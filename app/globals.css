@@ -1,0 +1,210 @@
+@import "tailwindcss";
+
+:root {
+  --color-1: #ce1a2a;
+  --color-1-light: #ff808c;
+  --color-2: #18d1be;
+  --color-3: #b6ede8;
+  --color-4: #40768c;
+  --form-control-color: red;
+}
+@font-face {
+  font-family: Ravi;
+  font-style: normal;
+  font-weight: normal;
+  src: url("../public/fonts/woff/Ravi-Regular.woff") format("woff"),
+    url("../public/fonts/woff2/Ravi-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Ravi;
+  font-style: normal;
+  font-weight: 500;
+  src: url("../public/fonts/woff/Ravi-Medium.woff") format("woff"),
+    url("../public/fonts/woff2/Ravi-Medium.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Ravi;
+  font-style: normal;
+  font-weight: 600;
+  src: url("../public/fonts/woff/Ravi-SemiBold.woff") format("woff"),
+    url("../public/fonts/woff2/Ravi-SemiBold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Ravi;
+  font-style: normal;
+  font-weight: bold;
+  src: url("../public/fonts/woff/Ravi-Bold.woff") format("woff"),
+    url("../public/fonts/woff2/Ravi-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Ravi;
+  font-style: normal;
+  font-weight: 900;
+  src: url("../public/fonts/woff/Ravi-Black.woff") format("woff"),
+    url("../public/fonts/woff2/Ravi-Black.woff2") format("woff2");
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  direction: rtl !important;
+  font-family: Ravi !important;
+  color: #656565;
+  background-color: #f4f4f4;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 23px;
+  overflow-x: hidden;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+input,
+textarea {
+  font-family: Ravi !important;
+  color: #000000;
+}
+h1 {
+  font-weight: bold;
+}
+p {
+  margin-bottom: 0 !important;
+}
+a {
+  color: #132447;
+  text-decoration: none;
+  cursor: pointer;
+}
+.persian_number {
+  font-family: "YekanPersianNum";
+}
+a:hover,
+a:focus,
+a:visited {
+  text-decoration: none;
+  outline: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  position: relative;
+  font-weight: bold;
+  margin: 0;
+  background: none;
+  line-height: 1.4em;
+}
+.typeCar_wrap {
+  background-image: url("./../public/images/gallery/bg00.png");
+  background-repeat: repeat-x;
+}
+
+.holographic-effect {
+  position: relative;
+  overflow: hidden;
+}
+.holographic-effect::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 45%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.1) 55%,
+    transparent 100%
+  );
+  transform: rotate(45deg);
+  transition: all 0.3s ease;
+  opacity: 0;
+}
+.newsBox:hover .holographic-effect::before {
+  opacity: 1;
+  animation: holographic 2s linear infinite;
+}
+@keyframes holographic {
+  0% {
+    transform: rotate(45deg) translateY(-100%);
+  }
+  100% {
+    transform: rotate(45deg) translateY(100%);
+  }
+}
+
+.button-wave-1 {
+  position: relative;
+  overflow: hidden;
+}
+.button-wave-1::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: var(--color-1);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+.button-wave-1:hover::after {
+  animation: wave-1 0.6s ease-out;
+}
+@keyframes wave-1 {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(20, 20);
+    opacity: 0;
+  }
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 50px;
+  aspect-ratio: 1;
+  color: #ce1a2a;
+  border-radius: 50%;
+  display: grid;
+  background: conic-gradient(from 90deg at 4px 4px, #0000 90deg, currentColor 0) -4px -4px /
+      calc(50% + 2px) calc(50% + 2px),
+    radial-gradient(
+        farthest-side,
+        currentColor 6px,
+        #0000 7px calc(100% - 6px),
+        currentColor calc(100% - 5px)
+      )
+      no-repeat;
+  animation: l10 2s infinite linear;
+  position: relative;
+}
+.loader:before {
+  content: "";
+  border-radius: inherit;
+  background: inherit;
+  transform: rotate(45deg);
+}
+@keyframes l10 {
+  to {
+    transform: rotate(0.5turn);
+  }
+}
