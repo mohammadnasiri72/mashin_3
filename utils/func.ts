@@ -87,6 +87,3 @@ export const formatPersianDate = (dateString: string): string => {
   
   return text;
 }
-
-
-// testttttttttttttt

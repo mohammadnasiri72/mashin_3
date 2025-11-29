@@ -281,3 +281,27 @@ interface ItemsCategoryId {
   categoryHtml: string | null;
   categoryInMenu: boolean;
 }
+
+interface PriceBrands {
+  id: number;
+  categoryKey: string;
+  title: string;
+  summary: string | null;
+  url: string | null;
+  parentId: number;
+  parentTitle: string;
+  image: string | null;
+  priority: number;
+  isHome: boolean;
+  routeId: string;
+}
+
+interface Price {
+  id: number;
+  title: string;
+  price1: number;
+  price2: number;
+  brandId: number;
+  brandTitle: string;
+  modified: string;
+}

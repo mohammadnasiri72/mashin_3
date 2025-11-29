@@ -9,18 +9,16 @@ export async function middleware(request: Request) {
 
   if (pathname.startsWith("/cars/")) {
     const id = Number(searchParams.get("id"));
-    if (!id) {
+    if (id) {
       return NextResponse.next();
     }
     const decodedPathname = decodeURIComponent(pathname);
     try {
       const data: ItemsCategoryId = await getCategoryByUrl(decodedPathname);
-      if (data.id > 0 && id !== data?.id) {
-        return NextResponse.redirect(
+      return NextResponse.redirect(
           new URL((pathname + `?id=${data?.id}`).toLowerCase(), request.url),
           { status: 301 }
         );
-      }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(

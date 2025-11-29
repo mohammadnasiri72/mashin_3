@@ -184,7 +184,7 @@ export default function Header({
 
   return (
     <div
-      className={`sticky-header z-1001! ${isSticky ? "sticky-active" : ""}`}
+      className={`sticky-header z-10001! ${isSticky ? "sticky-active" : ""}`}
     >
       {/* Main Header */}
       <header
