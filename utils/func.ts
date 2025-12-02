@@ -1,4 +1,5 @@
 const moment = require("moment-jalaali");
+import Swal from "sweetalert2";
 
 export const createMarkup = (html: string) => {
   return { __html: html };
@@ -41,49 +42,76 @@ export const formatPersianDate = (dateString: string): string => {
 };
 
 // تابع برای تخمین زمان مطالعه
-  export const estimateReadTime = (body: string): string => {
-    if (!body) return "۵ دقیقه";
+export const estimateReadTime = (body: string): string => {
+  if (!body) return "۵ دقیقه";
 
-    const text = body.replace(/<[^>]*>/g, "");
-    const wordCount = text.split(/\s+/).length;
-    const minutes = Math.ceil(wordCount / 200); // فرض: 200 کلمه در دقیقه
+  const text = body.replace(/<[^>]*>/g, "");
+  const wordCount = text.split(/\s+/).length;
+  const minutes = Math.ceil(wordCount / 200); // فرض: 200 کلمه در دقیقه
 
-    return `${toPersianNumbers(minutes)} دقیقه`;
-  };
+  return `${toPersianNumbers(minutes)} دقیقه`;
+};
 
+export const htmlToPlainText = (html: string): string => {
+  if (!html) return "";
 
-  export const htmlToPlainText = (html: string): string => {
-  if (!html) return '';
-  
   // حذف کامل تمام تگ‌های HTML
-  let text = html.replace(/<[^>]*>/g, ' ');
-  
+  let text = html.replace(/<[^>]*>/g, " ");
+
   // جایگزینی entityهای رایج HTML
   const entities: { [key: string]: string } = {
-    '&nbsp;': ' ',
-    '&amp;': '&',
-    '&lt;': '<',
-    '&gt;': '>',
-    '&quot;': '"',
-    '&#39;': "'",
-    '&zwnj;': '‌',
-    '&ndash;': '–',
-    '&mdash;': '—',
-    '&hellip;': '…',
-    '&laquo;': '«',
-    '&raquo;': '»'
+    "&nbsp;": " ",
+    "&amp;": "&",
+    "&lt;": "<",
+    "&gt;": ">",
+    "&quot;": '"',
+    "&#39;": "'",
+    "&zwnj;": "‌",
+    "&ndash;": "–",
+    "&mdash;": "—",
+    "&hellip;": "…",
+    "&laquo;": "«",
+    "&raquo;": "»",
   };
-  
-  Object.keys(entities).forEach(entity => {
-    text = text.replace(new RegExp(entity, 'g'), entities[entity]);
+
+  Object.keys(entities).forEach((entity) => {
+    text = text.replace(new RegExp(entity, "g"), entities[entity]);
   });
-  
+
   // حذف سایر entityها
-  text = text.replace(/&#\d+;/g, '');
-  text = text.replace(/&[a-zA-Z]+;/g, '');
-  
+  text = text.replace(/&#\d+;/g, "");
+  text = text.replace(/&[a-zA-Z]+;/g, "");
+
   // حذف فضاهای اضافی و نرمال‌سازی
-  text = text.replace(/\s+/g, ' ').trim();
-  
+  text = text.replace(/\s+/g, " ").trim();
+
   return text;
-}
+};
+
+// تنظیمات Toast
+export const Toast = Swal.mixin({
+  toast: true,
+  position: "top-start",
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  customClass: {
+    container: "toast-modal",
+  },
+});
+
+export const generateRandomUserId = () => {
+  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+};
+
+export const createInitialUserData = () => {
+  return {
+    token: "",
+    refreshToken: "",
+    expiration: "",
+    userId: generateRandomUserId(),
+    displayName: "",
+    avatar: "",
+    roles: [],
+  };
+};

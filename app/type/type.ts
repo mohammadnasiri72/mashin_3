@@ -305,3 +305,13 @@ interface Price {
   brandTitle: string;
   modified: string;
 }
+
+interface RegisterData {
+  langCode: string;
+  name: string;
+  family: string;
+  email: string;
+  password: string;
+  newsletter: boolean;
+  userId: string;
+}

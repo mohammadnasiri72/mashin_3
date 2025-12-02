@@ -31,7 +31,6 @@ async function pageWhichcarsDainamic({
     PageSize: 15,
   });
 
-  console.log(whichcars);
 
   return (
     <>

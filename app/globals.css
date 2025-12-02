@@ -208,3 +208,9 @@ h6 {
     transform: rotate(0.5turn);
   }
 }
+
+.toast-modal {
+  z-index: 9999999999 !important;
+  padding-bottom: 10px !important;
+  padding-top: 10px !important;
+}

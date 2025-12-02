@@ -7,12 +7,24 @@ import fa_IR from "antd/locale/fa_IR";
 import { ReactNode } from "react";
 import { Provider } from "react-redux";
 import AOSProvider from "./AOSProvider";
+import { createInitialUserData, generateRandomUserId } from "@/utils/func";
+const Cookies = require("js-cookie");
 
 interface LayoutClientProps {
   children: ReactNode;
 }
 
 function LayoutClient({ children }: LayoutClientProps) {
+  // const user = createInitialUserData();
+  // const user =
+  const user = Cookies.get("user");
+
+  // if (user?.token) {
+    
+  // } else {
+  //   Cookies.set("user", JSON.stringify(createInitialUserData()));
+  // }
+
   return (
     <>
       <AntdRegistry>
