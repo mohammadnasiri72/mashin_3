@@ -10,41 +10,41 @@ import { toPersianNumbers } from '@/utils/func';
 
 const { TextArea } = Input;
 
-const CommentsSection = ({detailsCar}:{detailsCar:ItemsId}) => {
+const CommentsSection = ({detailsCar , comments}:{detailsCar:ItemsId , comments:CommentResponse[]}) => {
   const [form] = Form.useForm();
 
-  const comments = [
-    {
-      id: 1,
-      author: 'علیرضا ریاحی',
-      date: '۸ دی ۱۴۰۴',
-      content: 'اما هنوز شیشه بالابر راننده سایپا اتوماتیک نیست، همین مزیت ایرانخودرو برگ برندشه. (وسط پیچ جاده یکی زنگ میزنه دستت رو فرمانه یکی رو دنده، پاهات درگیر پدالاست، کسی پیشت نیست! گوشی از رو داشبورد پرت میشه طبق معمول، نیش ترمزف کلاچ، گاز! یه دست رو فرمن و با اونیکی دنده میزنی سریع گوشیو تو هوا میگیری برای اینکه صدا به صدا برسه یدونه میزنی تو سر کلید بالابر! به عذن اون خدا شیشه خودش میره بالا!)',
-      likes: 0,
-      dislikes: 2,
-      replies: 2,
-      isReply: false
-    },
-    {
-      id: 2,
-      author: 'محمد توانا',
-      date: '۸ دی ۱۴۰۴',
-      content: 'اما هنوز شیشه بالابر راننده سایپا اتوماتیک نیست، همین مزیت ایرانخودرو برگ برندشه. (وسط پیچ جاده یکی زنگ میزنه دستت رو فرمانه یکی رو دنده، پاهات درگیر پدالاست، کسی پیشت نیست! گوشی از رو داشبورد پرت میشه طبق معمول، نیش ترمزف کلاچ، گاز! یه دست رو فرمن و با اونیکی دنده میزنی سریع گوشیو تو هوا میگیری برای اینکه صدا به صدا برسه یدونه میزنی تو سر کلید بالابر! به عذن اون خدا شیشه خودش میره بالا!)',
-      likes: 0,
-      dislikes: 2,
-      replies: 0,
-      isReply: false
-    },
-    {
-      id: 3,
-      author: 'علیرضا آقایی',
-      date: '۸ دی ۱۴۰۴',
-      content: 'اما هنوز شیشه بالابر راننده سایپا اتوماتیک نیست، همین مزیت ایرانخودرو برگ برندشه. (وسط پیچ جاده یکی زنگ میزنه دستت رو فرمانه یکی رو دنده، پاهات درگیر پدالاست، کسی پیشت نیست! گوشی از رو داشبورد پرت میشه طبق معمول، نیش ترمزف کلاچ، گاز! یه دست رو فرمن و با اونیکی دنده میزنی سریع گوشیو تو هوا میگیری برای اینکه صدا به صدا برسه یدونه میزنی تو سر کلید بالابر! به عذن اون خدا شیشه خودش میره بالا!)',
-      likes: 0,
-      dislikes: 0,
-      replies: 0,
-      isReply: true
-    }
-  ];
+  // const comments = [
+  //   {
+  //     id: 1,
+  //     author: 'علیرضا ریاحی',
+  //     date: '۸ دی ۱۴۰۴',
+  //     content: 'اما هنوز شیشه بالابر راننده سایپا اتوماتیک نیست، همین مزیت ایرانخودرو برگ برندشه. (وسط پیچ جاده یکی زنگ میزنه دستت رو فرمانه یکی رو دنده، پاهات درگیر پدالاست، کسی پیشت نیست! گوشی از رو داشبورد پرت میشه طبق معمول، نیش ترمزف کلاچ، گاز! یه دست رو فرمن و با اونیکی دنده میزنی سریع گوشیو تو هوا میگیری برای اینکه صدا به صدا برسه یدونه میزنی تو سر کلید بالابر! به عذن اون خدا شیشه خودش میره بالا!)',
+  //     likes: 0,
+  //     dislikes: 2,
+  //     replies: 2,
+  //     isReply: false
+  //   },
+  //   {
+  //     id: 2,
+  //     author: 'محمد توانا',
+  //     date: '۸ دی ۱۴۰۴',
+  //     content: 'اما هنوز شیشه بالابر راننده سایپا اتوماتیک نیست، همین مزیت ایرانخودرو برگ برندشه. (وسط پیچ جاده یکی زنگ میزنه دستت رو فرمانه یکی رو دنده، پاهات درگیر پدالاست، کسی پیشت نیست! گوشی از رو داشبورد پرت میشه طبق معمول، نیش ترمزف کلاچ، گاز! یه دست رو فرمن و با اونیکی دنده میزنی سریع گوشیو تو هوا میگیری برای اینکه صدا به صدا برسه یدونه میزنی تو سر کلید بالابر! به عذن اون خدا شیشه خودش میره بالا!)',
+  //     likes: 0,
+  //     dislikes: 2,
+  //     replies: 0,
+  //     isReply: false
+  //   },
+  //   {
+  //     id: 3,
+  //     author: 'علیرضا آقایی',
+  //     date: '۸ دی ۱۴۰۴',
+  //     content: 'اما هنوز شیشه بالابر راننده سایپا اتوماتیک نیست، همین مزیت ایرانخودرو برگ برندشه. (وسط پیچ جاده یکی زنگ میزنه دستت رو فرمانه یکی رو دنده، پاهات درگیر پدالاست، کسی پیشت نیست! گوشی از رو داشبورد پرت میشه طبق معمول، نیش ترمزف کلاچ، گاز! یه دست رو فرمن و با اونیکی دنده میزنی سریع گوشیو تو هوا میگیری برای اینکه صدا به صدا برسه یدونه میزنی تو سر کلید بالابر! به عذن اون خدا شیشه خودش میره بالا!)',
+  //     likes: 0,
+  //     dislikes: 0,
+  //     replies: 0,
+  //     isReply: true
+  //   }
+  // ];
 
   const onFinish = (values: any) => {
     message.success('دیدگاه شما با موفقیت ثبت شد');
@@ -141,21 +141,21 @@ const CommentsSection = ({detailsCar}:{detailsCar:ItemsId}) => {
               <div
                 key={comment.id}
                 className={`comment-box bg-gray-50 rounded-xl p-4 ${
-                  comment.isReply ? 'sm:mr-20 mr-8 border-r-2 border-red-200' : ''
+                  comment.parentId !==-1 ? 'sm:mr-20 mr-8 border-r-2 border-red-200' : ''
                 }`}
               >
                 <div className="cm_tp flex gap-3 items-center mb-3">
                   <div className="author_name font-bold text-gray-800">
-                    {comment.author}
+                    {comment.fullName}
                   </div>
                   <div className="text-xs font-semibold relative pr-3">
-                    {comment.date}
+                    {comment.created}
                     <span className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1.5 h-1.5 bg-purple-200 rounded-full"></span>
                   </div>
                 </div>
 
                 <div className="text-justify text-gray-700 leading-7 mb-3">
-                  {comment.content}
+                  {comment.body}
                 </div>
 
                 <div className="cm_btm flex justify-between items-center">
@@ -166,109 +166,17 @@ const CommentsSection = ({detailsCar}:{detailsCar:ItemsId}) => {
 
                   <div className="cm_buttons flex items-center gap-2">
                     <button className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg">
-                      <span>{toPersianNumbers(comment.replies)}</span>
+                      {/* <span>{toPersianNumbers(comment.replies)}</span> */}
                       <FaReply className="mr-1 text-purple-500 text-lg group-hover:-rotate-360 duration-500" />
                     </button>
                     
                     <button className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors">
-                      <span>{toPersianNumbers(comment.dislikes)}</span>
+                      {/* <span>{toPersianNumbers(comment.dislikes)}</span> */}
                       <FaThumbsDown className="mr-1 group-hover:animate-pulse text-red-500 text-lg" />
                     </button>
                     
                     <button className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors">
-                     <span>{toPersianNumbers(comment.likes)}</span>
-                      <FaThumbsUp className="mr-1 group-hover:animate-pulse text-green-500 text-lg" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-            {comments.map((comment) => (
-              <div
-                key={comment.id}
-                className={`comment-box bg-gray-50 rounded-xl p-4 ${
-                  comment.isReply ? 'sm:mr-20 mr-8 border-r-2 border-red-200' : ''
-                }`}
-              >
-                <div className="cm_tp flex gap-3 items-center mb-3">
-                  <div className="author_name font-bold text-gray-800">
-                    {comment.author}
-                  </div>
-                  <div className="text-xs font-semibold relative pr-3">
-                    {comment.date}
-                    <span className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1.5 h-1.5 bg-purple-200 rounded-full"></span>
-                  </div>
-                </div>
-
-                <div className="text-justify text-gray-700 leading-7 mb-3">
-                  {comment.content}
-                </div>
-
-                <div className="cm_btm flex justify-between items-center">
-                  <a href="#" className="cm_report flex items-center text-xs text-gray-500 bg-white px-3 py-1 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors">
-                    <FaFlag className="ml-1 text-red-500 text-lg" />
-                    گزارش مشکل
-                  </a>
-
-                  <div className="cm_buttons flex items-center gap-2">
-                    <button className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg">
-                      <span>{toPersianNumbers(comment.replies)}</span>
-                      <FaReply className="mr-1 text-purple-500 text-lg group-hover:-rotate-360 duration-500" />
-                    </button>
-                    
-                    <button className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors">
-                      <span>{toPersianNumbers(comment.dislikes)}</span>
-                      <FaThumbsDown className="mr-1 group-hover:animate-pulse text-red-500 text-lg" />
-                    </button>
-                    
-                    <button className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors">
-                     <span>{toPersianNumbers(comment.likes)}</span>
-                      <FaThumbsUp className="mr-1 group-hover:animate-pulse text-green-500 text-lg" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-            {comments.map((comment) => (
-              <div
-                key={comment.id}
-                className={`comment-box bg-gray-50 rounded-xl p-4 ${
-                  comment.isReply ? 'sm:mr-20 mr-8 border-r-2 border-red-200' : ''
-                }`}
-              >
-                <div className="cm_tp flex gap-3 items-center mb-3">
-                  <div className="author_name font-bold text-gray-800">
-                    {comment.author}
-                  </div>
-                  <div className="text-xs font-semibold relative pr-3">
-                    {comment.date}
-                    <span className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1.5 h-1.5 bg-purple-200 rounded-full"></span>
-                  </div>
-                </div>
-
-                <div className="text-justify text-gray-700 leading-7 mb-3">
-                  {comment.content}
-                </div>
-
-                <div className="cm_btm flex justify-between items-center">
-                  <a href="#" className="cm_report flex items-center text-xs text-gray-500 bg-white px-3 py-1 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors">
-                    <FaFlag className="ml-1 text-red-500 text-lg" />
-                    گزارش مشکل
-                  </a>
-
-                  <div className="cm_buttons flex items-center gap-2">
-                    <button className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg">
-                      <span>{toPersianNumbers(comment.replies)}</span>
-                      <FaReply className="mr-1 text-purple-500 text-lg group-hover:-rotate-360 duration-500" />
-                    </button>
-                    
-                    <button className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors">
-                      <span>{toPersianNumbers(comment.dislikes)}</span>
-                      <FaThumbsDown className="mr-1 group-hover:animate-pulse text-red-500 text-lg" />
-                    </button>
-                    
-                    <button className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors">
-                     <span>{toPersianNumbers(comment.likes)}</span>
+                     {/* <span>{toPersianNumbers(comment.likes)}</span> */}
                       <FaThumbsUp className="mr-1 group-hover:animate-pulse text-green-500 text-lg" />
                     </button>
                   </div>

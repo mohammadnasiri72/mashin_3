@@ -188,7 +188,7 @@ const CarDetails = ({
                     {Attachment.map((image) => (
                       <SwiperSlide key={image.id}>
                         <a
-                          className="h-full block cursor-pointer"
+                          className="sm:h-96 h-56 block cursor-pointer bg-[#ce1a2a]"
                           href={mainDomainOld + image.fileUrl}
                           data-fancybox="main-gallery"
                           data-caption={image.title}

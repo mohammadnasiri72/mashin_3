@@ -1,7 +1,6 @@
-import React from "react";
-import PriceCar from "./components/PriceCar";
-import { getPriceBrands } from "@/services/Price/PriceBrands";
 import { getPrice } from "@/services/Price/Price";
+import { getPriceBrands } from "@/services/Price/PriceBrands";
+import PriceCar from "./components/PriceCar";
 
 async function pagePrice({
   searchParams,
@@ -14,7 +13,14 @@ async function pagePrice({
   const brands: PriceBrands[] = await getPriceBrands(type);
   const price: Price[] = await getPrice({ Type: type, BrandId: -1 });
 
-  return <PriceCar brands={brands} price={price}/>;
+  // const headersList = await headers();
+
+  // const ip =
+  //   headersList.get("x-forwarded-for") ||
+  //   headersList.get("x-real-ip") ||
+  //   "unknown";
+
+  return <PriceCar brands={brands} price={price} />;
 }
 
 export default pagePrice;

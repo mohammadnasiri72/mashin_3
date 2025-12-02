@@ -10,6 +10,11 @@ import { FiX } from "react-icons/fi";
 import { IoChevronDown, IoSearch } from "react-icons/io5";
 import { TiThMenu } from "react-icons/ti";
 import ModalLogin from "./ModalLogin";
+import LoadingSkeletonAuth from "./LoadingSkeletonAuth";
+import ProfileDropdown from "./ProfileDropdown";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setToken } from "@/redux/slice/token";
 const Cookies = require("js-cookie");
 
 export default function Header({
@@ -23,9 +28,38 @@ export default function Header({
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const [isSticky, setIsSticky] = useState(false);
   const [menuItems, setMenuItems] = useState<LastMenuItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [user, setUser] = useState<any>({});
+  const token = useSelector((state: RootState) => state.token.token);
+  const disPatch = useDispatch();
 
-  const user = JSON.parse(Cookies.get("user"));
-  console.log(user);
+
+  useEffect(() => {
+    const loadUserFromCookie = () => {
+      setIsLoading(true);
+      try {
+        const userCookie = Cookies.get("user");
+
+        if (userCookie) {
+          const parsedUser = JSON.parse(userCookie);
+          setUser(parsedUser);
+          disPatch(setToken(parsedUser?.token || ""));
+        } else {
+          setUser(null);
+          disPatch(setToken(""));
+        }
+      } catch (error) {
+        console.error("Error parsing user cookie:", error);
+        setUser(null);
+        disPatch(setToken(""));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // بارگذاری اولیه
+    loadUserFromCookie();
+  }, []);
 
   // تابع تبدیل LastMenuItem به MenuItem با ساختار سلسله‌مراتبی
   const convertApiMenuToHierarchical = (
@@ -304,18 +338,22 @@ export default function Header({
                     />
                   </div>
                 </div>
-                {!user?.token && (
-                  <div className="flex items-center space-x-3 space-x-reverse">
-                    <ModalLogin />
+                <div className="w-44 ">
+                  {isLoading && <LoadingSkeletonAuth />}
+                  {!token && !isLoading && (
+                    <div className="flex items-center space-x-3 space-x-reverse">
+                      <ModalLogin />
 
-                    <Link
-                      href="/auth"
-                      className="bg-[#ce1a2a] text-white! font-bold text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_0_5px_rgba(206,26,42)] hover:bg-[#d1182b]"
-                    >
-                      ثبت‌نام
-                    </Link>
-                  </div>
-                )}
+                      <Link
+                        href="/auth"
+                        className="bg-[#ce1a2a] text-white! font-bold text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_0_5px_rgba(206,26,42)] hover:bg-[#d1182b]"
+                      >
+                        ثبت‌نام
+                      </Link>
+                    </div>
+                  )}
+                  {token && !isLoading && <ProfileDropdown />}
+                </div>
               </div>
             </div>
           </div>

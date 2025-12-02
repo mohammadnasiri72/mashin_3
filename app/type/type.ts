@@ -304,6 +304,7 @@ interface Price {
   brandId: number;
   brandTitle: string;
   modified: string;
+  change: number;
 }
 
 interface RegisterData {
@@ -314,4 +315,41 @@ interface RegisterData {
   password: string;
   newsletter: boolean;
   userId: string;
+}
+
+interface CommentParams {
+  id: number;
+  langCode: string;
+  type: number;
+  pageSize: number;
+  pageIndex: number;
+}
+interface CommentResponse {
+  rowId: number;
+  id: number;
+  parentId: number;
+  itemId: number;
+  langCode: string;
+  title: string;
+  url: string;
+  name: string;
+  fullName: string;
+  commentName: string;
+  email: string;
+  body: string;
+  userName: string;
+  userPhotoFileName: string | null;
+  userPhoto: string;
+  userIP: string;
+  confirmed: boolean;
+  isHome: boolean;
+  type: number;
+  score: number | null;
+  pos: null;
+  neg: null;
+  isPrivate: boolean;
+  seen: boolean;
+  created: string;
+  modified: string | null;
+  total: number;
 }

@@ -5,6 +5,7 @@ import CarDetails from "../components/CarDetails";
 import ContentTabs from "../components/ContentTabs";
 import FeaturesSection from "../components/FeaturesSection";
 import HeroSection from "../components/HeroSection";
+import { getComment } from "@/services/Comment/Comment";
 
 async function page({
   params,
@@ -27,17 +28,25 @@ async function page({
       )
     : [];
 
-    
+  const comments: CommentResponse[] = await getComment({
+    id: Number(id),
+    langCode: "fa",
+    type: 0,
+    pageSize: 20,
+    pageIndex: 1,
+  });
+
 
   return (
     <>
-      <HeroSection />
+      <HeroSection detailsCar={detailsCar} />
       <CarDetails Attachment={Attachment} detailsCar={detailsCar} />
       <FeaturesSection detailsCar={detailsCar} />
       <ContentTabs
         Attachment={Attachment}
         detailsCar={detailsCar}
         detailsCarcompetitor={detailsCarcompetitor}
+        comments={comments}
       />
     </>
   );

@@ -15,6 +15,8 @@ import {
 } from "react-icons/md";
 import { RegisterForm } from "./components/registerForm";
 import { LoginForm } from "./components/loginForm";
+import { PostLogin } from "@/services/Account/Login";
+import { PostResetPass } from "@/services/Account/ResetPass";
 const Cookies = require("js-cookie");
 
 // تایپ‌های TypeScript (همانطور که بود)
@@ -36,21 +38,6 @@ interface RegisterErrors {
   password: boolean;
   newsletter: boolean;
 }
-
-
-
-
-
-// کامپوننت فرم ثبت‌نام
-
-// سرویس‌های فرضی (همانطور که بود)
-const PostLogin = async (data: LoginData) => {
-  return Promise.resolve({ success: true });
-};
-
-const PostResetPass = async (userName: string) => {
-  return Promise.resolve({ success: true });
-};
 
 const AuthPage: React.FC = () => {
   // حالت‌های فرم ورود
@@ -91,6 +78,8 @@ const AuthPage: React.FC = () => {
   // حالت مودال بازیابی رمز عبور
   const [resetPasswordModal, setResetPasswordModal] = useState<boolean>(false);
   const [resetPasswordEmail, setResetPasswordEmail] = useState<string>("");
+  const [errResetPasswordEmail, setErrResetPasswordEmail] =
+    useState<string>("");
 
   // هندلر تغییر مقادیر فرم ورود
   const handleLoginChange = (
@@ -163,8 +152,19 @@ const AuthPage: React.FC = () => {
 
     try {
       const result = await PostLogin(loginData);
-    } catch (error) {
-      console.error("خطا در ورود:", error);
+      if (result.token) {
+        Toast.fire({
+          icon: "success",
+          title: "ورود با موفقیت انجام شد",
+        });
+        Cookies.set("user", JSON.stringify(result));
+        Router.push("/");
+      }
+    } catch (error: any) {
+      Toast.fire({
+        icon: "error",
+        title: error.response.data || "خطا در ورود به حساب",
+      });
     }
   };
   const Router = useRouter();
@@ -177,43 +177,51 @@ const AuthPage: React.FC = () => {
 
     try {
       const result = await PostRegister(registerData);
-      Toast.fire({
-        icon: "success",
-        title: "ثبت نام شما با موفقیت انجام شد",
-      });
+
       if (result.token) {
+        Toast.fire({
+          icon: "success",
+          title: "ثبت نام شما با موفقیت انجام شد",
+        });
         Cookies.set("user", JSON.stringify(result));
+        Router.push("/");
       }
-      Router.push("/");
     } catch (error: any) {
       Toast.fire({
         icon: "error",
-        title: error.response.data,
+        title: error.response.data || "خطا در ثبت‌ نام",
       });
-
-      console.error("خطا در ثبت‌نام:", error);
     }
   };
 
   // هندلر بازیابی رمز عبور
   const handleResetPassword = async (): Promise<void> => {
     if (!resetPasswordEmail) {
+      setErrResetPasswordEmail("لطفا ایمیل خود را وارد کنید");
       return;
     }
 
     if (!/\S+@\S+\.\S+/.test(resetPasswordEmail)) {
+      setErrResetPasswordEmail("ایمیل معتبر نیست");
       return;
     }
 
     try {
       const result = await PostResetPass(resetPasswordEmail);
+      Toast.fire({
+        icon: "success",
+        title: "رمز عبور ارسال شد",
+      });
+    } catch (error: any) {
+      Toast.fire({
+        icon: "error",
+        title: error.response.data || "خطا در بازیابی رمز عبور",
+      });
+    } finally {
       setResetPasswordModal(false);
       setResetPasswordEmail("");
-    } catch (error) {
-      console.error("خطا در بازیابی رمز عبور:", error);
     }
   };
-
 
   return (
     <>
@@ -304,7 +312,7 @@ const AuthPage: React.FC = () => {
       >
         <DialogTitle
           sx={{
-            bgcolor: "#3b82f6",
+            bgcolor: "#ce1a2a",
             color: "white",
             textAlign: "center",
             fontSize: "1.1rem",
@@ -330,7 +338,7 @@ const AuthPage: React.FC = () => {
 
         <DialogContent sx={{ py: 3, px: 3 }}>
           <div className="space-y-4">
-            <p className="text-gray-600 text-sm text-center">
+            <p className="text-gray-600 text-sm text-center mt-3!">
               لطفا ایمیل خود را وارد کنید. لینک بازیابی رمز عبور برای شما ارسال
               خواهد شد.
             </p>
@@ -341,12 +349,20 @@ const AuthPage: React.FC = () => {
               </label>
               <Input
                 value={resetPasswordEmail}
-                onChange={(e) => setResetPasswordEmail(e.target.value)}
+                onChange={(e) => {
+                  setResetPasswordEmail(e.target.value);
+                  setErrResetPasswordEmail("");
+                }}
                 prefix={<FaEnvelope className="text-gray-400 ml-2" />}
                 placeholder="ایمیل خود را وارد کنید"
                 size="large"
                 className="rounded-lg"
               />
+              {errResetPasswordEmail && (
+                <span className="text-[#ce1a2a] text-xs">
+                  {errResetPasswordEmail}
+                </span>
+              )}
             </div>
 
             <Button

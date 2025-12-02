@@ -1,3 +1,4 @@
+import { setToken } from "@/redux/slice/token";
 import { PostLogin } from "@/services/Account/Login";
 import { PostResetPass } from "@/services/Account/ResetPass";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
@@ -6,6 +7,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { FaLock, FaUser } from "react-icons/fa";
 import { MdClose, MdLogin } from "react-icons/md";
+import { useDispatch } from "react-redux";
+const Cookies = require("js-cookie");
 
 function ModalLogin() {
   const [open, setOpen] = useState(false);
@@ -16,6 +19,7 @@ function ModalLogin() {
     errUserName: false,
     errPassword: false,
   });
+  const disPatch = useDispatch();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -41,8 +45,10 @@ function ModalLogin() {
       };
       try {
         const dataLogin = await PostLogin(data);
-      } catch (err) {
-      }
+        Cookies.set("user", JSON.stringify(dataLogin));
+        disPatch(setToken(dataLogin.token));
+        setOpen(false);
+      } catch (err) {}
     }
   }
 
@@ -56,8 +62,7 @@ function ModalLogin() {
     if (userName) {
       try {
         const dataResetPass = await PostResetPass(userName);
-      } catch (err) {
-      }
+      } catch (err) {}
     }
   }
 
@@ -188,7 +193,8 @@ function ModalLogin() {
             </Button>
           </div>
           <div className="pr-5">
-            <Link href={'/auth'}
+            <Link
+              href={"/auth"}
               className="text-xs! p-0! h-auto! text-[#1677ff]! hover:text-[#69b1ff]!"
             >
               ساخت حساب کاربری
