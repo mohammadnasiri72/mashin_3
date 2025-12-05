@@ -1,6 +1,7 @@
 import { setToken } from "@/redux/slice/token";
 import { PostLogin } from "@/services/Account/Login";
 import { PostResetPass } from "@/services/Account/ResetPass";
+import { Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Button, Checkbox, Input } from "antd";
 import Link from "next/link";
@@ -10,8 +11,7 @@ import { MdClose, MdLogin } from "react-icons/md";
 import { useDispatch } from "react-redux";
 const Cookies = require("js-cookie");
 
-function ModalLogin() {
-  const [open, setOpen] = useState(false);
+function ModalLoginComment({ open, setOpen }: { open: boolean; setOpen: any }) {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
@@ -45,10 +45,19 @@ function ModalLogin() {
       };
       try {
         const dataLogin = await PostLogin(data);
-        Cookies.set("user", JSON.stringify(dataLogin) , { expires: 7 });
+        Cookies.set("user", JSON.stringify(dataLogin), { expires: 7 });
         disPatch(setToken(dataLogin.token));
         setOpen(false);
-      } catch (err) {}
+        Toast.fire({
+          icon: "success",
+          title: "با موفقیت وارد شدید",
+        });
+      } catch (error: any) {
+        Toast.fire({
+          icon: "error",
+          title: error.response.data || "خطا در ورود به حساب کاربری",
+        });
+      }
     }
   }
 
@@ -68,17 +77,6 @@ function ModalLogin() {
 
   return (
     <>
-      {/* دکمه باز کردن مودال */}
-      <button
-        onClick={handleOpen}
-        className="font-bold cursor-pointer whitespace-nowrap text-[#ce1a2a]! text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_0_5px_rgba(206,26,42)]"
-      >
-        <div className="flex items-center gap-0.5">
-          <MdLogin className="text-lg" />
-          <span>ورود</span>
-        </div>
-      </button>
-
       {/* مودال ورود با MUI */}
       <Dialog
         open={open}
@@ -227,4 +225,4 @@ function ModalLogin() {
   );
 }
 
-export default ModalLogin;
+export default ModalLoginComment;

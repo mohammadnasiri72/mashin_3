@@ -47,6 +47,7 @@ async function page({
         detailsCar={detailsCar}
         detailsCarcompetitor={detailsCarcompetitor}
         comments={comments}
+        id={Number(id)}
       />
     </>
   );

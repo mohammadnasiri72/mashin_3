@@ -33,7 +33,6 @@ export default function Header({
   const token = useSelector((state: RootState) => state.token.token);
   const disPatch = useDispatch();
 
-
   useEffect(() => {
     const loadUserFromCookie = () => {
       setIsLoading(true);

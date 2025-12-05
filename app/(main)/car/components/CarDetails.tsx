@@ -7,8 +7,6 @@ import type { Swiper as SwiperType } from "swiper";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-
-
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -19,7 +17,7 @@ import "swiper/css/thumbs";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
-import { Skeleton } from "antd";
+import { Empty, Skeleton } from "antd";
 import { FaCalendarDays, FaCodeCompare, FaCommentDots } from "react-icons/fa6";
 import { toPersianNumbers } from "@/utils/func";
 
@@ -245,25 +243,24 @@ const CarDetails = ({
                 <div className="slider-productDetails h-full">
                   {/* اسکلتون برای تصویر اصلی */}
                   <div className="mySwiper2 product-gallery-main">
-                    <div className="w-full h-full border-4 border-gray-200">
-                      <Skeleton.Image
-                        active
-                        className="w-full! h-full!"
-                        style={{ width: "100%", height: "100%" }}
-                      />
+                    <div className="w-full! sm:h-96 h-56 border-4 border-gray-200">
+                      <Skeleton.Image className="w-full! h-full! bg-slate-400" />
                     </div>
                   </div>
 
                   {/* اسکلتون برای تصاویر کوچک */}
                   <div className="product-gallery-thumbs mt-3 pb-10">
-                    <div className="flex gap-2 justify-center">
+                    <div className="gap-2 justify-center sm:flex hidden">
                       {[...Array(5)].map((_, index) => (
-                        <div key={index} className="w-1/5">
-                          <Skeleton.Image
-                            active
-                            className="w-full! h-20!"
-                            style={{ width: "100%", height: "80px" }}
-                          />
+                        <div key={index} className="w-1/5 h-20!">
+                          <Skeleton.Image className="w-full! h-full! bg-slate-400" />
+                        </div>
+                      ))}
+                    </div>
+                    <div className="gap-2 justify-center sm:hidden flex ">
+                      {[...Array(3)].map((_, index) => (
+                        <div key={index} className="w-1/3">
+                          <Skeleton.Image className="w-full! h-20! bg-white! rounded-3xl" />
                         </div>
                       ))}
                     </div>

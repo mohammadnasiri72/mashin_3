@@ -324,6 +324,7 @@ interface CommentParams {
   pageSize: number;
   pageIndex: number;
 }
+
 interface CommentResponse {
   rowId: number;
   id: number;
@@ -352,4 +353,38 @@ interface CommentResponse {
   created: string;
   modified: string | null;
   total: number;
+}
+
+interface PostCommentParams {
+  userName: string;
+  itemId: number;
+  parentId: number;
+  type: number;
+  name: string;
+  body: string;
+  langCode: string;
+  email: string;
+  score: number;
+  userIP: string;
+}
+interface PostCommentResponse {
+  id: number;
+  parentId: number;
+  itemId: number;
+  name: string;
+  email: string;
+  body: string;
+  userName: string;
+  userIP: string;
+  confirmed: boolean;
+  isHome: boolean;
+  type: number;
+  score: number | null;
+  pos: number | null;
+  neg: number | null;
+  isPrivate: boolean;
+  seen: boolean;
+  created: string;
+  modified: null;
+  item: null;
 }

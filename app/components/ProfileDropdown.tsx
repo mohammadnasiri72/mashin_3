@@ -55,7 +55,7 @@ export default function ProfileDropdown() {
         title: error.response.data || "خطا در خروج",
       });
     } finally {
-      Cookies.set("user", JSON.stringify(createInitialUserData()));
+      Cookies.set("user", JSON.stringify(createInitialUserData()) , { expires: 7 });
       disPatch(setToken(""));
       setOpen(false);
     }

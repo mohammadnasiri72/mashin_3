@@ -21,11 +21,13 @@ const ContentTabs = ({
   Attachment,
   detailsCarcompetitor,
   comments,
+  id
 }: {
   detailsCar: ItemsId;
   Attachment: ItemsAttachment[];
   detailsCarcompetitor: ItemsId[];
   comments:CommentResponse[]
+  id:number
 }) => {
  
 
@@ -235,7 +237,7 @@ const ContentTabs = ({
         </div>
       </div>
       <div id="comments" className="section-anchor py-5" ref={commentsRef}>
-        <CommentsSection detailsCar={detailsCar} comments={comments}/>
+        <CommentsSection detailsCar={detailsCar} comments={comments} id={id}/>
       </div>
       <style jsx global>{`
         .content-tabs-container {

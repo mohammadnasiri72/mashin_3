@@ -18,7 +18,7 @@ function LayoutClient({ children }: LayoutClientProps) {
   const user = Cookies.get("user");
   useEffect(() => {
     if (!user) {
-      Cookies.set("user", JSON.stringify(createInitialUserData()));
+      Cookies.set("user", JSON.stringify(createInitialUserData()), { expires: 7 });
     }
   }, []);
 

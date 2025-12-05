@@ -157,7 +157,7 @@ const AuthPage: React.FC = () => {
           icon: "success",
           title: "ورود با موفقیت انجام شد",
         });
-        Cookies.set("user", JSON.stringify(result));
+        Cookies.set("user", JSON.stringify(result) , { expires: 7 });
         Router.push("/");
       }
     } catch (error: any) {
@@ -183,7 +183,7 @@ const AuthPage: React.FC = () => {
           icon: "success",
           title: "ثبت نام شما با موفقیت انجام شد",
         });
-        Cookies.set("user", JSON.stringify(result));
+        Cookies.set("user", JSON.stringify(result), { expires: 7 });
         Router.push("/");
       }
     } catch (error: any) {
