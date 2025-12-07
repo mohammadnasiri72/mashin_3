@@ -12,12 +12,15 @@ function CompareCars({
   whichcars,
   dataCompare,
   popularComparisons,
+  comments,
+  id,
 }: {
   whichcars: ItemsId;
   dataCompare: ItemsId[];
   popularComparisons: Items[];
+  comments: CommentResponse[];
+  id: number;
 }) {
-
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
   const navbarRef = useRef<HTMLDivElement>(null);
@@ -200,14 +203,10 @@ function CompareCars({
         <div className="lg:w-3/4 w-full">
           <div className="space-y-8">
             {/* بخش محتوای اصلی مقایسه */}
-            
-              <div id="content" className="section-anchor" ref={contentRef}>
-                <CompareContent
-                  whichcars={whichcars}
-                  dataCompare={dataCompare}
-                />
-              </div>
-         
+
+            <div id="content" className="section-anchor" ref={contentRef}>
+              <CompareContent whichcars={whichcars} dataCompare={dataCompare} />
+            </div>
 
             {/* بخش مقایسه های مرتبط */}
             <div id="related" className="section-anchor" ref={relatedRef}>
@@ -223,7 +222,7 @@ function CompareCars({
 
       {/* بخش نظرات */}
       <div id="comments" className="section-anchor" ref={commentsRef}>
-        {whichcars && <WhichcarsComments whichcars={whichcars} />}
+        {whichcars && <WhichcarsComments whichcars={whichcars} comments={comments} id={id}/>}
       </div>
 
       <style jsx global>{`

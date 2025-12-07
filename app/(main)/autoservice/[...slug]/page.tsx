@@ -1,6 +1,7 @@
 import { getItemId } from "@/services/Item/ItemId";
 import MainBoxAutoService from "./components/MainBoxAutoService";
 import { redirect } from "next/navigation";
+import { getComment } from "@/services/Comment/Comment";
 
 async function pageAutoservicesDetails({
   params,
@@ -12,10 +13,19 @@ async function pageAutoservicesDetails({
     const id = Number(param.slug[0]);
     const detailsAuto: ItemsId = await getItemId(id);
 
+    const comments: CommentResponse[] = await getComment({
+        id: Number(id),
+        langCode: "fa",
+        type: 0,
+        pageSize: 20,
+        pageIndex: 1,
+      });
+    
+
     return (
       <>
         <div className="flex flex-wrap bg-gray-50">
-          <MainBoxAutoService detailsAuto={detailsAuto} />
+          <MainBoxAutoService detailsAuto={detailsAuto} comments={comments} id={id}/>
         </div>
       </>
     );

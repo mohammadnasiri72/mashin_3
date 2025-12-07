@@ -1,6 +1,5 @@
 "use client";
 
-import ModalLogin from "@/app/components/ModalLogin";
 import { RootState } from "@/redux/store";
 import { postComment } from "@/services/Comment/postComment";
 import { formatPersianDate, Toast } from "@/utils/func";

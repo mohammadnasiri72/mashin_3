@@ -8,8 +8,6 @@ import { useState } from "react";
 import { FaCar, FaInfoCircle, FaSearch, FaStar } from "react-icons/fa";
 import MarketStats from "../../../../components/MarketStats";
 
-
-
 const CarsDetails = ({
   carBrands,
   carDetails,
@@ -19,9 +17,7 @@ const CarsDetails = ({
   carDetails: ItemsCategoryId;
   carView: Items[];
 }) => {
-  
   const [carBrandsFilter, setCarBrandsFilter] = useState(carBrands);
-  
 
   // محتوای سایدبار
   const popularCars = [
@@ -160,7 +156,8 @@ const CarsDetails = ({
                     <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
                       <Link
                         href={
-                          carView.filter((c) => c.categoryId === car.id)[0]?.url || ''
+                          carView.filter((c) => c.categoryId === car.id)[0]
+                            ?.url || ""
                         }
                       >
                         <img
@@ -208,7 +205,8 @@ const CarsDetails = ({
                     <div className="flex-1">
                       <Link
                         href={
-                          carView.filter((c) => c.categoryId === car.id)[0]?.url || ''
+                          carView.filter((c) => c.categoryId === car.id)[0]
+                            ?.url || ""
                         }
                       >
                         <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">

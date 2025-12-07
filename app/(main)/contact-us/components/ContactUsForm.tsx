@@ -1,3 +1,4 @@
+import MapContainer from "@/app/components/MapContainer";
 import {
   EnvironmentOutlined,
   MessageOutlined,
@@ -77,7 +78,7 @@ function ContactUsForm() {
                   پیام در شبکه‌های اجتماعی
                 </h3>
                 <div className="flex gap-2">
-                  ( 
+                  (
                   {socialMediaBadges.map(
                     (badge: SocialMediaBadge, index: number) => (
                       <span
@@ -207,7 +208,7 @@ function ContactUsForm() {
           }
           className="shadow-lg border-t-4 border-t-[#ce1a2a]"
         >
-          <div className="h-96 bg-gray-200 rounded-lg flex items-center justify-center">
+          {/* <div className="h-96 bg-gray-200 rounded-lg flex items-center justify-center">
             <div className="text-center text-gray-600">
               <EnvironmentOutlined className="text-4xl mb-4 text-[#ce1a2a]" />
               <p className="text-lg">نقشه در اینجا نمایش داده می‌شود</p>
@@ -215,7 +216,14 @@ function ContactUsForm() {
                 می‌توانید از Google Maps یا هر سرویس نقشه‌ای استفاده کنید
               </p>
             </div>
-          </div>
+          </div> */}
+          <MapContainer
+            latitude={35.6892}
+            longitude={51.389}
+            zoom={14}
+            markerText="دفتر مرکزی ماشین3"
+            className="w-full! h-96!"
+          />
 
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
             <h4 className="font-semibold text-gray-700 mb-2">آدرس:</h4>

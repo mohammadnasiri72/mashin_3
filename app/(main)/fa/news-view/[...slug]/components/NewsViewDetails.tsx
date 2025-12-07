@@ -12,10 +12,14 @@ function NewsViewDetails({
   detailsNews,
   popularNews,
   Attachment,
+  comments,
+  id
 }: {
   detailsNews: ItemsId;
   popularNews: Items[];
   Attachment: ItemsAttachment[];
+  comments:CommentResponse[]
+  id:number
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
@@ -232,7 +236,7 @@ function NewsViewDetails({
 
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor mt-8" ref={commentsRef}>
-          <CommentsSectionNews detailsNews={detailsNews} />
+          <CommentsSectionNews detailsNews={detailsNews} comments={comments} id={id}/>
         </div>
       </div>
 

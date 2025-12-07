@@ -7,6 +7,7 @@ import {
   FaPhone,
   FaWhatsapp,
 } from "react-icons/fa";
+import MapContainer from "../../../../components/MapContainer";
 
 function ContactUsAutoService() {
   // اطلاعات تماس و خدمات
@@ -99,20 +100,18 @@ function ContactUsAutoService() {
                 </div>
               </div>
             </div>
-
-           
           </div>
 
           {/* نقشه و مسیریابی */}
           <div className="space-y-2">
-            <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center">
-              <div className="text-center text-gray-600">
-                <FaMapMarkerAlt className="text-4xl mx-auto mb-4! text-red-600" />
-                <p className="text-lg font-medium">نقشه نمایندگی</p>
-                <p className="text-sm mt-2">
-                  موقعیت مکانی روی نقشه نمایش داده می‌شود
-                </p>
-              </div>
+            <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center overflow-hidden">
+              <MapContainer
+                  latitude={35.6892}
+                  longitude={51.389}
+                  zoom={14}
+                  markerText="نمایندگی مرکزی تهران"
+                  className="w-full! h-full!"
+                />
             </div>
 
             <button className="w-full cursor-pointer bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 transition-colors flex items-center justify-center">

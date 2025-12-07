@@ -2,6 +2,7 @@ import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getItemId } from "@/services/Item/ItemId";
 import CompareCars from "./components/CompareCars";
+import { getComment } from "@/services/Comment/Comment";
 
 async function pageWhichcarsDainamic({
   params,
@@ -31,6 +32,13 @@ async function pageWhichcarsDainamic({
     PageSize: 15,
   });
 
+   const comments: CommentResponse[] = await getComment({
+      id: Number(id),
+      langCode: "fa",
+      type: 0,
+      pageSize: 20,
+      pageIndex: 1,
+    });
 
   return (
     <>
@@ -38,6 +46,8 @@ async function pageWhichcarsDainamic({
         whichcars={whichcars}
         dataCompare={dataCompare}
         popularComparisons={popularComparisons}
+        comments= {comments}
+        id={Number(id)}
       />
     </>
   );

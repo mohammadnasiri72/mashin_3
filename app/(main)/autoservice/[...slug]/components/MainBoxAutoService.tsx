@@ -11,7 +11,7 @@ import IntroductionAutoService from "./IntroductionAutoService";
 import ServicesAutoService from "./ServicesAutoService";
 import SidebarAutoService from "./SidebarAutoService";
 
-function MainBoxAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
+function MainBoxAutoService({ detailsAuto , comments , id}: { detailsAuto: ItemsId , comments:CommentResponse[] , id:number}) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
   const navbarRef = useRef<HTMLDivElement>(null);
@@ -211,7 +211,7 @@ function MainBoxAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
         </div>
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor" ref={commentsRef}>
-          <CommentsAutoService detailsAuto={detailsAuto} />
+          <CommentsAutoService detailsAuto={detailsAuto} comments={comments} id={id}/>
         </div>
       </div>
 

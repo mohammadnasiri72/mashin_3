@@ -1,16 +1,15 @@
 "use client";
 
-
 import Link from "next/link";
 import { FaSearch, FaStar } from "react-icons/fa";
 import NewsBlogForm from "../../../../../components/NewsBlogForm";
 import { mainDomainOld } from "@/utils/mainDomain";
 import MarketStats from "@/app/components/MarketStats";
+import { useState } from "react";
 
+const CarBrands = ({ carBrands }: { carBrands: ItemsCategory[] }) => {
+  const [term, setTerm] = useState("");
 
-
-const CarBrands = ({carBrands}:{carBrands:ItemsCategory[]}) => {
- 
   // محتوای سایدبار
   const popularCars = [
     {
@@ -39,7 +38,12 @@ const CarBrands = ({carBrands}:{carBrands:ItemsCategory[]}) => {
     },
   ];
 
-  const parentTitle = carBrands[0].parentId === 6059 ? 'موتور سیکلت' : carBrands[0].parentId === 6058 ? 'خودرو' : ''
+  const parentTitle =
+    carBrands[0].parentId === 6059
+      ? "موتور سیکلت"
+      : carBrands[0].parentId === 6058
+      ? "خودرو"
+      : "";
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
@@ -47,11 +51,12 @@ const CarBrands = ({carBrands}:{carBrands:ItemsCategory[]}) => {
         {/* هدر صفحه */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 text-center mb-4">
-            <span className="text-red-600">برند های  {parentTitle}</span> در بازار ایران
+            <span className="text-red-600">برند های {parentTitle}</span> در
+            بازار ایران
           </h1>
           <p className="text-gray-600 text-center max-w-2xl mx-auto">
-            بررسی کامل تمامی برند های  {parentTitle} موجود در بازار ایران با جزئیات فنی،
-            قیمت و نظرات کاربران
+            بررسی کامل تمامی برند های {parentTitle} موجود در بازار ایران با
+            جزئیات فنی، قیمت و نظرات کاربران
           </p>
         </div>
 
@@ -62,6 +67,10 @@ const CarBrands = ({carBrands}:{carBrands:ItemsCategory[]}) => {
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
               <div className="relative">
                 <input
+                  value={term}
+                  onChange={(e) => {
+                    setTerm(e.target.value);
+                  }}
                   type="text"
                   placeholder="جستجوی برند خودرو..."
                   className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -72,14 +81,16 @@ const CarBrands = ({carBrands}:{carBrands:ItemsCategory[]}) => {
 
             {/* گرید برندها */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {carBrands.map((brand) => (
+              {carBrands
+              .filter((e)=> e.title.includes(term))
+              .map((brand) => (
                 <Link key={brand.id} href={brand.url} className="group block">
                   <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200">
                     {/* لوگو و نام برند */}
                     <div className="flex flex-col items-center text-center">
                       <div className=" overflow-hidden flex items-center justify-center w-28 h-28">
                         <img
-                          src={mainDomainOld+ brand.image}
+                          src={mainDomainOld + brand.image}
                           alt={brand.title}
                           className="object-contain w-full h-full mb-2!"
                         />
@@ -89,8 +100,6 @@ const CarBrands = ({carBrands}:{carBrands:ItemsCategory[]}) => {
                         {brand.title}
                       </h3>
                     </div>
-
-                   
                   </div>
                 </Link>
               ))}

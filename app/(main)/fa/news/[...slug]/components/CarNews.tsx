@@ -128,7 +128,7 @@ const CarNews = ({
                       className={`hover:text-white!  duration-300 px-3 py-1 rounded-lg ${
                         activeTab === tab.key
                           ? "text-white! bg-[#ce1a2a]"
-                          : "text-black! hover:bg-red-500"
+                          : "text-black! hover:bg-[#ce1a2a]"
                       }`}
                       href={tab.href}
                     >
