@@ -87,12 +87,12 @@ const ContentTabsMotor = ({
       }
 
       // اگر به انتهای صفحه رسیده‌ایم، آخرین تب را فعال کن
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 200
-      ) {
-        currentActiveKey = "comments";
-      }
+    //   if (
+    //     window.innerHeight + window.scrollY >=
+    //     document.body.offsetHeight - 200
+    //   ) {
+    //     currentActiveKey = "comments";
+    //   }
 
       if (currentActiveKey !== "") {
         setActiveKey(currentActiveKey);

@@ -73,12 +73,12 @@ function NewsViewDetails({
         }
       }
 
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 200
-      ) {
-        currentActiveKey = "4";
-      }
+      // if (
+      //   window.innerHeight + window.scrollY >=
+      //   document.body.offsetHeight - 200
+      // ) {
+      //   currentActiveKey = "4";
+      // }
 
       if (currentActiveKey !== activeKey) {
         setActiveKey(currentActiveKey);

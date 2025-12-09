@@ -70,12 +70,12 @@ function CompareCars({
         }
       }
 
-      if (
-        window.innerHeight + window.scrollY >=
-        document.body.offsetHeight - 200
-      ) {
-        currentActiveKey = "3";
-      }
+      // if (
+      //   window.innerHeight + window.scrollY >=
+      //   document.body.offsetHeight - 200
+      // ) {
+      //   currentActiveKey = "3";
+      // }
 
       if (currentActiveKey !== activeKey) {
         setActiveKey(currentActiveKey);
