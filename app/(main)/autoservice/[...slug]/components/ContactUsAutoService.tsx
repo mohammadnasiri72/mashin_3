@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { Card } from "antd";
 import React from "react";
 import {
@@ -7,7 +8,18 @@ import {
   FaPhone,
   FaWhatsapp,
 } from "react-icons/fa";
-import MapContainer from "../../../../components/MapContainer";
+
+const MapContainer = dynamic(() => import("@/app/components/MapContainer"), {
+  ssr: false, // غیرفعال کردن SSR برای این کامپوننت
+  loading: () => (
+    <div className="w-full h-96 flex items-center justify-center bg-gray-100 rounded-lg">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ce1a2a] mx-auto mb-4"></div>
+        <p className="text-gray-600">در حال بارگذاری نقشه...</p>
+      </div>
+    </div>
+  ),
+});
 
 function ContactUsAutoService() {
   // اطلاعات تماس و خدمات
@@ -106,12 +118,12 @@ function ContactUsAutoService() {
           <div className="space-y-2">
             <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center overflow-hidden">
               <MapContainer
-                  latitude={35.6892}
-                  longitude={51.389}
-                  zoom={14}
-                  markerText="نمایندگی مرکزی تهران"
-                  className="w-full! h-full!"
-                />
+                latitude={35.6892}
+                longitude={51.389}
+                zoom={14}
+                markerText="نمایندگی مرکزی تهران"
+                className="w-full! h-full!"
+              />
             </div>
 
             <button className="w-full cursor-pointer bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 transition-colors flex items-center justify-center">

@@ -9,7 +9,7 @@ export const getPrice = async (data: {
       "/api/Price",
       {
         params: data,
-        withCredentials: true,
+        // withCredentials: true,
       }
     );
     return response.data;

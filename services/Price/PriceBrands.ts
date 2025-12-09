@@ -6,7 +6,7 @@ export const getPriceBrands = async (type: string): Promise<PriceBrands[]> => {
       "/api/Price/Brand",
       {
         params: { type },
-        withCredentials: true,
+        // withCredentials: true,
       }
     );
     return response.data;

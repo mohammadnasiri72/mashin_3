@@ -4,12 +4,13 @@ import { RootState } from "@/redux/store";
 import { postComment } from "@/services/Comment/postComment";
 import { formatPersianDate, Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
-import { Button, Form, Input } from "antd";
-import { useEffect, useState, useMemo } from "react";
+import { Button, Form, Input, Spin } from "antd";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import { FaFlag, FaReply, FaThumbsDown, FaThumbsUp } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 import { useSelector } from "react-redux";
 import ModalLoginComment from "./ModalLoginComment";
+import { getComment } from "@/services/Comment/Comment";
 
 const Cookies = require("js-cookie");
 
@@ -138,7 +139,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
           </div>
         </div>
       </div>
-
       {/* نمایش زیرمجموعه‌ها */}
       {comment.children && comment.children.length > 0 && (
         <div className="replies-container">
@@ -169,6 +169,12 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     useState<boolean>(false);
   const [openLogin, setOpenLogin] = useState<boolean>(false);
   const [parentId, setParentId] = useState<number>(0);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  const [pageIndex, setPageIndex] = useState<number>(1); // صفحه فعلی
+  const [pageSize] = useState<number>(3); // تعداد کامنت‌ها در هر صفحه
+  const [allComments, setAllComments] = useState<Comment[]>(comments); // تمام کامنت‌های بارگذاری شده
+  const [totalComments, setTotalComments] = useState<number>(0); // تعداد کل کامنت‌ها
+
   const token = useSelector((state: RootState) => state.token.token);
   const user = Cookies.get("user");
 
@@ -183,6 +189,13 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       }
     }
   }, [user]);
+
+  useEffect(() => {
+    // مقداردهی اولیه total از اولین کامنت
+    if (comments.length > 0) {
+      setTotalComments(comments[0].total || 0);
+    }
+  }, [comments]);
 
   const [form] = Form.useForm();
 
@@ -206,6 +219,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         const response = await postComment(data);
         form.resetFields();
         setOpenModalCommentReplay(false);
+        
+        // بعد از ثبت کامنت جدید، کامنت‌ها را از صفحه اول مجدد بارگیری کنید
+        await loadComments(1, false);
+        
         Toast.fire({
           icon: "success",
           title: "کامنت شما ثبت شد لطفا منتظر تایید ادمین بمانید",
@@ -225,13 +242,60 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     }
   };
 
+  // تابع بارگیری کامنت‌ها
+  const loadComments = useCallback(async (targetPageIndex: number, isLoadMore = false) => {
+    try {
+      if (isLoadMore) {
+        setLoadingMore(true);
+      }
+
+      const response: CommentResponse[] = await getComment({
+        id: Number(id),
+        langCode: "fa",
+        type: 0,
+        pageSize: pageSize,
+        pageIndex: targetPageIndex,
+      });
+
+      if (response.length > 0) {
+        // به‌روزرسانی total اگر اولین کامنت جدید total متفاوت داشت
+        if (response[0].total !== totalComments) {
+          setTotalComments(response[0].total);
+        }
+
+        // تبدیل کامنت‌های جدید به آرایه
+        const newComments = response.map((comment: any) => comment);
+
+        if (isLoadMore) {
+          // اضافه کردن کامنت‌های جدید به کامنت‌های موجود
+          setAllComments(prev => [...prev, ...newComments]);
+        } else {
+          // تنظیم کامنت‌های جدید (برای بارگذاری اولیه یا رفرش)
+          setAllComments(newComments);
+        }
+
+        setPageIndex(targetPageIndex);
+      }
+    } catch (error) {
+      console.error("Error loading comments:", error);
+      Toast.fire({
+        icon: "error",
+        title: "خطا در دریافت نظرات",
+      });
+    } finally {
+      if (isLoadMore) {
+        setLoadingMore(false);
+      }
+    }
+  }, [id, pageSize, totalComments]);
+
   // تبدیل کامنت‌ها به ساختار درختی
   const commentTree = useMemo<CommentTreeNode[]>(() => {
     const commentMap = new Map<number, CommentTreeNode>();
     const roots: CommentTreeNode[] = [];
 
     // اول همه کامنت‌ها رو توی مپ قرار می‌دیم
-    comments.forEach((comment: any) => {
+    allComments.forEach((comment: any) => {
       commentMap.set(comment.id, {
         ...comment,
         children: [],
@@ -239,7 +303,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     });
 
     // حالا هر کامنت رو به پدرش وصل می‌کنیم
-    comments.forEach((comment: any) => {
+    allComments.forEach((comment: any) => {
       const node = commentMap.get(comment.id);
 
       if (!node) return;
@@ -273,12 +337,20 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     return roots.sort(
       (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
     );
-  }, [comments]);
+  }, [allComments]);
 
   const handleReplyClick = (commentId: number) => {
     setParentId(commentId);
     setOpenModalCommentReplay(true);
   };
+
+  const handleLoadMore = async () => {
+    const nextPageIndex = pageIndex + 1;
+    await loadComments(nextPageIndex, true);
+  };
+
+  // بررسی آیا کامنت بیشتری برای نمایش وجود دارد یا خیر
+  const hasMoreComments = totalComments > allComments.length;
 
   return (
     <>
@@ -286,6 +358,9 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
           <strong className="text-red-600">نظرات </strong>
           درمورد ماشین {detailsCar.sourceName} {detailsCar.title}
+          <span className="text-sm font-normal text-gray-500 mr-2">
+            ({totalComments} نظر)
+          </span>
         </h3>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
@@ -361,17 +436,49 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
           <div className="lg:col-span-8">
             <div className="comments-area space-y-4">
               {commentTree.length > 0 ? (
-                commentTree.map((comment) => (
-                  <CommentItem
-                    key={comment.id}
-                    comment={comment}
-                    onReply={handleReplyClick}
-                    token={token}
-                    setOpenLogin={setOpenLogin}
-                    Toast={Toast}
-                    depth={0}
-                  />
-                ))
+                <>
+                  {commentTree.map((comment) => (
+                    <CommentItem
+                      key={comment.id}
+                      comment={comment}
+                      onReply={handleReplyClick}
+                      token={token}
+                      setOpenLogin={setOpenLogin}
+                      Toast={Toast}
+                      depth={0}
+                    />
+                  ))}
+                  
+                  {/* دکمه نمایش بیشتر */}
+                  {hasMoreComments && (
+                    <div className="text-center mt-6 pt-4 border-t border-gray-200">
+                      <Button
+                        type="default"
+                        size="large"
+                        onClick={handleLoadMore}
+                        loading={loadingMore}
+                        disabled={loadingMore}
+                        className="min-w-48 bg-white hover:bg-gray-50 border border-red-200 text-red-600 hover:text-red-700 hover:border-red-300 transition-all"
+                      >
+                        {loadingMore ? (
+                          <>
+                            <Spin size="small" className="ml-2" />
+                            در حال بارگذاری...
+                          </>
+                        ) : (
+                          <>
+                            نمایش نظرات بیشتر
+                            <span className="mr-2 text-sm text-gray-500">
+                              ({allComments.length} از {totalComments})
+                            </span>
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+                  
+                 
+                </>
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   هنوز دیدگاهی ثبت نشده است. اولین نفری باشید که دیدگاه می‌دهد!

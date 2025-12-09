@@ -3,7 +3,7 @@ import axiosInstance from "../axiosInstance";
 export const getSetting = async () => {
   try {
     const response = await axiosInstance.get("/api/Property/value/setting", {
-      withCredentials: true,
+      // withCredentials: true,
     });
     return response.data;
   } catch (error) {

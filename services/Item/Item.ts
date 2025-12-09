@@ -5,7 +5,7 @@ export const getItem = async (data: ItemParams): Promise<Items[]> => {
   try {
     const response = await axiosInstance.get<Items[]>("/api/Item", {
       params: data,
-      withCredentials: true,
+      // withCredentials: true,
     });
     return response.data;
   } catch (error) {

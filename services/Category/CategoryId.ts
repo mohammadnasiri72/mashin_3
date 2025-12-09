@@ -5,7 +5,7 @@ export const getCategoryId = async (id: number): Promise<ItemsCategoryId> => {
   try {
     const response = await axiosInstance.get<ItemsCategoryId>(`/api/Category/${id}`, {
     
-      withCredentials: true,
+      // withCredentials: true,
     });
     return response.data;
   } catch (error) {

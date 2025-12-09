@@ -16,9 +16,9 @@ export async function middleware(request: Request) {
     try {
       const data: ItemsCategoryId = await getCategoryByUrl(decodedPathname);
       return NextResponse.redirect(
-          new URL((pathname + `?id=${data?.id}`).toLowerCase(), request.url),
-          { status: 301 }
-        );
+        new URL((pathname + `?id=${data?.id}`).toLowerCase(), request.url),
+        { status: 301 }
+      );
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
@@ -78,31 +78,41 @@ export async function middleware(request: Request) {
     }
   } else {
     const decodedPathname = decodeURIComponent(pathname);
-    try {
-      const data: ItemsId = await getItemByUrl(decodedPathname);
-      if (data.url && data.url !== decodedPathname) {
-        return NextResponse.redirect(
-          new URL(data.url.toLowerCase(), request.url),
-          { status: 301 }
-        );
-      }
-    } catch (error) {
-      if (pathname !== pathname.toLowerCase()) {
-        const search = `?${searchParams}`;
-        return NextResponse.redirect(
-          new URL(
-            searchParams
-              ? pathname.toLowerCase() + search
-              : pathname.toLowerCase(),
-            request.url
-          ),
-          {
-            status: 301,
-          }
-        );
-      }
+    if (decodedPathname !== decodedPathname.toLowerCase()) {
+      return NextResponse.redirect(
+        new URL(decodedPathname.toLowerCase(), request.url),
+        { status: 301 }
+      );
     }
   }
+
+  // else {
+  //   const decodedPathname = decodeURIComponent(pathname);
+  //   try {
+  //     const data: ItemsId = await getItemByUrl(decodedPathname);
+  //     if (data.url && data.url !== decodedPathname) {
+  //       return NextResponse.redirect(
+  //         new URL(data.url.toLowerCase(), request.url),
+  //         { status: 301 }
+  //       );
+  //     }
+  //   } catch (error) {
+  //     if (pathname !== pathname.toLowerCase()) {
+  //       const search = `?${searchParams}`;
+  //       return NextResponse.redirect(
+  //         new URL(
+  //           searchParams
+  //             ? pathname.toLowerCase() + search
+  //             : pathname.toLowerCase(),
+  //           request.url
+  //         ),
+  //         {
+  //           status: 301,
+  //         }
+  //       );
+  //     }
+  //   }
+  // }
 
   return NextResponse.next();
 }

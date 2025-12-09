@@ -1,4 +1,4 @@
-import MapContainer from "@/app/components/MapContainer";
+import dynamic from "next/dynamic";
 import {
   EnvironmentOutlined,
   MessageOutlined,
@@ -6,6 +6,18 @@ import {
   SendOutlined,
 } from "@ant-design/icons";
 import { Button, Card, Form, Input, message } from "antd";
+
+const MapContainer = dynamic(() => import("@/app/components/MapContainer"), {
+  ssr: false, // غیرفعال کردن SSR برای این کامپوننت
+  loading: () => (
+    <div className="w-full h-96 flex items-center justify-center bg-gray-100 rounded-lg">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ce1a2a] mx-auto mb-4"></div>
+        <p className="text-gray-600">در حال بارگذاری نقشه...</p>
+      </div>
+    </div>
+  ),
+});
 
 const { TextArea } = Input;
 
@@ -208,15 +220,6 @@ function ContactUsForm() {
           }
           className="shadow-lg border-t-4 border-t-[#ce1a2a]"
         >
-          {/* <div className="h-96 bg-gray-200 rounded-lg flex items-center justify-center">
-            <div className="text-center text-gray-600">
-              <EnvironmentOutlined className="text-4xl mb-4 text-[#ce1a2a]" />
-              <p className="text-lg">نقشه در اینجا نمایش داده می‌شود</p>
-              <p className="text-sm mt-2">
-                می‌توانید از Google Maps یا هر سرویس نقشه‌ای استفاده کنید
-              </p>
-            </div>
-          </div> */}
           <MapContainer
             latitude={35.6892}
             longitude={51.389}

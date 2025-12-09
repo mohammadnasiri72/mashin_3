@@ -32,10 +32,9 @@ async function page({
     id: Number(id),
     langCode: "fa",
     type: 0,
-    pageSize: 20,
+    pageSize: 3,
     pageIndex: 1,
   });
-
 
   return (
     <>

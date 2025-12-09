@@ -7,7 +7,7 @@ export const getMenu = async (data: MenuParams): Promise< MenuGroup[]> => {
   try {
     const response = await axiosInstance.get< MenuGroup[]>("/api/Menu", {
       params: data,
-      withCredentials: true,
+      // withCredentials: true,
     });
     return response.data;
   } catch (error) {

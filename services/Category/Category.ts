@@ -5,7 +5,7 @@ export const getCategory = async (data: ItemCategoryParams): Promise<ItemsCatego
   try {
     const response = await axiosInstance.get<ItemsCategory[]>("/api/Category", {
       params: data,
-      withCredentials: true,
+      // withCredentials: true,
     });
     return response.data;
   } catch (error) {

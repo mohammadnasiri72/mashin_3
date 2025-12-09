@@ -7,7 +7,7 @@ export const getCategoryByUrl = async (url: string): Promise<ItemsCategoryId> =>
     params:{
         url
     },
-      withCredentials: true,
+      // withCredentials: true,
     });
     return response.data;
   } catch (error) {

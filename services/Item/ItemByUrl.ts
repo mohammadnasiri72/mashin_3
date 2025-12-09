@@ -9,7 +9,7 @@ export const getItemByUrl = async (url: string): Promise<ItemsId> => {
             url,
             langCode:'fa'
         },
-      withCredentials: true,
+      // withCredentials: true,
     });
     return response.data;
   } catch (error) {
