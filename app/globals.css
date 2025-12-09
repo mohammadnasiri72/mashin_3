@@ -12,40 +12,40 @@
   font-family: Ravi;
   font-style: normal;
   font-weight: normal;
-  src: url("../public/fonts/woff/Ravi-Regular.woff") format("woff"),
-    url("../public/fonts/woff2/Ravi-Regular.woff2") format("woff2");
+  src: url("./../public/fonts/woff/Ravi-Regular.woff") format("woff"),
+    url("./../public/fonts/woff2/Ravi-Regular.woff2") format("woff2");
 }
 
 @font-face {
   font-family: Ravi;
   font-style: normal;
   font-weight: 500;
-  src: url("../public/fonts/woff/Ravi-Medium.woff") format("woff"),
-    url("../public/fonts/woff2/Ravi-Medium.woff2") format("woff2");
+  src: url("./../public/fonts/woff/Ravi-Medium.woff") format("woff"),
+    url("./../public/fonts/woff2/Ravi-Medium.woff2") format("woff2");
 }
 
 @font-face {
   font-family: Ravi;
   font-style: normal;
   font-weight: 600;
-  src: url("../public/fonts/woff/Ravi-SemiBold.woff") format("woff"),
-    url("../public/fonts/woff2/Ravi-SemiBold.woff2") format("woff2");
+  src: url("./../public/fonts/woff/Ravi-SemiBold.woff") format("woff"),
+    url("./../public/fonts/woff2/Ravi-SemiBold.woff2") format("woff2");
 }
 
 @font-face {
   font-family: Ravi;
   font-style: normal;
   font-weight: bold;
-  src: url("../public/fonts/woff/Ravi-Bold.woff") format("woff"),
-    url("../public/fonts/woff2/Ravi-Bold.woff2") format("woff2");
+  src: url("./../public/fonts/woff/Ravi-Bold.woff") format("woff"),
+    url("./../public/fonts/woff2/Ravi-Bold.woff2") format("woff2");
 }
 
 @font-face {
   font-family: Ravi;
   font-style: normal;
   font-weight: 900;
-  src: url("../public/fonts/woff/Ravi-Black.woff") format("woff"),
-    url("../public/fonts/woff2/Ravi-Black.woff2") format("woff2");
+  src: url("./../public/fonts/woff/Ravi-Black.woff") format("woff"),
+    url("./../public/fonts/woff2/Ravi-Black.woff2") format("woff2");
 }
 
 html {

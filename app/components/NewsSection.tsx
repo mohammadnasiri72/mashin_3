@@ -13,7 +13,6 @@ export default function NewsSection({
   saleNews: Items[];
   lastCompare: Items[];
 }) {
-  
   return (
     <div className="mb-12">
       <div className="mx-auto px-4">
@@ -28,7 +27,8 @@ export default function NewsSection({
             </div>
             <div className="flex flex-wrap items-center lg:pl-2">
               {news.map((item) => (
-                <div
+                <Link
+                  href={item.url}
                   key={item.id}
                   className="sm:w-1/2 w-full sm:px-2 sm:mt-0 mt-3"
                 >
@@ -56,7 +56,7 @@ export default function NewsSection({
                       </div>
                     }
                   ></Card>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -70,7 +70,7 @@ export default function NewsSection({
             </div>
             <div className="flex flex-wrap items-center">
               {lastCompare.map((item) => (
-                <div key={item.id} className="w-full pb-2">
+                <Link key={item.id} href={item.url} className="w-full pb-2">
                   <Card
                     hoverable
                     className="rounded-3xl! h-64 overflow-hidden border-none shadow-sm group"
@@ -95,7 +95,7 @@ export default function NewsSection({
                       </div>
                     }
                   ></Card>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -115,7 +115,7 @@ export default function NewsSection({
                     }`}
                   >
                     <Link
-                      href="#"
+                      href={sale.url}
                       className="text-[#292929]! duration-300 group-hover:text-white! font-medium block"
                     >
                       {sale.title}

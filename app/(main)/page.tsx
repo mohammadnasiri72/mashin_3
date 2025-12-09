@@ -116,10 +116,10 @@ export default async function Home() {
         <CarFinderSection />
 
         {/* Car Ads Section */}
-        <CarAdsSection />
+        {/* <CarAdsSection /> */}
 
         {/* Services Section */}
-        <ServicesSection />
+        {/* <ServicesSection /> */}
       </div>
     </div>
   );

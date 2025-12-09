@@ -28,7 +28,11 @@ const NewsListSection = ({ news }: { news: Items[] }) => {
         {/* لیست اخبار */}
         <div className="flex flex-wrap -mx-2">
           {news.map((item) => (
-            <div key={item.id} className="w-full md:w-1/2 px-2 mb-4">
+            <Link
+              href={item.url}
+              key={item.id}
+              className="w-full md:w-1/2 px-2 mb-4"
+            >
               <div className="bg-white relative duration-300 cursor-pointer group hover:bg-linear-to-b hover:from-[#ff5363] hover:to-[#ce1a2a] rounded-2xl shadow-sm p-4 flex sm:flex-row flex-col sm:items-stretch items-center gap-4 hover:shadow-md transition-shadow overflow-hidden">
                 {/* تصویر */}
                 <div className="w-36 h-36 shrink-0 holographic-effect">
@@ -68,7 +72,7 @@ const NewsListSection = ({ news }: { news: Items[] }) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

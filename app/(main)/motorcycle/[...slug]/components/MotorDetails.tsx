@@ -21,16 +21,16 @@ import { Empty, Skeleton } from "antd";
 import { FaCalendarDays, FaCodeCompare, FaCommentDots } from "react-icons/fa6";
 import { toPersianNumbers } from "@/utils/func";
 
-const CarDetails = ({
+const MotorDetails = ({
   Attachment,
-  detailsCar,
+  detailsMotorcycle,
 }: {
   Attachment: ItemsAttachment[];
-  detailsCar: ItemsId;
+  detailsMotorcycle: ItemsId;
 }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
-  const specifications = detailsCar.properties.filter(
+  const specifications = detailsMotorcycle.properties.filter(
     (e) => e.isTechnicalProperty
   );
 
@@ -371,4 +371,4 @@ const CarDetails = ({
   );
 };
 
-export default CarDetails;
+export default MotorDetails;

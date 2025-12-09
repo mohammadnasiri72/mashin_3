@@ -109,7 +109,7 @@ const CarSpecsSection = ({ carSpecs }: { carSpecs: Items[] }) => {
                   <div className="bg-gray-100 rounded-2xl p-4 h-full">
                     {/* تصویر خودرو */}
                     <div className="relative rounded-xl overflow-hidden mb-3 bg-[#bfbfbf]">
-                      <Link href={mainDomain + car.url} className="">
+                      <Link href={car.url} className="">
                         <div className="aspect-2/1 relative">
                           <img
                             src={mainDomainOld + car.image}
