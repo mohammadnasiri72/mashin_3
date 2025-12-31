@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/app/components/loader";
 import {
   estimateReadTime,
   formatPersianDate,
@@ -8,6 +9,8 @@ import {
 } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
 import PaginationEducation from "./PaginationEducation";
 import SideBarEducation from "./SideBarEducation";
@@ -21,6 +24,8 @@ const EducationCar = ({
   educationCat: ItemsCategory[];
   id: number;
 }) => {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4">
@@ -49,6 +54,12 @@ const EducationCar = ({
                         : "bg-slate-100 text-[#333] hover:bg-slate-200"
                     }`}
                     href={"/fa/EducationTips/نکات-آموزشی.html"}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      startTransition(() => {
+                        router.push("/fa/EducationTips/نکات-آموزشی.html");
+                      });
+                    }}
                   >
                     همه نکات آموزشی
                   </Link>
@@ -63,6 +74,12 @@ const EducationCar = ({
                             : "bg-slate-100 text-[#333] hover:bg-slate-200"
                         }`}
                         href={ed.url}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          startTransition(() => {
+                            router.push(ed.url);
+                          });
+                        }}
                       >
                         {ed.title}
                       </Link>
@@ -79,7 +96,15 @@ const EducationCar = ({
                         <div className="flex flex-col md:flex-row gap-4 ">
                           {/* تصویر مطلب */}
                           <div className="md:w-48 w-full h-32 shrink-0">
-                            <Link href={item.url}>
+                            <Link
+                              href={item.url}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                startTransition(() => {
+                                  router.push(item.url);
+                                });
+                              }}
+                            >
                               <div className="w-full h-full bg-gray-200 rounded-lg overflow-hidden relative">
                                 <img
                                   src={mainDomainOld + item.image}
@@ -92,7 +117,15 @@ const EducationCar = ({
 
                           {/* محتوای مطلب */}
                           <div className="flex-1 ">
-                            <Link href={item.url}>
+                            <Link
+                              href={item.url}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                startTransition(() => {
+                                  router.push(item.url);
+                                });
+                              }}
+                            >
                               <h2 className="text-xl font-bold text-gray-900 mb-2! hover:text-[#ce1a2a]! transition-colors cursor-pointer">
                                 {item.title}
                               </h2>
@@ -212,6 +245,7 @@ const EducationCar = ({
           }
         }
       `}</style>
+      {isPending && <Loading />}
     </div>
   );
 };

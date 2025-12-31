@@ -1,5 +1,6 @@
 "use client";
 
+import Loading from "@/app/components/loader";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -57,6 +58,7 @@ export default function Error({
           </div>
         </div>
       </div>
+       {isPending && <Loading />}
     </>
   );
 }

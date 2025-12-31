@@ -1,11 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useTransition } from "react";
 
 // Fancybox
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
+import Loading from "@/app/components/loader";
+import { useRouter } from "next/navigation";
 
 const Sidebar = ({
   detailsMotorcompetitor,
@@ -14,6 +16,8 @@ const Sidebar = ({
   detailsMotorcompetitor: ItemsId[];
   detailsMotorcycle: ItemsId;
 }) => {
+  const [isPending, startTransition] = useTransition();
+    const router = useRouter();
   const shahinModels = [
     {
       image: "/images/gallery/shahin-s.jpg",
@@ -109,9 +113,9 @@ const Sidebar = ({
       {/* مدل‌های شاهین */}
       <div className="sidebar_widget bg-white rounded-xl p-4 shadow-sm border border-gray-100">
         <h3 className="widget_title text-lg font-bold text-gray-900 mb-3!">
-          <Link href="#" className="hover:text-red-600 transition-colors">
+          <span className="hover:text-red-600 transition-colors">
             مدل های {detailsMotorcycle.sourceName} {detailsMotorcycle.title}
-          </Link>
+          </span>
         </h3>
 
         <div className="space-y-4 flex flex-wrap">
@@ -155,9 +159,9 @@ const Sidebar = ({
       {/* ماشین‌های رقبا */}
       <div className="sidebar_widget bg-white rounded-xl p-4 shadow-sm border border-gray-100">
         <h3 className="widget_title text-lg font-bold text-gray-900 mb-3">
-          <Link href="#" className="hover:text-red-600 transition-colors">
+          <span className="hover:text-red-600 transition-colors">
             ماشین های رقبا
-          </Link>
+          </span>
         </h3>
 
         <div className="space-y-4">
@@ -168,7 +172,12 @@ const Sidebar = ({
             >
               <div>
                 <div className="block w-full h-full">
-                  <Link href={model.url} className="block w-full h-full">
+                  <Link href={model.url} onClick={(e) => {
+                e.preventDefault();
+                startTransition(() => {
+                  router.push(model.url);
+                });
+              }} className="block w-full h-full">
                     <img
                       src={mainDomainOld + model.image}
                       alt={model.title}
@@ -204,6 +213,7 @@ const Sidebar = ({
           background: rgba(0, 0, 0, 0.8);
         }
       `}</style>
+      {isPending && <Loading />}
     </div>
   );
 };

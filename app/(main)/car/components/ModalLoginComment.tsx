@@ -1,3 +1,4 @@
+import Loading from "@/app/components/loader";
 import { setToken } from "@/redux/slice/token";
 import { PostLogin } from "@/services/Account/Login";
 import { PostResetPass } from "@/services/Account/ResetPass";
@@ -5,13 +6,16 @@ import { Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Button, Checkbox, Input } from "antd";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { FaLock, FaUser } from "react-icons/fa";
 import { MdClose, MdLogin } from "react-icons/md";
 import { useDispatch } from "react-redux";
 const Cookies = require("js-cookie");
 
 function ModalLoginComment({ open, setOpen }: { open: boolean; setOpen: any }) {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
@@ -193,6 +197,12 @@ function ModalLoginComment({ open, setOpen }: { open: boolean; setOpen: any }) {
           <div className="pr-5">
             <Link
               href={"/auth"}
+              onClick={(e) => {
+                e.preventDefault();
+                startTransition(() => {
+                  router.push("/auth");
+                });
+              }}
               className="text-xs! p-0! h-auto! text-[#1677ff]! hover:text-[#69b1ff]!"
             >
               ساخت حساب کاربری
@@ -221,6 +231,7 @@ function ModalLoginComment({ open, setOpen }: { open: boolean; setOpen: any }) {
           </div>
         </DialogContent>
       </Dialog>
+      {isPending && <Loading />}
     </>
   );
 }

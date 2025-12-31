@@ -1,11 +1,16 @@
+import Loading from "@/app/components/loader";
 import MarketStats from "@/app/components/MarketStats";
 import NewsBlogForm from "@/app/components/NewsBlogForm";
 import { formatPersianDate, toPersianNumbers } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
 
 function SidebarNewsView({ popularNews }: { popularNews: Items[] }) {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   return (
     <>
       <section className="py-8 bg-gray-50">
@@ -18,7 +23,17 @@ function SidebarNewsView({ popularNews }: { popularNews: Items[] }) {
               </h3>
               <div className="space-y-4">
                 {popularNews.map((news) => (
-                  <Link key={news.id} href={news.url} className="block group">
+                  <Link
+                    key={news.id}
+                    href={news.url}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      startTransition(() => {
+                        router.push(news.url);
+                      });
+                    }}
+                    className="block group"
+                  >
                     <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors">
                       <div className="w-16 h-12 bg-gray-200 rounded shrink-0 overflow-hidden">
                         <img
@@ -56,6 +71,7 @@ function SidebarNewsView({ popularNews }: { popularNews: Items[] }) {
             <NewsBlogForm />
           </div>
         </div>
+        {isPending && <Loading />}
       </section>
     </>
   );

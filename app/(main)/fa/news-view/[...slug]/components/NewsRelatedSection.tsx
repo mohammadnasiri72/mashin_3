@@ -1,33 +1,14 @@
 "use client";
 
+import Loading from "@/app/components/loader";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
 const NewsRelatedSection = ({ relatedNews }: { relatedNews: Items[] }) => {
-  // این بخش می‌تونه از API مربوطه پر بشه
-//   const relatedNews = [
-//     {
-//       id: 1,
-//       title: "خبر مرتبط اول",
-//       image: "/images/news/1.jpg",
-//       date: "1403/08/15",
-//       category: "اخبار بازار"
-//     },
-//     {
-//       id: 2,
-//       title: "خبر مرتبط دوم", 
-//       image: "/images/news/2.jpg",
-//       date: "1403/08/14",
-//       category: "اخبار بازار"
-//     },
-//     {
-//       id: 3,
-//       title: "خبر مرتبط سوم",
-//       image: "/images/news/3.jpg", 
-//       date: "1403/08/13",
-//       category: "اخبار بازار"
-//     }
-//   ];
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   return (
     <section className="py-8 bg-white">
@@ -35,28 +16,36 @@ const NewsRelatedSection = ({ relatedNews }: { relatedNews: Items[] }) => {
         <h2 className="text-2xl font-bold text-gray-800 mb-6! text-center">
           اخبار مرتبط
         </h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {relatedNews.map((news) => (
-            <div key={news.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <div
+              key={news.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+            >
               <div className="h-48 overflow-hidden">
-                <img 
-                  src={mainDomainOld+ news.image} 
+                <img
+                  src={mainDomainOld + news.image}
                   alt={news.title}
                   className="w-full h-full object-cover hover:scale-105 transition-transform"
                 />
               </div>
-              
+
               <div className="p-4">
-               
                 <h3 className="font-bold text-gray-800 mt-3! mb-2! line-clamp-2">
                   {news.title}
                 </h3>
-                
+
                 <div className="flex justify-between items-center text-sm text-gray-500">
                   <span>{news.created}</span>
-                  <Link 
+                  <Link
                     href={`/news/${news.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      startTransition(() => {
+                        router.push(`/news/${news.id}`);
+                      });
+                    }}
                     className="text-[#ce1a2a] hover:text-red-700 font-medium"
                   >
                     ادامه مطلب
@@ -76,6 +65,7 @@ const NewsRelatedSection = ({ relatedNews }: { relatedNews: Items[] }) => {
           overflow: hidden;
         }
       `}</style>
+      {isPending && <Loading />}
     </section>
   );
 };

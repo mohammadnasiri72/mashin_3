@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useTransition } from "react";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Mousewheel } from "swiper/modules";
@@ -9,6 +9,8 @@ import { Navigation, Pagination, Mousewheel } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { useRouter } from "next/navigation";
+import Loading from "@/app/components/loader";
 
 interface ItemsCategory {
   id: number;
@@ -18,6 +20,8 @@ interface ItemsCategory {
 }
 
 function BoxCatPodcasts({ podcastsCat }: { podcastsCat: ItemsCategory[] }) {
+  const [isPending, startTransition] = useTransition();
+    const router = useRouter();
   return (
     <div className="w-full bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
       <h2 className="text-xl font-bold text-gray-800 mb-6! text-center">
@@ -40,6 +44,12 @@ function BoxCatPodcasts({ podcastsCat }: { podcastsCat: ItemsCategory[] }) {
           <SwiperSlide key={category.id} className="w-auto!">
             <Link
               href={category.url}
+              onClick={(e) => {
+                e.preventDefault();
+                startTransition(() => {
+                  router.push(category.url);
+                });
+              }}
               className="inline-flex items-center gap-2 bg-linear-to-br from-red-50 to-white border border-[#ce1a2a] rounded-full px-3 py-2 hover:shadow-lg transition-all duration-300 hover:scale-105 group select-none"
             >
               <span className="font-medium text-gray-800 text-xs group-hover:text-[#ce1a2a]! transition-colors whitespace-nowrap">
@@ -116,6 +126,7 @@ function BoxCatPodcasts({ podcastsCat }: { podcastsCat: ItemsCategory[] }) {
           }
         }
       `}</style>
+      {isPending && <Loading />}
     </div>
   );
 }

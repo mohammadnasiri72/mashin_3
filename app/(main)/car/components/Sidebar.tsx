@@ -109,9 +109,9 @@ const Sidebar = ({
       {/* مدل‌های شاهین */}
       <div className="sidebar_widget bg-white rounded-xl p-4 shadow-sm border border-gray-100">
         <h3 className="widget_title text-lg font-bold text-gray-900 mb-3!">
-          <Link href="#" className="hover:text-red-600 transition-colors">
+          <span>
             مدل های {detailsCar.sourceName} {detailsCar.title}
-          </Link>
+          </span>
         </h3>
 
         <div className="space-y-4 flex flex-wrap">
@@ -155,9 +155,7 @@ const Sidebar = ({
       {/* ماشین‌های رقبا */}
       <div className="sidebar_widget bg-white rounded-xl p-4 shadow-sm border border-gray-100">
         <h3 className="widget_title text-lg font-bold text-gray-900 mb-3">
-          <Link href="#" className="hover:text-red-600 transition-colors">
-            ماشین های رقبا
-          </Link>
+          <span>ماشین های رقبا</span>
         </h3>
 
         <div className="space-y-4">

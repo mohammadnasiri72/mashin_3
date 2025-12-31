@@ -1,8 +1,17 @@
 "use client";
 
+import Loading from "@/app/components/loader";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
-const MotorHeroSection = ({ detailsMotorcycle }: { detailsMotorcycle: ItemsId }) => {
+const MotorHeroSection = ({
+  detailsMotorcycle,
+}: {
+  detailsMotorcycle: ItemsId;
+}) => {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   return (
     <section
       className="relative min-h-[225px] bg-cover bg-center flex sm:block items-center justify-center"
@@ -15,7 +24,8 @@ const MotorHeroSection = ({ detailsMotorcycle }: { detailsMotorcycle: ItemsId })
         <div className="text-white sm:w-auto w-full">
           <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center">
             <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative sm:text-3xl text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ce1a2a]">
-              موتورسیکلت {detailsMotorcycle.sourceName} {detailsMotorcycle.title}
+              موتورسیکلت {detailsMotorcycle.sourceName}{" "}
+              {detailsMotorcycle.title}
             </h3>
           </div>
           {/* Breadcrumb */}
@@ -24,6 +34,12 @@ const MotorHeroSection = ({ detailsMotorcycle }: { detailsMotorcycle: ItemsId })
               <li>
                 <Link
                   href={"/"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    startTransition(() => {
+                      router.push("/");
+                    });
+                  }}
                   className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
                 >
                   صفحه اصلی
@@ -36,6 +52,12 @@ const MotorHeroSection = ({ detailsMotorcycle }: { detailsMotorcycle: ItemsId })
                     <span className="mx-2">/</span>
                     <Link
                       href={b.href}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        startTransition(() => {
+                          router.push(b.href);
+                        });
+                      }}
                       className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
                     >
                       {b.title}
@@ -53,6 +75,7 @@ const MotorHeroSection = ({ detailsMotorcycle }: { detailsMotorcycle: ItemsId })
           margin: 0 8px;
         }
       `}</style>
+      {isPending && <Loading />}
     </section>
   );
 };

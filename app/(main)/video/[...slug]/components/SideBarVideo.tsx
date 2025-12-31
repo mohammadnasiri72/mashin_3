@@ -1,12 +1,17 @@
 "use client";
+import Loading from "@/app/components/loader";
 import MarketStats from "@/app/components/MarketStats";
 import NewsBlogForm from "@/app/components/NewsBlogForm";
 import { formatPersianDate, toPersianNumbers } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 import { FaCalendar, FaEye, FaPlay } from "react-icons/fa";
 
 function SidebarVideo({ videos }: { videos: Items[] }) {
+  const [isPending, startTransition] = useTransition();
+    const router = useRouter();
   return (
     <>
       <section className="px-2">
@@ -19,7 +24,12 @@ function SidebarVideo({ videos }: { videos: Items[] }) {
               </h3>
               <div className="space-y-4">
                 {videos.slice(0,6).map((video) => (
-                  <Link key={video.id} href={video.url} className="block group">
+                  <Link key={video.id} href={video.url}  onClick={(e) => {
+                e.preventDefault();
+                startTransition(() => {
+                  router.push(video.url);
+                });
+              }} className="block group">
                     <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors">
                       <div className="w-18! h-14 bg-gray-200 rounded shrink-0 overflow-hidden relative">
                         <img
@@ -61,6 +71,7 @@ function SidebarVideo({ videos }: { videos: Items[] }) {
           </div>
         </div>
       </section>
+      {isPending && <Loading />}
     </>
   );
 }

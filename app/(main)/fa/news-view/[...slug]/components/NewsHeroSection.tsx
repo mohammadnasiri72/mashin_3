@@ -1,12 +1,17 @@
 "use client";
 
+import Loading from "@/app/components/loader";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 
 const NewsHeroSection = ({ detailsNews }: { detailsNews: any }) => {
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   return (
     <section
       className="relative min-h-[300px] bg-cover bg-center flex sm:block items-center justify-center"
-     style={{ backgroundImage: "url('/images/gallery/header-1.jpg')" }}
+      style={{ backgroundImage: "url('/images/gallery/header-1.jpg')" }}
     >
       {/* Overlay */}
       <div className="absolute inset-0 bg-linear-to-r from-transparent to-black"></div>
@@ -18,13 +23,19 @@ const NewsHeroSection = ({ detailsNews }: { detailsNews: any }) => {
               {detailsNews.title}
             </h3>
           </div>
-          
+
           {/* Breadcrumb */}
           <nav className="mt-6 sm:block hidden">
             <ol className="flex items-center space-x-2 space-x-reverse flex-wrap">
               <li>
                 <Link
                   href="/"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    startTransition(() => {
+                      router.push("/");
+                    });
+                  }}
                   className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
                 >
                   صفحه اصلی
@@ -34,6 +45,12 @@ const NewsHeroSection = ({ detailsNews }: { detailsNews: any }) => {
                 <span className="mx-2">/</span>
                 <Link
                   href="/news"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    startTransition(() => {
+                      router.push("/news");
+                    });
+                  }}
                   className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
                 >
                   اخبار
@@ -41,9 +58,7 @@ const NewsHeroSection = ({ detailsNews }: { detailsNews: any }) => {
               </li>
               <li className="flex items-center">
                 <span className="mx-2">/</span>
-                <span className="text-white! text-sm">
-                  {detailsNews.title}
-                </span>
+                <span className="text-white! text-sm">{detailsNews.title}</span>
               </li>
             </ol>
           </nav>
@@ -54,7 +69,7 @@ const NewsHeroSection = ({ detailsNews }: { detailsNews: any }) => {
               {detailsNews.categoryTitle}
             </span>
             <span className="bg-[#333] px-3 py-1 rounded-full">
-              {new Date(detailsNews.created).toLocaleDateString('fa-IR')}
+              {new Date(detailsNews.created).toLocaleDateString("fa-IR")}
             </span>
             <span className="bg-[#333] px-3 py-1 rounded-full">
               بازدید: {detailsNews.visit}
@@ -69,6 +84,7 @@ const NewsHeroSection = ({ detailsNews }: { detailsNews: any }) => {
           margin: 0 8px;
         }
       `}</style>
+      {isPending && <Loading />}
     </section>
   );
 };
