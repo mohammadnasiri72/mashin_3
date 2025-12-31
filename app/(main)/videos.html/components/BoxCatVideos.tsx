@@ -1,13 +1,8 @@
-import Loading from "@/app/components/loader";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 import { FaPlay } from "react-icons/fa";
 
 function BoxCatVideos({ videosCat }: { videosCat: ItemsCategory[] }) {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   return (
     <>
       <div className="px-2 py-4">
@@ -21,16 +16,7 @@ function BoxCatVideos({ videosCat }: { videosCat: ItemsCategory[] }) {
               className="group bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 hover:border-[#ce1a2a]/40 overflow-hidden"
             >
               {/* Image Container */}
-              <Link
-                href={category.url}
-                onClick={(e) => {
-                  e.preventDefault();
-                  startTransition(() => {
-                    router.push(category.url);
-                  });
-                }}
-                className="relative block"
-              >
+              <Link href={category.url} className="relative block">
                 <div className="relative h-40 overflow-hidden group/Img">
                   <img
                     src={mainDomainOld + category.image}
@@ -49,16 +35,7 @@ function BoxCatVideos({ videosCat }: { videosCat: ItemsCategory[] }) {
 
               {/* Content */}
               <div className="p-4">
-                <Link
-                  href={category.url}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    startTransition(() => {
-                      router.push(category.url);
-                    });
-                  }}
-                  className="text-center"
-                >
+                <Link href={category.url} className="text-center">
                   <h3 className="font-bold text-gray-900 text-sm leading-relaxed hover:text-[#ce1a2a]! transition-colors duration-300 line-clamp-2 mb-2">
                     {category.title}
                   </h3>
@@ -68,7 +45,6 @@ function BoxCatVideos({ videosCat }: { videosCat: ItemsCategory[] }) {
           ))}
         </div>
       </div>
-      {isPending && <Loading />}
     </>
   );
 }

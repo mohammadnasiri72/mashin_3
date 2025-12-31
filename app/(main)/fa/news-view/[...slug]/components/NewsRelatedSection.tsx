@@ -1,15 +1,9 @@
 "use client";
 
-import Loading from "@/app/components/loader";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 
 const NewsRelatedSection = ({ relatedNews }: { relatedNews: Items[] }) => {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
-
   return (
     <section className="py-8 bg-white">
       <div className="mx-auto px-4">
@@ -40,12 +34,6 @@ const NewsRelatedSection = ({ relatedNews }: { relatedNews: Items[] }) => {
                   <span>{news.created}</span>
                   <Link
                     href={`/news/${news.id}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      startTransition(() => {
-                        router.push(`/news/${news.id}`);
-                      });
-                    }}
                     className="text-[#ce1a2a] hover:text-red-700 font-medium"
                   >
                     ادامه مطلب
@@ -65,7 +53,6 @@ const NewsRelatedSection = ({ relatedNews }: { relatedNews: Items[] }) => {
           overflow: hidden;
         }
       `}</style>
-      {isPending && <Loading />}
     </section>
   );
 };

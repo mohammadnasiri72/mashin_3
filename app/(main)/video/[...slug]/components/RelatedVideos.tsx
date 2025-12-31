@@ -1,14 +1,9 @@
-import Loading from "@/app/components/loader";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Card } from "antd";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 import { FaPlay } from "react-icons/fa";
 
 function RelatedVideos({ video, videos }: { video: ItemsId; videos: Items[] }) {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   return (
     <>
       <Card className="rounded-xl shadow-lg">
@@ -21,12 +16,6 @@ function RelatedVideos({ video, videos }: { video: ItemsId; videos: Items[] }) {
                 <Link
                   key={relatedVideo.id}
                   href={relatedVideo.url}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    startTransition(() => {
-                      router.push(relatedVideo.url);
-                    });
-                  }}
                   className="block group"
                 >
                   <div className="bg-gray-100 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
@@ -64,7 +53,6 @@ function RelatedVideos({ video, videos }: { video: ItemsId; videos: Items[] }) {
           )}
         </div>
       </Card>
-      {isPending && <Loading />}
     </>
   );
 }

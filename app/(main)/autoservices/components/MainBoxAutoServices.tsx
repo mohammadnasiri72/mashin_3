@@ -1,11 +1,10 @@
 "use client";
 
-import Loading from "@/app/components/loader";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Card, Pagination, Select } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FaCar,
   FaClock,
@@ -25,7 +24,6 @@ function MainBoxAutoServices({
   brands: ItemsCategory[];
   id: string;
 }) {
-  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -80,10 +78,8 @@ function MainBoxAutoServices({
   const clearFilters = () => {
     setSelectedBrand(null);
     setSelectedProvince(null);
-    startTransition(() => {
-      router.push("/autoservices.html", {
-        scroll: false,
-      });
+    router.push("/autoservices.html", {
+      scroll: false,
     });
   };
 
@@ -120,10 +116,8 @@ function MainBoxAutoServices({
                         setSelectedBrand(value);
                       } else {
                         setSelectedBrand(null);
-                        startTransition(() => {
-                          router.push("/autoservices.html", {
-                            scroll: false,
-                          });
+                        router.push("/autoservices.html", {
+                          scroll: false,
                         });
                       }
                     }}
@@ -135,16 +129,7 @@ function MainBoxAutoServices({
                   >
                     {brands.map((brand) => (
                       <Option key={brand.id} value={brand.id}>
-                        <Link
-                          className="text-gray-800!"
-                          href={brand.url}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            startTransition(() => {
-                              router.push(brand.url);
-                            });
-                          }}
-                        >
+                        <Link className="text-gray-800!" href={brand.url}>
                           {brand.title}
                         </Link>
                       </Option>
@@ -209,15 +194,7 @@ function MainBoxAutoServices({
                   {/* تصویر */}
                   <div className="md:w-1/4 lg:w-1/5">
                     <div className="h-full overflow-hidden rounded-r-xl md:rounded-r-none md:rounded-l-xl p-3">
-                      <Link
-                        href={service.url}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          startTransition(() => {
-                            router.push(service.url);
-                          });
-                        }}
-                      >
+                      <Link href={service.url}>
                         <img
                           src={mainDomainOld + service.image}
                           alt={service.title}
@@ -235,15 +212,7 @@ function MainBoxAutoServices({
                   <div className="flex-1 p-6">
                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
                       <div className="flex-1">
-                        <Link
-                          href={service.url}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            startTransition(() => {
-                              router.push(service.url);
-                            });
-                          }}
-                        >
+                        <Link href={service.url}>
                           <h3 className="font-bold text-gray-800 text-xl mb-2! hover:text-[#ce1a2a]! transition-colors">
                             {service.title}
                           </h3>
@@ -311,10 +280,8 @@ function MainBoxAutoServices({
                 onChange={(page) => {
                   const params = new URLSearchParams(searchParams.toString());
                   params.set("page", page.toString());
-                  startTransition(() => {
-                    router.push(`${pathname}?${params.toString()}`, {
-                      scroll: false,
-                    });
+                  router.push(`${pathname}?${params.toString()}`, {
+                    scroll: false,
                   });
                 }}
                 total={AutoServiceData[0].total}
@@ -354,7 +321,6 @@ function MainBoxAutoServices({
           }
         `}</style>
       </div>
-      {isPending && <Loading />}
     </>
   );
 }

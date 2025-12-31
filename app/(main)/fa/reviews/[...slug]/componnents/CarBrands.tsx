@@ -1,17 +1,13 @@
 "use client";
 
+import MarketStats from "@/app/components/MarketStats";
+import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
+import { useState } from "react";
 import { FaSearch, FaStar } from "react-icons/fa";
 import NewsBlogForm from "../../../../../components/NewsBlogForm";
-import { mainDomainOld } from "@/utils/mainDomain";
-import MarketStats from "@/app/components/MarketStats";
-import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
-import Loading from "@/app/components/loader";
 
 const CarBrands = ({ carBrands }: { carBrands: ItemsCategory[] }) => {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   const [term, setTerm] = useState("");
 
   // محتوای سایدبار
@@ -88,17 +84,7 @@ const CarBrands = ({ carBrands }: { carBrands: ItemsCategory[] }) => {
               {carBrands
                 .filter((e) => e.title.includes(term))
                 .map((brand) => (
-                  <Link
-                    key={brand.id}
-                    href={brand.url}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      startTransition(() => {
-                        router.push(brand.url);
-                      });
-                    }}
-                    className="group block"
-                  >
+                  <Link key={brand.id} href={brand.url} className="group block">
                     <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200">
                       {/* لوگو و نام برند */}
                       <div className="flex flex-col items-center text-center">
@@ -131,17 +117,7 @@ const CarBrands = ({ carBrands }: { carBrands: ItemsCategory[] }) => {
                 </h3>
                 <div className="space-y-4">
                   {popularCars.map((car) => (
-                    <Link
-                      key={car.id}
-                      href={car.link}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        startTransition(() => {
-                          router.push(car.link);
-                        });
-                      }}
-                      className="block group"
-                    >
+                    <Link key={car.id} href={car.link} className="block group">
                       <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                         <div className="w-16 h-12 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
                           <img
@@ -234,7 +210,6 @@ const CarBrands = ({ carBrands }: { carBrands: ItemsCategory[] }) => {
           background: #a1a1a1;
         }
       `}</style>
-      {isPending && <Loading />}
     </div>
   );
 };

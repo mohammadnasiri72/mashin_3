@@ -1,9 +1,6 @@
-import Loading from "@/app/components/loader";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Card } from "antd";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 import { FaBook } from "react-icons/fa";
 
 interface ItemsId {
@@ -28,8 +25,6 @@ function RelatedEducation({
   education: ItemsId;
   educations: Items[];
 }) {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   // فیلتر مطالب مرتبط (همان دسته‌بندی)
   const relatedEducations = educations
     .filter(
@@ -54,12 +49,6 @@ function RelatedEducation({
                 <Link
                   key={related.id}
                   href={related.url}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    startTransition(() => {
-                      router.push(related.url);
-                    });
-                  }}
                   className="block group"
                 >
                   <div className="bg-gray-100 rounded-lg overflow-hidden hover:shadow-lg transition-shadow border border-gray-200">
@@ -100,7 +89,6 @@ function RelatedEducation({
           )}
         </div>
       </Card>
-      {isPending && <Loading />}
     </>
   );
 }

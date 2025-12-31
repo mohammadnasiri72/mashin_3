@@ -19,7 +19,7 @@ export default async function RootLayout({
   const menu: MenuGroup[] = await getMenu({ langCode: "fa", menuKey: "" });
   const setting: SettingType[] = await getSetting();
   const Social: Items[] = await getItem({ TypeId: 8, langCode: "fa" });
-   const banner: Items[] = await getItem({
+  const banner: Items[] = await getItem({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6390",
@@ -30,7 +30,7 @@ export default async function RootLayout({
       <Header menu={menu} setting={setting} />
       <BannerTop banner={banner} />
       <main>{children}</main>
-      <Footer menu={menu} setting={setting} Social={Social}/>
+      <Footer menu={menu} setting={setting} Social={Social} />
     </>
   );
 }

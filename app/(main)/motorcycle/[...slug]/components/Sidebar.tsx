@@ -1,13 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useTransition } from "react";
+import { useEffect } from "react";
 
 // Fancybox
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
-import Loading from "@/app/components/loader";
-import { useRouter } from "next/navigation";
 
 const Sidebar = ({
   detailsMotorcompetitor,
@@ -16,8 +14,6 @@ const Sidebar = ({
   detailsMotorcompetitor: ItemsId[];
   detailsMotorcycle: ItemsId;
 }) => {
-  const [isPending, startTransition] = useTransition();
-    const router = useRouter();
   const shahinModels = [
     {
       image: "/images/gallery/shahin-s.jpg",
@@ -172,12 +168,7 @@ const Sidebar = ({
             >
               <div>
                 <div className="block w-full h-full">
-                  <Link href={model.url} onClick={(e) => {
-                e.preventDefault();
-                startTransition(() => {
-                  router.push(model.url);
-                });
-              }} className="block w-full h-full">
+                  <Link href={model.url} className="block w-full h-full">
                     <img
                       src={mainDomainOld + model.image}
                       alt={model.title}
@@ -213,7 +204,6 @@ const Sidebar = ({
           background: rgba(0, 0, 0, 0.8);
         }
       `}</style>
-      {isPending && <Loading />}
     </div>
   );
 };

@@ -8,12 +8,13 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 import "swiper/css/navigation";
 import { htmlToPlainText } from "@/utils/func";
+import Link from "next/link";
 
 export default function HeroSlider({ slider }: { slider: Items[] }) {
   return (
     <div className="mb-8">
       <div className="mx-auto px-4">
-        <div className="main-slider rounded-2xl overflow-hidden relative">
+        <div className="main-slider rounded-2xl overflow-hidden relative h-96">
           <Swiper
             modules={[Autoplay, Navigation]}
             speed={1000}
@@ -23,15 +24,15 @@ export default function HeroSlider({ slider }: { slider: Items[] }) {
               disableOnInteraction: false,
             }}
             loop={true}
-            className="rounded-2xl"
+            className="rounded-2xl h-96"
           >
             {slider.map((slide) => (
               <SwiperSlide key={slide.id}>
-                <div className="relative w-full h-full">
+                <div className="relative w-full h-96">
                   <img
                     src={mainDomain + slide.image}
                     alt={slide.summary || slide.title}
-                    className="object-contain w-full h-auto"
+                    className="object-cover w-full h-96"
                   />
 
                   {/* Content Overlay */}
@@ -41,10 +42,13 @@ export default function HeroSlider({ slider }: { slider: Items[] }) {
                         <h2 className="text-white! md:text-[2.5rem]! font-bold mb-4 leading-tight line-clamp-2">
                           {htmlToPlainText(slide.summary || "")}
                         </h2>
-                        <button className="text-white! px-3 py-1 relative cursor-pointer group md:text-xl! text-xs!">
+                        <Link
+                          href={slide.url || "#"}
+                          className="text-white! px-3 py-1 relative cursor-pointer group md:text-xl! text-xs!"
+                        >
                           <span className="z-10 relative">نمایش بیشتر</span>
                           <div className="absolute left-0 right-0 top-0 bottom-full bg-[#f0b542] group-hover:bottom-0 duration-300"></div>
-                        </button>
+                        </Link>
                       </div>
                     </div>
                   </div>

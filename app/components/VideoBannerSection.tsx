@@ -1,30 +1,16 @@
 "use client";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 import { FaPlay } from "react-icons/fa";
-import Loading from "./loader";
 
 const VideoBannerSection = ({ video }: { video: Items[] }) => {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   return (
     <>
       <div className="mb-5">
         <div className="flex flex-wrap px-3">
           <div className="md:w-1/2 w-full md:pl-3">
             <div className="w-full relative overflow-hidden rounded-2xl shadow-lg md:h-80 h-auto cursor-pointer">
-              <Link
-                href={video[0].url}
-                onClick={(e) => {
-                  e.preventDefault();
-                  startTransition(() => {
-                    router.push(video[0].url);
-                  });
-                }}
-                className="h-full w-full"
-              >
+              <Link href={video[0].url} className="h-full w-full">
                 <div className="relative h-full w-full">
                   <img
                     src={mainDomainOld + video[0].image}
@@ -48,16 +34,7 @@ const VideoBannerSection = ({ video }: { video: Items[] }) => {
           <div className="md:w-1/2 w-full  flex flex-wrap md:mt-0 mt-3">
             <div className="sm:w-1/2 w-full sm:pl-1.5 pl-0">
               <div className="w-full overflow-hidden rounded-2xl shadow-lg sm:h-80 h-auto cursor-pointer">
-                <Link
-                  className="h-full w-full"
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    startTransition(() => {
-                      router.push("#");
-                    });
-                  }}
-                >
+                <Link className="h-full w-full" href="#">
                   <div className="relative h-full w-full">
                     <img
                       src="/images/gallery/bn-1.jpg"
@@ -70,16 +47,7 @@ const VideoBannerSection = ({ video }: { video: Items[] }) => {
             </div>
             <div className="sm:w-1/2 w-full sm:pr-1.5 pr-0 sm:mt-0 mt-3">
               <div className="w-full overflow-hidden rounded-2xl shadow-lg sm:h-80 h-auto cursor-pointer">
-                <Link
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    startTransition(() => {
-                      router.push("#");
-                    });
-                  }}
-                  className="h-full w-full"
-                >
+                <Link href="#" className="h-full w-full">
                   <div className="relative h-full w-full">
                     <img
                       src="/images/gallery/bn-2.jpg"
@@ -93,7 +61,6 @@ const VideoBannerSection = ({ video }: { video: Items[] }) => {
           </div>
         </div>
       </div>
-      {isPending && <Loading />}
     </>
   );
 };

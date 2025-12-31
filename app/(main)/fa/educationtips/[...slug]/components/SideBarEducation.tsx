@@ -1,18 +1,13 @@
 "use client";
 
-import Loading from "@/app/components/loader";
 import MarketStats from "@/app/components/MarketStats";
 import NewsBlogForm from "@/app/components/NewsBlogForm";
 import { formatPersianDate, toPersianNumbers } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
 
 function SideBarEducation({ education }: { education: Items[] }) {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   return (
     <>
       <section className="px-2">
@@ -25,17 +20,7 @@ function SideBarEducation({ education }: { education: Items[] }) {
               </h3>
               <div className="space-y-4">
                 {education.map((edu) => (
-                  <Link
-                    href={edu.url}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      startTransition(() => {
-                        router.push(edu.url);
-                      });
-                    }}
-                    key={edu.id}
-                    className="block group"
-                  >
+                  <Link href={edu.url} key={edu.id} className="block group">
                     <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors">
                       <div className="w-18! h-14 bg-gray-200 rounded shrink-0 overflow-hidden relative">
                         <img
@@ -74,7 +59,6 @@ function SideBarEducation({ education }: { education: Items[] }) {
           </div>
         </div>
       </section>
-      {isPending && <Loading />}
     </>
   );
 }

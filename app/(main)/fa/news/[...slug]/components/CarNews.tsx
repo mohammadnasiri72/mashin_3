@@ -1,6 +1,5 @@
 "use client";
 
-import Loading from "@/app/components/loader";
 import MarketStats from "@/app/components/MarketStats";
 import NewsBlogForm from "@/app/components/NewsBlogForm";
 import {
@@ -12,7 +11,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { Pagination } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
 
 const CarNews = ({
@@ -28,7 +27,6 @@ const CarNews = ({
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
 
   const page = searchParams.get("page");
 
@@ -42,10 +40,8 @@ const CarNews = ({
   const handleChangPageIndex = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", page.toString());
-    startTransition(() => {
-      router.push(`${pathname}?${params.toString()}`, {
-        scroll: false,
-      });
+    router.push(`${pathname}?${params.toString()}`, {
+      scroll: false,
     });
   };
 
@@ -128,13 +124,6 @@ const CarNews = ({
                           : "text-black! hover:bg-[#ce1a2a]"
                       }`}
                       href={tab.href}
-                      onClick={(e) => {
-                        setActiveTab(tab.key);
-                        e.preventDefault();
-                        startTransition(() => {
-                          router.push(tab.href);
-                        });
-                      }}
                     >
                       {tab.label}
                     </Link>
@@ -158,16 +147,7 @@ const CarNews = ({
                         {/* تصویر خبر */}
                         <div className="md:w-48 w-full h-32 shrink-0">
                           <div className="w-full h-full bg-gray-200 rounded-lg overflow-hidden relative">
-                            <Link
-                              href={news.url}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                startTransition(() => {
-                                  router.push(news.url);
-                                });
-                              }}
-                              className="rounded-lg!"
-                            >
+                            <Link href={news.url} className="rounded-lg!">
                               <img
                                 src={mainDomainOld + news.image}
                                 alt={news.title}
@@ -179,15 +159,7 @@ const CarNews = ({
 
                         {/* محتوای خبر */}
                         <div className="flex-1">
-                          <Link
-                            href={news.url}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              startTransition(() => {
-                                router.push(news.url);
-                              });
-                            }}
-                          >
+                          <Link href={news.url}>
                             <h2 className="text-xl font-bold text-gray-900 mb-2 hover:text-[#ce1a2a]! duration-300 transition-colors cursor-pointer">
                               {news.title}
                             </h2>
@@ -247,12 +219,6 @@ const CarNews = ({
                       <Link
                         key={news.id}
                         href={`/news/${news.id}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          startTransition(() => {
-                            router.push(`/news/${news.id}`);
-                          });
-                        }}
                         className="block group"
                       >
                         <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors">
@@ -347,7 +313,6 @@ const CarNews = ({
           }
         `}</style>
       </div>
-      {isPending && <Loading />}
     </>
   );
 };

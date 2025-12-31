@@ -1,13 +1,8 @@
 "use client";
 
-import Loading from "@/app/components/loader";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 
 const NewsHeroSection = ({ detailsNews }: { detailsNews: any }) => {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   return (
     <section
       className="relative min-h-[300px] bg-cover bg-center flex sm:block items-center justify-center"
@@ -30,12 +25,6 @@ const NewsHeroSection = ({ detailsNews }: { detailsNews: any }) => {
               <li>
                 <Link
                   href="/"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    startTransition(() => {
-                      router.push("/");
-                    });
-                  }}
                   className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
                 >
                   صفحه اصلی
@@ -45,12 +34,6 @@ const NewsHeroSection = ({ detailsNews }: { detailsNews: any }) => {
                 <span className="mx-2">/</span>
                 <Link
                   href="/news"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    startTransition(() => {
-                      router.push("/news");
-                    });
-                  }}
                   className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
                 >
                   اخبار
@@ -84,7 +67,6 @@ const NewsHeroSection = ({ detailsNews }: { detailsNews: any }) => {
           margin: 0 8px;
         }
       `}</style>
-      {isPending && <Loading />}
     </section>
   );
 };

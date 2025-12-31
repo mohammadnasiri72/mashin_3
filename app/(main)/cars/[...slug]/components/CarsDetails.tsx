@@ -1,12 +1,10 @@
 "use client";
 
-import Loading from "@/app/components/loader";
 import NewsBlogForm from "@/app/components/NewsBlogForm";
 import { createMarkup, toPersianNumbers } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { FaCar, FaInfoCircle, FaSearch, FaStar } from "react-icons/fa";
 import MarketStats from "../../../../components/MarketStats";
 
@@ -19,8 +17,6 @@ const CarsDetails = ({
   carDetails: ItemsCategoryId;
   carView: Items[];
 }) => {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   const [carBrandsFilter, setCarBrandsFilter] = useState(carBrands);
 
   // محتوای سایدبار
@@ -163,15 +159,6 @@ const CarsDetails = ({
                           carView.filter((c) => c.categoryId === car.id)[0]
                             ?.url || ""
                         }
-                        onClick={(e) => {
-                          e.preventDefault();
-                          startTransition(() => {
-                            router.push(
-                              carView.filter((c) => c.categoryId === car.id)[0]
-                                ?.url || ""
-                            );
-                          });
-                        }}
                       >
                         <img
                           src={mainDomainOld + car.image}
@@ -185,12 +172,6 @@ const CarsDetails = ({
                           .map((ca) => (
                             <Link
                               href={ca.url}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                startTransition(() => {
-                                  router.push(ca.url);
-                                });
-                              }}
                               key={ca.id}
                               className="bg-[#ce1a2a] rounded-lg px-2 py-1 text-white! hover:bg-red-800 duration-300"
                             >
@@ -206,12 +187,6 @@ const CarsDetails = ({
                         .map((ca) => (
                           <Link
                             href={ca.url}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              startTransition(() => {
-                                router.push(ca.url);
-                              });
-                            }}
                             key={ca.id}
                             className="bg-[#ce1a2a] rounded-lg px-2 py-1 text-white! hover:bg-red-800 duration-300"
                           >
@@ -235,12 +210,6 @@ const CarsDetails = ({
                         }
                         onClick={(e) => {
                           e.preventDefault();
-                          startTransition(() => {
-                            router.push(
-                              carView.filter((c) => c.categoryId === car.id)[0]
-                                ?.url || ""
-                            );
-                          });
                         }}
                       >
                         <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
@@ -290,17 +259,7 @@ const CarsDetails = ({
                 </h3>
                 <div className="space-y-4">
                   {popularCars.map((car) => (
-                    <Link
-                      key={car.id}
-                      href={car.link}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        startTransition(() => {
-                          router.push(car.link);
-                        });
-                      }}
-                      className="block group"
-                    >
+                    <Link key={car.id} href={car.link} className="block group">
                       <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                         <div className="w-16 h-12 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
                           <img
@@ -400,7 +359,6 @@ const CarsDetails = ({
           background: #a1a1a1;
         }
       `}</style>
-      {isPending && <Loading />}
     </div>
   );
 };

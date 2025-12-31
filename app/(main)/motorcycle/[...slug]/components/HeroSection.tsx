@@ -1,17 +1,12 @@
 "use client";
 
-import Loading from "@/app/components/loader";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 
 const MotorHeroSection = ({
   detailsMotorcycle,
 }: {
   detailsMotorcycle: ItemsId;
 }) => {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   return (
     <section
       className="relative min-h-[225px] bg-cover bg-center flex sm:block items-center justify-center"
@@ -34,12 +29,6 @@ const MotorHeroSection = ({
               <li>
                 <Link
                   href={"/"}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    startTransition(() => {
-                      router.push("/");
-                    });
-                  }}
                   className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
                 >
                   صفحه اصلی
@@ -52,12 +41,6 @@ const MotorHeroSection = ({
                     <span className="mx-2">/</span>
                     <Link
                       href={b.href}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        startTransition(() => {
-                          router.push(b.href);
-                        });
-                      }}
                       className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
                     >
                       {b.title}
@@ -75,7 +58,6 @@ const MotorHeroSection = ({
           margin: 0 8px;
         }
       `}</style>
-      {isPending && <Loading />}
     </section>
   );
 };

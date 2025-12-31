@@ -1,12 +1,7 @@
-import Loading from "@/app/components/loader";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 import { FaArrowRight, FaHome, FaVideoSlash } from "react-icons/fa";
 
 function VideoNotFound() {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
   return (
     <>
       <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4">
@@ -38,12 +33,6 @@ function VideoNotFound() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/videos.html"
-              onClick={(e) => {
-                e.preventDefault();
-                startTransition(() => {
-                  router.push("/videos.html");
-                });
-              }}
               className="flex items-center justify-center gap-2 bg-[#ce1a2a] text-white! px-6 py-3 rounded-lg hover:bg-red-700 transition-all duration-300 font-medium shadow-lg hover:shadow-xl"
             >
               <FaVideoSlash className="w-4 h-4" />
@@ -53,12 +42,6 @@ function VideoNotFound() {
 
             <Link
               href="/"
-              onClick={(e) => {
-                e.preventDefault();
-                startTransition(() => {
-                  router.push("/");
-                });
-              }}
               className="flex items-center justify-center gap-2 border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-all duration-300 font-medium"
             >
               <FaHome className="w-4 h-4" />
@@ -67,7 +50,6 @@ function VideoNotFound() {
           </div>
         </div>
       </div>
-      {isPending && <Loading />}
     </>
   );
 }
