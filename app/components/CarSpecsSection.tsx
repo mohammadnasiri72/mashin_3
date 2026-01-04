@@ -10,7 +10,15 @@ import "swiper/css/navigation";
 import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-const CarSpecsSection = ({ carSpecs }: { carSpecs: Items[] }) => {
+const CarSpecsSection = ({
+  carSpecs,
+  Properties,
+}: {
+  carSpecs: Items[];
+  Properties: properties[];
+}) => {
+
+ 
 
   const swiperRef = useRef<any>(null);
 
@@ -104,37 +112,43 @@ const CarSpecsSection = ({ carSpecs }: { carSpecs: Items[] }) => {
               loop={true}
               className="car-specs-swiper"
             >
-              {carSpecs.map((car) => (
-                <SwiperSlide key={car.id}>
-                  <div className="bg-gray-100 rounded-2xl p-4 h-full">
-                    {/* تصویر خودرو */}
-                    <div className="relative rounded-xl overflow-hidden mb-3 bg-[#bfbfbf]">
-                      <Link href={car.url} className="">
-                        <div className="aspect-2/1 relative">
-                          <img
-                            src={mainDomainOld + car.image}
-                            alt={car.title}
-                            className="object-contain w-full h-28 brightness-75!"
-                          />
-                        </div>
-                      </Link>
-                      <div className="absolute bottom-2 right-2">
-                        {/* <div className="text-white! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 after:bg-[#ce1a2a]">
+              {carSpecs.map((car) => {
+                const propertyCar = Properties.filter(
+                  (e) => e.itemId === car.id
+                )
+                  .filter((e) => e.isTechnicalProperty)
+                  .slice(0, 4);
+                return (
+                  <SwiperSlide key={car.id}>
+                    <div className="bg-gray-100 rounded-2xl p-4 h-full">
+                      {/* تصویر خودرو */}
+                      <div className="relative rounded-xl overflow-hidden mb-3 bg-[#bfbfbf]">
+                        <Link href={car.url} className="">
+                          <div className="aspect-2/1 relative">
+                            <img
+                              src={mainDomainOld + car.image}
+                              alt={car.title}
+                              className="object-contain w-full h-28 brightness-75!"
+                            />
+                          </div>
+                        </Link>
+                        <div className="absolute bottom-2 right-2">
+                          {/* <div className="text-white! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 after:bg-[#ce1a2a]">
                           <h3 className="text-xl font-bold! text-gray-700!">
                             {car.title}
                           </h3>
                         </div> */}
-                        <div className="pr-3">
-                          <h3 className="text-white! font-bold! inline-block relative text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 after:bg-[#ce1a2a]">
-                            {car.title}
-                          </h3>
+                          <div className="pr-3">
+                            <h3 className="text-white! font-bold! inline-block relative text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 after:bg-[#ce1a2a]">
+                              {car.title}
+                            </h3>
+                          </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* مشخصات فنی */}
-                    <div className="grid grid-cols-2 gap-2">
-                      {/* {car.specs.map((spec, index) => (
+                      {/* مشخصات فنی */}
+                      <div className="grid grid-cols-2 gap-2 h-50">
+                        {/* {car.specs.map((spec, index) => (
                         <div
                           key={index}
                           className="flex items-center bg-white rounded-lg p-2"
@@ -158,35 +172,36 @@ const CarSpecsSection = ({ carSpecs }: { carSpecs: Items[] }) => {
                           </div>
                         </div>
                       ))} */}
-                      {[1, 2, 3, 4].map((spec, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center bg-white rounded-lg p-2"
-                        >
-                          <div className="ml-2 shrink-0"></div>
-                          <div className="text-xs">
-                            <div className="font-bold text-gray-900">
-                              {spec}
-                            </div>
-                            <div className="text-gray-500 text-[10px] mt-1">
-                              {spec}
+                        {propertyCar.map((spec, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center bg-white rounded-lg p-2 h-20"
+                          >
+                            <div className="ml-2 shrink-0"></div>
+                            <div className="text-xs">
+                              <div className="font-bold text-gray-900">
+                                {spec.title}
+                              </div>
+                              <div className="text-gray-500 text-[10px] mt-1">
+                                {spec.propertyValue}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
 
-                    {/* دکمه نمایش بیشتر */}
-                    <Link
-                      href={car.url}
-                      className="flex items-center justify-center gap-1 text-center py-2 text-[#ce1a2a]! text-sm mt-3 rounded-lg  hover:bg-[#ce1a2a] hover:text-white! transition-colors duration-300 font-medium"
-                    >
-                      <span>نمایش بیشتر</span>
-                      <FaArrowLeftLong className="" />
-                    </Link>
-                  </div>
-                </SwiperSlide>
-              ))}
+                      {/* دکمه نمایش بیشتر */}
+                      <Link
+                        href={car.url}
+                        className="flex items-center justify-center gap-1 text-center py-2 text-[#ce1a2a]! text-sm mt-3 rounded-lg  hover:bg-[#ce1a2a] hover:text-white! transition-colors duration-300 font-medium"
+                      >
+                        <span>نمایش بیشتر</span>
+                        <FaArrowLeftLong className="" />
+                      </Link>
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
             </Swiper>
           </div>
         </div>

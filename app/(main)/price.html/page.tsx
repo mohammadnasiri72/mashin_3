@@ -9,16 +9,8 @@ async function pagePrice({
 }) {
   const searchParam = await searchParams;
   const type = String(searchParam.type);
-
   const brands: PriceBrands[] = await getPriceBrands(type);
   const price: Price[] = await getPrice({ Type: type, BrandId: -1 });
-
-  // const headersList = await headers();
-
-  // const ip =
-  //   headersList.get("x-forwarded-for") ||
-  //   headersList.get("x-real-ip") ||
-  //   "unknown";
 
   return <PriceCar brands={brands} price={price} />;
 }

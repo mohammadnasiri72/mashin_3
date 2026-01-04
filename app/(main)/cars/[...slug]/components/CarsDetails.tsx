@@ -50,61 +50,6 @@ const CarsDetails = ({
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4">
-        {/* هدر صفحه با اطلاعات برند */}
-        <div className="mb-8 bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <div className="flex flex-col md:flex-row items-center gap-6">
-            {/* لوگو برند */}
-            <div className="w-24 h-24 overflow-hidden flex items-center justify-center bg-gray-50 rounded-xl">
-              <img
-                src={mainDomainOld + carDetails.image}
-                alt={carDetails.title}
-                className="object-contain w-20 h-20"
-              />
-            </div>
-
-            {/* اطلاعات برند */}
-            <div className="flex-1 text-center md:text-right">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {carDetails.title}
-              </h1>
-              {carDetails.seoTitle && (
-                <p className="text-gray-600 text-lg mb-3">
-                  {carDetails.seoTitle}
-                </p>
-              )}
-
-              {/* اطلاعات آماری */}
-              <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-4">
-                <div className="flex items-center gap-2 bg-red-50 px-3 py-2 rounded-lg">
-                  <FaCar className="text-red-600" />
-                  <span className="text-sm font-medium text-gray-700">
-                    {toPersianNumbers(carBrands.length)} مدل
-                  </span>
-                </div>
-
-                {carDetails.created && (
-                  <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg">
-                    <FaInfoCircle className="text-blue-600" />
-                    <span className="text-sm font-medium text-gray-700">
-                      فعالیت از {new Date(carDetails.created).getFullYear()}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* توضیحات برند */}
-          {carDetails.summary && (
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <div
-                className="prose prose-sm max-w-none text-justify text-gray-600"
-                dangerouslySetInnerHTML={createMarkup(carDetails.summary)}
-              />
-            </div>
-          )}
-        </div>
-
         <div className="flex flex-col lg:flex-row gap-6">
           {/* محتوای اصلی - 3/4 صفحه */}
           <div className="lg:w-3/4 w-full">
@@ -135,9 +80,18 @@ const CarsDetails = ({
 
             {/* عنوان بخش مدل‌ها */}
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">
-                مدل‌های <span className="text-red-600">{carDetails.title}</span>
-              </h2>
+              <div className="flex items-center">
+                <img
+                  src={mainDomainOld + carDetails.image}
+                  alt={carDetails.title}
+                  className="object-contain w-20 h-20"
+                />
+                <h2 className="text-2xl font-bold text-gray-900 ">
+                  مدل‌های{" "}
+                  <span className="text-red-600">{carDetails.title}</span>{" "}
+                  <span className="text-red-600">({carDetails.seoTitle})</span>
+                </h2>
+              </div>
               <span className="text-gray-500 text-sm">
                 {toPersianNumbers(carBrands.length)} مدل
               </span>
@@ -251,37 +205,7 @@ const CarsDetails = ({
           {/* سایدبار - 1/4 صفحه */}
           <div className="lg:w-1/4 w-full">
             <div className="space-y-6">
-              {/* محبوب ترین خودروهای بازار */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <FaStar className="text-yellow-500" />
-                  محبوب ترین خودروهای بازار
-                </h3>
-                <div className="space-y-4">
-                  {popularCars.map((car) => (
-                    <Link key={car.id} href={car.link} className="block group">
-                      <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="w-16 h-12 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
-                          <img
-                            src={car.image}
-                            alt={car.name}
-                            className="object-cover w-full h-full"
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 text-sm group-hover:text-red-600 transition-colors">
-                            {car.name}
-                          </h4>
-                          <p className="text-xs text-gray-500">{car.brand}</p>
-                          <p className="text-xs font-bold text-red-600 mt-1">
-                            {car.price}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
+             
 
               {/* آمار بازار */}
               <MarketStats />

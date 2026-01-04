@@ -5,7 +5,7 @@ import { postComment } from "@/services/Comment/postComment";
 import { formatPersianDate, Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Button, Form, Input, Spin } from "antd";
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { FaFlag, FaReply, FaThumbsDown, FaThumbsUp } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 import { useSelector } from "react-redux";
@@ -170,10 +170,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   const [openLogin, setOpenLogin] = useState<boolean>(false);
   const [parentId, setParentId] = useState<number>(0);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
-  const [pageIndex, setPageIndex] = useState<number>(1); // صفحه فعلی
-  const [pageSize] = useState<number>(3); // تعداد کامنت‌ها در هر صفحه
-  const [allComments, setAllComments] = useState<Comment[]>(comments); // تمام کامنت‌های بارگذاری شده
-  const [totalComments, setTotalComments] = useState<number>(0); // تعداد کل کامنت‌ها
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const [pageSize] = useState<number>(10);
+  const [allComments, setAllComments] = useState<Comment[]>(comments);
+  const [totalComments, setTotalComments] = useState<number>(0);
 
   const token = useSelector((state: RootState) => state.token.token);
   const user = Cookies.get("user");
@@ -191,7 +191,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   }, [user]);
 
   useEffect(() => {
-    // مقداردهی اولیه total از اولین کامنت
     if (comments.length > 0) {
       setTotalComments(comments[0].total || 0);
     }
@@ -221,7 +220,29 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         setOpenModalCommentReplay(false);
         
         // بعد از ثبت کامنت جدید، کامنت‌ها را از صفحه اول مجدد بارگیری کنید
-        await loadComments(1, false);
+        setPageIndex(1);
+        setLoadingMore(true);
+        try {
+          const newComments = await getComment({
+            id: Number(id),
+            langCode: "fa",
+            type: 0,
+            pageSize: 10,
+            pageIndex: 1,
+          });
+          setAllComments(newComments);
+          if (newComments.length > 0) {
+            setTotalComments(newComments[0].total || 0);
+          }
+        } catch (error) {
+          console.error("Error refreshing comments:", error);
+          Toast.fire({
+            icon: "error",
+            title: "خطا در دریافت نظرات جدید",
+          });
+        } finally {
+          setLoadingMore(false);
+        }
         
         Toast.fire({
           icon: "success",
@@ -242,52 +263,37 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     }
   };
 
-  // تابع بارگیری کامنت‌ها
-  const loadComments = useCallback(async (targetPageIndex: number, isLoadMore = false) => {
+  // تابع ساده برای بارگیری کامنت‌های بیشتر
+  const handleLoadMore = async () => {
+    if (loadingMore) return;
+    
+    setLoadingMore(true);
     try {
-      if (isLoadMore) {
-        setLoadingMore(true);
-      }
-
-      const response: CommentResponse[] = await getComment({
+      const nextPageIndex = pageIndex + 1;
+      
+      const response = await getComment({
         id: Number(id),
         langCode: "fa",
         type: 0,
         pageSize: pageSize,
-        pageIndex: targetPageIndex,
+        pageIndex: nextPageIndex,
       });
 
       if (response.length > 0) {
-        // به‌روزرسانی total اگر اولین کامنت جدید total متفاوت داشت
-        if (response[0].total !== totalComments) {
-          setTotalComments(response[0].total);
-        }
-
-        // تبدیل کامنت‌های جدید به آرایه
-        const newComments = response.map((comment: any) => comment);
-
-        if (isLoadMore) {
-          // اضافه کردن کامنت‌های جدید به کامنت‌های موجود
-          setAllComments(prev => [...prev, ...newComments]);
-        } else {
-          // تنظیم کامنت‌های جدید (برای بارگذاری اولیه یا رفرش)
-          setAllComments(newComments);
-        }
-
-        setPageIndex(targetPageIndex);
+        // اضافه کردن کامنت‌های جدید به کامنت‌های موجود
+        setAllComments(prev => [...prev, ...response]);
+        setPageIndex(nextPageIndex);
       }
     } catch (error) {
-      console.error("Error loading comments:", error);
+      console.error("Error loading more comments:", error);
       Toast.fire({
         icon: "error",
-        title: "خطا در دریافت نظرات",
+        title: "خطا در دریافت نظرات بیشتر",
       });
     } finally {
-      if (isLoadMore) {
-        setLoadingMore(false);
-      }
+      setLoadingMore(false);
     }
-  }, [id, pageSize, totalComments]);
+  };
 
   // تبدیل کامنت‌ها به ساختار درختی
   const commentTree = useMemo<CommentTreeNode[]>(() => {
@@ -342,11 +348,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   const handleReplyClick = (commentId: number) => {
     setParentId(commentId);
     setOpenModalCommentReplay(true);
-  };
-
-  const handleLoadMore = async () => {
-    const nextPageIndex = pageIndex + 1;
-    await loadComments(nextPageIndex, true);
   };
 
   // بررسی آیا کامنت بیشتری برای نمایش وجود دارد یا خیر
@@ -452,13 +453,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                   {/* دکمه نمایش بیشتر */}
                   {hasMoreComments && (
                     <div className="text-center mt-6 pt-4 border-t border-gray-200">
-                      <Button
-                        type="default"
-                        size="large"
+                      <button
                         onClick={handleLoadMore}
-                        loading={loadingMore}
                         disabled={loadingMore}
-                        className="min-w-48 bg-white hover:bg-gray-50 border border-red-200 text-red-600 hover:text-red-700 hover:border-red-300 transition-all"
+                        className="min-w-48 bg-white hover:bg-gray-50 border border-red-200 text-red-600 hover:text-red-700 hover:border-red-300 transition-all py-2 px-6 rounded-lg font-medium"
                       >
                         {loadingMore ? (
                           <>
@@ -473,11 +471,9 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                             </span>
                           </>
                         )}
-                      </Button>
+                      </button>
                     </div>
                   )}
-                  
-                 
                 </>
               ) : (
                 <div className="text-center py-8 text-gray-500">

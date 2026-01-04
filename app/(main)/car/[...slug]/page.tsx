@@ -6,6 +6,8 @@ import ContentTabs from "../components/ContentTabs";
 import FeaturesSection from "../components/FeaturesSection";
 import HeroSection from "../components/HeroSection";
 import { getComment } from "@/services/Comment/Comment";
+import { getPollId } from "@/services/Poll/pollId";
+import { getItem } from "@/services/Item/Item";
 
 async function page({
   params,
@@ -19,9 +21,8 @@ async function page({
   const id = searchParam.id;
   const Attachment: ItemsAttachment[] = await getAttachment(Number(id));
   const detailsCar: ItemsId = await getItemId(Number(id));
-
   const detailsCarcompetitor: ItemsId[] = detailsCar.properties.filter(
-    (e) => e.propertyId === 22643
+    (e) => e.propertyKey === "p1042_relatedcars"
   )[0]?.value
     ? await getItemByIds(
         detailsCar.properties.filter((e) => e.propertyId === 22643)[0]?.value
@@ -32,14 +33,27 @@ async function page({
     id: Number(id),
     langCode: "fa",
     type: 0,
-    pageSize: 3,
+    pageSize: 10,
     pageIndex: 1,
+  });
+  const pollData: PollData = await getPollId(Number(id));
+
+  const carsModel: Items[] = await getItem({
+    TypeId: 1042,
+    langCode: "fa",
+    CategoryIdArray: detailsCar.sourceLink,
+    PageIndex: 1,
+    PageSize: 5,
   });
 
   return (
     <>
       <HeroSection detailsCar={detailsCar} />
-      <CarDetails Attachment={Attachment} detailsCar={detailsCar} />
+      <CarDetails
+        Attachment={Attachment}
+        detailsCar={detailsCar}
+        initialPollData={pollData}
+      />
       <FeaturesSection detailsCar={detailsCar} />
       <ContentTabs
         Attachment={Attachment}
@@ -47,6 +61,7 @@ async function page({
         detailsCarcompetitor={detailsCarcompetitor}
         comments={comments}
         id={Number(id)}
+        carsModel={carsModel}
       />
     </>
   );

@@ -21,16 +21,16 @@ const ContentTabs = ({
   Attachment,
   detailsCarcompetitor,
   comments,
-  id
+  id,
+  carsModel,
 }: {
   detailsCar: ItemsId;
   Attachment: ItemsAttachment[];
   detailsCarcompetitor: ItemsId[];
-  comments:CommentResponse[]
-  id:number
+  comments: CommentResponse[];
+  id: number;
+  carsModel: Items[];
 }) => {
- 
-
   const [activeKey, setActiveKey] = useState("review");
   const [isSticky, setIsSticky] = useState(false);
   const navbarRef = useRef<HTMLDivElement>(null);
@@ -202,7 +202,11 @@ const ContentTabs = ({
       </div>
       <div className=" flex lg:flex-row-reverse gap-3 lg:flex-nowrap flex-wrap">
         <div className="lg:w-1/4 w-full mt-6">
-          <Sidebar detailsCarcompetitor={detailsCarcompetitor} detailsCar={detailsCar}/>
+          <Sidebar
+            detailsCarcompetitor={detailsCarcompetitor}
+            detailsCar={detailsCar}
+            carsModel={carsModel}
+          />
         </div>
         <div className="lg:w-3/4 w-full ">
           {/* Navigation Tabs */}
@@ -221,11 +225,14 @@ const ContentTabs = ({
                   className="section-anchor"
                   ref={technicalRef}
                 >
-                  <TechnicalSection detailsCar={detailsCar}/>
+                  <TechnicalSection detailsCar={detailsCar} />
                 </div>
 
                 <div id="images" className="section-anchor" ref={imagesRef}>
-                  <GallerySection Attachment={Attachment} detailsCar={detailsCar}/>
+                  <GallerySection
+                    Attachment={Attachment}
+                    detailsCar={detailsCar}
+                  />
                 </div>
 
                 <div id="faq" className="section-anchor" ref={faqRef}>
@@ -237,7 +244,7 @@ const ContentTabs = ({
         </div>
       </div>
       <div id="comments" className="section-anchor py-5" ref={commentsRef}>
-        <CommentsSection detailsCar={detailsCar} comments={comments} id={id}/>
+        <CommentsSection detailsCar={detailsCar} comments={comments} id={id} />
       </div>
       <style jsx global>{`
         .content-tabs-container {

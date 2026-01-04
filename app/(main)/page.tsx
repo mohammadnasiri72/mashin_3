@@ -13,6 +13,7 @@ import PopularCarsSection from "../components/PopularCarsSection";
 import ServicesSection from "../components/ServicesSection";
 import VideoBannerSection from "../components/VideoBannerSection";
 import { getCategory } from "@/services/Category/Category";
+import { getPropertyIds } from "@/services/Property/propertyIds";
 
 export default async function Home() {
   const slider: Items[] = await getItem({ TypeId: 6, langCode: "fa" });
@@ -56,18 +57,26 @@ export default async function Home() {
   const carSpecs: Items[] = await getItem({
     TypeId: 1042,
     langCode: "fa",
+    IsHome: 1,
     PageIndex: 1,
     PageSize: 12,
   });
+  let Properties: properties[] = [];
+  if (carSpecs.length > 0) {
+    Properties = await getPropertyIds(
+      carSpecs.map((item) => item.id).join(",")
+    );
+  }
+
   const carView: Items[] = await getItem({
     TypeId: 1042,
     langCode: "fa",
-    OrderBy: 5,
+    OrderBy: 8,
     PageIndex: 1,
     PageSize: 12,
   });
 
-  const brandMotor : ItemsCategory[] = await getCategory({
+  const brandMotor: ItemsCategory[] = await getCategory({
     TypeId: 1052,
     LangCode: "fa",
     ParentIdArray: 6059,
@@ -98,7 +107,7 @@ export default async function Home() {
         <NewsListSection news={news} />
 
         {/* Car Specs Section */}
-        <CarSpecsSection carSpecs={carSpecs} />
+        <CarSpecsSection carSpecs={carSpecs} Properties={Properties}/>
 
         {/* Popular Cars Section */}
         <PopularCarsSection carView={carView} />
@@ -110,7 +119,7 @@ export default async function Home() {
         <CarBrandPricesSection />
 
         {/* Motorcycle Brands Section */}
-        <MotorcycleBrandsSection brands={brandMotor}/>
+        <MotorcycleBrandsSection brands={brandMotor} />
 
         {/* Car Finder Section */}
         <CarFinderSection />

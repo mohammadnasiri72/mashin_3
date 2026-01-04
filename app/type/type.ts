@@ -24,7 +24,7 @@ interface ItemParams {
   langCode: string;
   CategoryIdArray?: string;
   IsActive?: boolean;
-  IsHome?: boolean;
+  IsHome?: number;
   Amount1?: number;
   Amount2?: number;
   FilterProps?: string;
@@ -387,4 +387,39 @@ interface PostCommentResponse {
   created: string;
   modified: null;
   item: null;
+}
+
+interface ItemFindByTermParams {
+  term: string;
+  typeId: number;
+  langCode: string;
+  pageSize: number;
+  pageIndex: number;
+}
+interface ItemsFindByTerm {
+  id: number;
+  title: string;
+  url: string;
+  typeId: number;
+  type: string;
+  image: string;
+}
+interface pollDetails {
+  questionId: number;
+  questionTitle: string;
+  avgScore: number;
+}
+interface PollData {
+  maxScore: number;
+  pollNumber: number;
+  pollScore: number;
+  pollDetails: pollDetails[];
+}
+interface pollScoreDto {
+  questionId: number;
+  score: number;
+}
+interface PollSaveParam {
+  caseId: number;
+  pollScoreDto: pollScoreDto[];
 }

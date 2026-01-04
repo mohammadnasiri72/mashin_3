@@ -15,6 +15,8 @@ import ProfileDropdown from "./ProfileDropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setToken } from "@/redux/slice/token";
+import SearchBoxHeader from "./SearchBoxHeader";
+import SearchBoxHeaderMobile from "./SearchBoxHeaderMobile";
 const Cookies = require("js-cookie");
 
 export default function Header({
@@ -326,17 +328,8 @@ export default function Header({
             <div className="w-full lg:w-1/3 xl:w-5/12 flex items-center">
               <div className="flex items-center lg:justify-between justify-end w-full">
                 {/* Search Box */}
-                <div className="hidden lg:block flex-1 max-w-md">
-                  <div className="bg-[#f1f2f4] rounded-lg px-4 py-2 flex items-center border border-transparent hover:border-gray-300 transition-all duration-300">
-                    <IoSearch className="text-lg text-[#656565]!" />
-                    <input
-                      type="text"
-                      className="bg-transparent text-[13px] w-full pr-2 outline-none placeholder-[#777] font-medium"
-                      placeholder="دنبال چی میگردی؟"
-                      required
-                    />
-                  </div>
-                </div>
+                <SearchBoxHeader />
+                
                 <div className="w-44 ">
                   {isLoading && <LoadingSkeletonAuth />}
                   {!token && !isLoading && (
@@ -362,15 +355,8 @@ export default function Header({
         <div className={`lg:hidden bg-[#ce1a2a] transition-all duration-300`}>
           <div className="flex items-center justify-between">
             {/* Search Box */}
-            <div className="grow bg-[#d1182b] rounded-lg p-4 flex items-center mr-4">
-              <IoSearch className="text-white! text-lg" />
-              <input
-                type="text"
-                className="bg-transparent text-sm w-full pr-2 outline-none text-white! placeholder-white font-medium"
-                placeholder="جستجو"
-                required
-              />
-            </div>
+            <SearchBoxHeaderMobile />
+           
 
             {/* Close Button */}
             <button
