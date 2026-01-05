@@ -22,11 +22,23 @@ async function pageWhichCars({
     TypeId: 1045,
     langCode: "fa",
     PageSize: 15,
+    PageIndex: 1,
+    OrderBy: 8,
+  });
+
+  const banner: Items[] = await getItem({
+    TypeId: 1051,
+    langCode: "fa",
+    CategoryIdArray: "6415",
   });
 
   return (
     <>
-      <WhichCars whichCars={whichCars} popularComparisons={popularComparisons}/>
+      <WhichCars
+        whichCars={whichCars}
+        popularComparisons={popularComparisons}
+        banner={banner}
+      />
     </>
   );
 }

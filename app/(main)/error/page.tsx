@@ -1,8 +1,8 @@
 "use client";
 
 import { Suspense } from "react";
-import Loading from "../components/loader";
 import ErrorContent from "./ErrorContent";
+import Loading from "@/app/components/loader";
 
 export default function ErrorPage() {
   return (

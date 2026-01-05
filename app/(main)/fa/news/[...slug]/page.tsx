@@ -1,5 +1,6 @@
 import { getItem } from "@/services/Item/Item";
 import CarNews from "./components/CarNews";
+import { redirect } from "next/navigation";
 
 async function pageNewsDetails({
   params,
@@ -32,12 +33,29 @@ async function pageNewsDetails({
   const popularNews: Items[] = await getItem({
     TypeId: 5,
     langCode: "fa",
-    OrderBy: 5,
+    OrderBy: 8,
     PageIndex: 1,
     PageSize: 5,
   });
 
-  return <CarNews id={id} newsData={news} popularNews={popularNews} />;
+  const banner: Items[] = await getItem({
+    TypeId: 1051,
+    langCode: "fa",
+    CategoryIdArray: "6415",
+  });
+
+  if (news.length > 0) {
+    return (
+      <CarNews
+        id={id}
+        newsData={news}
+        popularNews={popularNews}
+        banner={banner}
+      />
+    );
+  } else {
+    redirect(`/error?status=${404}`);
+  }
 }
 
 export default pageNewsDetails;

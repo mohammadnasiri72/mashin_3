@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCategoryByUrl } from "./services/Category/CategoryByUrl";
 import { getItemByUrl } from "./services/Item/ItemByUrl";
 import { getItemId } from "./services/Item/ItemId";
+import { getCategoryId } from "./services/Category/CategoryId";
 
 export async function middleware(request: Request) {
   const url = new URL(request.url);
@@ -30,7 +31,10 @@ export async function middleware(request: Request) {
     const id = searchParams.get("id");
 
     if (!id) {
-      return NextResponse.next();
+      return NextResponse.redirect(
+        new URL(`/error?status=${404}`, request.url),
+        { status: 301 }
+      );
     }
 
     try {
@@ -70,13 +74,74 @@ export async function middleware(request: Request) {
         );
       }
     } catch (error: any) {
-      const status = error.response?.status || error.status || 500;
-      return NextResponse.redirect(
-        new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
-      );
+      // const status = error.response?.status || error.status || 500;
+      // return NextResponse.redirect(
+      //   new URL(`/error?status=${status}`, request.url),
+      //   { status: 301 }
+      // );
     }
-  } else {
+  } else if (pathname.startsWith("/fa/reviews/")) {
+    try {
+      const pathParts = pathname.split("/");
+      let id = null;
+      for (let i = pathParts.length - 1; i >= 0; i--) {
+        const num = Number(pathParts[i]);
+        if (!isNaN(num)) {
+          id = num;
+          break;
+        }
+      }
+
+      if (id !== null) {
+        const data: ItemsCategoryId = await getCategoryId(Number(id));
+        const decodedPathname = decodeURIComponent(pathname);
+
+        if (data?.url && data.url !== decodedPathname) {
+          return NextResponse.redirect(new URL(data.url, request.url), {
+            status: 301,
+          });
+        }
+      }
+    } 
+    catch (error: any) {
+      // const status = error.response?.status || error.status || 500;
+      // return NextResponse.redirect(
+      //   new URL(`/error?status=${status}`, request.url),
+      //   { status: 301 }
+      // );
+    }
+  }
+   else if (pathname.startsWith("/fa/news/")) {
+    try {
+      const pathParts = pathname.split("/");
+      let id = null;
+      for (let i = pathParts.length - 1; i >= 0; i--) {
+        const num = Number(pathParts[i]);
+        if (!isNaN(num)) {
+          id = num;
+          break;
+        }
+      }
+
+      if (id !== null) {
+        const data: ItemsCategoryId = await getCategoryId(Number(id));
+        const decodedPathname = decodeURIComponent(pathname);
+
+        if (data?.url && data.url !== decodedPathname) {
+          return NextResponse.redirect(new URL(data.url, request.url), {
+            status: 301,
+          });
+        }
+      }
+    } catch (error: any) {
+      // const status = error.response?.status || error.status || 500;
+      // return NextResponse.redirect(
+      //   new URL(`/error?status=${status}`, request.url),
+      //   { status: 301 }
+      // );
+    }
+  } 
+  else {
     const decodedPathname = decodeURIComponent(pathname);
     if (decodedPathname !== decodedPathname.toLowerCase()) {
       return NextResponse.redirect(

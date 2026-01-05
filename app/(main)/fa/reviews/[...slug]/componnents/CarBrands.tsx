@@ -7,36 +7,10 @@ import { useState } from "react";
 import { FaSearch, FaStar } from "react-icons/fa";
 import NewsBlogForm from "../../../../../components/NewsBlogForm";
 
-const CarBrands = ({ carBrands }: { carBrands: ItemsCategory[] }) => {
+const CarBrands = ({ carBrands , banner}: { carBrands: ItemsCategory[] , banner:Items[]}) => {
   const [term, setTerm] = useState("");
 
-  // محتوای سایدبار
-  const popularCars = [
-    {
-      id: 1,
-      name: "شاهین پلاس",
-      brand: "ایران خودرو",
-      image: "/images/gallery/shahin-plus.jpg",
-      price: "۱,۲۹۰,۰۰۰,۰۰۰ تومان",
-      link: "#",
-    },
-    {
-      id: 2,
-      name: "تارا پلاس",
-      brand: "ایران خودرو",
-      image: "/images/gallery/shahin-plus.jpg",
-      price: "۱,۴۵۰,۰۰۰,۰۰۰ تومان",
-      link: "#",
-    },
-    {
-      id: 3,
-      name: "تیگو ۷ پرو",
-      brand: "چری",
-      image: "/images/gallery/shahin-plus.jpg",
-      price: "۱,۸۲۰,۰۰۰,۰۰۰ تومان",
-      link: "#",
-    },
-  ];
+ 
 
   const parentTitle =
     carBrands[0].parentId === 6059
@@ -109,43 +83,19 @@ const CarBrands = ({ carBrands }: { carBrands: ItemsCategory[] }) => {
           {/* سایدبار - 1/4 صفحه */}
           <div className="lg:w-1/4 w-full">
             <div className="space-y-6">
-              {/* محبوب ترین خودروهای بازار */}
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <FaStar className="text-yellow-500" />
-                  محبوب ترین خودروهای بازار
-                </h3>
-                <div className="space-y-4">
-                  {popularCars.map((car) => (
-                    <Link key={car.id} href={car.link} className="block group">
-                      <div className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                        <div className="w-16 h-12 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
-                          <img
-                            src={car.image}
-                            alt={car.name}
-                            className="object-cover w-full h-full"
-                          />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-gray-900 text-sm group-hover:text-red-600 transition-colors">
-                            {car.name}
-                          </h4>
-                          <p className="text-xs text-gray-500">{car.brand}</p>
-                          <p className="text-xs font-bold text-red-600 mt-1">
-                            {car.price}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
+              {banner.length > 0 &&
+                banner.map((ban) => (
+                  <div className="w-full" key={ban.id}>
+                    <img
+                      className="w-full"
+                      src={mainDomainOld + ban.image}
+                      alt={ban.title}
+                    />
+                  </div>
+                ))}
 
               {/* آمار بازار */}
               <MarketStats />
-
-              {/* خبرنامه */}
-              <NewsBlogForm />
             </div>
           </div>
         </div>

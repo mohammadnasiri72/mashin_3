@@ -1,11 +1,8 @@
-import React from 'react'
+import { redirect } from "next/navigation";
 
 function pageCars() {
-  return (
-    <div>
-      pageCars
-    </div>
-  )
+  const encodedPath = encodeURIComponent("خودرو-های-بازار");
+  redirect(`/fa/reviews/6058/${encodedPath}.html`);
 }
 
-export default pageCars
+export default pageCars;

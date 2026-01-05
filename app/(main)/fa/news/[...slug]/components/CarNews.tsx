@@ -18,10 +18,12 @@ const CarNews = ({
   id,
   newsData,
   popularNews,
+  banner,
 }: {
   id: number;
   newsData: Items[];
   popularNews: Items[];
+  banner: Items[];
 }) => {
   const [activeTab, setActiveTab] = useState<string>("all");
   const router = useRouter();
@@ -252,12 +254,18 @@ const CarNews = ({
                     ))}
                   </div>
                 </div>
-
+                {banner.length > 0 &&
+                  banner.map((ban) => (
+                    <div className="w-full" key={ban.id}>
+                      <img
+                        className="w-full"
+                        src={mainDomainOld + ban.image}
+                        alt={ban.title}
+                      />
+                    </div>
+                  ))}
                 {/* آمار بازار */}
                 <MarketStats />
-
-                {/* خبرنامه */}
-                <NewsBlogForm />
               </div>
             </div>
           </div>

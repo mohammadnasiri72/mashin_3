@@ -232,7 +232,7 @@ function MainBoxAutoService({ detailsAuto , comments , id}: { detailsAuto: Items
 
         .navbar-tabs.sticky {
           position: sticky;
-          top: 120px;
+          top: 110px;
           left: 0;
           right: 0;
           z-index: 1000;
@@ -258,7 +258,7 @@ function MainBoxAutoService({ detailsAuto , comments , id}: { detailsAuto: Items
         }
 
         .section-anchor {
-          scroll-margin-top: 120px;
+          scroll-margin-top: 110px;
         }
 
         @keyframes slideDown {

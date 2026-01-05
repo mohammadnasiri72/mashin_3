@@ -67,7 +67,7 @@ function PriceCar({
   ];
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<number | null>(null);
   const [searchText, setSearchText] = useState("");
   const [filteredData, setFilteredData] = useState<Price[]>(price);
   const [isMobile, setIsMobile] = useState(false);
@@ -99,7 +99,7 @@ function PriceCar({
 
     // فیلتر بر اساس برند انتخاب شده
     if (selectedBrand) {
-      filtered = filtered.filter((item) => item.brandTitle === selectedBrand);
+      filtered = filtered.filter((item) => item.brandId === selectedBrand);
     }
 
     // فیلتر بر اساس جستجو
@@ -203,105 +203,6 @@ function PriceCar({
       </div>
     );
   };
-  // کامپوننت فیلتر موبایل
-  const MobileFilterSection = () => {
-    const [showFilters, setShowFilters] = useState(false);
-
-    return (
-      <div className="mb-6!">
-        {/* دکمه نمایش فیلترها */}
-        <div className="flex gap-2 mb-4!">
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex-1 bg-white border border-gray-300 rounded-xl py-3 flex items-center justify-center gap-2"
-          >
-            <span className="text-gray-700 font-medium">فیلترها</span>
-            <div className="w-6 h-6 rounded-full bg-[#ce1a2a] text-white flex items-center justify-center text-xs">
-              {
-                [selectedCategory, selectedBrand, searchText].filter(Boolean)
-                  .length
-              }
-            </div>
-          </button>
-          <button
-            onClick={handleResetFilters}
-            className="px-4 bg-gray-100 border border-gray-300 rounded-xl py-3 flex items-center justify-center gap-2"
-          >
-            <ReloadOutlined />
-          </button>
-        </div>
-
-        {/* بخش فیلترها */}
-        {showFilters && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4!">
-            {/* دسته‌بندی‌ها */}
-            <div className="mb-4!">
-              <h4 className="font-bold text-gray-800 mb-3!">دسته‌بندی</h4>
-              <div className="flex flex-wrap gap-2">
-                {mainCategories.map((category) => (
-                  <button
-                    key={category.id}
-                    onClick={() => router.push(category.url)}
-                    className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                      selectedCategory === category.id
-                        ? "bg-[#ce1a2a] text-white"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                  >
-                    {category.title}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* برندها */}
-            {selectedCategory && (
-              <div className="mb-4!">
-                <div className="flex justify-between items-center mb-3!">
-                  <h4 className="font-bold text-gray-800">برندها</h4>
-                  <span className="text-xs text-gray-500">
-                    {filteredBrands.length} برند
-                  </span>
-                </div>
-                <div className="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-1">
-                  {filteredBrands.map((brand) => (
-                    <button
-                      key={brand.id}
-                      onClick={() =>
-                        setSelectedBrand(
-                          selectedBrand === brand.title ? null : brand.title
-                        )
-                      }
-                      className={`px-3 py-2 rounded-lg text-sm transition-colors whitespace-nowrap ${
-                        selectedBrand === brand.title
-                          ? "bg-[#ce1a2a] text-white"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      {brand.title}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* جستجو */}
-            <div className="mb-2!">
-              <h4 className="font-bold text-gray-800 mb-3!">جستجو</h4>
-              <Input
-                placeholder="جستجو در برند و مدل..."
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                prefix={<SearchOutlined className="text-gray-400" />}
-                className="rounded-lg"
-                size="large"
-              />
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-4 px-3 sm:px-4 lg:px-8">
@@ -324,15 +225,54 @@ function PriceCar({
           className="shadow-md border-0 rounded-xl overflow-hidden"
           style={{ borderColor: PRIMARY_LIGHT }}
         >
-          <div className="flex justify-between items-center mb-4!">
-            <h3 className="text-lg font-bold text-gray-800">
-              لیست قیمت خودروها ({filteredData.length})
+          <div
+            className={` flex-col sm:flex-row gap-3 items-center w-full mb-4! ${
+              isMobile ? "flex" : "hidden"
+            }`}
+          >
+            <div className="flex-1 w-full">
+              <Input
+                placeholder="جستجو در برند و مدل خودرو..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                prefix={<SearchOutlined className="text-gray-400" />}
+                className="rounded-lg hover:border-[#ce1a2a] focus:border-[#ce1a2a] focus:shadow-sm"
+                size="large"
+                style={{ borderColor: "#e5e7eb" }}
+              />
+            </div>
+          </div>
+          <div
+            className={`flex justify-between items-center mb-4! ${
+              isMobile ? "flex-wrap" : "flex-nowrap"
+            }`}
+          >
+            <h3 className="text-lg font-bold text-gray-800 whitespace-nowrap">
+              لیست قیمت خودروها ({filteredData.length} مورد)
             </h3>
+            {/* Search and Filters for Desktop */}
+            <div
+              className={` flex-col sm:flex-row gap-3 items-center w-full px-5 ${
+                isMobile ? "hidden" : "flex"
+              }`}
+            >
+              <div className="flex-1 w-full">
+                <Input
+                  placeholder="جستجو در برند و مدل خودرو..."
+                  value={searchText}
+                  onChange={(e) => setSearchText(e.target.value)}
+                  prefix={<SearchOutlined className="text-gray-400" />}
+                  className="rounded-lg hover:border-[#ce1a2a] focus:border-[#ce1a2a] focus:shadow-sm"
+                  size="large"
+                  style={{ borderColor: "#e5e7eb" }}
+                />
+              </div>
+            </div>
             <span
               onClick={() => {
                 setShowFilter(true);
               }}
-              className="text-sm text-white px-3 py-1 rounded cursor-pointer"
+              className="text-sm text-white px-3 py-1 rounded cursor-pointer whitespace-nowrap"
               style={{ backgroundColor: PRIMARY_COLOR }}
             >
               نمایش فیلترها
@@ -369,7 +309,10 @@ function PriceCar({
                       className="w-auto! max-w-none!"
                     >
                       <div
-                        onClick={() => router.push(category.url)}
+                        onClick={() => {
+                          router.push(category.url);
+                          setSelectedBrand(null);
+                        }}
                         className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 cursor-pointer transition-all duration-300 ${
                           selectedCategory === category.id
                             ? "bg-slate-700 text-white!"
@@ -448,23 +391,24 @@ function PriceCar({
                         className="w-auto! max-w-none!"
                       >
                         <div
-                          onClick={() =>
+                          onClick={() => {
                             setSelectedBrand(
-                              selectedBrand === brand.title ? null : brand.title
-                            )
-                          }
+                              selectedBrand === brand.id ? null : brand.id
+                            );
+                            setShowFilter(false);
+                          }}
                           className={`inline-flex items-center rounded-lg px-3 py-2 cursor-pointer transition-all duration-300 min-w-[100px] justify-center ${
-                            selectedBrand === brand.title
+                            selectedBrand === brand.id
                               ? "text-white shadow-sm"
                               : "bg-slate-200! hover:bg-slate-300!  text-gray-700 hover:text-[#ce1a2a]!"
                           }`}
                           style={{
                             backgroundColor:
-                              selectedBrand === brand.title
+                              selectedBrand === brand.id
                                 ? PRIMARY_COLOR
                                 : "white",
                             borderColor:
-                              selectedBrand === brand.title
+                              selectedBrand === brand.id
                                 ? PRIMARY_COLOR
                                 : "#d1d5db",
                           }}
@@ -478,26 +422,6 @@ function PriceCar({
                   </Swiper>
                 </Card>
               )}
-
-              {/* Search and Filters for Desktop */}
-              {/* <Card
-                className="mb-6! shadow-md border-0 rounded-xl hidden md:block"
-                style={{ borderColor: PRIMARY_LIGHT }}
-              >
-                <div className="flex flex-col sm:flex-row gap-3 items-center">
-                  <div className="flex-1 w-full">
-                    <Input
-                      placeholder="جستجو در برند و مدل خودرو..."
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      prefix={<SearchOutlined className="text-gray-400" />}
-                      className="rounded-lg hover:border-[#ce1a2a] focus:border-[#ce1a2a] focus:shadow-sm"
-                      size="large"
-                      style={{ borderColor: "#e5e7eb" }}
-                    />
-                  </div>
-                </div>
-              </Card> */}
             </>
           </div>
           {showFilter && (

@@ -9,8 +9,10 @@ import { FaBalanceScale, FaCalendar, FaEye } from "react-icons/fa";
 
 function SideBarCompareCars({
   popularComparisons,
+  banner,
 }: {
   popularComparisons: Items[];
+  banner: Items[];
 }) {
   return (
     <>
@@ -63,12 +65,18 @@ function SideBarCompareCars({
             ))}
           </div>
         </div>
-
+        {banner.length > 0 &&
+          banner.map((ban) => (
+            <div className="w-full" key={ban.id}>
+              <img
+                className="w-full"
+                src={mainDomainOld + ban.image}
+                alt={ban.title}
+              />
+            </div>
+          ))}
         {/* آمار بازار */}
         <MarketStats />
-
-        {/* خبرنامه */}
-        <NewsBlogForm />
       </div>
     </>
   );

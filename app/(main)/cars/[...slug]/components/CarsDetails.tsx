@@ -12,40 +12,14 @@ const CarsDetails = ({
   carBrands,
   carDetails,
   carView,
+  banner,
 }: {
   carBrands: ItemsCategory[];
   carDetails: ItemsCategoryId;
   carView: Items[];
+  banner: Items[];
 }) => {
   const [carBrandsFilter, setCarBrandsFilter] = useState(carBrands);
-
-  // محتوای سایدبار
-  const popularCars = [
-    {
-      id: 1,
-      name: "شاهین پلاس",
-      brand: "ایران خودرو",
-      image: "/images/gallery/shahin-plus.jpg",
-      price: "۱,۲۹۰,۰۰۰,۰۰۰ تومان",
-      link: "#",
-    },
-    {
-      id: 2,
-      name: "تارا پلاس",
-      brand: "ایران خودرو",
-      image: "/images/gallery/shahin-plus.jpg",
-      price: "۱,۴۵۰,۰۰۰,۰۰۰ تومان",
-      link: "#",
-    },
-    {
-      id: 3,
-      name: "تیگو ۷ پرو",
-      brand: "چری",
-      image: "/images/gallery/shahin-plus.jpg",
-      price: "۱,۸۲۰,۰۰۰,۰۰۰ تومان",
-      link: "#",
-    },
-  ];
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
@@ -205,13 +179,19 @@ const CarsDetails = ({
           {/* سایدبار - 1/4 صفحه */}
           <div className="lg:w-1/4 w-full">
             <div className="space-y-6">
-             
+              {banner.length > 0 &&
+                banner.map((ban) => (
+                  <div className="w-full" key={ban.id}>
+                    <img
+                      className="w-full"
+                      src={mainDomainOld + ban.image}
+                      alt={ban.title}
+                    />
+                  </div>
+                ))}
 
               {/* آمار بازار */}
               <MarketStats />
-
-              {/* خبرنامه */}
-              <NewsBlogForm />
             </div>
           </div>
         </div>

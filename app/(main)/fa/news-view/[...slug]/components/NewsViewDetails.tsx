@@ -13,13 +13,17 @@ function NewsViewDetails({
   popularNews,
   Attachment,
   comments,
-  id
+  id,
+  banner,
+  relatedNews
 }: {
   detailsNews: ItemsId;
   popularNews: Items[];
   Attachment: ItemsAttachment[];
   comments:CommentResponse[]
   id:number
+  banner:Items[]
+  relatedNews:Items[]
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
@@ -149,7 +153,7 @@ function NewsViewDetails({
     },
     {
       key: "3",
-      label: "اخبار مشابه",
+      label: "اخبار مرتبط",
     },
     {
       key: "4",
@@ -203,8 +207,8 @@ function NewsViewDetails({
         </Card>
       </div>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-wrap items-start">
+      <div className="py-8 ">
+        <div className="flex flex-wrap items-start ">
           {/* محتوای اصلی */}
           <div className="lg:w-3/4 w-full">
             <div className="space-y-8">
@@ -221,16 +225,16 @@ function NewsViewDetails({
                 />
               </div>
 
-              {/* بخش اخبار مشابه */}
-              <div id="related" className="section-anchor" ref={relatedRef}>
-                <NewsRelatedSection relatedNews={popularNews} />
+              {/* بخش اخبار مرتبط */}
+              <div id="related" className="section-anchor px-4" ref={relatedRef}>
+                <NewsRelatedSection relatedNews={relatedNews} />
               </div>
             </div>
           </div>
 
           {/* سایدبار */}
-          <div className="lg:w-1/4 w-full">
-            <SidebarNewsView popularNews={popularNews} />
+          <div className="lg:w-1/4 w-full ">
+            <SidebarNewsView popularNews={popularNews} banner={banner}/>
           </div>
         </div>
 
@@ -257,7 +261,7 @@ function NewsViewDetails({
 
         .navbar-tabs.sticky {
           position: sticky;
-          top: 120px;
+          top: 110px;
           left: 0;
           right: 0;
           z-index: 1000;
@@ -300,7 +304,7 @@ function NewsViewDetails({
 
         @media (min-width: 1024px) {
           .navbar-tabs.sticky {
-            top: 65px;
+            top: 65px !important;
           }
           .section-anchor {
             scroll-margin-top: 100px;
@@ -313,7 +317,7 @@ function NewsViewDetails({
             font-size: 12px;
           }
           .section-anchor {
-            scroll-margin-top: 120px;
+            scroll-margin-top: 110px;
           }
         }
       `}</style>

@@ -5,7 +5,13 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 import { FaCalendar, FaEye } from "react-icons/fa";
 
-function SidebarNewsView({ popularNews }: { popularNews: Items[] }) {
+function SidebarNewsView({
+  popularNews,
+  banner,
+}: {
+  popularNews: Items[];
+  banner: Items[];
+}) {
   return (
     <>
       <section className="py-8 bg-gray-50">
@@ -48,12 +54,18 @@ function SidebarNewsView({ popularNews }: { popularNews: Items[] }) {
                 ))}
               </div>
             </div>
-
+            {banner.length > 0 &&
+              banner.map((ban) => (
+                <div className="w-full" key={ban.id}>
+                  <img
+                    className="w-full"
+                    src={mainDomainOld + ban.image}
+                    alt={ban.title}
+                  />
+                </div>
+              ))}
             {/* آمار بازار */}
             <MarketStats />
-
-            {/* خبرنامه */}
-            <NewsBlogForm />
           </div>
         </div>
       </section>

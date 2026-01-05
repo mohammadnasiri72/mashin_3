@@ -15,9 +15,11 @@ import SideBarWhichCars from "./SideBarWhichCars";
 const WhichCars = ({
   whichCars,
   popularComparisons,
+  banner
 }: {
   whichCars: Items[];
   popularComparisons: Items[];
+  banner: Items[];
 }) => {
   // استخراج نام خودروها از عنوان برای نمایش بهتر
   const extractCarNames = (title: string) => {
@@ -142,7 +144,7 @@ const WhichCars = ({
 
           {/* سایدبار - 1/4 صفحه */}
           <div className="lg:w-1/4 w-full">
-            <SideBarWhichCars popularComparisons={popularComparisons} />
+            <SideBarWhichCars popularComparisons={popularComparisons} banner={banner}/>
           </div>
         </div>
       </div>

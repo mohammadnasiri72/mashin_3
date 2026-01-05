@@ -26,6 +26,12 @@ async function pageAutoService({
     PageIndex: 1,
   });
 
+   const banner: Items[] = await getItem({
+      TypeId: 1051,
+      langCode: "fa",
+      CategoryIdArray: "6415",
+    });
+
   return (
     <>
       <div className="flex flex-wrap bg-gray-50">
@@ -33,7 +39,7 @@ async function pageAutoService({
           <MainBoxAutoService AutoServiceData={AutoServiceData} brands={brands} id={id}/>
         </div>
         <div className="lg:w-1/4 w-full">
-          <SidebarAutoService />
+          <SidebarAutoService banner={banner}/>
         </div>
       </div>
     </>

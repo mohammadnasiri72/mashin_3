@@ -15,10 +15,23 @@ async function pageNewsViewDetails({
   const searchParam = await searchParams;
   const id = Number(param.slug[0]);
   const detailsNews: ItemsId = await getItemId(Number(id));
+
+  let relatedNews: Items[] = [];
+
+  if (detailsNews.categoryId) {
+    relatedNews = await getItem({
+      TypeId: 5,
+      langCode: "fa",
+      PageIndex: 1,
+      PageSize: 15,
+      CategoryIdArray: String(detailsNews.categoryId),
+    });
+  }
+
   const popularNews: Items[] = await getItem({
     TypeId: 5,
     langCode: "fa",
-    OrderBy: 5,
+    OrderBy: 8,
     PageIndex: 1,
     PageSize: 5,
   });
@@ -32,6 +45,11 @@ async function pageNewsViewDetails({
     pageIndex: 1,
   });
 
+  const banner: Items[] = await getItem({
+    TypeId: 1051,
+    langCode: "fa",
+    CategoryIdArray: "6415",
+  });
 
   return (
     <NewsViewDetails
@@ -40,6 +58,8 @@ async function pageNewsViewDetails({
       popularNews={popularNews}
       comments={comments}
       id={Number(id)}
+      banner={banner}
+      relatedNews={relatedNews}
     />
   );
 }

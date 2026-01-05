@@ -14,12 +14,14 @@ function CompareCars({
   popularComparisons,
   comments,
   id,
+  banner
 }: {
   whichcars: ItemsId;
   dataCompare: ItemsId[];
   popularComparisons: Items[];
   comments: CommentResponse[];
   id: number;
+  banner:Items[]
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
@@ -184,7 +186,7 @@ function CompareCars({
       </div>
 
       {/* باکس تب ها */}
-      <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 mt-4">
+      <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 mt-4 mb-8">
         <Card
           style={{ padding: 0, margin: 0 }}
           className="rounded-xl shadow-lg"
@@ -199,7 +201,7 @@ function CompareCars({
         </Card>
       </div>
 
-      <div className="flex flex-wrap items-start">
+      <div className="flex flex-col lg:flex-row gap-6 px-4">
         <div className="lg:w-3/4 w-full">
           <div className="space-y-8">
             {/* بخش محتوای اصلی مقایسه */}
@@ -216,7 +218,7 @@ function CompareCars({
         </div>
         {/* سایدبار */}
         <div className="lg:w-1/4 w-full">
-          <SideBarCompareCars popularComparisons={popularComparisons} />
+          <SideBarCompareCars popularComparisons={popularComparisons} banner={banner}/>
         </div>
       </div>
 
@@ -242,7 +244,7 @@ function CompareCars({
 
         .navbar-tabs.sticky {
           position: sticky;
-          top: 120px;
+          top: 110px;
           left: 0;
           right: 0;
           z-index: 1000;
@@ -268,7 +270,7 @@ function CompareCars({
         }
 
         .section-anchor {
-          scroll-margin-top: 120px;
+          scroll-margin-top: 110px;
         }
 
         @keyframes slideDown {

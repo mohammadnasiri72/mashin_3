@@ -30,15 +30,23 @@ async function pageWhichcarsDainamic({
     TypeId: 1045,
     langCode: "fa",
     PageSize: 15,
+    PageIndex: 1,
+    OrderBy: 8,
   });
 
-   const comments: CommentResponse[] = await getComment({
-      id: Number(id),
-      langCode: "fa",
-      type: 0,
-      pageSize: 20,
-      pageIndex: 1,
-    });
+  const banner: Items[] = await getItem({
+    TypeId: 1051,
+    langCode: "fa",
+    CategoryIdArray: "6415",
+  });
+
+  const comments: CommentResponse[] = await getComment({
+    id: Number(id),
+    langCode: "fa",
+    type: 0,
+    pageSize: 20,
+    pageIndex: 1,
+  });
 
   return (
     <>
@@ -46,8 +54,9 @@ async function pageWhichcarsDainamic({
         whichcars={whichcars}
         dataCompare={dataCompare}
         popularComparisons={popularComparisons}
-        comments= {comments}
+        comments={comments}
         id={Number(id)}
+        banner={banner}
       />
     </>
   );
