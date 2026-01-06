@@ -26,7 +26,7 @@ function BoxCatVideos({ videosCat }: { videosCat: ItemsCategory[] }) {
 
                   {/* Play Button Overlay */}
                   <div className="absolute inset-0 bg-black/30 group-hover/Img:bg-black/20 transition-colors duration-300 flex items-center justify-center">
-                    <div className="bg-[#ce1a2a] text-white p-3 rounded-full transform group-hover/Img:scale-125 transition-transform duration-300 shadow-lg">
+                    <div className="bg-[#ce1a2a] text-white! p-3 rounded-full transform group-hover/Img:scale-125 transition-transform duration-300 shadow-lg">
                       <FaPlay className="text-sm ml-0.5" />
                     </div>
                   </div>

@@ -14,12 +14,16 @@ import SideBarEducation from "./SideBarEducation";
 
 const EducationCar = ({
   education,
+  educationPopular,
   educationCat,
   id,
+  banner
 }: {
   education: Items[];
+  educationPopular: Items[];
   educationCat: ItemsCategory[];
   id: number;
+  banner:Items[]
 }) => {
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
@@ -158,7 +162,7 @@ const EducationCar = ({
 
           {/* سایدبار - 1/4 صفحه */}
           <div className="lg:w-1/4 w-full">
-            <SideBarEducation education={education} />
+            <SideBarEducation educationPopular={educationPopular} banner={banner}/>
           </div>
         </div>
       </div>

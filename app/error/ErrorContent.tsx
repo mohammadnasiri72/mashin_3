@@ -66,7 +66,7 @@ export default function ErrorContent() {
       400: "text-orange-500",
       401: "text-yellow-500",
       403: "text-[#ce1a2a]!",
-      404: "text-purple-500",
+      404: "text-[#ce1a2a]!",
       500: "text-[#ce1a2a]!",
       502: "text-[#ce1a2a]!",
       503: "text-blue-500",
@@ -126,7 +126,7 @@ export default function ErrorContent() {
           <div className="flex flex-wrap gap-3 justify-center">
             <button
               onClick={() => router.push("/")}
-              className="flex items-center cursor-pointer gap-2 px-6 py-3 bg-linear-to-r from-blue-500 to-purple-500 text-white rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-medium shadow-sm"
+              className="flex items-center cursor-pointer gap-2 px-6 py-3 bg-linear-to-r from-red-400 to-[#ce1a2a] text-white! rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-medium shadow-sm"
             >
               <FaHome className="w-4 h-4" />
               صفحه اصلی
@@ -140,7 +140,7 @@ export default function ErrorContent() {
 
           {/* Decorative Line */}
           <div className="mt-8">
-            <div className="w-24 h-1 bg-linear-to-r from-transparent via-gray-300 to-transparent mx-auto rounded-full"></div>
+            <div className="w-24 h-1 bg-linear-to-r from-transparent via-red-300 to-transparent mx-auto rounded-full"></div>
           </div>
         </div>
       </div>

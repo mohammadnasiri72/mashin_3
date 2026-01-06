@@ -28,7 +28,7 @@ function HeaderAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
               <div className="flex flex-col items-start justify-center">
                 <h1 className="text-3xl font-bold mb-2! text-white!">{detailsAuto.title}</h1>
                 <div className="flex items-center">
-                  <Tag color="red" className="text-white font-medium">
+                  <Tag color="red" className="text-white! font-medium">
                     {detailsAuto.categoryTitle}
                   </Tag>
                   <div className="flex items-center mr-4">

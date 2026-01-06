@@ -24,6 +24,7 @@ function MainBoxAutoServices({
   brands: ItemsCategory[];
   id: string;
 }) {
+  
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -89,7 +90,7 @@ function MainBoxAutoServices({
         {/* هدر */}
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-800 mb-4">
-            مراکز و نمایندگی های خدمات خودرو{" "}
+            مراکز و نمایندگی های خدمات خودرو
             <span className="text-[#ce1a2a]!">{titleBrandSelected}</span>
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
@@ -102,7 +103,7 @@ function MainBoxAutoServices({
           {/* فیلترها */}
           <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
             <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-              <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+              <div className="flex flex-col lg:flex-row gap-4 w-full lg:w-auto">
                 {/* فیلتر برند */}
                 <div className="flex flex-wrap items-center gap-2">
                   <label className="block whitespace-nowrap text-sm font-medium text-gray-700">
@@ -124,7 +125,7 @@ function MainBoxAutoServices({
                     placeholder="انتخاب برند..."
                     allowClear
                     showSearch
-                    className="w-52"
+                    className="w-full"
                     size="large"
                   >
                     {brands.map((brand) => (
@@ -156,7 +157,7 @@ function MainBoxAutoServices({
                         .toLowerCase()
                         .includes(input.toLowerCase());
                     }}
-                    className="w-52"
+                    className="w-full!"
                     size="large"
                   >
                     {provinces.map((province) => (
@@ -169,12 +170,14 @@ function MainBoxAutoServices({
               </div>
 
               {/* دکمه پاک کردن فیلترها */}
-              <button
-                onClick={clearFilters}
-                className="bg-gray-500 cursor-pointer text-white px-6 py-2 rounded-lg font-medium hover:bg-gray-600 transition-colors whitespace-nowrap mt-6 lg:mt-0"
-              >
-                پاک کردن فیلترها
-              </button>
+              {pathname !== "/autoservices.html" && (
+                <button
+                  onClick={clearFilters}
+                  className="bg-gray-500 cursor-pointer text-white! px-6 py-2 rounded-lg font-medium hover:bg-gray-600 transition-colors whitespace-nowrap mt-6 lg:mt-0"
+                >
+                  پاک کردن فیلترها
+                </button>
+              )}
             </div>
           </div>
 
@@ -219,7 +222,7 @@ function MainBoxAutoServices({
                         </Link>
 
                         <div className="flex flex-wrap gap-2 mb-3 items-start">
-                          <span className="bg-[#ce1a2a] text-white px-2 py-1 rounded-full text-xs! font-medium">
+                          <span className="bg-[#ce1a2a] text-white! px-2 py-1 rounded-full text-xs! font-medium">
                             {service.categoryTitle}
                           </span>
                           <div className="flex items-center bg-yellow-50 px-3 py-1 rounded-full">
@@ -258,7 +261,7 @@ function MainBoxAutoServices({
 
                     {/* دکمه‌های اقدام */}
                     <div className="flex gap-3 items-start text-xs!">
-                      <button className="bg-[#ce1a2a] font-bold! cursor-pointer text-white py-2 px-3 rounded-lg hover:bg-red-700 transition-colors flex items-center">
+                      <button className="bg-[#ce1a2a] font-bold! cursor-pointer text-white! py-2 px-3 rounded-lg hover:bg-red-700 transition-colors flex items-center">
                         <FaPhone className="ml-2" />
                         تماس
                       </button>
@@ -305,7 +308,7 @@ function MainBoxAutoServices({
               </p>
               <button
                 onClick={clearFilters}
-                className="bg-[#ce1a2a] text-white cursor-pointer px-6 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors"
+                className="bg-[#ce1a2a] text-white! cursor-pointer px-6 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors"
               >
                 نمایش همه نمایندگی‌ها
               </button>

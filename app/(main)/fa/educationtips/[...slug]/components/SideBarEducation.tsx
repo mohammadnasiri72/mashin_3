@@ -7,7 +7,15 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 import { FaCalendar, FaEye } from "react-icons/fa";
 
-function SideBarEducation({ education }: { education: Items[] }) {
+function SideBarEducation({
+  educationPopular,
+  banner,
+}: {
+  educationPopular: Items[];
+  banner: Items[];
+}) {
+  console.log(educationPopular.filter((e)=>e.id===3177));
+  
   return (
     <>
       <section className="px-2">
@@ -19,7 +27,7 @@ function SideBarEducation({ education }: { education: Items[] }) {
                 محبوب ترین نکات آموزشی خودرو
               </h3>
               <div className="space-y-4">
-                {education.map((edu) => (
+                {educationPopular.map((edu) => (
                   <Link href={edu.url} key={edu.id} className="block group">
                     <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors">
                       <div className="w-18! h-14 bg-gray-200 rounded shrink-0 overflow-hidden relative">
@@ -50,12 +58,19 @@ function SideBarEducation({ education }: { education: Items[] }) {
                 ))}
               </div>
             </div>
+            {banner.length > 0 &&
+              banner.map((ban) => (
+                <div className="w-full" key={ban.id}>
+                  <img
+                    className="w-full"
+                    src={mainDomainOld + ban.image}
+                    alt={ban.title}
+                  />
+                </div>
+              ))}
 
             {/* آمار بازار */}
             <MarketStats />
-
-            {/* خبرنامه */}
-            <NewsBlogForm />
           </div>
         </div>
       </section>

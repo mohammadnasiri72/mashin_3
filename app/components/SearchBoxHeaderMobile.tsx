@@ -174,7 +174,7 @@ function SearchBoxHeaderMobile() {
             {/* Header */}
             <div className="bg-[#d1182b] p-4 flex items-center justify-between">
               <div className="flex items-center flex-1">
-                <IoSearch className="text-white text-lg ml-2" />
+                <IoSearch className="text-white! text-lg ml-2" />
                 <input
                   ref={inputRef}
                   value={term}

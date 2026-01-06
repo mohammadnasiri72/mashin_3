@@ -274,7 +274,7 @@ const CarBrandPricesSection = ({
                   <div
                     className={`brand-box flex flex-col items-center text-center p-5 h-44 border border-gray-200 rounded-2xl relative bg-white cursor-pointer transition-all duration-300 ${
                       activeBrand === brand.id
-                        ? "bg-linear-to-b from-red-500 to-[#ce1a2a] text-white shadow-lg"
+                        ? "bg-linear-to-b from-red-500 to-[#ce1a2a] text-white! shadow-lg"
                         : "hover:shadow-md"
                     }`}
                     onClick={() => handleBrandClick(brand.id)}

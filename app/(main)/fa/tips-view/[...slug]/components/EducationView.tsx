@@ -165,7 +165,7 @@ function EducationView({
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <button className="bg-[#ce1a2a] cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+              <button className="bg-[#ce1a2a] cursor-pointer text-white! px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
                 اشتراک گذاری
               </button>
             </div>

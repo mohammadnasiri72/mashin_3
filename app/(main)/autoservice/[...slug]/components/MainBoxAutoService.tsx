@@ -11,7 +11,7 @@ import IntroductionAutoService from "./IntroductionAutoService";
 import ServicesAutoService from "./ServicesAutoService";
 import SidebarAutoService from "./SidebarAutoService";
 
-function MainBoxAutoService({ detailsAuto , comments , id}: { detailsAuto: ItemsId , comments:CommentResponse[] , id:number}) {
+function MainBoxAutoService({ detailsAuto , comments , id , banner}: { detailsAuto: ItemsId , comments:CommentResponse[] , id:number , banner:Items[]}) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
   const navbarRef = useRef<HTMLDivElement>(null);
@@ -206,7 +206,7 @@ function MainBoxAutoService({ detailsAuto , comments , id}: { detailsAuto: Items
 
           {/* سایدبار */}
           <div className="lg:w-1/4 w-full mt-6 lg:mt-0">
-            <SidebarAutoService />
+            <SidebarAutoService banner={banner}/>
           </div>
         </div>
         {/* بخش نظرات */}

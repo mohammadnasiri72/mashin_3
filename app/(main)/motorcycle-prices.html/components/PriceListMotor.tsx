@@ -162,7 +162,7 @@ function PriceListMotor({ brand }: { brand: any[] }) {
           <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="bg-[#ce1a2a] p-3 rounded-xl">
-                <FaMotorcycle className="text-white text-2xl" />
+                <FaMotorcycle className="text-white! text-2xl" />
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-[#ce1a2a] whitespace-nowrap">
@@ -221,10 +221,10 @@ function PriceListMotor({ brand }: { brand: any[] }) {
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div className="flex items-center gap-4">
                           <div className="bg-white/20 p-3 rounded-xl border border-white/30">
-                            <GiSteeringWheel className="text-white text-xl" />
+                            <GiSteeringWheel className="text-white! text-xl" />
                           </div>
                           <div>
-                            <h2 className="text-xl font-bold text-white mb-1">
+                            <h2 className="text-xl font-bold text-white! mb-1">
                               {brandItem.brandName}
                             </h2>
                             <div className="flex items-center gap-4">
@@ -235,7 +235,7 @@ function PriceListMotor({ brand }: { brand: any[] }) {
                                   className="text-amber-300 text-sm"
                                   character={<FaStar />}
                                 />
-                                <span className="text-white font-medium text-sm">
+                                <span className="text-white! font-medium text-sm">
                                   ({brandItem.rating})
                                 </span>
                               </div>

@@ -1,11 +1,8 @@
-import React from 'react'
+import { redirect } from "next/navigation";
 
 function pageMotorcycle() {
-  return (
-    <div>
-      pageMotorcycle
-    </div>
-  )
+  const encodedPath = encodeURIComponent("موتور-سیکلت");
+  redirect(`/fa/Reviews/6059/${encodedPath}.html`);
 }
 
-export default pageMotorcycle
+export default pageMotorcycle;

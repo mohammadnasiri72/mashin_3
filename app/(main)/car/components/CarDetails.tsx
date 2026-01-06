@@ -315,7 +315,7 @@ const CarDetails = ({
                           (rating) => rating === 0
                         )
                           ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                          : "bg-[#ce1a2a] text-white hover:bg-[#b01625]"
+                          : "bg-[#ce1a2a] text-white! hover:bg-[#b01625]"
                       }`}
                     >
                       {isSubmitting ? (
@@ -363,7 +363,7 @@ const CarDetails = ({
                   </div>
                   <button
                     onClick={() => setIsRatingMode(true)}
-                    className="mt-4 md:mt-0 mr-2 bg-red-50 duration-300 rounded-lg text-[#ce1a2a] hover:bg-[#ce1a2a] hover:text-white transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
+                    className="mt-4 md:mt-0 mr-2 bg-red-50 duration-300 rounded-lg text-[#ce1a2a] hover:bg-[#ce1a2a] hover:text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
                   >
                     <FaCommentDots className="ml-2" />
                     نظر دادن
@@ -388,7 +388,7 @@ const CarDetails = ({
                 ].map((action, index) => (
                   <div
                     key={index}
-                    className="bg-[#ce1a2a] text-white px-4 py-2 text-xs text-center whitespace-nowrap"
+                    className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap"
                   >
                     <action.icon className="inline ml-1" />
                     {action.text}

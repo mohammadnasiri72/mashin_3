@@ -126,15 +126,15 @@ function ContactUsAutoService() {
               />
             </div>
 
-            <button className="w-full cursor-pointer bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 transition-colors flex items-center justify-center">
+            <button className="w-full cursor-pointer bg-teal-600 text-white! py-3 rounded-lg font-medium hover:bg-teal-700 transition-colors flex items-center justify-center">
               <FaMapMarkerAlt className="ml-2" />
               مسیریابی
             </button>
-            <button className="w-full cursor-pointer bg-red-600 text-white py-3 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center">
+            <button className="w-full cursor-pointer bg-red-600 text-white! py-3 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center">
               <FaPhone className="ml-2" />
               تماس تلفنی
             </button>
-            <button className="w-full cursor-pointer bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center">
+            <button className="w-full cursor-pointer bg-green-600 text-white! py-3 rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center">
               <FaWhatsapp className="ml-2" />
               ارتباط در واتساپ
             </button>

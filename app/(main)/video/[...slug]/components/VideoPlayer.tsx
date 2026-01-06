@@ -84,7 +84,7 @@ function VideoPlayer({ video }: { video: ItemsId }) {
           <h2 className="text-xl font-bold text-gray-800">پخش ویدئو</h2>
           <div className="bg-black rounded-lg overflow-hidden">
             <div className="w-full aspect-video flex items-center justify-center">
-              <div className="text-white text-center">
+              <div className="text-white! text-center">
                 <p className="text-lg mb-4">در حال بارگذاری ویدئو...</p>
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
               </div>
@@ -102,7 +102,7 @@ function VideoPlayer({ video }: { video: ItemsId }) {
           <h2 className="text-xl font-bold text-gray-800">پخش ویدئو</h2>
           <div className="bg-black rounded-lg overflow-hidden">
             <div className="w-full aspect-video flex items-center justify-center">
-              <div className="text-white text-center">
+              <div className="text-white! text-center">
                 <p className="text-lg mb-4">شناسه ویدئو یافت نشد</p>
               </div>
             </div>
@@ -163,7 +163,7 @@ function VideoPlayer({ video }: { video: ItemsId }) {
               {/* دکمه مشاهده در آپارات */}
               <button
                 onClick={handleViewOnAparat}
-                className="flex items-center cursor-pointer gap-2 bg-[#ce1a2a] text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium text-sm shadow-sm"
+                className="flex items-center cursor-pointer gap-2 bg-[#ce1a2a] text-white! py-2 px-4 rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium text-sm shadow-sm"
               >
                 <FaExternalLinkAlt className="text-xs" />
                 مشاهده آپارات
@@ -187,7 +187,7 @@ function VideoPlayer({ video }: { video: ItemsId }) {
                 trigger={['click']}
               >
                 <Button 
-                  className="flex items-center gap-2 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium text-sm h-auto border-none shadow-sm"
+                  className="flex items-center gap-2 bg-green-600 text-white! py-2 px-4 rounded-lg hover:bg-green-700 transition-colors duration-200 font-medium text-sm h-auto border-none shadow-sm"
                   size="small"
                 >
                   <FaDownload className="text-xs" />

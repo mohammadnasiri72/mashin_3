@@ -2,6 +2,7 @@ import { getItemId } from "@/services/Item/ItemId";
 import MainBoxAutoService from "./components/MainBoxAutoService";
 import { redirect } from "next/navigation";
 import { getComment } from "@/services/Comment/Comment";
+import { getItem } from "@/services/Item/Item";
 
 async function pageAutoservicesDetails({
   params,
@@ -20,12 +21,18 @@ async function pageAutoservicesDetails({
         pageSize: 20,
         pageIndex: 1,
       });
+
+       const banner: Items[] = await getItem({
+          TypeId: 1051,
+          langCode: "fa",
+          CategoryIdArray: "6415",
+        });
     
 
     return (
       <>
         <div className="flex flex-wrap bg-gray-50">
-          <MainBoxAutoService detailsAuto={detailsAuto} comments={comments} id={id}/>
+          <MainBoxAutoService detailsAuto={detailsAuto} comments={comments} id={id} banner={banner}/>
         </div>
       </>
     );

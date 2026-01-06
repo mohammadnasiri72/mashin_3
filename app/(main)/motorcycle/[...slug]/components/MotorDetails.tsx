@@ -144,7 +144,7 @@ const MotorDetails = ({
                   </div>
                 ))}
               </div>
-              <button className="mt-2 mr-2 bg-red-50 duration-300 rounded-lg text-[#ce1a2a] hover:bg-[#ce1a2a] hover:text-white transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap">
+              <button className="mt-2 mr-2 bg-red-50 duration-300 rounded-lg text-[#ce1a2a] hover:bg-[#ce1a2a] hover:text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap">
                 <FaCommentDots className="ml-2" />
                 نظر دادن
               </button>
@@ -163,7 +163,7 @@ const MotorDetails = ({
                 ].map((action, index) => (
                   <div
                     key={index}
-                    className="bg-[#ce1a2a] text-white px-4 py-2 text-xs text-center whitespace-nowrap"
+                    className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap"
                   >
                     <action.icon className="inline ml-1" />
                     {action.text}

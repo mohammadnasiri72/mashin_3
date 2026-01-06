@@ -212,7 +212,7 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
           <button
             onClick={handlePlayClick}
             disabled={isLoading}
-            className="w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-[#ce1a2a] to-[#a01522] text-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+            className="w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-[#ce1a2a] to-[#a01522] text-white! rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
           >
             {isLoading ? (
               <div className="w-6 h-6 lg:w-7 lg:h-7 border-2 border-white border-t-transparent rounded-full animate-spin" />

@@ -220,7 +220,7 @@ const Footer = ({
 
         {/* Footer Bottom */}
         {copyright && (
-          <div className="footer-bottom bg-[#ce1a2a] text-white py-3!">
+          <div className="footer-bottom bg-[#ce1a2a] text-white! py-3!">
             <div className="mx-auto px-4">
               <div className="row">
                 <div className="copyright text-center text-xs">{copyright}</div>

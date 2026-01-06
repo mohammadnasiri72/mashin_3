@@ -11,6 +11,11 @@ async function pageMotorcyclesDainamic({
 }) {
   const searchParam = await searchParams;
   const id = Number(searchParam.id);
+  const banner: Items[] = await getItem({
+    TypeId: 1051,
+    langCode: "fa",
+    CategoryIdArray: "6415",
+  });
 
   const motorBrands: ItemsCategory[] = await getCategory({
     TypeId: 1052,
@@ -40,6 +45,7 @@ async function pageMotorcyclesDainamic({
       carBrands={productsWithCategories}
       carDetails={motorDetails}
       carView={motorView}
+      banner={banner}
     />
   );
 }

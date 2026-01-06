@@ -272,7 +272,7 @@ function PriceCar({
               onClick={() => {
                 setShowFilter(true);
               }}
-              className="text-sm text-white px-3 py-1 rounded cursor-pointer whitespace-nowrap"
+              className="text-sm text-white! px-3 py-1 rounded cursor-pointer whitespace-nowrap"
               style={{ backgroundColor: PRIMARY_COLOR }}
             >
               نمایش فیلترها
@@ -369,7 +369,7 @@ function PriceCar({
                       }
                     </h3>
                     <span
-                      className="text-xs text-white px-2 py-1 rounded"
+                      className="text-xs text-white! px-2 py-1 rounded"
                       style={{ backgroundColor: PRIMARY_COLOR }}
                     >
                       {filteredBrands.length} برند
@@ -399,7 +399,7 @@ function PriceCar({
                           }}
                           className={`inline-flex items-center rounded-lg px-3 py-2 cursor-pointer transition-all duration-300 min-w-[100px] justify-center ${
                             selectedBrand === brand.id
-                              ? "text-white shadow-sm"
+                              ? "text-white! shadow-sm"
                               : "bg-slate-200! hover:bg-slate-300!  text-gray-700 hover:text-[#ce1a2a]!"
                           }`}
                           style={{

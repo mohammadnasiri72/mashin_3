@@ -64,7 +64,7 @@ export default function NotFound() {
             
             <button
               onClick={() => router.push("/")}
-              className="flex items-center cursor-pointer gap-2 px-6 py-3 bg-linear-to-r from-red-400 to-[#ce1a2a] text-white rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-medium shadow-sm"
+              className="flex items-center cursor-pointer gap-2 px-6 py-3 bg-linear-to-r from-red-400 to-[#ce1a2a] text-white! rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-medium shadow-sm"
             >
               <FaHome className="w-4 h-4" />
               صفحه اصلی
