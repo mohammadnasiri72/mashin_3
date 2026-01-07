@@ -9,10 +9,18 @@ import SidebarEducation from "./SidebarEducation";
 
 function EducationView({
   education,
-  educations,
+  popularEducations,
+  relatedEducations,
+  id,
+  comments,
+  banner,
 }: {
   education: ItemsId;
-  educations: Items[];
+  popularEducations: Items[];
+  relatedEducations: Items[];
+  id: number;
+  comments: CommentResponse[];
+  banner: Items[];
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
@@ -202,8 +210,7 @@ function EducationView({
               {/* بخش مطالب مرتبط */}
               <div id="related" className="section-anchor" ref={relatedRef}>
                 <RelatedEducation
-                  education={education}
-                  educations={educations}
+                  relatedEducations={relatedEducations}
                 />
               </div>
             </div>
@@ -211,13 +218,17 @@ function EducationView({
 
           {/* سایدبار */}
           <div className="lg:w-1/4 w-full">
-            <SidebarEducation educations={educations} />
+            <SidebarEducation popularEducations={popularEducations} banner={banner} />
           </div>
         </div>
 
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor mt-8" ref={commentsRef}>
-          <EducationComments education={education} />
+          <EducationComments
+            education={education}
+            id={id}
+            comments={comments}
+          />
         </div>
       </div>
 

@@ -77,7 +77,7 @@ function MainBoxAutoServices({
   };
 
   const clearFilters = () => {
-    setSelectedBrand(null);
+    // setSelectedBrand(null);
     setSelectedProvince(null);
     router.push("/autoservices.html", {
       scroll: false,
@@ -114,9 +114,9 @@ function MainBoxAutoServices({
                     value={selectedBrand}
                     onChange={(value: number | null) => {
                       if (value) {
-                        setSelectedBrand(value);
+                        // setSelectedBrand(value);
                       } else {
-                        setSelectedBrand(null);
+                        // setSelectedBrand(null);
                         router.push("/autoservices.html", {
                           scroll: false,
                         });

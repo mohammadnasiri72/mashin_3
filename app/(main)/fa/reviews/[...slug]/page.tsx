@@ -1,7 +1,6 @@
 import { getCategory } from "@/services/Category/Category";
-import CarBrands from "./componnents/CarBrands";
 import { getItem } from "@/services/Item/Item";
-import { redirect } from "next/navigation";
+import CarBrands from "./componnents/CarBrands";
 
 async function pageReviews({ params }: { params: Promise<{ slug: string }> }) {
   const param = await params;
@@ -33,12 +32,7 @@ async function pageReviews({ params }: { params: Promise<{ slug: string }> }) {
     });
   }
 
-  if (brand.length > 0) {
-    return <CarBrands carBrands={brand} banner={banner} />;
-  } else {
-    // return <>موجود نیست</>;
-    redirect(`/error?status=${404}`);
-  }
+  return <CarBrands carBrands={brand} banner={banner} />;
 }
 
 export default pageReviews;

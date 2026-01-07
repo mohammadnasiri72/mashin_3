@@ -19,20 +19,11 @@ interface Items {
 }
 
 function RelatedEducation({
-  education,
-  educations,
+  relatedEducations,
 }: {
-  education: ItemsId;
-  educations: Items[];
+  relatedEducations: Items[];
 }) {
   // فیلتر مطالب مرتبط (همان دسته‌بندی)
-  const relatedEducations = educations
-    .filter(
-      (item) =>
-        item.id !== education.id &&
-        item.categoryTitle === education.categoryTitle
-    )
-    .slice(0, 4);
 
   return (
     <>
@@ -52,15 +43,11 @@ function RelatedEducation({
                   className="block group"
                 >
                   <div className="bg-gray-100 rounded-lg overflow-hidden hover:shadow-lg transition-shadow border border-gray-200">
-                    <div className="aspect-video relative">
+                    <div className="aspect-video relative overflow-hidden">
                       <img
                         src={mainDomainOld + related.image}
                         alt={related.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = "/images/placeholder.jpg";
-                        }}
                       />
                       <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
                     </div>

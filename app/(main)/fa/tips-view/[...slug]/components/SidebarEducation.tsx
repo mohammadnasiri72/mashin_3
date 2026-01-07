@@ -6,12 +6,13 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 import { FaBook, FaCalendar, FaEye } from "react-icons/fa";
 
-function SidebarEducation({ educations }: { educations: Items[] }) {
-  // محبوب‌ترین مطالب آموزشی (بر اساس بازدید)
-  const popularEducations = [...educations]
-    .sort((a, b) => b.visit - a.visit)
-    .slice(0, 6);
-
+function SidebarEducation({
+  popularEducations,
+  banner,
+}: {
+  popularEducations: Items[];
+  banner: Items[];
+}) {
   return (
     <>
       <section className="px-2">
@@ -36,10 +37,6 @@ function SidebarEducation({ educations }: { educations: Items[] }) {
                           src={mainDomainOld + education.image}
                           alt={education.title}
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.src = "/images/placeholder.jpg";
-                          }}
                         />
                         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
                       </div>
@@ -66,12 +63,18 @@ function SidebarEducation({ educations }: { educations: Items[] }) {
                 ))}
               </div>
             </div>
-
+            {banner.length > 0 &&
+              banner.map((ban) => (
+                <div className="w-full" key={ban.id}>
+                  <img
+                    className="w-full"
+                    src={mainDomainOld + ban.image}
+                    alt={ban.title}
+                  />
+                </div>
+              ))}
             {/* آمار بازار */}
             <MarketStats />
-
-            {/* خبرنامه */}
-            <NewsBlogForm />
           </div>
         </div>
       </section>
