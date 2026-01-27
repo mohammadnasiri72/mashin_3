@@ -2,7 +2,7 @@ import React from "react";
 import SidebarVideo from "./SidebarVideo";
 import BoxVideo from "./BoxVideo";
 
-function Video({ videos }: { videos: Items[] }) {
+function Video({popularVideos, videos , banner}: {popularVideos:Items[], videos: Items[] , banner:Items[] }) {
   return (
     <>
       <div className="flex flex-wrap ">
@@ -10,7 +10,7 @@ function Video({ videos }: { videos: Items[] }) {
           <BoxVideo videos={videos} />
         </div>
         <div className="lg:w-1/4 w-full">
-          <SidebarVideo videos={videos} />
+          <SidebarVideo popularVideos={popularVideos} banner={banner}/>
         </div>
       </div>
     </>

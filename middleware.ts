@@ -3,6 +3,8 @@ import { getCategoryByUrl } from "./services/Category/CategoryByUrl";
 import { getCategoryId } from "./services/Category/CategoryId";
 import { getItemId } from "./services/Item/ItemId";
 import { getItemByUrl } from "./services/Item/ItemByUrl";
+import { getPriceBrands } from "./services/Price/PriceBrands";
+import { getItemByIds } from "./services/Item/ItemByIds";
 
 export async function middleware(request: Request) {
   const url = new URL(request.url);
@@ -353,6 +355,181 @@ export async function middleware(request: Request) {
       } else {
         return NextResponse.redirect(
           new URL("/fa/news/اخبار-خودرو.html", request.url),
+          {
+            status: 301,
+          }
+        );
+      }
+    } catch (error: any) {
+      const status = error.response?.status || error.status || 500;
+      return NextResponse.redirect(
+        new URL(`/error?status=${status}`, request.url),
+        { status: 301 }
+      );
+    }
+  } else if (pathname.startsWith("/price.html")) {
+    const type = searchParams.get("type");
+    if (!type) {
+      return NextResponse.redirect(
+        new URL(`/error?status=${400}`, request.url),
+        { status: 301 }
+      );
+    } else {
+      try {
+        await getPriceBrands(type);
+      } catch (error: any) {
+        const status = error.response?.status || error.status || 500;
+        return NextResponse.redirect(
+          new URL(`/error?status=${status}`, request.url),
+          { status: 301 }
+        );
+      }
+    }
+  } else if (pathname.startsWith("/whichcar/")) {
+    const decodedPathname = decodeURIComponent(pathname);
+    const pathParts = pathname.split("/");
+    const id = Number(pathParts[2]);
+    try {
+      if (!isNaN(id)) {
+        const data: ItemsId = await getItemId(id);
+        if (data?.url && data.url !== decodedPathname) {
+          return NextResponse.redirect(
+            new URL(data.url.toLowerCase(), request.url),
+            {
+              status: 301,
+            }
+          );
+        }
+      } else {
+        return NextResponse.redirect(new URL("/whichcars.html", request.url), {
+          status: 301,
+        });
+      }
+    } catch (error: any) {
+      const status = error.response?.status || error.status || 500;
+      return NextResponse.redirect(
+        new URL(`/error?status=${status}`, request.url),
+        { status: 301 }
+      );
+    }
+  } else if (pathname.startsWith("/videos/")) {
+    try {
+      const pathParts = pathname.split("/");
+      const decodedPathname = decodeURIComponent(pathname);
+      const id = Number(pathParts[2]);
+      if (!isNaN(id)) {
+        const data: ItemsCategoryId = await getCategoryId(id);
+        const decodedPathname = decodeURIComponent(pathname);
+
+        if (data?.url && data.url !== decodedPathname) {
+          return NextResponse.redirect(
+            new URL(data.url.toLowerCase(), request.url),
+            {
+              status: 301,
+            }
+          );
+        }
+      } else {
+        return NextResponse.redirect(new URL("/videos.html", request.url), {
+          status: 301,
+        });
+      }
+    } catch (error: any) {
+      const status = error.response?.status || error.status || 500;
+      return NextResponse.redirect(
+        new URL(`/error?status=${status}`, request.url),
+        { status: 301 }
+      );
+    }
+  } else if (pathname.startsWith("/video/")) {
+    const decodedPathname = decodeURIComponent(pathname);
+    const pathParts = pathname.split("/");
+    const id = Number(pathParts[2]);
+    const id2 = Number(searchParams.get("id"));
+    try {
+      if (!isNaN(id)) {
+        const data: ItemsId = await getItemId(id);
+        if (data?.url && data.url !== decodedPathname + `?id=${data?.id}`) {
+          return NextResponse.redirect(
+            new URL(data.url.toLowerCase(), request.url),
+            {
+              status: 301,
+            }
+          );
+        }
+      } else if (!isNaN(id2)) {
+        const data: ItemsId = await getItemId(id2);
+        if (data?.url && data.url !== decodedPathname + `?id=${data?.id}`) {
+          return NextResponse.redirect(
+            new URL(data.url.toLowerCase(), request.url),
+            {
+              status: 301,
+            }
+          );
+        }
+      } else {
+        return NextResponse.redirect(new URL("/videos.html", request.url), {
+          status: 301,
+        });
+      }
+    } catch (error: any) {
+      const status = error.response?.status || error.status || 500;
+      return NextResponse.redirect(
+        new URL(`/error?status=${status}`, request.url),
+        { status: 301 }
+      );
+    }
+  } else if (pathname.startsWith("/podcast/")) {
+    try {
+      const pathParts = pathname.split("/");
+      const decodedPathname = decodeURIComponent(pathname);
+      const id = Number(pathParts[2]);
+      if (!isNaN(id)) {
+        const data: ItemsCategoryId = await getCategoryId(id);
+        const decodedPathname = decodeURIComponent(pathname);
+
+        if (data?.url && data.url !== decodedPathname) {
+          return NextResponse.redirect(
+            new URL(data.url.toLowerCase(), request.url),
+            {
+              status: 301,
+            }
+          );
+        }
+      } else {
+        return NextResponse.redirect(new URL("/podcast.html", request.url), {
+          status: 301,
+        });
+      }
+    } catch (error: any) {
+      const status = error.response?.status || error.status || 500;
+      return NextResponse.redirect(
+        new URL(`/error?status=${status}`, request.url),
+        { status: 301 }
+      );
+    }
+  } else if (pathname.startsWith("/compare/")) {
+    try {
+      const pathParts = pathname.split("/");
+      const decodedPathname = decodeURIComponent(pathname);
+      const ids = String(pathParts[2]);
+      const dataCompare: ItemsId[] = await getItemByIds(ids);
+      const idsRes = dataCompare.map((item) => item.id).join(",");
+      if (ids.split(",").length > 3) {
+        ids.split(",").slice(0, 3).join(",");
+        return NextResponse.redirect(
+          new URL(
+            `/compare/${ids.split(",").slice(0, 3).join(",")}`,
+            request.url
+          ),
+          {
+            status: 301,
+          }
+        );
+      }
+      if (idsRes !== ids) {
+        return NextResponse.redirect(
+          new URL(`/compare/${idsRes}`, request.url),
           {
             status: 301,
           }

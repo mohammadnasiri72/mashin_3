@@ -20,6 +20,13 @@ async function pageVideo({
     ...(term && term !== "undefined" && { Term: term }),
     PageSize: 10,
   });
+  const popularVideos: Items[] = await getItem({
+    TypeId: 1028,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 10,
+    OrderBy: 8,
+  });
   const videosCat: ItemsCategory[] = await getCategory({
     TypeId: 1028,
     LangCode: "fa",
@@ -27,10 +34,16 @@ async function pageVideo({
     PageSize: 200,
   });
 
+  const banner: Items[] = await getItem({
+    TypeId: 1051,
+    langCode: "fa",
+    CategoryIdArray: "6415",
+  });
+
   return (
     <>
       <div className="bg-[#f4f4f4]">
-        <Video videos={videos} />
+        <Video popularVideos={popularVideos} videos={videos} banner={banner} />
         <BoxCatVideos videosCat={videosCat} />
       </div>
     </>

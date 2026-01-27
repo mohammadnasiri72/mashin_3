@@ -14,6 +14,8 @@ import ServicesSection from "../components/ServicesSection";
 import VideoBannerSection from "../components/VideoBannerSection";
 import { getCategory } from "@/services/Category/Category";
 import { getPropertyIds } from "@/services/Property/propertyIds";
+import { getPriceBrands } from "@/services/Price/PriceBrands";
+import { getPrice } from "@/services/Price/Price";
 
 export default async function Home() {
   const slider: Items[] = await getItem({ TypeId: 6, langCode: "fa" });
@@ -52,7 +54,7 @@ export default async function Home() {
     TypeId: 1028,
     langCode: "fa",
     PageIndex: 1,
-    PageSize: 1,
+    PageSize: 4,
   });
   const carSpecs: Items[] = await getItem({
     TypeId: 1042,
@@ -84,6 +86,27 @@ export default async function Home() {
     PageSize: 200,
   });
 
+  const brandsCar: ItemsCategory[] = await getCategory({
+    TypeId: 1042,
+    LangCode: "fa",
+    ParentIdArray: 6058,
+    PageIndex: 1,
+    PageSize: 200,
+  });
+
+  const whichCars: Items[] = await getItem({
+    TypeId: 1045,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 10,
+  });
+
+  const brands: PriceBrands[] = await getPriceBrands("internal");
+  const prices: Price[] = await getPrice({
+    Type: "internal",
+    BrandId: brands[0].id,
+  });
+
   return (
     <div className="page-wrapper min-h-screen bg-[#f4f4f4]">
       <div className="content-box pt-4">
@@ -107,22 +130,22 @@ export default async function Home() {
         <NewsListSection news={news} />
 
         {/* Car Specs Section */}
-        <CarSpecsSection carSpecs={carSpecs} Properties={Properties}/>
+        <CarSpecsSection carSpecs={carSpecs} Properties={Properties} />
 
         {/* Popular Cars Section */}
         <PopularCarsSection carView={carView} />
 
         {/* Car Comparison Section */}
-        <CarComparisonSection />
+        <CarComparisonSection brandsCar={brandsCar} whichCars={whichCars} />
 
         {/* Car BrandPrices Section */}
-        <CarBrandPricesSection />
+        <CarBrandPricesSection initialBrands={brands} initialPrices={prices} />
 
         {/* Motorcycle Brands Section */}
         <MotorcycleBrandsSection brands={brandMotor} />
 
         {/* Car Finder Section */}
-        <CarFinderSection />
+        <CarFinderSection brands={brandsCar} segmentCars={segmentCars} />
 
         {/* Car Ads Section */}
         {/* <CarAdsSection /> */}

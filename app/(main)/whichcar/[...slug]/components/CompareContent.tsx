@@ -4,6 +4,8 @@ import { createMarkup } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Card, Col, Divider, Row, Table, Tag } from "antd";
 import ComparisonTable from "./ComparisonTable";
+import Link from "next/link";
+import { FaCalendar, FaEye } from "react-icons/fa";
 
 // تعریف تایپ‌ها بر اساس interface شما
 
@@ -97,12 +99,6 @@ function CompareContent({
   return (
     <Card className="rounded-xl shadow-lg border-0">
       <div className="space-y-8">
-        {/* هدر مقایسه */}
-        <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-800 mb-4!">
-            {whichcars.title}
-          </h2>
-        </div>
         {/* خلاصه مقایسه از whichcars */}
         {whichcars.body && (
           <Card className="shadow-lg">
@@ -271,6 +267,32 @@ function CompareContent({
             </Col>
           </Row>
         )}
+
+        {/* News Tags */}
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <div className="flex flex-wrap gap-2 justify-between">
+            <Link
+              href={`/whichcars/${whichcars.categoryId}`}
+              className="bg-gray-100! px-3 py-1 rounded-full text-xs text-gray-700! hover:text-[#ce1a2a]! duration-300"
+            >
+              #{whichcars.categoryTitle}
+            </Link>
+            <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 flex-wrap">
+              <div className="flex items-center gap-1 ">
+                <FaEye className="text-[#666] text-xs" />
+                <span className="font-bold text-[#666] text-xs">
+                  {whichcars.visit}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <FaCalendar className="text-[#666] text-xs" />
+                <span className="font-bold text-[#666] text-xs">
+                  {new Date(whichcars.created).toLocaleDateString("fa-IR")}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <style jsx global>{`

@@ -1,6 +1,7 @@
 import { setToken } from "@/redux/slice/token";
 import { PostLogin } from "@/services/Account/Login";
 import { PostResetPass } from "@/services/Account/ResetPass";
+import { Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Button, Checkbox, Input } from "antd";
 import Link from "next/link";
@@ -45,10 +46,19 @@ function ModalLogin() {
       };
       try {
         const dataLogin = await PostLogin(data);
-        Cookies.set("user", JSON.stringify(dataLogin) , { expires: 7 });
+        Cookies.set("user", JSON.stringify(dataLogin), { expires: 7 });
         disPatch(setToken(dataLogin.token));
         setOpen(false);
-      } catch (err) {}
+         Toast.fire({
+          icon: "success",
+          title:  "با موفقیت وارد شدید",
+        });
+      } catch (err: any) {
+        Toast.fire({
+          icon: "error",
+          title: err.response.data || "خطا در ورود به حساب",
+        });
+      }
     }
   }
 

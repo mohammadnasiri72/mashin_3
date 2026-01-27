@@ -17,9 +17,6 @@ const CarSpecsSection = ({
   carSpecs: Items[];
   Properties: properties[];
 }) => {
-
- 
-
   const swiperRef = useRef<any>(null);
 
   const handlePrev = () => {
@@ -65,12 +62,14 @@ const CarSpecsSection = ({
               {/* دکمه‌های ناوبری زیر متن */}
               <div className="flex gap-2 justify-center lg:justify-center mt-6">
                 <button
+                  aria-label="FaArrowRightLong"
                   onClick={handleNext}
                   className="w-10 h-10 cursor-pointer bg-[#c2c2c2] rounded-full flex items-center justify-center hover:bg-[#ce1a2a] text-white! transition-colors"
                 >
                   <FaArrowRightLong />
                 </button>
                 <button
+                  aria-label="FaArrowLeftLong"
                   onClick={handlePrev}
                   className="w-10 h-10 cursor-pointer bg-[#c2c2c2] rounded-full flex items-center justify-center hover:bg-[#ce1a2a] text-white! transition-colors"
                 >
@@ -83,13 +82,13 @@ const CarSpecsSection = ({
           {/* بخش اسلایدر - سمت چپ */}
           <div
             dir="rtl"
-            className="w-full lg:w-3/4 mb-8 lg:mb-0 order-1 lg:order-2"
+            className="w-full lg:w-3/4 lg:mb-0 order-1 lg:order-2 h-[500px]"
           >
             <Swiper
               ref={swiperRef}
               modules={[Autoplay, Navigation]}
               spaceBetween={16}
-              slidesPerView={1.2}
+              slidesPerView={1.5}
               initialSlide={0} // شروع از اسلاید اول
               breakpoints={{
                 640: {
@@ -120,9 +119,9 @@ const CarSpecsSection = ({
                   .slice(0, 4);
                 return (
                   <SwiperSlide key={car.id}>
-                    <div className="bg-gray-100 rounded-2xl p-4 h-full">
+                    <div className="bg-gray-100 rounded-2xl p-4">
                       {/* تصویر خودرو */}
-                      <div className="relative rounded-xl overflow-hidden mb-3 bg-[#bfbfbf]">
+                      <div className="relative rounded-xl overflow-hidden mb-3 bg-[#bfbfbf] h-52">
                         <Link href={car.url} className="">
                           <div className="aspect-2/1 relative">
                             <img
@@ -147,7 +146,7 @@ const CarSpecsSection = ({
                       </div>
 
                       {/* مشخصات فنی */}
-                      <div className="grid grid-cols-2 gap-2 h-50">
+                      <div className="grid grid-cols-2 gap-2 h-44">
                         {/* {car.specs.map((spec, index) => (
                         <div
                           key={index}
@@ -177,12 +176,11 @@ const CarSpecsSection = ({
                             key={index}
                             className="flex items-center bg-white rounded-lg p-2 h-20"
                           >
-                            <div className="ml-2 shrink-0"></div>
                             <div className="text-xs">
                               <div className="font-bold text-gray-900">
                                 {spec.title}
                               </div>
-                              <div className="text-gray-500 text-[10px] mt-1">
+                              <div className="text-gray-500 text-[10px]">
                                 {spec.propertyValue}
                               </div>
                             </div>

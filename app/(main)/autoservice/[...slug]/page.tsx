@@ -3,6 +3,7 @@ import MainBoxAutoService from "./components/MainBoxAutoService";
 import { redirect } from "next/navigation";
 import { getComment } from "@/services/Comment/Comment";
 import { getItem } from "@/services/Item/Item";
+import { getPollId } from "@/services/Poll/pollId";
 
 async function pageAutoservicesDetails({
   params,
@@ -28,11 +29,11 @@ async function pageAutoservicesDetails({
           CategoryIdArray: "6415",
         });
     
-
+const pollData: PollData = await getPollId(Number(id));
     return (
       <>
         <div className="flex flex-wrap bg-gray-50">
-          <MainBoxAutoService detailsAuto={detailsAuto} comments={comments} id={id} banner={banner}/>
+          <MainBoxAutoService detailsAuto={detailsAuto} comments={comments} id={id} banner={banner} pollData={pollData}/>
         </div>
       </>
     );

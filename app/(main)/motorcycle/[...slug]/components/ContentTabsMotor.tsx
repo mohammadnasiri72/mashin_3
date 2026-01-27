@@ -3,7 +3,7 @@
 import type { TabsProps } from "antd";
 import { Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
-import FAQSection from "./FAQSection";
+// import FAQSection from "./FAQSection";
 import GallerySection from "./GallerySection";
 import ReviewSection from "./ReviewSection";
 import Sidebar from "./Sidebar";
@@ -35,8 +35,12 @@ const ContentTabsMotor = ({
   const reviewRef = useRef<HTMLDivElement>(null);
   const technicalRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLDivElement>(null);
-  const faqRef = useRef<HTMLDivElement>(null);
+  // const faqRef = useRef<HTMLDivElement>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
+
+  const Criticism = detailsMotorcycle.properties.filter(
+    (e) => e.propertyId === 22642
+  );
 
   // هندل کردن اسکرول و sticky navbar
   useEffect(() => {
@@ -52,7 +56,7 @@ const ContentTabsMotor = ({
         { key: "review", ref: reviewRef },
         { key: "technical", ref: technicalRef },
         { key: "images", ref: imagesRef },
-        { key: "faq", ref: faqRef },
+        // { key: "faq", ref: faqRef },
         { key: "comments", ref: commentsRef },
       ];
 
@@ -87,12 +91,12 @@ const ContentTabsMotor = ({
       }
 
       // اگر به انتهای صفحه رسیده‌ایم، آخرین تب را فعال کن
-    //   if (
-    //     window.innerHeight + window.scrollY >=
-    //     document.body.offsetHeight - 200
-    //   ) {
-    //     currentActiveKey = "comments";
-    //   }
+      //   if (
+      //     window.innerHeight + window.scrollY >=
+      //     document.body.offsetHeight - 200
+      //   ) {
+      //     currentActiveKey = "comments";
+      //   }
 
       if (currentActiveKey !== "") {
         setActiveKey(currentActiveKey);
@@ -125,7 +129,7 @@ const ContentTabsMotor = ({
       review: reviewRef,
       technical: technicalRef,
       images: imagesRef,
-      faq: faqRef,
+      // faq: faqRef,
       comments: commentsRef,
     };
 
@@ -157,24 +161,41 @@ const ContentTabsMotor = ({
     }
   };
 
+  const specifications = detailsMotorcycle.properties.filter(
+    (e) => e.isTechnicalProperty
+  );
+
   // آیتم‌های تب
   const tabItems: TabsProps["items"] = [
-    {
-      key: "review",
-      label: "نقد کارشناسی",
-    },
-    {
-      key: "technical",
-      label: "فنی",
-    },
-    {
-      key: "images",
-      label: "تصاویر",
-    },
-    {
-      key: "faq",
-      label: "سوالات متداول",
-    },
+    ...(Criticism[0]?.value
+      ? [
+          {
+            key: "review",
+            label: "نقد کارشناسی",
+          },
+        ]
+      : []),
+    ...(specifications.length > 0
+      ? [
+          {
+            key: "technical",
+            label: "فنی",
+          },
+        ]
+      : []),
+    ...(Attachment.length > 0
+      ? [
+          {
+            key: "images",
+            label: "تصاویر",
+          },
+        ]
+      : []),
+
+    // {
+    //   key: "faq",
+    //   label: "سوالات متداول",
+    // },
     {
       key: "comments",
       label: "نظرات",
@@ -202,35 +223,37 @@ const ContentTabsMotor = ({
           />
         </div>
         <div className="lg:w-3/4 w-full ">
-          {/* Navigation Tabs */}
-
           {/* Content Area */}
           <div className="flex items-start gap-6 lg:flex-nowrap flex-wrap-reverse mt-6">
             {/* Main Content */}
             <div className="w-full">
               <div className="space-y-6">
-                <div id="review" className="section-anchor" ref={reviewRef}>
-                  <ReviewSection detailsMotorcycle={detailsMotorcycle} />
-                </div>
+                {Criticism[0]?.value && (
+                  <div id="review" className="section-anchor" ref={reviewRef}>
+                    <ReviewSection detailsMotorcycle={detailsMotorcycle} />
+                  </div>
+                )}
+                {specifications.length > 0 && (
+                  <div
+                    id="technical"
+                    className="section-anchor"
+                    ref={technicalRef}
+                  >
+                    <TechnicalSection detailsMotorcycle={detailsMotorcycle} />
+                  </div>
+                )}
+                {Attachment.length > 0 && (
+                  <div id="images" className="section-anchor" ref={imagesRef}>
+                    <GallerySection
+                      Attachment={Attachment}
+                      detailsMotorcycle={detailsMotorcycle}
+                    />
+                  </div>
+                )}
 
-                <div
-                  id="technical"
-                  className="section-anchor"
-                  ref={technicalRef}
-                >
-                  <TechnicalSection detailsMotorcycle={detailsMotorcycle} />
-                </div>
-
-                <div id="images" className="section-anchor" ref={imagesRef}>
-                  <GallerySection
-                    Attachment={Attachment}
-                    detailsMotorcycle={detailsMotorcycle}
-                  />
-                </div>
-
-                <div id="faq" className="section-anchor" ref={faqRef}>
+                {/* <div id="faq" className="section-anchor" ref={faqRef}>
                   <FAQSection />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

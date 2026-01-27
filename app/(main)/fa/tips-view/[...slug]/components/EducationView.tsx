@@ -6,6 +6,7 @@ import EducationComments from "./EducationComments";
 import EducationContent from "./EducationContent";
 import RelatedEducation from "./RelatedEducation";
 import SidebarEducation from "./SidebarEducation";
+import HeroSectionEdu from "./HeroSectionEdu";
 
 function EducationView({
   education,
@@ -154,7 +155,7 @@ function EducationView({
   return (
     <div className="min-h-screen bg-gray-50 w-full">
       {/* هدر صفحه */}
-      <div className="bg-white shadow-lg">
+      {/* <div className="bg-white shadow-lg">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div>
@@ -179,7 +180,9 @@ function EducationView({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+
+      <HeroSectionEdu education={education} />
 
       {/* باکس تب ها */}
       <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 mt-4">

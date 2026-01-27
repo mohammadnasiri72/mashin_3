@@ -31,10 +31,22 @@ async function pageVideosDainamic({
     return <VideoNotFound />;
   }
 
+   const banner: Items[] = await getItem({
+      TypeId: 1051,
+      langCode: "fa",
+      CategoryIdArray: "6415",
+    });
+ const popularVideos: Items[] = await getItem({
+    TypeId: 1028,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 10,
+    OrderBy: 8,
+  });
   return (
     <>
       <div className="bg-[#f4f4f4]">
-        <Video videos={videos} />
+        <Video popularVideos={popularVideos} videos={videos} banner={banner}/>
       </div>
     </>
   );

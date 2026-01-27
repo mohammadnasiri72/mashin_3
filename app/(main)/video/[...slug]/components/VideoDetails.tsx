@@ -6,8 +6,23 @@ import RelatedVideos from "./RelatedVideos";
 import SidebarVideo from "./SideBarVideo";
 import VideoComments from "./VideoComments";
 import VideoPlayer from "./VideoPlayer";
+import HeroSectionVideo from "./HeroSectionVideo";
 
-function VideoDetails({ video, videos }: { video: ItemsId; videos: Items[] }) {
+function VideoDetails({
+  video,
+  popularVideos,
+  relatedVideos,
+  banner,
+  comments,
+  id
+}: {
+  video: ItemsId;
+  popularVideos: Items[];
+  relatedVideos: Items[];
+  banner: Items[];
+  comments: CommentResponse[];
+  id:number
+}) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
   const navbarRef = useRef<HTMLDivElement>(null);
@@ -143,7 +158,7 @@ function VideoDetails({ video, videos }: { video: ItemsId; videos: Items[] }) {
   return (
     <div className="min-h-screen bg-gray-50 w-full">
       {/* هدر صفحه */}
-      <div className="bg-white shadow-lg">
+      {/* <div className="bg-white shadow-lg">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div>
@@ -168,7 +183,8 @@ function VideoDetails({ video, videos }: { video: ItemsId; videos: Items[] }) {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+      <HeroSectionVideo video={video}/>
 
       {/* باکس تب ها */}
       <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 mt-4">
@@ -198,20 +214,20 @@ function VideoDetails({ video, videos }: { video: ItemsId; videos: Items[] }) {
 
               {/* بخش ویدئوهای مرتبط */}
               <div id="related" className="section-anchor" ref={relatedRef}>
-                <RelatedVideos video={video} videos={videos} />
+                <RelatedVideos relatedVideos={relatedVideos} />
               </div>
             </div>
           </div>
 
           {/* سایدبار */}
           <div className="lg:w-1/4 w-full">
-            <SidebarVideo videos={videos} />
+            <SidebarVideo popularVideos={popularVideos} banner={banner} />
           </div>
         </div>
 
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor mt-8" ref={commentsRef}>
-          <VideoComments video={video} />
+          <VideoComments video={video} comments={comments} id={id}/>
         </div>
       </div>
 

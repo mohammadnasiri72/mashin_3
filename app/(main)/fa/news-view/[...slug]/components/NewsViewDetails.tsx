@@ -7,6 +7,7 @@ import NewsContentSection from "./NewsContentSection";
 import NewsGallerySection from "./NewsGallerySection";
 import NewsRelatedSection from "./NewsRelatedSection";
 import SidebarNewsView from "./SidebarNewsView";
+import HeroSectionNews from "./HeroSectionNews";
 
 function NewsViewDetails({
   detailsNews,
@@ -15,15 +16,15 @@ function NewsViewDetails({
   comments,
   id,
   banner,
-  relatedNews
+  relatedNews,
 }: {
   detailsNews: ItemsId;
   popularNews: Items[];
   Attachment: ItemsAttachment[];
-  comments:CommentResponse[]
-  id:number
-  banner:Items[]
-  relatedNews:Items[]
+  comments: CommentResponse[];
+  id: number;
+  banner: Items[];
+  relatedNews: Items[];
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
@@ -147,10 +148,14 @@ function NewsViewDetails({
       key: "1",
       label: "متن خبر",
     },
-    {
-      key: "2",
-      label: "گالری تصاویر",
-    },
+    ...(Attachment.length > 0
+      ? [
+          {
+            key: "2",
+            label: "گالری تصاویر",
+          },
+        ]
+      : []),
     {
       key: "3",
       label: "اخبار مرتبط",
@@ -164,32 +169,7 @@ function NewsViewDetails({
   return (
     <div className="min-h-screen bg-gray-50 w-full">
       {/* هدر صفحه */}
-      <div className="bg-white shadow-lg">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            <div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-800">
-                {detailsNews.title}
-              </h1>
-              <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 flex-wrap">
-                <span>دسته‌بندی: {detailsNews.categoryTitle}</span>
-                <span>•</span>
-                <span>تعداد بازدید: {detailsNews.visit}</span>
-                <span>•</span>
-                <span>
-                  تاریخ انتشار:{" "}
-                  {new Date(detailsNews.created).toLocaleDateString("fa-IR")}
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="bg-[#ce1a2a] cursor-pointer text-white! px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
-                اشتراک گذاری
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <HeroSectionNews detailsNews={detailsNews} />
 
       {/* باکس تب ها */}
       <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 mt-4">
@@ -218,15 +198,21 @@ function NewsViewDetails({
               </div>
 
               {/* بخش گالری تصاویر */}
-              <div id="gallery" className="section-anchor" ref={galleryRef}>
-                <NewsGallerySection
-                  Attachment={Attachment}
-                  detailsNews={detailsNews}
-                />
-              </div>
+              {Attachment.length > 0 && (
+                <div id="gallery" className="section-anchor" ref={galleryRef}>
+                  <NewsGallerySection
+                    Attachment={Attachment}
+                    detailsNews={detailsNews}
+                  />
+                </div>
+              )}
 
               {/* بخش اخبار مرتبط */}
-              <div id="related" className="section-anchor px-4" ref={relatedRef}>
+              <div
+                id="related"
+                className="section-anchor px-4"
+                ref={relatedRef}
+              >
                 <NewsRelatedSection relatedNews={relatedNews} />
               </div>
             </div>
@@ -234,13 +220,17 @@ function NewsViewDetails({
 
           {/* سایدبار */}
           <div className="lg:w-1/4 w-full ">
-            <SidebarNewsView popularNews={popularNews} banner={banner}/>
+            <SidebarNewsView popularNews={popularNews} banner={banner} />
           </div>
         </div>
 
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor mt-8" ref={commentsRef}>
-          <CommentsSectionNews detailsNews={detailsNews} comments={comments} id={id}/>
+          <CommentsSectionNews
+            detailsNews={detailsNews}
+            comments={comments}
+            id={id}
+          />
         </div>
       </div>
 
@@ -272,6 +262,7 @@ function NewsViewDetails({
           padding: 12px 24px;
           font-weight: 600;
           font-size: 14px;
+          height: 50px !important;
         }
 
         .news-details-tabs .ant-tabs-tab-active {
@@ -304,7 +295,7 @@ function NewsViewDetails({
 
         @media (min-width: 1024px) {
           .navbar-tabs.sticky {
-            top: 65px !important;
+            top: 60px !important;
           }
           .section-anchor {
             scroll-margin-top: 100px;

@@ -14,7 +14,7 @@ const TechnicalSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
           {specifications.map((spec, index) => (
             <tr
               key={spec.id}
-              className={index % 2 === 0 ? "bg-gray-50" : "bg-white"}
+              className={`h-20 ${index % 2 === 0 ? "bg-gray-50" : "bg-white"}`}
             >
               <th className="text-right p-4 text-gray-600 font-medium text-sm border-b border-gray-200">
                 {spec.title}

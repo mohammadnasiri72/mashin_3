@@ -16,7 +16,6 @@ async function pageTipView({
   const id = Number(param.slug[0]);
 
   const education: ItemsId = await getItemId(id);
-  console.log(education);
 
   const popularEducations: Items[] = await getItem({
     TypeId: 3,

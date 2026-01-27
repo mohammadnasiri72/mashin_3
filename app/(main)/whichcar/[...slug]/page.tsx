@@ -22,6 +22,7 @@ async function pageWhichcarsDainamic({
 
   const whichcars: ItemsId = await getItemId(id);
   const ids = whichcars.properties.find((w) => w.propertyId === 22664)?.value;
+  
   let dataCompare: ItemsId[] = [];
   if (ids) {
     dataCompare = await getItemByIds(String(ids));

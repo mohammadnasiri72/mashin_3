@@ -6,7 +6,13 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 import { FaCalendar, FaEye, FaPlay } from "react-icons/fa";
 
-function SidebarVideo({ videos }: { videos: Items[] }) {
+function SidebarVideo({
+  popularVideos,
+  banner,
+}: {
+  popularVideos: Items[];
+  banner: Items[];
+}) {
   return (
     <>
       <section className="px-2">
@@ -18,7 +24,7 @@ function SidebarVideo({ videos }: { videos: Items[] }) {
                 محبوب ترین فیلم های ماشین 3
               </h3>
               <div className="space-y-4">
-                {videos.slice(0, 6).map((video) => (
+                {popularVideos.map((video) => (
                   <Link key={video.id} href={video.url} className="block group">
                     <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors">
                       <div className="w-18! h-14 bg-gray-200 rounded shrink-0 overflow-hidden relative">
@@ -52,12 +58,17 @@ function SidebarVideo({ videos }: { videos: Items[] }) {
                 ))}
               </div>
             </div>
-
-            {/* آمار بازار */}
-            <MarketStats />
-
-            {/* خبرنامه */}
-            <NewsBlogForm />
+            {banner.length > 0 &&
+              banner.map((ban) => (
+                <div className="w-full" key={ban.id}>
+                  <img
+                    className="w-full"
+                    src={mainDomainOld + ban.image}
+                    alt={ban.title}
+                  />
+                </div>
+              ))}
+           
           </div>
         </div>
       </section>

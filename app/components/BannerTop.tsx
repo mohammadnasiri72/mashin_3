@@ -2,7 +2,6 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 
 function BannerTop({ banner }: { banner: Items[] }) {
-
   return (
     <>
       <div className="bannerTop_wrap my-8">
@@ -17,7 +16,9 @@ function BannerTop({ banner }: { banner: Items[] }) {
                   <img
                     src={mainDomainOld + ban.image}
                     alt={ban.title}
-                    className="w-full h-auto rounded-2xl transition-transform hover:scale-105"
+                    className="w-full aspect-10/2 object-cover rounded-2xl transition-transform hover:scale-105"
+                    loading="eager"
+                    fetchPriority="high"
                   />
                 </Link>
               </div>

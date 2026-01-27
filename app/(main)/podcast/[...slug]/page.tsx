@@ -24,15 +24,30 @@ async function pagePodcastDainamic({
     PageSize: 15,
   });
 
+  const popularNews: Items[] = await getItem({
+      TypeId: 5,
+      langCode: "fa",
+      OrderBy: 8,
+      PageIndex: 1,
+      PageSize: 5,
+    });
+
   const podcastsCat: ItemsCategory[] = await getCategory({
     TypeId: 1047,
     LangCode: "fa",
     PageIndex: 1,
     PageSize: 200,
   });
+
+   const banner: Items[] = await getItem({
+      TypeId: 1051,
+      langCode: "fa",
+      CategoryIdArray: "6415",
+    });
+
   return (
     <>
-      <Podcast podcasts={podcasts} podcastsCat={podcastsCat} />
+      <Podcast podcasts={podcasts} podcastsCat={podcastsCat} banner={banner} popularNews={popularNews} />
     </>
   );
 }

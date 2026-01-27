@@ -2,8 +2,6 @@
 
 import { Collapse } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
-import { Skeleton } from "antd";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
@@ -17,7 +15,50 @@ import { RootState } from "@/redux/store";
 import { setToken } from "@/redux/slice/token";
 import SearchBoxHeader from "./SearchBoxHeader";
 import SearchBoxHeaderMobile from "./SearchBoxHeaderMobile";
+import { mainDomainOld } from "@/utils/mainDomain";
 const Cookies = require("js-cookie");
+
+// تابع تبدیل LastMenuItem به MenuItem با ساختار سلسله‌مراتبی
+const convertApiMenuToHierarchical = (apiItems: MenuItem[]): LastMenuItem[] => {
+  // ایجاد یک مپ برای دسترسی سریع به آیتم‌ها بر اساس id
+  const itemsMap = new Map<number, MenuItem>();
+
+  // اول همه آیتم‌ها را در مپ قرار می‌دهیم
+  apiItems.forEach((item) => {
+    itemsMap.set(item.id, item);
+  });
+
+  // تابع بازگشتی برای ایجاد ساختار سلسله‌مراتبی
+  const buildHierarchy = (parentId: number | null): LastMenuItem[] => {
+    const children: LastMenuItem[] = [];
+
+    apiItems.forEach((item) => {
+      if (item.parentId === parentId) {
+        const menuItem: LastMenuItem = {
+          title: item.title,
+          url: item.url || item.href || "#",
+        };
+
+        // بررسی می‌کنیم که آیا این آیتم فرزند دارد یا نه
+        const childItems = buildHierarchy(item.id);
+        if (childItems.length > 0) {
+          menuItem.children = childItems;
+        }
+
+        children.push(menuItem);
+      }
+    });
+
+    // بر اساس priority مرتب می‌کنیم (اعداد کمتر اولویت بالاتر)
+    return children.sort((b, a) => {
+      const aItem = apiItems.find((item) => item.title === a.title);
+      const bItem = apiItems.find((item) => item.title === b.title);
+      return (aItem?.priority || 0) - (bItem?.priority || 0);
+    });
+  };
+
+  return buildHierarchy(null);
+};
 
 export default function Header({
   menu,
@@ -26,12 +67,22 @@ export default function Header({
   menu: MenuGroup[];
   setting: SettingType[];
 }) {
+  console.log(menu);
+
+  const menuItems = convertApiMenuToHierarchical(
+    menu.find((m) => m.menuKey === "primary")?.menuItems || []
+  );
+
+  const logoSrc: string | undefined = setting.find(
+    (e) => e.propertyKey === "site_logo"
+  )?.propertyValue;
+  const logoTitle: string | undefined = setting.find(
+    (e) => e.propertyKey === "site_logo"
+  )?.title;
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const [isSticky, setIsSticky] = useState(false);
-  const [menuItems, setMenuItems] = useState<LastMenuItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [user, setUser] = useState<any>({});
   const token = useSelector((state: RootState) => state.token.token);
   const disPatch = useDispatch();
 
@@ -43,15 +94,12 @@ export default function Header({
 
         if (userCookie) {
           const parsedUser = JSON.parse(userCookie);
-          setUser(parsedUser);
           disPatch(setToken(parsedUser?.token || ""));
         } else {
-          setUser(null);
           disPatch(setToken(""));
         }
       } catch (error) {
         console.error("Error parsing user cookie:", error);
-        setUser(null);
         disPatch(setToken(""));
       } finally {
         setIsLoading(false);
@@ -61,60 +109,6 @@ export default function Header({
     // بارگذاری اولیه
     loadUserFromCookie();
   }, []);
-
-  // تابع تبدیل LastMenuItem به MenuItem با ساختار سلسله‌مراتبی
-  const convertApiMenuToHierarchical = (
-    apiItems: MenuItem[]
-  ): LastMenuItem[] => {
-    // ایجاد یک مپ برای دسترسی سریع به آیتم‌ها بر اساس id
-    const itemsMap = new Map<number, MenuItem>();
-    const hierarchicalItems: LastMenuItem[] = [];
-
-    // اول همه آیتم‌ها را در مپ قرار می‌دهیم
-    apiItems.forEach((item) => {
-      itemsMap.set(item.id, item);
-    });
-
-    // تابع بازگشتی برای ایجاد ساختار سلسله‌مراتبی
-    const buildHierarchy = (parentId: number | null): LastMenuItem[] => {
-      const children: LastMenuItem[] = [];
-
-      apiItems.forEach((item) => {
-        if (item.parentId === parentId) {
-          const menuItem: LastMenuItem = {
-            title: item.title,
-            url: item.url || item.href || "#",
-          };
-
-          // بررسی می‌کنیم که آیا این آیتم فرزند دارد یا نه
-          const childItems = buildHierarchy(item.id);
-          if (childItems.length > 0) {
-            menuItem.children = childItems;
-          }
-
-          children.push(menuItem);
-        }
-      });
-
-      // بر اساس priority مرتب می‌کنیم (اعداد کمتر اولویت بالاتر)
-      return children.sort((b, a) => {
-        const aItem = apiItems.find((item) => item.title === a.title);
-        const bItem = apiItems.find((item) => item.title === b.title);
-        return (aItem?.priority || 0) - (bItem?.priority || 0);
-      });
-    };
-
-    return buildHierarchy(null);
-  };
-
-  useEffect(() => {
-    if (menu.length > 0) {
-      const primaryMenuItems =
-        menu.find((m) => m.menuKey === "primary")?.menuItems || [];
-      const convertedMenu = convertApiMenuToHierarchical(primaryMenuItems);
-      setMenuItems(convertedMenu);
-    }
-  }, [menu]);
 
   // هندل کردن اسکرول برای sticky header
   useEffect(() => {
@@ -189,12 +183,12 @@ export default function Header({
             setIsMenuOpen(false);
           }}
         >
-          <Image
-            src="/images/logo.png"
-            alt="ماشین 3"
-            width={120}
-            height={50}
+          <img
+            src={mainDomainOld + logoSrc}
+            alt={logoTitle}
             className="max-w-32"
+            loading="eager"
+            fetchPriority="high"
           />
         </Link>
         <button
@@ -220,7 +214,7 @@ export default function Header({
 
   return (
     <div
-      className={`sticky-header z-10001! ${isSticky ? "sticky-active" : ""}`}
+      className={`sticky-header z-10001!  ${isSticky ? "sticky-active" : ""}`}
     >
       {/* Main Header */}
       <header
@@ -228,7 +222,7 @@ export default function Header({
           isSticky ? "sticky" : ""
         }`}
       >
-        <div className="max-w-[1560px] mx-auto px-4 py-3">
+        <div className="max-w-[1560px] mx-auto px-4 py-3 h-16 flex flex-col justify-center">
           <div className="flex items-center">
             {/* Logo and Menu Section */}
             <div className="w-auto lg:w-2/3 xl:w-7/12 flex items-center">
@@ -236,12 +230,12 @@ export default function Header({
                 {/* Logo */}
                 <div className="w-full lg:w-2/12 xl:w-2/12 flex items-center lg:pr-4">
                   <Link href="/">
-                    <Image
-                      src="/images/logo.png"
-                      alt="ماشین 3"
-                      width={100}
-                      height={50}
-                      className="max-w-32"
+                    <img
+                      src={mainDomainOld + logoSrc}
+                      alt={logoTitle}
+                      className="max-w-28!"
+                      loading="eager"
+                      fetchPriority="high"
                     />
                   </Link>
                 </div>
@@ -251,12 +245,7 @@ export default function Header({
                   <nav className="flex items-center space-x-1 space-x-reverse">
                     {menuItems.length > 0 &&
                       menuItems.map((item, index) => (
-                        <div
-                          key={index}
-                          className="relative group"
-                          onMouseEnter={() => setActiveDropdown(index)}
-                          onMouseLeave={() => setActiveDropdown(null)}
-                        >
+                        <div key={index} className="relative group">
                           <Link
                             href={item.url}
                             className="flex items-center text-[13px] whitespace-nowrap font-medium text-[#222]! hover:bg-[#ce1a2a] hover:text-white! rounded-lg px-2 py-2 duration-300 transition-all"
@@ -286,37 +275,16 @@ export default function Header({
                         </div>
                       ))}
                     {menuItems.length === 0 && (
-                      <div className="flex items-center gap-5">
-                        <Skeleton.Button
-                          active={true}
-                          size={"small"}
-                          shape={"default"}
-                        />
-                        <Skeleton.Button
-                          active={true}
-                          size={"small"}
-                          shape={"default"}
-                        />
-                        <Skeleton.Button
-                          active={true}
-                          size={"small"}
-                          shape={"default"}
-                        />
-                        <Skeleton.Button
-                          active={true}
-                          size={"small"}
-                          shape={"default"}
-                        />
-                        <Skeleton.Button
-                          active={true}
-                          size={"small"}
-                          shape={"default"}
-                        />
-                        <Skeleton.Button
-                          active={true}
-                          size={"small"}
-                          shape={"default"}
-                        />
+                      <div className="flex items-center gap-5 px-5">
+                        <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
+                        /
+                        <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
+                        /
+                        <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
+                        /
+                        <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
+                        /
+                        <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />
                       </div>
                     )}
                   </nav>
@@ -329,7 +297,7 @@ export default function Header({
               <div className="flex items-center lg:justify-between justify-end w-full">
                 {/* Search Box */}
                 <SearchBoxHeader />
-                
+
                 <div className="w-44 ">
                   {isLoading && <LoadingSkeletonAuth />}
                   {!token && !isLoading && (
@@ -356,16 +324,17 @@ export default function Header({
           <div className="flex items-center justify-between">
             {/* Search Box */}
             <SearchBoxHeaderMobile />
-           
 
             {/* Close Button */}
             <button
+              aria-label="Menu Icon"
               className="text-white! cursor-pointer p-2 text-2xl hover:bg-[#d1182b] rounded-lg transition-all duration-300"
               onClick={() => setIsMenuOpen((e) => !e)}
             >
               <TiThMenu className="text-3xl" />
             </button>
             <Drawer
+              sx={{ zIndex: 100000 }}
               open={isMenuOpen}
               onClose={() => {
                 setIsMenuOpen(false);

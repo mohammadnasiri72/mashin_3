@@ -14,16 +14,16 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
 // Fancybox
-import { mainDomainOld } from "@/utils/mainDomain";
-import { Fancybox } from "@fancyapps/ui";
-import "@fancyapps/ui/dist/fancybox/fancybox.css";
-import { Empty, Skeleton } from "antd";
-import { FaCalendarDays, FaCodeCompare, FaCommentDots } from "react-icons/fa6";
-import { Toast, toPersianNumbers } from "@/utils/func";
+import { RootState } from "@/redux/store";
 import { PostPollSave } from "@/services/Poll/PollSave";
 import { getPollId } from "@/services/Poll/pollId";
+import { Toast, toPersianNumbers } from "@/utils/func";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { Fancybox } from "@fancyapps/ui";
+import { Skeleton } from "antd";
+import Link from "next/link";
+import { FaCalendarDays, FaCodeCompare, FaCommentDots } from "react-icons/fa6";
 import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
 
 const Cookies = require("js-cookie");
 
@@ -45,6 +45,7 @@ const CarDetails = ({
     caseId: detailsCar.id,
     pollScoreDto: [],
   });
+
 
   const token = useSelector((state: RootState) => state.token.token);
   const user = Cookies.get("user");
@@ -160,22 +161,7 @@ const CarDetails = ({
       setIsSubmitting(false);
     }
 
-    // شبیه‌سازی ارسال به سرور
-    // setTimeout(() => {
-    //   setIsSubmitting(false);
-    //   setSubmitted(true);
-    //   setIsRatingMode(false);
-
-    //   // ریست کردن امتیازها
-    //   const resetRatings: { [key: number]: number } = {};
-    //   pollData.pollDetails.forEach((question) => {
-    //     resetRatings[question.questionId] = 0;
-    //   });
-    //   setUserRatings(resetRatings);
-
-    //   // نمایش پیام موفقیت
-    //   alert("نظر شما با موفقیت ثبت شد!");
-    // }, 1000);
+   
   };
 
   const handleCancelRating = () => {
@@ -374,26 +360,25 @@ const CarDetails = ({
           </div>
 
           {/* Right Column - Image Gallery */}
-          <div className="lg:col-span-5 lg:-mt-[42%]">
+          <div className="lg:col-span-5 lg:-mt-[40%]">
             <div className="relative">
               {/* Quick Actions */}
               <div className="absolute left-full lg:translate-x-0 -translate-x-full top-0 mr-3 space-y-3 z-10 lg:z-0">
-                {[
-                  { icon: FaCodeCompare, text: "مقایسه کنید" },
-                  {
-                    icon: FaStar,
-                    text: `امتیاز کاربران ${pollData.pollScore} از ۱۰`,
-                  },
-                  { icon: FaCalendarDays, text: "سال ساخت 1400-1402" },
-                ].map((action, index) => (
-                  <div
-                    key={index}
-                    className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap"
-                  >
-                    <action.icon className="inline ml-1" />
-                    {action.text}
-                  </div>
-                ))}
+                <Link
+                  href={`/compare/${detailsCar.id}`}
+                  className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap block"
+                >
+                  <FaCodeCompare className="inline ml-1" />
+                  مقایسه کنید
+                </Link>
+                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap">
+                  <FaStar className="inline ml-1" />
+                 امتیاز کاربران {pollData.pollScore} از ۱۰
+                </div>
+                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap">
+                  <FaCalendarDays className="inline ml-1" />
+                 {detailsCar.publishCode}
+                </div>
               </div>
 
               {/* Main Image Slider */}

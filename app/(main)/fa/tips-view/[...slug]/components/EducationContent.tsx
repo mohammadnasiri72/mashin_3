@@ -2,11 +2,10 @@ import { createMarkup } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Card } from "antd";
 import Image from "next/image";
-
-
+import Link from "next/link";
+import { FaCalendar, FaEye } from "react-icons/fa";
 
 function EducationContent({ education }: { education: ItemsId }) {
-
   return (
     <Card className="rounded-xl shadow-lg">
       <div className="space-y-6">
@@ -22,17 +21,42 @@ function EducationContent({ education }: { education: ItemsId }) {
         )}
 
         {/* محتوای HTML */}
-        <div 
+        <div
           className="prose prose-lg max-w-none education-content"
-          dangerouslySetInnerHTML={createMarkup(education.body || '')}
+          dangerouslySetInnerHTML={createMarkup(education.body || "")}
         />
 
         {/* اطلاعات مفید */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-6">
+        {/* <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mt-6">
           <h4 className="font-bold text-blue-800 mb-2">📝 نکته مهم:</h4>
           <p className="text-blue-700">
             این مطلب آموزشی به صورت تخصصی برای بهبود مهارت‌های رانندگی و نگهداری از خودرو تهیه شده است.
           </p>
+        </div> */}
+        {/* News Tags */}
+        <div className="mt-8 pt-6 border-t border-gray-200">
+          <div className="flex flex-wrap gap-2 justify-between">
+            <Link
+              href={`/fa/educationtips/${education.categoryId}`}
+              className="bg-gray-100! px-3 py-1 rounded-full text-xs text-gray-700! hover:text-[#ce1a2a]! duration-300"
+            >
+              #{education.categoryTitle}
+            </Link>
+            <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 flex-wrap">
+              <div className="flex items-center gap-1 ">
+                <FaEye className="text-[#666] text-xs" />
+                <span className="font-bold text-[#666] text-xs">
+                  {education.visit}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <FaCalendar className="text-[#666] text-xs" />
+                <span className="font-bold text-[#666] text-xs">
+                  {new Date(education.created).toLocaleDateString("fa-IR")}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -41,42 +65,43 @@ function EducationContent({ education }: { education: ItemsId }) {
           line-height: 2;
           text-align: justify;
         }
-        
+
         .education-content h2 {
           color: #ce1a2a;
           margin-top: 2rem;
           margin-bottom: 1rem;
           font-weight: bold;
         }
-        
+
         .education-content h3 {
           color: #374151;
           margin-top: 1.5rem;
           margin-bottom: 0.75rem;
           font-weight: 600;
         }
-        
+
         .education-content p {
           margin-bottom: 1rem;
           color: #4b5563;
         }
-        
-        .education-content ul, .education-content ol {
+
+        .education-content ul,
+        .education-content ol {
           margin-right: 1.5rem;
           margin-bottom: 1rem;
         }
-        
+
         .education-content li {
           margin-bottom: 0.5rem;
           color: #4b5563;
         }
-        
+
         .education-content img {
           border-radius: 0.75rem;
           margin: 1.5rem auto;
           display: block;
         }
-        
+
         .education-content strong {
           color: #ce1a2a;
         }

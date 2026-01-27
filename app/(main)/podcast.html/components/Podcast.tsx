@@ -6,9 +6,13 @@ import BoxCatPodcasts from "./BoxCatPodcasts";
 function Podcast({
   podcasts,
   podcastsCat,
+  banner,
+  popularNews,
 }: {
   podcasts: Items[];
   podcastsCat: ItemsCategory[];
+  banner: Items[];
+  popularNews: Items[];
 }) {
   return (
     <>
@@ -18,7 +22,7 @@ function Podcast({
           <BoxPodcasts podcasts={podcasts} />
         </div>
         <div className="lg:w-1/4 w-full">
-          <SidebarPodcasts podcasts={podcasts} />
+          <SidebarPodcasts popularNews={popularNews} banner={banner} />
         </div>
       </div>
     </>

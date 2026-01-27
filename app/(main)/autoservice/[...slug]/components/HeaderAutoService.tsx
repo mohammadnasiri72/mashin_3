@@ -20,10 +20,10 @@ function HeaderAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
                 src={mainDomainOld + detailsAuto.image}
                 alt={detailsAuto.categoryTitle}
                 className="w-16 h-16 rounded-lg bg-white ml-4"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    "/images/default-logo.png";
-                }}
+                // onError={(e) => {
+                //   (e.target as HTMLImageElement).src =
+                //     "/images/default-logo.png";
+                // }}
               />
               <div className="flex flex-col items-start justify-center">
                 <h1 className="text-3xl font-bold mb-2! text-white!">{detailsAuto.title}</h1>

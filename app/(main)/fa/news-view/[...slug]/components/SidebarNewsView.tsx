@@ -37,7 +37,7 @@ function SidebarNewsView({
                         <h4 className="font-medium text-gray-900 text-sm leading-tight group-hover:text-white! transition-colors line-clamp-2">
                           {news.title}
                         </h4>
-                        <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 mt-2 group-hover:text-white!">
+                        <div className="flex flex-wrap items-center gap-4 text-xs text-gray-700 mt-2 group-hover:text-white!">
                           <div className="flex items-center gap-1">
                             <FaCalendar />
                             <span>{formatPersianDate(news.created)}</span>

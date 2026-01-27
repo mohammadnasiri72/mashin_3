@@ -16,30 +16,43 @@ async function pageMotorcycleDainamic({
   const searchParam = await searchParams;
   const id = Number(searchParam.id);
   const detailsMotorcycle: ItemsId = await getItemId(Number(id));
-   const Attachment: ItemsAttachment[] = await getAttachment(Number(id));
-   const comments: CommentResponse[] = await getComment({
-      id: Number(id),
-      langCode: "fa",
-      type: 0,
-      pageSize: 20,
-      pageIndex: 1,
-    });
+  const Attachment: ItemsAttachment[] = await getAttachment(Number(id));
+  const comments: CommentResponse[] = await getComment({
+    id: Number(id),
+    langCode: "fa",
+    type: 0,
+    pageSize: 20,
+    pageIndex: 1,
+  });
 
-    const detailsMotorcompetitor: ItemsId[] = detailsMotorcycle.properties.filter(
-        (e) => e.propertyId === 22643
-      )[0]?.value
-        ? await getItemByIds(
-            detailsMotorcycle.properties.filter((e) => e.propertyId === 22643)[0]?.value
-          )
-        : [];
+  const detailsMotorcompetitor: ItemsId[] = detailsMotorcycle.properties.filter(
+    (e) => e.propertyId === 22643
+  )[0]?.value
+    ? await getItemByIds(
+        detailsMotorcycle.properties.filter((e) => e.propertyId === 22643)[0]
+          ?.value
+      )
+    : [];
 
+  const advantages = detailsMotorcycle.properties.filter(
+    (e) => e.propertyId === 22639
+  );
+
+  const disadvantages = detailsMotorcycle.properties.filter(
+    (e) => e.propertyId === 22640
+  );
 
   return (
     <>
-    <MotorHeroSection detailsMotorcycle={detailsMotorcycle} />
-    <MotorDetails Attachment={Attachment} detailsMotorcycle={detailsMotorcycle} />
-    <FeaturesSectionMotor detailsMotorcycle={detailsMotorcycle} />
-    <ContentTabsMotor
+      <MotorHeroSection detailsMotorcycle={detailsMotorcycle} />
+      <MotorDetails
+        Attachment={Attachment}
+        detailsMotorcycle={detailsMotorcycle}
+      />
+      {(advantages.length !== 0 || disadvantages.length !== 0) && (
+        <FeaturesSectionMotor detailsMotorcycle={detailsMotorcycle} />
+      )}
+      <ContentTabsMotor
         Attachment={Attachment}
         detailsMotorcycle={detailsMotorcycle}
         detailsMotorcompetitor={detailsMotorcompetitor}

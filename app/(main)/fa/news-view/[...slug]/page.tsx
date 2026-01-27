@@ -35,7 +35,7 @@ async function pageNewsViewDetails({
     PageIndex: 1,
     PageSize: 5,
   });
-  const Attachment: ItemsAttachment[] = await getAttachment(2135);
+  const Attachment: ItemsAttachment[] = await getAttachment(id);
 
   const comments: CommentResponse[] = await getComment({
     id: Number(id),

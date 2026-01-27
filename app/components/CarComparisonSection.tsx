@@ -1,74 +1,74 @@
 "use client";
 
+import { getItem } from "@/services/Item/Item";
+import { mainDomainOld } from "@/utils/mainDomain";
 import { Select } from "antd";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 const { Option } = Select;
 
-interface ComparisonItem {
-  id: number;
-  image: string;
-  alt: string;
-  title: string;
-  link: string;
-}
-
-interface CarComparisonSectionProps {
-  comparisons?: ComparisonItem[];
-}
-
 const CarComparisonSection = ({
-  comparisons = [
-    {
-      id: 1,
-      image: "/images/gallery/vs1.jpg",
-      alt: "مقایسه سایپا شاهین با پژو 207i",
-      title: "مقایسه سایپا شاهین با پژو 207i",
-      link: "#",
-    },
-    {
-      id: 2,
-      image: "/images/gallery/vs2.jpg",
-      alt: "مقایسه فیدلیتی و مزدا 3",
-      title: "مقایسه فیدلیتی و مزدا 3",
-      link: "#",
-    },
-    {
-      id: 3,
-      image: "/images/gallery/vs3.jpg",
-      alt: "مقایسه جک S5 فیس لیفت با یواز پاتریوت",
-      title: "مقایسه جک S5 فیس لیفت با یواز پاتریوت",
-      link: "#",
-    },
-    {
-      id: 4,
-      image: "/images/gallery/vs4.jpg",
-      alt: "مقایسه سایپا شاهین با پژو 207i",
-      title: "مقایسه سایپا شاهین با پژو 207i",
-      link: "#",
-    },
-    {
-      id: 5,
-      image: "/images/gallery/vs4.jpg",
-      alt: "مقایسه سایپا شاهین با پژو 207i",
-      title: "مقایسه سایپا شاهین با پژو 207i",
-      link: "#",
-    },
-  ],
-}: CarComparisonSectionProps) => {
-  const [firstCarType, setFirstCarType] = useState("type_option-0");
-  const [firstCarModel, setFirstCarModel] = useState("type_option-0");
-  const [secondCarType, setSecondCarType] = useState("type_option-0");
-  const [secondCarModel, setSecondCarModel] = useState("type_option-0");
+  brandsCar,
+  whichCars,
+}: {
+  brandsCar: ItemsCategory[];
+  whichCars: Items[];
+}) => {
+  const [firstCarBrand, setFirstCarBrand] = useState<number>(0);
+  const [firstModelsCarList, setFirstModelsCarList] = useState<Items[]>([]);
+  const [firstCarModel, setFirstCarModel] = useState<number>(0);
+  const [secCarBrand, setSecCarBrand] = useState<number>(0);
+  const [secModelsCarList, setSecModelsCarList] = useState<Items[]>([]);
+  const [secCarModel, setSecCarModel] = useState<number>(0);
+  const [dataCompare, setDataCompare] = useState<ItemsId[]>([]);
+
+  const router = useRouter();
 
   const handleCompare = () => {
-    // منطق مقایسه خودروها
-  
+    router.push(`/compare/${firstCarModel},${secCarModel}`);
   };
+
+  const fetchModelCars = async () => {
+    try {
+      const modelsCarResponse: Items[] = await getItem({
+        TypeId: 1042,
+        langCode: "fa",
+        CategoryIdArray: String(firstCarBrand),
+        PageIndex: 1,
+        PageSize: 200,
+      });
+      setFirstModelsCarList(modelsCarResponse);
+    } catch (err) {}
+  };
+  const fetchModelCars2 = async () => {
+    try {
+      const modelsCarResponse: Items[] = await getItem({
+        TypeId: 1042,
+        langCode: "fa",
+        CategoryIdArray: String(secCarBrand),
+        PageIndex: 1,
+        PageSize: 200,
+      });
+      setSecModelsCarList(modelsCarResponse);
+    } catch (err) {}
+  };
+
+  useEffect(() => {
+    if (firstCarBrand > 0) {
+      fetchModelCars();
+    }
+  }, [firstCarBrand]);
+
+  useEffect(() => {
+    if (secCarBrand > 0) {
+      fetchModelCars2();
+    }
+  }, [secCarBrand]);
 
   return (
     <div className="py-3">
@@ -90,25 +90,55 @@ const CarComparisonSection = ({
 
                 <div className="grid sm:grid-cols-2 grid-cols-1 gap-8">
                   <Select
-                    value={firstCarType}
-                    onChange={(value) => setFirstCarType(value)}
+                    aria-label="select brand car1"
+                    value={firstCarBrand ? firstCarBrand : null}
+                    onChange={(value) => {
+                      setFirstCarBrand(value);
+                      setFirstCarModel(0);
+                    }}
                     className="w-full custom-ant-select"
                     size="large"
+                    placeholder="جستجوی برند..."
+                    showSearch
+                    filterOption={(input, option) => {
+                      if (!option || !option.children) return false;
+                      return option.children
+                        .toString()
+                        .toLowerCase()
+                        .includes(input.toLowerCase());
+                    }}
                   >
-                    <Option value="type_option-0">همه انواع خودرو</Option>
-                    <Option value="type_option-1">تست یک</Option>
-                    <Option value="type_option-2">تست دو</Option>
+                    {brandsCar.length > 0 &&
+                      brandsCar.map((e) => (
+                        <Option key={e.id} value={e.id}>
+                          {e.title}
+                        </Option>
+                      ))}
                   </Select>
 
                   <Select
-                    value={firstCarModel}
+                    aria-label="select model car1"
+                    disabled={firstCarBrand === 0}
+                    value={firstCarModel ? firstCarModel : null}
                     onChange={(value) => setFirstCarModel(value)}
                     className="w-full custom-ant-select"
                     size="large"
+                    placeholder="جستجوی مدل..."
+                    showSearch
+                    filterOption={(input, option) => {
+                      if (!option || !option.children) return false;
+                      return option.children
+                        .toString()
+                        .toLowerCase()
+                        .includes(input.toLowerCase());
+                    }}
                   >
-                    <Option value="type_option-0">همه انواع خودرو</Option>
-                    <Option value="type_option-1">تست یک</Option>
-                    <Option value="type_option-2">تست دو</Option>
+                    {firstModelsCarList.length > 0 &&
+                      firstModelsCarList.map((e) => (
+                        <Option key={e.id} value={e.id}>
+                          {e.title}
+                        </Option>
+                      ))}
                   </Select>
                 </div>
               </div>
@@ -121,25 +151,55 @@ const CarComparisonSection = ({
 
                 <div className="grid sm:grid-cols-2 grid-cols-1 gap-8">
                   <Select
-                    value={secondCarType}
-                    onChange={(value) => setSecondCarType(value)}
+                    aria-label="select brand car2"
+                    value={secCarBrand ? secCarBrand : null}
+                    onChange={(value) => {
+                      setSecCarBrand(value);
+                      setSecCarModel(0);
+                    }}
                     className="w-full custom-ant-select"
                     size="large"
+                    placeholder="جستجوی برند..."
+                    showSearch
+                    filterOption={(input, option) => {
+                      if (!option || !option.children) return false;
+                      return option.children
+                        .toString()
+                        .toLowerCase()
+                        .includes(input.toLowerCase());
+                    }}
                   >
-                    <Option value="type_option-0">همه انواع خودرو</Option>
-                    <Option value="type_option-1">تست یک</Option>
-                    <Option value="type_option-2">تست دو</Option>
+                    {brandsCar.length > 0 &&
+                      brandsCar.map((e) => (
+                        <Option key={e.id} value={e.id}>
+                          {e.title}
+                        </Option>
+                      ))}
                   </Select>
 
                   <Select
-                    value={secondCarModel}
-                    onChange={(value) => setSecondCarModel(value)}
+                    aria-label="select model car2"
+                    disabled={secCarBrand === 0}
+                    value={secCarModel ? secCarModel : null}
+                    onChange={(value) => setSecCarModel(value)}
                     className="w-full custom-ant-select"
                     size="large"
+                    placeholder="جستجوی مدل..."
+                    showSearch
+                    filterOption={(input, option) => {
+                      if (!option || !option.children) return false;
+                      return option.children
+                        .toString()
+                        .toLowerCase()
+                        .includes(input.toLowerCase());
+                    }}
                   >
-                    <Option value="type_option-0">همه انواع خودرو</Option>
-                    <Option value="type_option-1">تست یک</Option>
-                    <Option value="type_option-2">تست دو</Option>
+                    {secModelsCarList.length > 0 &&
+                      secModelsCarList.map((e) => (
+                        <Option key={e.id} value={e.id}>
+                          {e.title}
+                        </Option>
+                      ))}
                   </Select>
                 </div>
               </div>
@@ -159,62 +219,64 @@ const CarComparisonSection = ({
             </div>
           </div>
         </div>
-        {/* اسلایدر مقایسه‌ها */}
-        <Swiper
-          modules={[Autoplay]}
-          spaceBetween={16}
-          slidesPerView={1}
-          breakpoints={{
-            640: {
-              slidesPerView: 1,
-            },
-            768: {
-              slidesPerView: 2,
-            },
-            1024: {
-              slidesPerView: 3,
-            },
-            1280: {
-              slidesPerView: 4,
-            },
-          }}
-          autoplay={{
-            delay: 4000,
-            disableOnInteraction: false,
-          }}
-          loop={true}
-          className="comparison-swiper -mt-[350px]"
-          dir="rtl"
-        >
-          {comparisons.map((item) => (
-            <SwiperSlide key={item.id}>
-              <div className="bg-white overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
-                <div className="overflow-hidden">
-                  <Link href={item.link}>
-                    <div className="h-48 relative">
-                      <img
-                        src={item.image}
-                        alt={item.alt}
-                        className="object-contain w-full"
-                      />
-                    </div>
-                  </Link>
-                </div>
-
-                <div className="p-4 text-center w-full">
-                  <h3 className="text-sm text-[#202020]! font-medium">
-                    <Link
-                      href={item.link}
-                      className="hover:text-[#ce1a2a]! text-black! font-semibold! transition-colors duration-200"
-                    >
-                      {item.title}
+        <div className="h-72">
+          {/* اسلایدر مقایسه‌ها */}
+          <Swiper
+            modules={[Autoplay]}
+            spaceBetween={16}
+            slidesPerView={1}
+            breakpoints={{
+              640: {
+                slidesPerView: 1,
+              },
+              768: {
+                slidesPerView: 2,
+              },
+              1024: {
+                slidesPerView: 3,
+              },
+              1280: {
+                slidesPerView: 4,
+              },
+            }}
+            autoplay={{
+              delay: 4000,
+              disableOnInteraction: false,
+            }}
+            loop={true}
+            className="comparison-swiper -mt-[350px]"
+            dir="rtl"
+          >
+            {whichCars.map((item) => (
+              <SwiperSlide key={item.id}>
+                <div className="bg-white overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
+                  <div className="overflow-hidden">
+                    <Link href={item.url}>
+                      <div className="h-48 relative">
+                        <img
+                          src={mainDomainOld + item.image}
+                          alt={item.title}
+                          className="object-contain w-full"
+                        />
+                      </div>
                     </Link>
-                  </h3>
+                  </div>
+
+                  <div className="p-4 text-center w-full">
+                    <h3 className="text-sm text-[#202020]! font-medium">
+                      <Link
+                        href={item.url}
+                        className="hover:text-[#ce1a2a]! text-black! font-semibold! transition-colors duration-200"
+                      >
+                        {item.title}
+                      </Link>
+                    </h3>
+                  </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
 
       <style jsx global>{`
@@ -246,6 +308,9 @@ const CarComparisonSection = ({
           font-size: 14px !important;
           font-weight: 500 !important;
           padding: 12px !important;
+        }
+        .custom-ant-select .ant-select-selection-placeholder {
+          color: white !important;
         }
 
         .custom-ant-select .ant-select-selection-item {

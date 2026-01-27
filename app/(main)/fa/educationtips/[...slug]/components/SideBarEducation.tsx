@@ -14,7 +14,6 @@ function SideBarEducation({
   educationPopular: Items[];
   banner: Items[];
 }) {
-  console.log(educationPopular.filter((e)=>e.id===3177));
   
   return (
     <>

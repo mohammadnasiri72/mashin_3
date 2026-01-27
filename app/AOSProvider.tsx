@@ -21,7 +21,7 @@ const AOSProvider = ({ children }: AOSProviderProps) => {
     });
   }, []);
 
-  return <>{children}</>;
+  return <div className="max-w-[2000px] mx-auto">{children}</div>;
 };
 
 export default AOSProvider;

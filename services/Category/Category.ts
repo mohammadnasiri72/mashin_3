@@ -1,16 +1,39 @@
-import axiosInstance from "../axiosInstance";
+import { baseUrl } from "@/utils/mainDomain";
 
-
-export const getCategory = async (data: ItemCategoryParams): Promise<ItemsCategory[]> => {
+export const getCategory = async (
+  data: ItemCategoryParams
+): Promise<ItemsCategory[]> => {
   try {
-    const response = await axiosInstance.get<ItemsCategory[]>("/api/Category", {
-      params: data,
-      // withCredentials: true,
+    const url = new URL(`${baseUrl}api/Category`);
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        if (Array.isArray(value)) {
+          value.forEach((val) => url.searchParams.append(key, String(val)));
+        } else {
+          url.searchParams.append(key, String(value));
+        }
+      }
     });
-    return response.data;
+
+    const response = await fetch(url.toString(), {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // cache: "no-store", // برای SSR
+      next: { revalidate: 60 }, // برای ISR
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `خطا در دریافت: ${response.status} ${response.statusText}`
+      );
+    }
+
+    const responseData: ItemsCategory[] = await response.json();
+    return responseData;
   } catch (error) {
     console.error("خطا در دریافت دسته بندی:", error);
     throw error;
   }
 };
-

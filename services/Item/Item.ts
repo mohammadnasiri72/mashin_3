@@ -19,7 +19,7 @@ export const getItem = async (data: ItemParams): Promise<Items[]> => {
         "Content-Type": "application/json",
       },
       // cache: "no-store", // برای SSR
-      next: { revalidate: 600 } // برای ISR
+      next: { revalidate: 60 } // برای ISR
     });
 
     if (!response.ok) {

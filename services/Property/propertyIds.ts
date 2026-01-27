@@ -10,8 +10,8 @@ export const getPropertyIds = async (ids: string): Promise<properties[]> => {
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "no-store", // برای SSR
-      // next: { revalidate: 3600 } // برای ISR
+      // cache: "no-store", // برای SSR
+      next: { revalidate: 60 } // برای ISR
     });
 
     if (!response.ok) {

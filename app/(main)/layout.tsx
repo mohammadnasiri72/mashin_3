@@ -25,6 +25,7 @@ export default async function RootLayout({
     CategoryIdArray: "6390",
   });
 
+
   return (
     <>
       <Header menu={menu} setting={setting} />

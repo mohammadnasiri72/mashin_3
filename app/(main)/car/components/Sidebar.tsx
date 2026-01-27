@@ -107,7 +107,7 @@ const Sidebar = ({
                         src={mainDomainOld + model.image}
                         alt={model.title}
                         aria-label={model.title}
-                        className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-32 object-contain group-hover:scale-105 transition-transform duration-300"
                       />
                       <div className="absolute inset-0 bg-black/20 transition-all duration-300"></div>
                       <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center absolute left-0 bottom-0">

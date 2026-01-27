@@ -20,6 +20,7 @@ function ComparisonTable({
   car2,
   comparisonTableData,
 }: ComparisonTableProps) {
+  
   const numEN1 = car1.properties.find((e) => e.propertyId === 22654)?.value;
   const numEN2 = car2.properties.find((e) => e.propertyId === 22654)?.value;
 

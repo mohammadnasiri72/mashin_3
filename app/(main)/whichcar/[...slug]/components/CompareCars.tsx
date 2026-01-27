@@ -7,6 +7,7 @@ import CompareContent from "./CompareContent";
 import RelatedCompare from "./RelatedCompare";
 import SideBarCompareCars from "./SideBarCompareCars";
 import WhichcarsComments from "./WhichcarsComments";
+import HeroSectionWhichcars from "./HeroSectionWhichcars";
 
 function CompareCars({
   whichcars,
@@ -154,7 +155,7 @@ function CompareCars({
   return (
     <div className="min-h-screen bg-gray-50 w-full">
       {/* هدر صفحه */}
-      <div className="bg-white shadow-lg">
+      {/* <div className="bg-white shadow-lg">
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div>
@@ -183,7 +184,8 @@ function CompareCars({
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
+      <HeroSectionWhichcars whichcars={whichcars}/>
 
       {/* باکس تب ها */}
       <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 mt-4 mb-8">

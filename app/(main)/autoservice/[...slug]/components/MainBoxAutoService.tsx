@@ -5,20 +5,28 @@ import { Card, Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
 import CommentsAutoService from "./CommentsAutoService";
 import ContactUsAutoService from "./ContactUsAutoService";
-import GalleryAutoService from "./GalleryAutoService";
-import HeaderAutoService from "./HeaderAutoService";
-import IntroductionAutoService from "./IntroductionAutoService";
-import ServicesAutoService from "./ServicesAutoService";
+import HeroSectionAutoService from "./HeroSectionAutoService";
+import RatingAutoService from "./RatingAutoService";
 import SidebarAutoService from "./SidebarAutoService";
 
-function MainBoxAutoService({ detailsAuto , comments , id , banner}: { detailsAuto: ItemsId , comments:CommentResponse[] , id:number , banner:Items[]}) {
+function MainBoxAutoService({
+  detailsAuto,
+  comments,
+  id,
+  banner,
+  pollData
+}: {
+  detailsAuto: ItemsId;
+  comments: CommentResponse[];
+  id: number;
+  banner: Items[];
+  pollData:PollData
+}) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
   const navbarRef = useRef<HTMLDivElement>(null);
 
   // رفرنس‌های مربوط به هر بخش
-  const introRef = useRef<HTMLDivElement>(null);
-  const galleryRef = useRef<HTMLDivElement>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
@@ -32,11 +40,9 @@ function MainBoxAutoService({ detailsAuto , comments , id , banner}: { detailsAu
       }
 
       const sections = [
-        { key: "1", ref: introRef },
-        { key: "2", ref: galleryRef },
-        { key: "3", ref: contactRef },
-        { key: "4", ref: servicesRef },
-        { key: "5", ref: commentsRef },
+        { key: "1", ref: contactRef },
+        { key: "2", ref: servicesRef },
+        { key: "3", ref: commentsRef },
       ];
 
       let currentActiveKey = activeKey;
@@ -100,11 +106,9 @@ function MainBoxAutoService({ detailsAuto , comments , id , banner}: { detailsAu
     const sectionRefs: {
       [key: string]: React.RefObject<HTMLDivElement | null>;
     } = {
-      "1": introRef,
-      "2": galleryRef,
-      "3": contactRef,
-      "4": servicesRef,
-      "5": commentsRef,
+      "1": contactRef,
+      "2": servicesRef,
+      "3": commentsRef,
     };
 
     const targetRef = sectionRefs[key];
@@ -135,22 +139,14 @@ function MainBoxAutoService({ detailsAuto , comments , id , banner}: { detailsAu
   const items: TabsProps["items"] = [
     {
       key: "1",
-      label: "معرفی نمایندگی",
+      label: "مشخصات نمایندگی",
     },
     {
       key: "2",
-      label: "گالری تصاویر",
+      label: "نظرسنجی",
     },
     {
       key: "3",
-      label: "تماس با ما",
-    },
-    {
-      key: "4",
-      label: "خدمات و سرویس‌ها",
-    },
-    {
-      key: "5",
       label: "نظرات مشتریان",
     },
   ];
@@ -158,13 +154,12 @@ function MainBoxAutoService({ detailsAuto , comments , id , banner}: { detailsAu
   return (
     <div className="min-h-screen bg-gray-50 w-full">
       {/* هدر صفحه */}
-      <HeaderAutoService detailsAuto={detailsAuto} />
-
+      <HeroSectionAutoService detailsAuto={detailsAuto} />
       {/* باکس تب ها */}
-      <div ref={navbarRef} className="navbar-tabs sticky w-full px-2">
+      <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 z-10000!">
         <Card
           style={{ padding: 0, margin: 0 }}
-          className="rounded-xl shadow-lg"
+          className="rounded-xl shadow-lg z-1000000!"
         >
           <Tabs
             activeKey={activeKey}
@@ -180,38 +175,31 @@ function MainBoxAutoService({ detailsAuto , comments , id , banner}: { detailsAu
           {/* محتوای اصلی */}
 
           <div className="lg:w-3/4 w-full px-2">
-            {/* Content Sections */}
             <div className="space-y-8 mt-6">
-              {/* بخش معرفی */}
-              <div id="intro" className="section-anchor" ref={introRef}>
-                <IntroductionAutoService detailsAuto={detailsAuto} />
-              </div>
-
-              {/* بخش گالری */}
-              <div id="gallery" className="section-anchor" ref={galleryRef}>
-                <GalleryAutoService detailsAuto={detailsAuto} />
-              </div>
-
-              {/* بخش تماس با ما */}
+              {/* بخش مشخصات نمایندگی */}
               <div id="contact" className="section-anchor" ref={contactRef}>
-                <ContactUsAutoService />
+                <ContactUsAutoService detailsAuto={detailsAuto} />
               </div>
 
-              {/* بخش خدمات و سرویس‌ها */}
+              {/* بخش نظرسنجی */}
               <div id="services" className="section-anchor" ref={servicesRef}>
-                <ServicesAutoService />
+                <RatingAutoService initialPollData={pollData} detailsAuto={detailsAuto}/>
               </div>
             </div>
           </div>
 
           {/* سایدبار */}
           <div className="lg:w-1/4 w-full mt-6 lg:mt-0">
-            <SidebarAutoService banner={banner}/>
+            <SidebarAutoService banner={banner} />
           </div>
         </div>
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor" ref={commentsRef}>
-          <CommentsAutoService detailsAuto={detailsAuto} comments={comments} id={id}/>
+          <CommentsAutoService
+            detailsAuto={detailsAuto}
+            comments={comments}
+            id={id}
+          />
         </div>
       </div>
 

@@ -1,186 +1,81 @@
 "use client";
 
+import { getPrice } from "@/services/Price/Price";
+import { getPriceBrands } from "@/services/Price/PriceBrands";
+import { formatPersianDate } from "@/utils/func";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-interface BrandItem {
-  id: number;
-  image: string;
-  alt: string;
-  name: string;
-  type: "domestic" | "chinese" | "foreign";
-}
-
-interface PriceItem {
-  id: number;
-  brand: string;
-  model: string;
-  price: string;
-  date: string;
-  brandId: number;
-}
-
-interface CarBrandPricesSectionProps {
-  brands?: BrandItem[];
-  priceItems?: PriceItem[];
-}
-
 const CarBrandPricesSection = ({
-  brands = [
-    {
-      id: 1,
-      image: "/images/gallery/benz.png",
-      alt: "Mercedes-Benz",
-      name: "Mercedes-Benz",
-      type: "foreign",
-    },
-    {
-      id: 2,
-      image: "/images/gallery/ford.png",
-      alt: "Ford",
-      name: "Ford",
-      type: "foreign",
-    },
-    {
-      id: 3,
-      image: "/images/gallery/bmw.png",
-      alt: "BMW",
-      name: "BMW",
-      type: "foreign",
-    },
-    {
-      id: 4,
-      image: "/images/gallery/porsche.png",
-      alt: "Porsche",
-      name: "Porsche",
-      type: "foreign",
-    },
-    {
-      id: 5,
-      image: "/images/gallery/pagani.png",
-      alt: "Pagani",
-      name: "Pagani",
-      type: "foreign",
-    },
-    {
-      id: 6,
-      image: "/images/gallery/jeep.png",
-      alt: "Jeep",
-      name: "Jeep",
-      type: "foreign",
-    },
-    {
-      id: 7,
-      image: "/images/gallery/toyota.png",
-      alt: "Toyota",
-      name: "Toyota",
-      type: "foreign",
-    },
-  ],
-  priceItems = [
-    {
-      id: 1,
-      brand: "پورشه",
-      model: "ماکان",
-      price: "۱۸,۰۰۰,۰۰۰,۰۰۰",
-      date: "۱۴۰۳/۰۳/۲۲",
-      brandId: 4,
-    },
-    {
-      id: 2,
-      brand: "پورشه",
-      model: "ماکان",
-      price: "۱۸,۰۰۰,۰۰۰,۰۰۰",
-      date: "۱۴۰۳/۰۳/۲۲",
-      brandId: 4,
-    },
-    {
-      id: 3,
-      brand: "پورشه",
-      model: "ماکان",
-      price: "۱۸,۰۰۰,۰۰۰,۰۰۰",
-      date: "۱۴۰۳/۰۳/۲۲",
-      brandId: 4,
-    },
-    {
-      id: 4,
-      brand: "پورشه",
-      model: "ماکان",
-      price: "۱۸,۰۰۰,۰۰۰,۰۰۰",
-      date: "۱۴۰۳/۰۳/۲۲",
-      brandId: 4,
-    },
-    {
-      id: 5,
-      brand: "پورشه",
-      model: "ماکان",
-      price: "۱۸,۰۰۰,۰۰۰,۰۰۰",
-      date: "۱۴۰۳/۰۳/۲۲",
-      brandId: 4,
-    },
-    {
-      id: 6,
-      brand: "پورشه",
-      model: "ماکان",
-      price: "۱۸,۰۰۰,۰۰۰,۰۰۰",
-      date: "۱۴۰۳/۰۳/۲۲",
-      brandId: 4,
-    },
-    {
-      id: 7,
-      brand: "پورشه",
-      model: "ماکان",
-      price: "۱۸,۰۰۰,۰۰۰,۰۰۰",
-      date: "۱۴۰۳/۰۳/۲۲",
-      brandId: 4,
-    },
-    {
-      id: 8,
-      brand: "پورشه",
-      model: "ماکان",
-      price: "۱۸,۰۰۰,۰۰۰,۰۰۰",
-      date: "۱۴۰۳/۰۳/۲۲",
-      brandId: 4,
-    },
-    {
-      id: 9,
-      brand: "پورشه",
-      model: "ماکان",
-      price: "۱۸,۰۰۰,۰۰۰,۰۰۰",
-      date: "۱۴۰۳/۰۳/۲۲",
-      brandId: 4,
-    },
-    {
-      id: 10,
-      brand: "پورشه",
-      model: "ماکان",
-      price: "۱۸,۰۰۰,۰۰۰,۰۰۰",
-      date: "۱۴۰۳/۰۳/۲۲",
-      brandId: 4,
-    },
-  ],
-}: CarBrandPricesSectionProps) => {
-  const [activeTab, setActiveTab] = useState<"tab-1" | "tab-2" | "tab-3">(
-    "tab-3"
-  );
-  const [activeBrand, setActiveBrand] = useState<number>(4); // Porsche is active by default
+  initialBrands,
+  initialPrices,
+}: {
+  initialBrands: PriceBrands[];
+  initialPrices: Price[];
+}) => {
+  const [type, setType] = useState<string>("internal");
+  const [loadingBrands, setLoadingBrands] = useState<boolean>(false);
+  const [brands, setBrands] = useState<PriceBrands[]>(initialBrands);
+  const [loadingPrices, setLoadingPrices] = useState<boolean>(false);
+  const [prices, setPrices] = useState<Price[]>(initialPrices);
+  const [activeBrand, setActiveBrand] = useState<number>(NaN);
 
-  const handleTabChange = (tab: "tab-1" | "tab-2" | "tab-3") => {
-    setActiveTab(tab);
+  const fetchBrands = async (type: string) => {
+    setLoadingBrands(true);
+    setLoadingPrices(true);
+    try {
+      const brands: PriceBrands[] = await getPriceBrands(type);
+      setBrands(brands);
+      if (brands.length > 0) {
+        fetchPrice(type, brands[0].id);
+        setActiveBrand(brands[0].id);
+      }
+    } catch (err) {
+    } finally {
+      setLoadingBrands(false);
+    }
   };
 
-  const handleBrandClick = (brandId: number) => {
-    setActiveBrand(brandId);
+  const fetchPrice = async (type: string, brandId: number) => {
+    setLoadingPrices(true);
+    try {
+      const price: Price[] = await getPrice({
+        Type: type,
+        BrandId: brandId,
+      });
+      setPrices(price);
+    } catch (err) {
+    } finally {
+      setLoadingPrices(false);
+    }
   };
 
-  const filteredPriceItems = priceItems.filter(
-    (item) => item.brandId === activeBrand
-  );
+  const [skeletonCount, setSkeletonCount] = useState(7);
+
+  useEffect(() => {
+    const calculateCount = () => {
+      const width = window.innerWidth;
+      if (width < 640) return 2;
+      if (width < 768) return 4;
+      if (width < 1024) return 6;
+      if (width < 1280) return 7;
+      return 7;
+    };
+
+    const handleResize = () => {
+      setSkeletonCount(calculateCount());
+    };
+
+    handleResize(); // مقدار اولیه
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div className="mb-5 mt-20">
@@ -197,143 +92,149 @@ const CarBrandPricesSection = ({
           <div className="flex gap-4">
             <button
               className={`px-4 py-2 text-gray-600 font-medium text-sm cursor-pointer whitespace-nowrap ${
-                activeTab === "tab-1"
+                type === "import"
                   ? "text-[#ce1a2a]! font-extrabold! text-[20px]!"
                   : "text-gray-600 text-sm"
               } transition-all duration-200`}
-              onClick={() => handleTabChange("tab-1")}
+              onClick={() => {
+                setType("import");
+                fetchBrands("import");
+              }}
             >
-              برند داخلی
-            </button>
-            <button
-              className={`px-4 py-2 text-gray-600 font-medium text-sm cursor-pointer whitespace-nowrap ${
-                activeTab === "tab-2"
-                  ? "text-[#ce1a2a]! font-extrabold! text-[20px]!"
-                  : "text-gray-600 text-sm"
-              } transition-all duration-200`}
-              onClick={() => handleTabChange("tab-2")}
-            >
-              برند چینی
+              خودرو وارداتی
             </button>
             <button
               className={`px-4 py-2 font-medium cursor-pointer whitespace-nowrap ${
-                activeTab === "tab-3"
+                type === "internal"
                   ? "text-[#ce1a2a]! font-extrabold! text-[20px]!"
                   : "text-gray-600 text-sm"
               } transition-all duration-200`}
-              onClick={() => handleTabChange("tab-3")}
+              onClick={() => {
+                setType("internal");
+                fetchBrands("internal");
+              }}
             >
-              برند خارجی
+              خودرو داخلی
             </button>
           </div>
         </div>
 
         {/* محتوای تب‌ها */}
         <div className="tab-content">
-          {/* تب برند داخلی */}
-          <div className={`${activeTab === "tab-1" ? "block" : "hidden"}`}>
-            <p className="text-center text-gray-500 py-8">محتوای برند داخلی</p>
-          </div>
-
-          {/* تب برند چینی */}
-          <div className={`${activeTab === "tab-2" ? "block" : "hidden"}`}>
-            <p className="text-center text-gray-500 py-8">محتوای برند چینی</p>
-          </div>
-
-          {/* تب برند خارجی */}
-          <div className={`${activeTab === "tab-3" ? "block" : "hidden"}`}>
-            {/* اسلایدر برندها */}
-            <Swiper
-              modules={[Autoplay]}
-              spaceBetween={16}
-              slidesPerView={2}
-              breakpoints={{
-                640: {
-                  slidesPerView: 2,
-                },
-                768: {
-                  slidesPerView: 4,
-                },
-                1024: {
-                  slidesPerView: 6,
-                },
-                1280: {
-                  slidesPerView: 7,
-                },
-              }}
-              autoplay={{
-                delay: 3000,
-                disableOnInteraction: false,
-              }}
-              loop={true}
-              className="brands-swiper mb-8"
-              dir="rtl"
-            >
-              {brands.map((brand) => (
-                <SwiperSlide key={brand.id}>
-                  <div
-                    className={`brand-box flex flex-col items-center text-center p-5 h-44 border border-gray-200 rounded-2xl relative bg-white cursor-pointer transition-all duration-300 ${
-                      activeBrand === brand.id
-                        ? "bg-linear-to-b from-red-500 to-[#ce1a2a] text-white! shadow-lg"
-                        : "hover:shadow-md"
-                    }`}
-                    onClick={() => handleBrandClick(brand.id)}
-                  >
-                    <div className="w-full h-24 flex items-center justify-center mb-4">
-                      <Image
-                        src={brand.image}
-                        alt={brand.alt}
-                        width={80}
-                        height={60}
-                        className="max-w-full h-auto object-contain"
-                      />
-                    </div>
-                    <h4
-                      className={`text-sm font-bold absolute bottom-5 left-0 right-0 text-center ${
+          {!loadingBrands && (
+            <div className="h-56">
+              {/* اسلایدر برندها */}
+              <Swiper
+                modules={[Autoplay]}
+                spaceBetween={16}
+                slidesPerView={2}
+                breakpoints={{
+                  640: {
+                    slidesPerView: 2,
+                  },
+                  768: {
+                    slidesPerView: 4,
+                  },
+                  1024: {
+                    slidesPerView: 6,
+                  },
+                  1280: {
+                    slidesPerView: 7,
+                  },
+                }}
+                autoplay={{
+                  delay: 3000,
+                  disableOnInteraction: false,
+                }}
+                // loop={true}
+                className="brands-swiper mb-8"
+                dir="rtl"
+              >
+                {brands.map((brand) => (
+                  <SwiperSlide key={brand.id}>
+                    <div
+                      className={`brand-box flex flex-col items-center text-center px-5 h-44 border border-gray-200 rounded-2xl relative bg-white cursor-pointer transition-all duration-300 ${
                         activeBrand === brand.id
-                          ? "text-white"
-                          : "text-gray-900"
-                      } uppercase`}
+                          ? "bg-linear-to-b from-red-500 to-[#ce1a2a] text-white! shadow-lg"
+                          : "hover:shadow-md"
+                      }`}
+                      onClick={() => {
+                        setActiveBrand(brand.id);
+                        fetchPrice(type, brand.id);
+                      }}
                     >
-                      {brand.name}
-                    </h4>
-                  </div>
-                </SwiperSlide>
+                      <div className="w-full h-24 flex items-center justify-center mb-4">
+                        <img
+                          src={brand.image || "/images/gallery/hybrid-car.png"}
+                          alt={brand.title}
+                          className="max-w-full h-auto object-contain"
+                        />
+                      </div>
+                      <h4
+                        className={`text-sm font-bold absolute bottom-1 h-10 left-0 right-0 text-center line-clamp-2 ${
+                          activeBrand === brand.id
+                            ? "text-white!"
+                            : "text-gray-900!"
+                        } uppercase`}
+                      >
+                        {brand.title}
+                      </h4>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+          )}
+          {loadingBrands && (
+            <div className="h-52 flex justify-center gap-2">
+              {[...Array(skeletonCount)].map((_, index) => (
+                <div
+                  key={index}
+                  className="w-full h-44 bg-gray-200 rounded-lg animate-pulse"
+                ></div>
               ))}
-            </Swiper>
+            </div>
+          )}
 
-            {/* محتوای مرتبط با برند انتخاب شده */}
+          {/* محتوای مرتبط با برند انتخاب شده */}
+          {!loadingPrices && (
             <div className="related-content ">
               <div className="flex flex-wrap -mx-2 -mt-5!">
-                {filteredPriceItems.slice(0, 9).map((item, index) => (
+                {prices.slice(0, 9).map((item) => (
                   <div
                     key={item.id}
                     className="w-full md:w-1/2 px-2 mb-4 transition-all! duration-500!"
                     data-aos="custom-fade-down"
                   >
                     <div className="bg-white rounded-2xl shadow-sm p-5 flex sm:flex-nowrap flex-wrap items-center gap-5 text-base font-bold text-gray-900">
-                      <div className="text-center sm:text-right w-full">
-                        {item.brand}، {item.model}
+                      <div className="text-center sm:text-right w-1/2 line-clamp-1">
+                        {item.title}
                       </div>
-                      <div className="text-center flex items-center justify-center gap-2 w-full">
-                        <Image
-                          src="/images/icons/toman.png"
-                          alt="تومان"
-                          width={12}
-                          height={8}
-                          className="w-3 h-2"
-                        />
-                        {item.price}
-                      </div>
-                      <div className="text-center sm:text-left text-sm font-medium text-gray-500 w-full">
-                        {item.date}
+                      {item.price1 > 0 ? (
+                        <div className="text-center flex items-center justify-center gap-2 w-1/4">
+                          <Image
+                            src="/images/icons/toman.png"
+                            alt="تومان"
+                            width={12}
+                            height={8}
+                            className="w-3 h-2"
+                          />
+                          {item.price1.toLocaleString()}
+                        </div>
+                      ) : (
+                        <div className="text-center flex items-center justify-center gap-2 w-1/4">
+                          ---
+                        </div>
+                      )}
+                      <div className="text-center sm:text-left text-sm font-medium text-gray-500 w-1/4">
+                        {formatPersianDate(item.modified)}
                       </div>
                     </div>
                   </div>
                 ))}
-                {filteredPriceItems.length > 9 && (
+                {prices.length > 9 && (
                   <Link
-                    href="#"
+                    href={`/price.html?type=${type}`}
                     data-aos="custom-fade-down"
                     className="text-[#ce1a2a]! bg-white w-full md:w-1/2 px-2 mb-4 rounded-2xl shadow-sm p-5 flex items-center justify-center hover:bg-linear-to-b hover:from-red-400 hover:to-[#ce1a2a] transition-all! duration-500! text-sm font-bold hover:text-white! gap-2"
                   >
@@ -343,7 +244,16 @@ const CarBrandPricesSection = ({
                 )}
               </div>
             </div>
-          </div>
+          )}
+          {loadingPrices && (
+            <div className="flex flex-wrap">
+              {[...Array(10)].map((_, index) => (
+                <div key={index} className="md:w-1/2 w-full h-16 p-1 mt-3">
+                  <div className="w-full h-16 bg-gray-200 rounded-lg animate-pulse"></div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

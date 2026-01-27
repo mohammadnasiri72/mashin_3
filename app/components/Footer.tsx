@@ -18,8 +18,18 @@ const Footer = ({
   setting: SettingType[];
   Social: Items[];
 }) => {
+
+  const logoSrc: string | undefined = setting.find(
+    (e) => e.propertyKey === "site_logo"
+  )?.propertyValue;
+  const logoTitle: string | undefined = setting.find(
+    (e) => e.propertyKey === "site_logo"
+  )?.title;
   const copyright: string | undefined = setting.find(
     (e) => e.propertyKey === "site_copyright"
+  )?.propertyValue;
+  const footerDescription: string | undefined = setting.find(
+    (e) => e.propertyKey === "site_footer_description"
   )?.propertyValue;
   // پیدا کردن منوی فوتر
   const footerMenu = menu.find((m) => m.menuKey === "menufooter");
@@ -64,33 +74,35 @@ const Footer = ({
                 <div className="logo-footer mb-4 h-7!">
                   <Link href="/" className="h-7!">
                     <img
-                      src="/images/logo.png"
-                      alt="ماشین3"
-                      className="h-7! w-auto"
+                      src={mainDomainOld + logoSrc}
+                      alt={logoTitle}
+                      className="max-w-32"
+                      loading="eager"
+                      fetchPriority="high"
                     />
                   </Link>
                 </div>
-                <p className="text-gray-600 text-sm leading-7 mb-6 text-justify">
-                  ©کلیه حقوق این وب سایت متعلق به ماشین 3 مي باشد. پروانه تاسیس
-                  واحد نشر دیجیتال : 1724112کد شامد : 1-4-65-704068-1-1 طراحی
-                  سایت و بهینه سازی :
-                  <Link
-                    href="#"
-                    className="text-[#639700]! hover:text-[#0a58ca]! duration-300 font-bold mr-1 inline-flex items-center"
-                  >
-                    ایده پویا
-                    <Image
-                      src="/images/icons/activeidea.png"
-                      alt="ایده پویا"
-                      width={16}
-                      height={16}
-                      className="mr-1"
-                    />
-                  </Link>
-                </p>
+                {footerDescription && (
+                  <p className="text-gray-600 text-sm leading-7 mb-6 text-justify">
+                    {footerDescription}
+                    <Link
+                      href="#"
+                      className="text-black! hover:text-[#0a58ca]! duration-300 font-bold mr-1 inline-flex items-center"
+                    >
+                      ایده پویا
+                      <Image
+                        src="/images/icons/activeidea.png"
+                        alt="ایده پویا"
+                        width={16}
+                        height={16}
+                        className="mr-1"
+                      />
+                    </Link>
+                  </p>
+                )}
 
                 <div className="rewards sm:flex p-5">
-                  <div className="rw-item flex flex-col items-center text-center">
+                  <div className="rw-item flex flex-col items-center text-center h-48">
                     <Image
                       src="/images/gallery/award.png"
                       alt="جایزه"
@@ -98,7 +110,7 @@ const Footer = ({
                       height={80}
                       className="mb-2"
                     />
-                    <p className="text-black font-semibold text-sm mt-2">
+                    <p className="text-black font-semibold  text-sm mt-2">
                       برنده جشواره وب و موبایل <br />
                       به انتخاب مردم
                     </p>

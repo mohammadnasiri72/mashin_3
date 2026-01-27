@@ -23,8 +23,6 @@ const MotorcycleBrandsSection = ({ brands }: { brands: ItemsCategory[] }) => {
     }
   }, [brands.length, currentSlidesPerView]);
 
- 
-
   const handleGroupClick = (groupIndex: number) => {
     if (swiperRef.current && swiperRef.current.swiper) {
       const targetSlide = groupIndex * currentSlidesPerView;
@@ -87,7 +85,7 @@ const MotorcycleBrandsSection = ({ brands }: { brands: ItemsCategory[] }) => {
 
           {/* Pagination گروهی پویا - فقط زمانی نمایش داده شود که بیش از یک گروه وجود دارد */}
           {totalGroups > 1 && (
-            <div className="lg:flex hidden justify-end gap-1">
+            <div className="lg:flex hidden justify-end gap-2">
               {Array.from({ length: totalGroups }, (_, index) => (
                 <button
                   key={index}
@@ -103,7 +101,7 @@ const MotorcycleBrandsSection = ({ brands }: { brands: ItemsCategory[] }) => {
         </div>
 
         <div className="flex flex-col lg:flex-row items-center ">
-          <div className="w-full lg:w-1/3 flex items-center justify-center pt-5">
+          <div className="w-full lg:w-1/3 flex items-center justify-center pt-5  h-72">
             <img
               src="/images/gallery/motorcycle.png"
               alt="موتورسیکلت"
@@ -114,82 +112,87 @@ const MotorcycleBrandsSection = ({ brands }: { brands: ItemsCategory[] }) => {
             {/* اسلایدر برندهای موتورسیکلت */}
             <div className="relative">
               {/* Pagination گروهی پویا برای موبایل - فقط زمانی نمایش داده شود که بیش از یک گروه وجود دارد */}
-              {totalGroups > 1 && (
-                <div className="lg:hidden flex justify-end gap-1 pb-4">
-                  {Array.from({ length: totalGroups }, (_, index) => (
-                    <button
-                      key={index}
-                      className={`custom-group-bullet ${
-                        currentGroup === index
-                          ? "custom-group-bullet-active"
-                          : ""
-                      }`}
-                      onClick={() => handleGroupClick(index)}
-                      aria-label={`گروه ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
-              <Swiper
-                ref={swiperRef}
-                modules={[Autoplay]}
-                spaceBetween={16}
-                slidesPerView={2}
-                breakpoints={{
-                  320: {
-                    slidesPerView: 2,
-                    spaceBetween: 16,
-                  },
-                  480: {
-                    slidesPerView: 2,
-                    spaceBetween: 20,
-                  },
-                  640: {
-                    slidesPerView: 3,
-                    spaceBetween: 24,
-                  },
-                  768: {
-                    slidesPerView: 4,
-                    spaceBetween: 24,
-                  },
-                  1024: {
-                    slidesPerView: 5,
-                    spaceBetween: 28,
-                  },
-                }}
-                autoplay={{
-                  delay: 3500,
-                  disableOnInteraction: false,
-                }}
-                loop={true}
-                onSlideChange={handleSlideChange}
-                onBreakpoint={handleBreakpointChange}
-                className="motorcycle-brands-swiper"
-                dir="rtl"
-              >
-                {brands.map((brand) => (
-                  <SwiperSlide key={brand.id}>
-                    <Link href={brand.url}
-                      className={`brand-box flex flex-col items-center justify-between text-center p-5 h-52! border border-gray-200 rounded-2xl relative bg-white cursor-pointer transition-all duration-300 hover:shadow-md hover:border-gray-300 `}
-                    >
-                      <div className="w-full h-28 flex items-start justify-center">
-                        <div className="h-20 flex items-center justify-center">
-                          <img
-                            src={mainDomainOld + brand.image}
-                            alt={brand.title}
-                            className="max-w-full max-h-full object-contain"
-                          />
-                        </div>
-                      </div>
-                      <h4
-                        className={`text-sm font-bold absolute bottom-5 left-0 right-0 text-center text-[#656565]! `}
+              <div className="h-8">
+                {totalGroups > 1 && (
+                  <div className="lg:hidden flex justify-end gap-2 pb-4 ">
+                    {Array.from({ length: totalGroups }, (_, index) => (
+                      <button
+                        key={index}
+                        className={`custom-group-bullet ${
+                          currentGroup === index
+                            ? "custom-group-bullet-active"
+                            : ""
+                        }`}
+                        onClick={() => handleGroupClick(index)}
+                        aria-label={`گروه ${index + 1}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className="h-56">
+                <Swiper
+                  ref={swiperRef}
+                  modules={[Autoplay]}
+                  spaceBetween={16}
+                  slidesPerView={2}
+                  breakpoints={{
+                    320: {
+                      slidesPerView: 2,
+                      spaceBetween: 16,
+                    },
+                    480: {
+                      slidesPerView: 2,
+                      spaceBetween: 20,
+                    },
+                    640: {
+                      slidesPerView: 3,
+                      spaceBetween: 24,
+                    },
+                    768: {
+                      slidesPerView: 4,
+                      spaceBetween: 24,
+                    },
+                    1024: {
+                      slidesPerView: 5,
+                      spaceBetween: 28,
+                    },
+                  }}
+                  autoplay={{
+                    delay: 3500,
+                    disableOnInteraction: false,
+                  }}
+                  loop={true}
+                  onSlideChange={handleSlideChange}
+                  onBreakpoint={handleBreakpointChange}
+                  className="motorcycle-brands-swiper"
+                  dir="rtl"
+                >
+                  {brands.map((brand) => (
+                    <SwiperSlide key={brand.id}>
+                      <Link
+                        href={brand.url}
+                        className={`brand-box flex flex-col items-center justify-between text-center p-5 h-52! border border-gray-200 rounded-2xl relative bg-white cursor-pointer transition-all duration-300 hover:shadow-md hover:border-gray-300 `}
                       >
-                        {brand.title}
-                      </h4>
-                    </Link>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+                        <div className="w-full h-28 flex items-start justify-center">
+                          <div className="h-20 flex items-center justify-center">
+                            <img
+                              src={mainDomainOld + brand.image}
+                              alt={brand.title}
+                              className="max-w-full max-h-full object-contain"
+                            />
+                          </div>
+                        </div>
+                        <h4
+                          className={`text-sm font-bold absolute bottom-5 left-0 right-0 text-center text-[#656565]! `}
+                        >
+                          {brand.title}
+                        </h4>
+                      </Link>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
             </div>
           </div>
         </div>

@@ -28,62 +28,64 @@ const PopularCarsSection = ({ carView }: { carView: Items[] }) => {
           </Link>
         </div>
 
-        {/* اسلایدر خودروها */}
-        <Swiper
-          modules={[Autoplay]}
-          spaceBetween={16}
-          slidesPerView={1.5}
-          centeredSlides={true}
-          breakpoints={{
-            640: {
-              slidesPerView: 3,
-              centeredSlides: true,
-            },
-            768: {
-              slidesPerView: 4,
-              centeredSlides: false,
-            },
-            1024: {
-              slidesPerView: 5,
-              centeredSlides: false,
-            },
-            1280: {
-              slidesPerView: 6,
-              centeredSlides: false,
-            },
-          }}
-          autoplay={{
-            delay: 3000,
-            disableOnInteraction: false,
-          }}
-          loop={true}
-          className="popular-cars-swiper"
-          dir="rtl"
-        >
-          {carView.map((car) => (
-            <SwiperSlide key={car.id}>
-              <Link href={car.url}>
-                <div className="overflow-hidden rounded-2xl group h-40 relative">
-                  <div className="relative aspect-4/3 w-full h-full">
-                    <img
-                      src={mainDomainOld + car.image}
-                      alt={car.title}
-                      className="object-contain w-full h-full"
-                    />
+        <div className="h-48">
+          {/* اسلایدر خودروها */}
+          <Swiper
+            modules={[Autoplay]}
+            spaceBetween={16}
+            slidesPerView={1.5}
+            centeredSlides={true}
+            breakpoints={{
+              640: {
+                slidesPerView: 3,
+                centeredSlides: true,
+              },
+              768: {
+                slidesPerView: 4,
+                centeredSlides: false,
+              },
+              1024: {
+                slidesPerView: 5,
+                centeredSlides: false,
+              },
+              1280: {
+                slidesPerView: 6,
+                centeredSlides: false,
+              },
+            }}
+            autoplay={{
+              delay: 3000,
+              disableOnInteraction: false,
+            }}
+            loop={true}
+            className="popular-cars-swiper"
+            dir="rtl"
+          >
+            {carView.map((car) => (
+              <SwiperSlide key={car.id}>
+                <Link href={car.url}>
+                  <div className="overflow-hidden rounded-2xl group h-40 relative">
+                    <div className="relative aspect-4/3 w-full h-full">
+                      <img
+                        src={mainDomainOld + car.image}
+                        alt={car.title}
+                        className="object-contain w-full h-full"
+                      />
+                    </div>
+
+                    {/* Shadow Overlay */}
+                    <div className="absolute bottom-0 right-0 w-full h-1/2 bg-linear-to-t from-black to-transparent opacity-100 group-hover:h-full duration-300" />
+
+                    {/* عنوان خودرو */}
+                    <h4 className="absolute flex justify-end pl-3.5 group-hover:pl-6 duration-300 w-full bottom-10 left-0 text-white! font-bold text-sm">
+                      {car.title}
+                    </h4>
                   </div>
-
-                  {/* Shadow Overlay */}
-                  <div className="absolute bottom-0 right-0 w-full h-1/2 bg-linear-to-t from-black to-transparent opacity-100 group-hover:h-full duration-300" />
-
-                  {/* عنوان خودرو */}
-                  <h4 className="absolute flex justify-end pl-3.5 group-hover:pl-6 duration-300 w-full bottom-10 left-0 text-white! font-bold text-sm">
-                    {car.title}
-                  </h4>
-                </div>
-              </Link>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+                </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       </div>
 
       <style jsx global>{`
