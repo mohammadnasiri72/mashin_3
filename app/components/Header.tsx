@@ -67,7 +67,6 @@ export default function Header({
   menu: MenuGroup[];
   setting: SettingType[];
 }) {
-
   const menuItems = convertApiMenuToHierarchical(
     menu.find((m) => m.menuKey === "primary")?.menuItems || []
   );
@@ -76,11 +75,8 @@ export default function Header({
     (e) => e.propertyKey === "site_logo"
   )?.propertyValue;
   const logoTitle: string | undefined = setting.find(
-    (e) => e.propertyKey === "site_logo"
-  )?.title;
-
-  
- 
+    (e) => e.propertyKey === "site_title"
+  )?.propertyValue;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);

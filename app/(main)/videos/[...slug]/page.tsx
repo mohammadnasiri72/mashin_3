@@ -53,12 +53,16 @@ async function pageVideosDainamic({
   });
 
   const videoCat: ItemsCategoryId = await getCategoryId(Number(id));
-  console.log(videoCat.title);
 
   return (
     <>
       <div className="bg-[#f4f4f4]">
-        <Video popularVideos={popularVideos} videos={videos} banner={banner} titleCat={videoCat.title}/>
+        <Video
+          popularVideos={popularVideos}
+          videos={videos}
+          banner={banner}
+          titleCat={videoCat.title}
+        />
         <BoxCatVideos videosCat={videosCat} />
       </div>
     </>

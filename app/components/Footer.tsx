@@ -23,8 +23,8 @@ const Footer = ({
     (e) => e.propertyKey === "site_logo"
   )?.propertyValue;
   const logoTitle: string | undefined = setting.find(
-    (e) => e.propertyKey === "site_logo"
-  )?.title;
+    (e) => e.propertyKey === "site_title"
+  )?.propertyValue;
   const copyright: string | undefined = setting.find(
     (e) => e.propertyKey === "site_copyright"
   )?.propertyValue;

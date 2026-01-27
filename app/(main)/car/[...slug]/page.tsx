@@ -9,14 +9,42 @@ import { getComment } from "@/services/Comment/Comment";
 import { getPollId } from "@/services/Poll/pollId";
 import { getItem } from "@/services/Item/Item";
 
-async function page({
-  params,
+export async function generateMetadata({
   searchParams,
 }: {
-  params: Promise<{ slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const param = await params;
+  const searchParam = await searchParams;
+  const id = searchParam.id;
+
+  const detailsCar: ItemsId = await getItemId(Number(id));
+
+  if (detailsCar.title) {
+    return {
+      title: `ماشین3 - ${
+        detailsCar.seoTitle ? detailsCar.seoTitle : detailsCar.title
+      }`,
+      description: detailsCar.seoDescription,
+      openGraph: {
+        title: `ماشین3 - ${
+          detailsCar.seoTitle ? detailsCar.seoTitle : detailsCar.title
+        }`,
+        description: detailsCar.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "مشخصات خودرو",
+      description: "مشخصات خودرو",
+    };
+  }
+}
+
+async function page({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const searchParam = await searchParams;
   const id = searchParam.id;
   const Attachment: ItemsAttachment[] = await getAttachment(Number(id));

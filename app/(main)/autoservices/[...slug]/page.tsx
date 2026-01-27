@@ -2,6 +2,40 @@ import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
 import MainBoxAutoServices from "../components/MainBoxAutoServices";
 import SidebarAutoServices from "../components/SidebarAutoServices";
+import { getCategoryId } from "@/services/Category/CategoryId";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const param = await params;
+  const id = param.slug[0];
+
+  const autoServiceCat = await getCategoryId(Number(id));
+
+  if (autoServiceCat.title) {
+    return {
+      title: `مراکز و نمایندگی های خدمات خودرو - ${
+        autoServiceCat.seoTitle ? autoServiceCat.seoTitle : autoServiceCat.title
+      }`,
+      description: autoServiceCat.seoDescription,
+      openGraph: {
+        title: `مراکز و نمایندگی های خدمات خودرو - ${
+          autoServiceCat.seoTitle
+            ? autoServiceCat.seoTitle
+            : autoServiceCat.title
+        }`,
+        description: autoServiceCat.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "مراکز و نمایندگی های خدمات خودرو",
+      description: "مراکز و نمایندگی های خدمات خودرو",
+    };
+  }
+}
 
 async function pageAutoServiceDetails({
   params,

@@ -2,6 +2,21 @@ import { getCategory } from "@/services/Category/Category";
 import CompareClient from "./components/CompareClient";
 import { getItemByIds } from "@/services/Item/ItemByIds";
 
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParam = await searchParams;
+  const type = searchParam.type;
+
+  return {
+    title: type === "car" ? "مقایسه خودروهای بازار" : "مقایسه موتورسیکلت‌ها",
+    description:
+      type === "car" ? "مقایسه خودروهای بازار" : "مقایسه موتورسیکلت‌ها",
+  };
+}
+
 async function pageCompareDainamic({
   params,
   searchParams,

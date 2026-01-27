@@ -1,5 +1,8 @@
+import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
-import CarAdsSection from "../components/CarAdsSection";
+import { getPrice } from "@/services/Price/Price";
+import { getPriceBrands } from "@/services/Price/PriceBrands";
+import { getPropertyIds } from "@/services/Property/propertyIds";
 import CarBrandPricesSection from "../components/CarBrandPricesSection";
 import CarComparisonSection from "../components/CarComparisonSection";
 import CarFinderSection from "../components/CarFinderSection";
@@ -10,12 +13,7 @@ import MotorcycleBrandsSection from "../components/MotorcycleBrandsSection";
 import NewsListSection from "../components/NewsListSection";
 import NewsSection from "../components/NewsSection";
 import PopularCarsSection from "../components/PopularCarsSection";
-import ServicesSection from "../components/ServicesSection";
 import VideoBannerSection from "../components/VideoBannerSection";
-import { getCategory } from "@/services/Category/Category";
-import { getPropertyIds } from "@/services/Property/propertyIds";
-import { getPriceBrands } from "@/services/Price/PriceBrands";
-import { getPrice } from "@/services/Price/Price";
 
 export default async function Home() {
   const slider: Items[] = await getItem({ TypeId: 6, langCode: "fa" });
@@ -146,12 +144,6 @@ export default async function Home() {
 
         {/* Car Finder Section */}
         <CarFinderSection brands={brandsCar} segmentCars={segmentCars} />
-
-        {/* Car Ads Section */}
-        {/* <CarAdsSection /> */}
-
-        {/* Services Section */}
-        {/* <ServicesSection /> */}
       </div>
     </div>
   );

@@ -1,14 +1,18 @@
 import { getItem } from "@/services/Item/Item";
 import { getMenu } from "@/services/Menu/Menu";
 import { getSetting } from "@/services/Property/setting";
+import { baseUrl } from "@/utils/mainDomain";
 import type { Metadata } from "next";
+import BannerTop from "../components/BannerTop";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import BannerTop from "../components/BannerTop";
 
 export const metadata: Metadata = {
   title: "ماشین 3 - بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
   description: "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
+  alternates: {
+    canonical: `${baseUrl}/`,
+  },
 };
 
 export default async function RootLayout({
@@ -24,7 +28,6 @@ export default async function RootLayout({
     langCode: "fa",
     CategoryIdArray: "6390",
   });
-
 
   return (
     <>

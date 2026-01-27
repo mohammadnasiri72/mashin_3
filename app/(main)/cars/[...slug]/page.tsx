@@ -3,14 +3,42 @@ import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
 import CarsDetails from "./components/CarsDetails";
 
-async function pageCarsDetails({
-  params,
+export async function generateMetadata({
   searchParams,
 }: {
-  params: Promise<{ slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const param = await params;
+  const searchParam = await searchParams;
+  const id = searchParam.id;
+
+  const carDetails: ItemsCategoryId = await getCategoryId(Number(id));
+
+  if (carDetails.title) {
+    return {
+      title: `ماشین3 - ${
+        carDetails.seoTitle ? carDetails.seoTitle : carDetails.title
+      }`,
+      description: carDetails.seoDescription,
+      openGraph: {
+        title: `ماشین3 - ${
+          carDetails.seoTitle ? carDetails.seoTitle : carDetails.title
+        }`,
+        description: carDetails.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "مشخصات خودرو",
+      description: "مشخصات خودرو",
+    };
+  }
+}
+
+async function pageCarsDetails({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
   const searchParam = await searchParams;
   const id = Number(searchParam.id);
   const carBrands: ItemsCategory[] = await getCategory({
@@ -21,6 +49,7 @@ async function pageCarsDetails({
     PageSize: 200,
   });
   const carDetails: ItemsCategoryId = await getCategoryId(id);
+
   const carView: Items[] = await getItem({
     TypeId: 1042,
     langCode: "fa",
