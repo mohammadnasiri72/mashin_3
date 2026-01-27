@@ -14,38 +14,48 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
 // Fancybox
+import { RootState } from "@/redux/store";
+import { PostPollSave } from "@/services/Poll/PollSave";
+import { getPollId } from "@/services/Poll/pollId";
+import { Toast, toPersianNumbers } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
-import "@fancyapps/ui/dist/fancybox/fancybox.css";
-import { Empty, Skeleton } from "antd";
+import { Skeleton } from "antd";
+import Link from "next/link";
 import { FaCalendarDays, FaCodeCompare, FaCommentDots } from "react-icons/fa6";
-import { toPersianNumbers } from "@/utils/func";
+import { useSelector } from "react-redux";
+
+const Cookies = require("js-cookie");
 
 const MotorDetails = ({
   Attachment,
   detailsMotorcycle,
+  initialPollData,
 }: {
   Attachment: ItemsAttachment[];
   detailsMotorcycle: ItemsId;
+  initialPollData: PollData;
 }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
+  const [isRatingMode, setIsRatingMode] = useState<boolean>(false);
+  const [userRatings, setUserRatings] = useState<{ [key: number]: number }>({});
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [pollData, setPollData] = useState<PollData>(initialPollData);
+  const [pollSaveData, setPollSaveData] = useState<PollSaveParam>({
+    caseId: detailsMotorcycle.id,
+    pollScoreDto: [],
+  });
+
+  const token = useSelector((state: RootState) => state.token.token);
+  const user = Cookies.get("user");
 
   const specifications = detailsMotorcycle.properties.filter(
     (e) => e.isTechnicalProperty
   );
 
-  const ratings = [
-    { title: "ارزش خرید به نسبت قیمت", score: 9 },
-    { title: "طراحی و ظاهر", score: 9 },
-    { title: "امکانات و قابلیت ها", score: 7 },
-  ];
-
   // Initialize Fancybox
   useEffect(() => {
-    // Import fancybox CSS dynamically
-
     Fancybox.bind("[data-fancybox='main-gallery']", {
-      // استفاده از تنظیمات معتبر Fancybox
       Toolbar: {
         display: {
           left: [],
@@ -86,6 +96,81 @@ const MotorDetails = ({
     };
   }, []);
 
+  // Initialize user ratings with poll data
+  useEffect(() => {
+    const initialRatings: { [key: number]: number } = {};
+    pollData.pollDetails.forEach((question) => {
+      initialRatings[question.questionId] = 0;
+    });
+    setUserRatings(initialRatings);
+  }, [pollData]);
+
+  const handleRatingClick = (questionId: number, score: number) => {
+    setPollSaveData((prev) => {
+      // بررسی می‌کنیم آیا این سوال قبلاً در آرایه وجود دارد یا نه
+      const existingQuestionIndex = prev.pollScoreDto.findIndex(
+        (item) => item.questionId === questionId
+      );
+
+      let newPollScoreDto;
+
+      if (existingQuestionIndex >= 0) {
+        // اگر سوال وجود دارد، امتیاز آن را آپدیت می‌کنیم
+        newPollScoreDto = [...prev.pollScoreDto];
+        newPollScoreDto[existingQuestionIndex] = {
+          questionId,
+          score,
+        };
+      } else {
+        // اگر سوال وجود ندارد، آن را اضافه می‌کنیم
+        newPollScoreDto = [...prev.pollScoreDto, { questionId, score }];
+      }
+
+      // همچنین userRatings را هم آپدیت می‌کنیم برای نمایش UI
+      setUserRatings((userPrev) => ({
+        ...userPrev,
+        [questionId]: score,
+      }));
+
+      return {
+        caseId: detailsMotorcycle.id,
+        pollScoreDto: newPollScoreDto,
+      };
+    });
+  };
+  const handleSubmitRating = async () => {
+    setIsSubmitting(true);
+    try {
+      await PostPollSave(pollSaveData, token);
+      setIsRatingMode(false);
+      try {
+        const res = await getPollId(Number(detailsMotorcycle.id));
+        setPollData(res);
+      } catch (err) {}
+      Toast.fire({
+        icon: "success",
+        title: "نظر شما با موفقیت ثبت شد",
+      });
+    } catch (error: any) {
+      Toast.fire({
+        icon: "error",
+        title: error?.response?.data || "خطا در ثبت نظرسنجی",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCancelRating = () => {
+    setIsRatingMode(false);
+    // ریست کردن امتیازها
+    const resetRatings: { [key: number]: number } = {};
+    pollData.pollDetails.forEach((question) => {
+      resetRatings[question.questionId] = 0;
+    });
+    setUserRatings(resetRatings);
+  };
+
   return (
     <section className="py-5 bg-[#f4f4f4]">
       <div className="mx-auto px-4">
@@ -118,57 +203,179 @@ const MotorDetails = ({
               ))}
             </div>
 
-            {/* Ratings */}
-            <div className="bg-gray-50 py-3 rounded-lg flex md:flex-nowrap flex-wrap mt-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                {ratings.map((rating, index) => (
-                  <div key={index} className="text-center">
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-gray-700 text-sm font-medium whitespace-nowrap">
-                        {rating.title}
-                      </span>
-                      <span className="text-red-600 font-bold">
-                        {toPersianNumbers(rating.score)}/۱۰
-                      </span>
-                    </div>
-                    <div className="flex gap-1">
-                      {[...Array(10)].map((_, i) => (
-                        <div
-                          key={i}
-                          className={`h-2 flex-1 rounded-full ${
-                            i < rating.score ? "bg-[#ce1a2a]" : "bg-[#e7abb1]"
-                          }`}
-                        ></div>
-                      ))}
-                    </div>
+            {/* Ratings Section */}
+            <div className="bg-white py-6 px-4 rounded-lg shadow-sm border border-gray-100 mt-4">
+              {isRatingMode ? (
+                // Rating Form Mode
+                <div className="space-y-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-bold text-gray-800">
+                      ثبت نظر و امتیاز شما
+                    </h3>
+                    <button
+                      onClick={handleCancelRating}
+                      className="text-sm text-[#ce1a2a]! hover:text-white! hover:bg-[#ce1a2a]! bg-slate-100 cursor-pointer px-3 py-1 rounded-lg duration-300"
+                    >
+                      انصراف
+                    </button>
                   </div>
-                ))}
-              </div>
-              <button className="mt-2 mr-2 bg-red-50 duration-300 rounded-lg text-[#ce1a2a] hover:bg-[#ce1a2a] hover:text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap">
-                <FaCommentDots className="ml-2" />
-                نظر دادن
-              </button>
+
+                  {pollData.pollDetails.map((question) => (
+                    <div key={question.questionId} className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-700 font-medium">
+                          {question.questionTitle}
+                        </span>
+                        <span className="text-[#ce1a2a] font-bold">
+                          {userRatings[question.questionId] > 0
+                            ? toPersianNumbers(userRatings[question.questionId])
+                            : "۰"}
+                          /۱۰
+                        </span>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                        {/* Rating Stars */}
+                        <div className="flex gap-1">
+                          {[...Array(10)].map((_, index) => {
+                            const score = index + 1;
+                            return (
+                              <button
+                                key={score}
+                                type="button"
+                                onClick={() =>
+                                  handleRatingClick(question.questionId, score)
+                                }
+                                className={`w-8 h-8 cursor-pointer flex items-center justify-center rounded-full transition-all duration-200 ${
+                                  score <= userRatings[question.questionId]
+                                    ? "bg-[#ce1a2a] text-white"
+                                    : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                                }`}
+                              >
+                                <span className="text-sm font-bold">
+                                  {toPersianNumbers(score)}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Rating Progress Bar */}
+                      <div className="flex gap-1">
+                        {[...Array(10)].map((_, i) => {
+                          const score = i + 1;
+                          return (
+                            <div
+                              onClick={() =>
+                                handleRatingClick(question.questionId, score)
+                              }
+                              key={i}
+                              className={`h-2 flex-1 rounded-full cursor-pointer ${
+                                i < userRatings[question.questionId]
+                                  ? "bg-[#ce1a2a]"
+                                  : "bg-gray-200"
+                              }`}
+                            ></div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Submit Button */}
+                  <div className="pt-4 border-t border-gray-200">
+                    <button
+                      onClick={handleSubmitRating}
+                      disabled={
+                        isSubmitting ||
+                        Object.values(userRatings).some(
+                          (rating) => rating === 0
+                        )
+                      }
+                      className={`w-full cursor-pointer py-3 px-6 rounded-lg font-bold transition-all duration-300 flex items-center justify-center ${
+                        Object.values(userRatings).some(
+                          (rating) => rating === 0
+                        )
+                          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                          : "bg-[#ce1a2a] text-white! hover:bg-[#b01625]"
+                      }`}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-2"></div>
+                          در حال ثبت...
+                        </>
+                      ) : (
+                        <>
+                          <FaCommentDots className="ml-2" />
+                          ثبت نظر و امتیاز
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                // Display Mode
+                <div className="bg-gray-50 py-3 px-4 rounded-lg flex md:flex-nowrap flex-wrap">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+                    {pollData.pollDetails.map((rating, index) => (
+                      <div key={index} className="text-center">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-gray-700 text-sm font-medium whitespace-nowrap">
+                            {rating.questionTitle}
+                          </span>
+                          <span className="text-[#ce1a2a] font-bold">
+                            {toPersianNumbers(rating.avgScore)}/۱۰
+                          </span>
+                        </div>
+                        <div className="flex gap-1">
+                          {[...Array(10)].map((_, i) => (
+                            <div
+                              key={i}
+                              className={`h-2 flex-1 rounded-full ${
+                                i < rating.avgScore
+                                  ? "bg-[#ce1a2a]"
+                                  : "bg-[#e7abb1]"
+                              }`}
+                            ></div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => setIsRatingMode(true)}
+                    className="mt-4 md:mt-0 mr-2 bg-red-50 duration-300 rounded-lg text-[#ce1a2a] hover:bg-[#ce1a2a] hover:text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
+                  >
+                    <FaCommentDots className="ml-2" />
+                    نظر دادن
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Right Column - Image Gallery */}
-          <div className="lg:col-span-5 lg:-mt-[42%]">
+          <div className="lg:col-span-5 lg:-mt-[40%]">
             <div className="relative">
               {/* Quick Actions */}
               <div className="absolute left-full lg:translate-x-0 -translate-x-full top-0 mr-3 space-y-3 z-10 lg:z-0">
-                {[
-                  { icon: FaCodeCompare, text: "مقایسه کنید" },
-                  { icon: FaStar, text: "امتیاز کاربران ۸ از ۱۰" },
-                  { icon: FaCalendarDays, text: "سال ساخت 1400-1402" },
-                ].map((action, index) => (
-                  <div
-                    key={index}
-                    className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap"
-                  >
-                    <action.icon className="inline ml-1" />
-                    {action.text}
-                  </div>
-                ))}
+                <Link
+                  href={`/compare/${detailsMotorcycle.id}`}
+                  className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap block"
+                >
+                  <FaCodeCompare className="inline ml-1" />
+                  مقایسه کنید
+                </Link>
+                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap">
+                  <FaStar className="inline ml-1" />
+                  امتیاز کاربران {pollData.pollScore} از ۱۰
+                </div>
+                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap">
+                  <FaCalendarDays className="inline ml-1" />
+                  {detailsMotorcycle.publishCode}
+                </div>
               </div>
 
               {/* Main Image Slider */}

@@ -73,13 +73,6 @@ function EducationView({
         }
       }
 
-      // if (
-      //   window.innerHeight + window.scrollY >=
-      //   document.body.offsetHeight - 200
-      // ) {
-      //   currentActiveKey = "3";
-      // }
-
       if (currentActiveKey !== activeKey) {
         setActiveKey(currentActiveKey);
       }
@@ -138,14 +131,22 @@ function EducationView({
   };
 
   const items = [
-    {
-      key: "1",
-      label: "محتوا و توضیحات",
-    },
-    {
-      key: "2",
-      label: "مطالب مرتبط",
-    },
+    ...(education
+      ? [
+          {
+            key: "1",
+            label: "محتوا و توضیحات",
+          },
+        ]
+      : []),
+    ...(relatedEducations.length > 0
+      ? [
+          {
+            key: "2",
+            label: "مطالب مرتبط",
+          },
+        ]
+      : []),
     {
       key: "3",
       label: "نظرات کاربران",
@@ -154,36 +155,7 @@ function EducationView({
 
   return (
     <div className="min-h-screen bg-gray-50 w-full">
-      {/* هدر صفحه */}
-      {/* <div className="bg-white shadow-lg">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            <div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-800">
-                {education.title}
-              </h1>
-              <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-                <span>دسته‌بندی: {education.categoryTitle}</span>
-                <span>•</span>
-                <span>تعداد بازدید: {education.visit}</span>
-                <span>•</span>
-                <span>
-                  تاریخ انتشار:{" "}
-                  {new Date(education.created).toLocaleDateString("fa-IR")}
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="bg-[#ce1a2a] cursor-pointer text-white! px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
-                اشتراک گذاری
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
       <HeroSectionEdu education={education} />
-
       {/* باکس تب ها */}
       <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 mt-4">
         <Card
@@ -206,22 +178,27 @@ function EducationView({
           <div className="lg:w-3/4 w-full">
             <div className="space-y-8">
               {/* بخش محتوا و توضیحات */}
-              <div id="content" className="section-anchor" ref={contentRef}>
-                <EducationContent education={education} />
-              </div>
+              {education && (
+                <div id="content" className="section-anchor" ref={contentRef}>
+                  <EducationContent education={education} />
+                </div>
+              )}
 
               {/* بخش مطالب مرتبط */}
-              <div id="related" className="section-anchor" ref={relatedRef}>
-                <RelatedEducation
-                  relatedEducations={relatedEducations}
-                />
-              </div>
+              {relatedEducations.length > 0 && (
+                <div id="related" className="section-anchor" ref={relatedRef}>
+                  <RelatedEducation relatedEducations={relatedEducations} />
+                </div>
+              )}
             </div>
           </div>
 
           {/* سایدبار */}
           <div className="lg:w-1/4 w-full">
-            <SidebarEducation popularEducations={popularEducations} banner={banner} />
+            <SidebarEducation
+              popularEducations={popularEducations}
+              banner={banner}
+            />
           </div>
         </div>
 
@@ -262,6 +239,7 @@ function EducationView({
         .education-details-tabs .ant-tabs-tab {
           padding: 12px 24px;
           font-weight: 600;
+          height: 50px !important;
         }
 
         .education-details-tabs .ant-tabs-tab-active {
@@ -294,7 +272,7 @@ function EducationView({
 
         @media (min-width: 1024px) {
           .navbar-tabs.sticky {
-            top: 65px;
+            top: 60px;
           }
         }
       `}</style>

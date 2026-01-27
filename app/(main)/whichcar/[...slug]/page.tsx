@@ -22,7 +22,7 @@ async function pageWhichcarsDainamic({
 
   const whichcars: ItemsId = await getItemId(id);
   const ids = whichcars.properties.find((w) => w.propertyId === 22664)?.value;
-  
+
   let dataCompare: ItemsId[] = [];
   if (ids) {
     dataCompare = await getItemByIds(String(ids));
@@ -30,9 +30,16 @@ async function pageWhichcarsDainamic({
   const popularComparisons: Items[] = await getItem({
     TypeId: 1045,
     langCode: "fa",
-    PageSize: 15,
+    PageSize: 5,
     PageIndex: 1,
     OrderBy: 8,
+  });
+  const ralatedComparisons: Items[] = await getItem({
+    TypeId: 1045,
+    langCode: "fa",
+    PageSize: 17,
+    PageIndex: 1,
+    CategoryIdArray: String(whichcars.categoryId),
   });
 
   const banner: Items[] = await getItem({
@@ -55,6 +62,9 @@ async function pageWhichcarsDainamic({
         whichcars={whichcars}
         dataCompare={dataCompare}
         popularComparisons={popularComparisons}
+        ralatedComparisons={ralatedComparisons
+          .filter((e) => e.id !== id)
+          .slice(0, 16)}
         comments={comments}
         id={Number(id)}
         banner={banner}

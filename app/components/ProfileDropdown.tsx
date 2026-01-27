@@ -40,6 +40,7 @@ export default function ProfileDropdown() {
   const user = Cookies.get("user");
   const name = user ? JSON.parse(user)?.displayName : "";
   const token = useSelector((state: RootState) => state.token.token);
+
   const handleLogout = async () => {
     try {
       if (token) {
@@ -55,40 +56,13 @@ export default function ProfileDropdown() {
         title: error.response.data || "خطا در خروج",
       });
     } finally {
-      Cookies.set("user", JSON.stringify(createInitialUserData()) , { expires: 7 });
+      Cookies.set("user", JSON.stringify(createInitialUserData()), {
+        expires: 7,
+      });
       disPatch(setToken(""));
       setOpen(false);
     }
   };
-
-  // استفاده از تایپ ساده‌تر
-  const menuItems: MenuItemType[] = [
-    {
-      key: "dashboard",
-      icon: <DashboardOutlined />,
-      label: (
-        <Link href="/dashboard" className="flex items-center gap-2">
-          داشبورد
-        </Link>
-      ),
-    },
-
-    {
-      type: "divider" as const,
-    },
-    {
-      key: "logout",
-      icon: <LogoutOutlined />,
-      label: (
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 w-full text-right text-red-600"
-        >
-          خروج از حساب
-        </button>
-      ),
-    },
-  ];
 
   // بستن dropdown با کلیک بیرون
   useEffect(() => {
@@ -134,7 +108,7 @@ export default function ProfileDropdown() {
           }`}
         >
           <div>
-            <Link
+            {/* <Link
               href="/dashboard"
               onClick={() => {}}
               className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
@@ -142,7 +116,7 @@ export default function ProfileDropdown() {
               <DashboardOutlined />
               <span className="flex items-center gap-2">داشبورد</span>
             </Link>
-            <Divider className="m-0! p-0!" />
+            <Divider className="m-0! p-0!" /> */}
             <div
               onClick={() => {
                 handleLogout();

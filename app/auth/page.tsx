@@ -76,6 +76,8 @@ const AuthPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("register");
 
   // حالت مودال بازیابی رمز عبور
+  const [loadingLogin, setLoadingLogin] = useState<boolean>(false);
+  const [loadingRegister, setLoadingRegister] = useState<boolean>(false);
   const [resetPasswordModal, setResetPasswordModal] = useState<boolean>(false);
   const [resetPasswordEmail, setResetPasswordEmail] = useState<string>("");
   const [errResetPasswordEmail, setErrResetPasswordEmail] =
@@ -149,7 +151,7 @@ const AuthPage: React.FC = () => {
     if (!validateLoginForm()) {
       return;
     }
-
+    setLoadingLogin(true);
     try {
       const result = await PostLogin(loginData);
       if (result.token) {
@@ -157,7 +159,7 @@ const AuthPage: React.FC = () => {
           icon: "success",
           title: "ورود با موفقیت انجام شد",
         });
-        Cookies.set("user", JSON.stringify(result) , { expires: 7 });
+        Cookies.set("user", JSON.stringify(result), { expires: 7 });
         Router.push("/");
       }
     } catch (error: any) {
@@ -165,6 +167,8 @@ const AuthPage: React.FC = () => {
         icon: "error",
         title: error.response.data || "خطا در ورود به حساب",
       });
+    } finally {
+      setLoadingLogin(false);
     }
   };
   const Router = useRouter();
@@ -174,7 +178,7 @@ const AuthPage: React.FC = () => {
     if (!validateRegisterForm()) {
       return;
     }
-
+    setLoadingRegister(true);
     try {
       const result = await PostRegister(registerData);
 
@@ -191,6 +195,8 @@ const AuthPage: React.FC = () => {
         icon: "error",
         title: error.response.data || "خطا در ثبت‌ نام",
       });
+    } finally {
+      setLoadingRegister(false);
     }
   };
 
@@ -260,6 +266,7 @@ const AuthPage: React.FC = () => {
                       onLoginChange={handleLoginChange}
                       onResetPassword={() => setResetPasswordModal(true)}
                       onLogin={handleLogin}
+                      loading={loadingLogin}
                     />
                   ),
                 },
@@ -277,6 +284,7 @@ const AuthPage: React.FC = () => {
                       registerErrors={registerErrors}
                       onRegisterChange={handleRegisterChange}
                       onRegister={handleRegister}
+                      loading={loadingRegister}
                     />
                   ),
                 },

@@ -10,33 +10,12 @@ import "@fancyapps/ui/dist/fancybox/fancybox.css";
 const Sidebar = ({
   detailsMotorcompetitor,
   detailsMotorcycle,
+  motorcyclesModel,
 }: {
   detailsMotorcompetitor: ItemsId[];
   detailsMotorcycle: ItemsId;
+  motorcyclesModel: Items[];
 }) => {
-  const shahinModels = [
-    {
-      image: "/images/gallery/shahin-s.jpg",
-      title: "شاهین S",
-      link: "#",
-    },
-    {
-      image: "/images/gallery/shahin-g.jpg",
-      title: "شاهین G",
-      link: "#",
-    },
-    {
-      image: "/images/gallery/shahin-automatic-cv.jpg",
-      title: "شاهین اتوماتیک CVT",
-      link: "#",
-    },
-    {
-      image: "/images/gallery/shahin-plus.jpg",
-      title: "شاهین پلاس",
-      link: "#",
-    },
-  ];
-
   // Initialize Fancybox
   useEffect(() => {
     Fancybox.bind("[data-fancybox='sidebar-gallery1']", {
@@ -106,88 +85,90 @@ const Sidebar = ({
 
   return (
     <div className="sidebar space-y-6">
-      {/* مدل‌های شاهین */}
-      <div className="sidebar_widget bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-        <h3 className="widget_title text-lg font-bold text-gray-900 mb-3!">
-          <span className="hover:text-red-600 transition-colors">
-            مدل های {detailsMotorcycle.sourceName} {detailsMotorcycle.title}
-          </span>
-        </h3>
+      {motorcyclesModel.length > 0 && (
+        <div className="sidebar_widget bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <h3 className="widget_title text-lg font-bold text-gray-900 mb-3!">
+            <span>
+              مدل های {detailsMotorcycle.sourceName} {detailsMotorcycle.title}
+            </span>
+          </h3>
 
-        <div className="space-y-4 flex flex-wrap">
-          {shahinModels.map((model, index) => (
-            <div
-              key={index}
-              className="px-0 sm:px-2 lg:px-0 lg:w-full sm:w-1/2 w-full"
-            >
-              <div className="h-32 relative rounded-lg overflow-hidden group w-full ">
-                {/* استفاده از Link با legacyBehavior */}
+          <div className="space-y-4 flex flex-wrap">
+            {motorcyclesModel.map((model, index) => (
+              <div
+                key={index}
+                className="px-0 sm:px-2 lg:px-0 lg:w-full sm:w-1/2 w-full"
+              >
+                <div className="h-32 relative rounded-lg overflow-hidden group w-full ">
 
-                <div className="block w-full h-full">
-                  <a
-                    href={model.image}
-                    data-fancybox="sidebar-gallery1"
-                    data-caption={model.title}
-                    aria-label={`بزرگنمایی تصویر ${model.title}`}
-                    className="block w-full h-full"
-                  >
-                    <Image
-                      src={model.image}
-                      alt={model.title}
-                      fill
-                      className="w-full group-hover:scale-105 h-32 object-cover transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-black/20 transition-all duration-300"></div>
+                  <div className="block w-full h-full">
+                    <a
+                      href={mainDomainOld + model.image}
+                      data-fancybox="sidebar-gallery1"
+                      data-caption={model.title}
+                      aria-label={`بزرگنمایی تصویر ${model.title}`}
+                      className="block w-full h-full"
+                    >
+                      <img
+                        src={mainDomainOld + model.image}
+                        alt={model.title}
+                        aria-label={model.title}
+                        className="w-full group-hover:scale-105 h-32 object-contain transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-black/20 transition-all duration-300"></div>
 
-                    <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center absolute left-0 bottom-0">
-                      <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative text-sm z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#5d5dff]">
-                        {model.title}
-                      </h3>
-                    </div>
-                  </a>
+                      <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center absolute left-0 bottom-0">
+                        <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative text-sm z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#5d5dff]">
+                          {model.title}
+                        </h3>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* ماشین‌های رقبا */}
-      <div className="sidebar_widget bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-        <h3 className="widget_title text-lg font-bold text-gray-900 mb-3">
-          <span className="hover:text-red-600 transition-colors">
-            ماشین های رقبا
-          </span>
-        </h3>
+      {detailsMotorcompetitor.length > 0 && (
+        <div className="sidebar_widget bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+          <h3 className="widget_title text-lg font-bold text-gray-900 mb-3">
+            <span className="hover:text-red-600 transition-colors">
+              ماشین های رقبا
+            </span>
+          </h3>
 
-        <div className="space-y-4">
-          {detailsMotorcompetitor.map((model) => (
-            <div
-              key={model.id}
-              className="item_wd relative rounded-lg overflow-hidden group"
-            >
-              <div>
-                <div className="block w-full h-full">
-                  <Link href={model.url} className="block w-full h-full">
-                    <img
-                      src={mainDomainOld + model.image}
-                      alt={model.title}
-                      aria-label={model.title}
-                      className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-black/20 transition-all duration-300"></div>
-                    <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center absolute left-0 bottom-0">
-                      <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative text-sm z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#5d5dff]">
-                        {model.title}
-                      </h3>
-                    </div>
-                  </Link>
+          <div className="space-y-4">
+            {detailsMotorcompetitor.map((model) => (
+              <div
+                key={model.id}
+                className="item_wd relative rounded-lg overflow-hidden group"
+              >
+                <div>
+                  <div className="block w-full h-full">
+                    <Link href={model.url} className="block w-full h-full">
+                      <img
+                        src={mainDomainOld + model.image}
+                        alt={model.title}
+                        aria-label={model.title}
+                        className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-black/20 transition-all duration-300"></div>
+                      <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center absolute left-0 bottom-0">
+                        <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative text-sm z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#5d5dff]">
+                          {model.title}
+                        </h3>
+                      </div>
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <style jsx global>{`
         /* Fancybox custom styles */

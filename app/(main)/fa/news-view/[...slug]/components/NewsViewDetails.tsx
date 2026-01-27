@@ -144,10 +144,14 @@ function NewsViewDetails({
   };
 
   const items = [
-    {
-      key: "1",
-      label: "متن خبر",
-    },
+    ...(detailsNews
+      ? [
+          {
+            key: "1",
+            label: "متن خبر",
+          },
+        ]
+      : []),
     ...(Attachment.length > 0
       ? [
           {
@@ -156,10 +160,14 @@ function NewsViewDetails({
           },
         ]
       : []),
-    {
-      key: "3",
-      label: "اخبار مرتبط",
-    },
+    ...(relatedNews.length > 0
+      ? [
+          {
+            key: "3",
+            label: "اخبار مرتبط",
+          },
+        ]
+      : []),
     {
       key: "4",
       label: "نظرات کاربران",
@@ -193,9 +201,11 @@ function NewsViewDetails({
           <div className="lg:w-3/4 w-full">
             <div className="space-y-8">
               {/* بخش محتوای اصلی خبر */}
-              <div id="content" className="section-anchor" ref={contentRef}>
-                <NewsContentSection detailsNews={detailsNews} />
-              </div>
+              {detailsNews && (
+                <div id="content" className="section-anchor" ref={contentRef}>
+                  <NewsContentSection detailsNews={detailsNews} />
+                </div>
+              )}
 
               {/* بخش گالری تصاویر */}
               {Attachment.length > 0 && (
@@ -208,13 +218,15 @@ function NewsViewDetails({
               )}
 
               {/* بخش اخبار مرتبط */}
-              <div
-                id="related"
-                className="section-anchor px-4"
-                ref={relatedRef}
-              >
-                <NewsRelatedSection relatedNews={relatedNews} />
-              </div>
+              {relatedNews.length > 0 && (
+                <div
+                  id="related"
+                  className="section-anchor px-4"
+                  ref={relatedRef}
+                >
+                  <NewsRelatedSection relatedNews={relatedNews} />
+                </div>
+              )}
             </div>
           </div>
 

@@ -20,12 +20,14 @@ const ContentTabsMotor = ({
   detailsMotorcompetitor,
   comments,
   id,
+  motorcyclesModel
 }: {
   detailsMotorcycle: ItemsId;
   Attachment: ItemsAttachment[];
   detailsMotorcompetitor: ItemsId[];
   comments: CommentResponse[];
   id: number;
+  motorcyclesModel:Items[]
 }) => {
   const [activeKey, setActiveKey] = useState("review");
   const [isSticky, setIsSticky] = useState(false);
@@ -220,6 +222,7 @@ const ContentTabsMotor = ({
           <Sidebar
             detailsMotorcompetitor={detailsMotorcompetitor}
             detailsMotorcycle={detailsMotorcycle}
+            motorcyclesModel={motorcyclesModel}
           />
         </div>
         <div className="lg:w-3/4 w-full ">
@@ -292,7 +295,7 @@ const ContentTabsMotor = ({
         }
         @media (min-width: 1024px) {
           .navbar-tabs.sticky {
-            top: 65px;
+            top: 60px;
           }
         }
 
@@ -301,11 +304,9 @@ const ContentTabsMotor = ({
         }
 
         .custom-tabs .ant-tabs-tab {
-          padding: 12px 20px;
+          padding: 12px 24px;
           font-weight: 600;
-          color: #6b7280;
-          transition: all 0.3s ease;
-          cursor: pointer;
+          height: 50px !important;
         }
 
         .custom-tabs .ant-tabs-tab:hover {

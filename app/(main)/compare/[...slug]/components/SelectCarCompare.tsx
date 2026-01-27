@@ -25,7 +25,7 @@ function SelectCarCompare({
   const fetchModelCars = async () => {
     try {
       const modelsCarResponse: Items[] = await getItem({
-        TypeId: 1042,
+        TypeId: brandsCar[0].itemTypeId,
         langCode: "fa",
         CategoryIdArray: String(firstCarBrand),
         PageIndex: 1,

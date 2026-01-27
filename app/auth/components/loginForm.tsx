@@ -8,6 +8,7 @@ interface LoginFormProps {
   onLoginChange: (field: keyof LoginData, value: string | boolean) => void;
   onResetPassword: () => void;
   onLogin: () => void;
+  loading: boolean;
 }
 interface LoginErrors {
   userName: boolean;
@@ -25,6 +26,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   onLoginChange,
   onResetPassword,
   onLogin,
+  loading,
 }) => (
   <div className="space-y-4">
     <div>
@@ -88,6 +90,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     </div>
 
     <Button
+      disabled={loading}
       type="primary"
       size="large"
       block
@@ -95,7 +98,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       className="h-12 rounded-lg bg-red-600 hover:bg-red-700 border-none font-bold flex items-center justify-center gap-2"
     >
       <MdLogin className="text-lg" />
-      ورود به حساب
+      {loading ? "در حال ورود..." : " ورود به حساب"}
     </Button>
   </div>
 );

@@ -510,16 +510,60 @@ export async function middleware(request: Request) {
     }
   } else if (pathname.startsWith("/compare/")) {
     try {
+      const type = searchParams.get("type");
       const pathParts = pathname.split("/");
       const decodedPathname = decodeURIComponent(pathname);
       const ids = String(pathParts[2]);
       const dataCompare: ItemsId[] = await getItemByIds(ids);
       const idsRes = dataCompare.map((item) => item.id).join(",");
+
       if (ids.split(",").length > 3) {
         ids.split(",").slice(0, 3).join(",");
+        if (dataCompare[0].itemTypeId === 1042) {
+          return NextResponse.redirect(
+            new URL(
+              `/compare/${ids.split(",").slice(0, 3).join(",")}` + "?type=car",
+              request.url
+            ),
+            {
+              status: 301,
+            }
+          );
+        } else {
+          return NextResponse.redirect(
+            new URL(
+              `/compare/${ids.split(",").slice(0, 3).join(",")}` +
+                "?type=motor",
+              request.url
+            ),
+            {
+              status: 301,
+            }
+          );
+        }
+      }
+      if (idsRes !== ids) {
+        if (dataCompare[0].itemTypeId === 1042) {
+          return NextResponse.redirect(
+            new URL(`/compare/${idsRes}` + "?type=car", request.url),
+            {
+              status: 301,
+            }
+          );
+        } else {
+          return NextResponse.redirect(
+            new URL(`/compare/${idsRes}` + "?type=motor", request.url),
+            {
+              status: 301,
+            }
+          );
+        }
+      }
+
+      if (dataCompare[0].itemTypeId === 1052 && type !== "motor") {
         return NextResponse.redirect(
           new URL(
-            `/compare/${ids.split(",").slice(0, 3).join(",")}`,
+            `/compare/${ids.split(",").slice(0, 3).join(",")}` + `?type=motor`,
             request.url
           ),
           {
@@ -527,9 +571,12 @@ export async function middleware(request: Request) {
           }
         );
       }
-      if (idsRes !== ids) {
+      if (dataCompare[0].itemTypeId === 1042 && type !== "car") {
         return NextResponse.redirect(
-          new URL(`/compare/${idsRes}`, request.url),
+          new URL(
+            `/compare/${ids.split(",").slice(0, 3).join(",")}` + `?type=car`,
+            request.url
+          ),
           {
             status: 301,
           }

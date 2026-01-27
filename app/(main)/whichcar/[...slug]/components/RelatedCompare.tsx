@@ -3,9 +3,9 @@ import { Card } from "antd";
 import Link from "next/link";
 
 function RelatedCompare({
-  popularComparisons,
+  ralatedComparisons,
 }: {
-  popularComparisons: Items[];
+  ralatedComparisons: Items[];
 }) {
   return (
     <Card className="rounded-xl shadow-lg">
@@ -14,9 +14,9 @@ function RelatedCompare({
           مقایسه‌های مرتبط
         </h2>
 
-        {popularComparisons.length > 0 ? (
+        {ralatedComparisons.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {popularComparisons.map((compare) => (
+            {ralatedComparisons.map((compare) => (
               <Link key={compare.id} href={compare.url} className="block group">
                 <div className="bg-gray-100 rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-300">
                   <div className="aspect-video relative">

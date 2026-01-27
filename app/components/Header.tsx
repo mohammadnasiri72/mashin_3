@@ -67,7 +67,6 @@ export default function Header({
   menu: MenuGroup[];
   setting: SettingType[];
 }) {
-  console.log(menu);
 
   const menuItems = convertApiMenuToHierarchical(
     menu.find((m) => m.menuKey === "primary")?.menuItems || []
@@ -80,12 +79,14 @@ export default function Header({
     (e) => e.propertyKey === "site_logo"
   )?.title;
 
+  
+ 
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const token = useSelector((state: RootState) => state.token.token);
   const disPatch = useDispatch();
-
   useEffect(() => {
     const loadUserFromCookie = () => {
       setIsLoading(true);

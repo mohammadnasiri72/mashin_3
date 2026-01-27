@@ -13,16 +13,18 @@ function CompareCars({
   whichcars,
   dataCompare,
   popularComparisons,
+  ralatedComparisons,
   comments,
   id,
-  banner
+  banner,
 }: {
   whichcars: ItemsId;
   dataCompare: ItemsId[];
   popularComparisons: Items[];
+  ralatedComparisons: Items[];
   comments: CommentResponse[];
   id: number;
-  banner:Items[]
+  banner: Items[];
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
@@ -72,13 +74,6 @@ function CompareCars({
           }
         }
       }
-
-      // if (
-      //   window.innerHeight + window.scrollY >=
-      //   document.body.offsetHeight - 200
-      // ) {
-      //   currentActiveKey = "3";
-      // }
 
       if (currentActiveKey !== activeKey) {
         setActiveKey(currentActiveKey);
@@ -138,14 +133,22 @@ function CompareCars({
   };
 
   const items = [
-    {
-      key: "1",
-      label: "مقایسه تخصصی",
-    },
-    {
-      key: "2",
-      label: "مقایسه‌های مرتبط",
-    },
+    ...(whichcars && dataCompare
+      ? [
+          {
+            key: "1",
+            label: "مقایسه تخصصی",
+          },
+        ]
+      : []),
+    // ...(ralatedComparisons.length > 0
+    //   ? [
+    //       {
+    //         key: "2",
+    //         label: "مقایسه‌های مرتبط",
+    //       },
+    //     ]
+    //   : []),
     {
       key: "3",
       label: "نظرات کاربران",
@@ -154,39 +157,7 @@ function CompareCars({
 
   return (
     <div className="min-h-screen bg-gray-50 w-full">
-      {/* هدر صفحه */}
-      {/* <div className="bg-white shadow-lg">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            <div>
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-800">
-                {whichcars?.title || "مقایسه خودروها"}
-              </h1>
-              <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
-                <span>
-                  دسته‌بندی: {whichcars?.categoryTitle || "مقایسه خودرو"}
-                </span>
-                <span>•</span>
-                <span>تعداد بازدید: {whichcars?.visit || 0}</span>
-                <span>•</span>
-                <span>
-                  تاریخ انتشار:{" "}
-                  {whichcars?.created
-                    ? new Date(whichcars.created).toLocaleDateString("fa-IR")
-                    : new Date().toLocaleDateString("fa-IR")}
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <button className="bg-[#ce1a2a] cursor-pointer text-white! px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
-                اشتراک گذاری
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> */}
-      <HeroSectionWhichcars whichcars={whichcars}/>
-
+      <HeroSectionWhichcars whichcars={whichcars} />
       {/* باکس تب ها */}
       <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 mt-4 mb-8">
         <Card
@@ -213,20 +184,31 @@ function CompareCars({
             </div>
 
             {/* بخش مقایسه های مرتبط */}
-            <div id="related" className="section-anchor" ref={relatedRef}>
-              <RelatedCompare popularComparisons={popularComparisons} />
-            </div>
+            {/* {ralatedComparisons.length > 0 && (
+              <div id="related" className="section-anchor" ref={relatedRef}>
+                <RelatedCompare ralatedComparisons={ralatedComparisons} />
+              </div>
+            )} */}
           </div>
         </div>
         {/* سایدبار */}
         <div className="lg:w-1/4 w-full">
-          <SideBarCompareCars popularComparisons={popularComparisons} banner={banner}/>
+          <SideBarCompareCars
+            popularComparisons={popularComparisons}
+            banner={banner}
+          />
         </div>
       </div>
 
       {/* بخش نظرات */}
       <div id="comments" className="section-anchor" ref={commentsRef}>
-        {whichcars && <WhichcarsComments whichcars={whichcars} comments={comments} id={id}/>}
+        {whichcars && (
+          <WhichcarsComments
+            whichcars={whichcars}
+            comments={comments}
+            id={id}
+          />
+        )}
       </div>
 
       <style jsx global>{`
@@ -256,6 +238,7 @@ function CompareCars({
         .compare-cars-tabs .ant-tabs-tab {
           padding: 12px 24px;
           font-weight: 600;
+          height: 50px !important;
         }
 
         .compare-cars-tabs .ant-tabs-tab-active {
@@ -288,7 +271,7 @@ function CompareCars({
 
         @media (min-width: 1024px) {
           .navbar-tabs.sticky {
-            top: 65px;
+            top: 60px;
           }
         }
       `}</style>

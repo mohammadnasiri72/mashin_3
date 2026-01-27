@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 const Cookies = require("js-cookie");
 
 function ModalLogin() {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -44,20 +45,23 @@ function ModalLogin() {
         password,
         remember,
       };
+      setLoading(true);
       try {
         const dataLogin = await PostLogin(data);
         Cookies.set("user", JSON.stringify(dataLogin), { expires: 7 });
         disPatch(setToken(dataLogin.token));
         setOpen(false);
-         Toast.fire({
+        Toast.fire({
           icon: "success",
-          title:  "با موفقیت وارد شدید",
+          title: "با موفقیت وارد شدید",
         });
       } catch (err: any) {
         Toast.fire({
           icon: "error",
           title: err.response.data || "خطا در ورود به حساب",
         });
+      } finally {
+        setLoading(false);
       }
     }
   }
@@ -213,6 +217,7 @@ function ModalLogin() {
           <div className="mt-3">
             <Button
               onClick={loginHandler}
+              disabled={loading}
               type="primary"
               size="middle"
               block
@@ -227,7 +232,11 @@ function ModalLogin() {
             >
               <div className="flex items-center gap-1">
                 <MdLogin className="text-xl" />
-                <span> ورود به حساب</span>
+                {loading ? (
+                  <span>در حال ورود...</span>
+                ) : (
+                  <span> ورود به حساب</span>
+                )}
               </div>
             </Button>
           </div>

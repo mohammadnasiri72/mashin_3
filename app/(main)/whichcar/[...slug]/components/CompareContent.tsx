@@ -19,17 +19,7 @@ function CompareContent({
   const car1 = dataCompare[0];
   const car2 = dataCompare[1];
 
-  // if (!car1 || !car2) {
-  //   return (
-  //     <Card className="rounded-xl shadow-lg">
-  //       <div className="text-center py-8 text-gray-500">
-  //         <p>داده‌های کافی برای مقایسه موجود نیست</p>
-  //       </div>
-  //     </Card>
-  //   );
-  // }
-
-  // استخراج properties برای مقایسه
+ 
   const extractPropertiesForComparison = (car: ItemsId) => {
     const properties: Record<
       string,

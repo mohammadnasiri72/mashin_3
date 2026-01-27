@@ -25,12 +25,11 @@ const CarComparisonSection = ({
   const [secCarBrand, setSecCarBrand] = useState<number>(0);
   const [secModelsCarList, setSecModelsCarList] = useState<Items[]>([]);
   const [secCarModel, setSecCarModel] = useState<number>(0);
-  const [dataCompare, setDataCompare] = useState<ItemsId[]>([]);
 
   const router = useRouter();
 
   const handleCompare = () => {
-    router.push(`/compare/${firstCarModel},${secCarModel}`);
+    router.push(`/compare/${firstCarModel},${secCarModel}?type=car`);
   };
 
   const fetchModelCars = async () => {

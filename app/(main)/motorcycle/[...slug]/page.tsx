@@ -7,6 +7,8 @@ import MotorDetails from "./components/MotorDetails";
 import FeaturesSectionMotor from "./components/FeaturesSectionMotor";
 import { getItemByIds } from "@/services/Item/ItemByIds";
 import ContentTabsMotor from "./components/ContentTabsMotor";
+import { getItem } from "@/services/Item/Item";
+import { getPollId } from "@/services/Poll/pollId";
 
 async function pageMotorcycleDainamic({
   searchParams,
@@ -42,12 +44,24 @@ async function pageMotorcycleDainamic({
     (e) => e.propertyId === 22640
   );
 
+  const motorcyclesModel: Items[] = await getItem({
+      TypeId: 1052,
+      langCode: "fa",
+      CategoryIdArray: detailsMotorcycle.sourceLink,
+      PageIndex: 1,
+      PageSize: 5,
+    });
+
+    
+ const pollData: PollData = await getPollId(Number(id));
+
   return (
     <>
       <MotorHeroSection detailsMotorcycle={detailsMotorcycle} />
       <MotorDetails
         Attachment={Attachment}
         detailsMotorcycle={detailsMotorcycle}
+         initialPollData={pollData}
       />
       {(advantages.length !== 0 || disadvantages.length !== 0) && (
         <FeaturesSectionMotor detailsMotorcycle={detailsMotorcycle} />
@@ -58,6 +72,7 @@ async function pageMotorcycleDainamic({
         detailsMotorcompetitor={detailsMotorcompetitor}
         comments={comments}
         id={Number(id)}
+        motorcyclesModel={motorcyclesModel}
       />
     </>
   );

@@ -360,7 +360,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
           <strong className="text-red-600">نظرات </strong>
-          درمورد ماشین {detailsMotorcycle.sourceName} {detailsMotorcycle.title}
+          درمورد موتور {detailsMotorcycle.sourceName} {detailsMotorcycle.title}
           <span className="text-sm font-normal text-gray-500 mr-2">
             ({totalComments} نظر)
           </span>

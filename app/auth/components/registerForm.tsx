@@ -17,6 +17,7 @@ interface RegisterFormProps {
     value: string | boolean
   ) => void;
   onRegister: () => void;
+  loading: boolean;
 }
 
 export const RegisterForm: React.FC<RegisterFormProps> = ({
@@ -24,6 +25,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   registerErrors,
   onRegisterChange,
   onRegister,
+  loading,
 }) => (
   <div className="space-y-4">
     <div>
@@ -113,6 +115,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     </div>
 
     <Button
+      disabled={loading}
       type="primary"
       size="large"
       block
@@ -120,7 +123,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
       className="h-12 rounded-lg bg-green-600 hover:bg-green-700 border-none font-bold flex items-center justify-center gap-2"
     >
       <FaUserPlus className="text-lg" />
-      ایجاد حساب کاربری
+      {loading ? "در حال ایجاد حساب..." : "ایجاد حساب کاربری"}
     </Button>
   </div>
 );
