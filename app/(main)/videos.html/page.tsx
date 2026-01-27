@@ -43,7 +43,7 @@ async function pageVideo({
   return (
     <>
       <div className="bg-[#f4f4f4]">
-        <Video popularVideos={popularVideos} videos={videos} banner={banner} />
+        <Video popularVideos={popularVideos} videos={videos} banner={banner} titleCat={''}/>
         <BoxCatVideos videosCat={videosCat} />
       </div>
     </>

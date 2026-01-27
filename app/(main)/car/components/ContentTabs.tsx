@@ -157,7 +157,7 @@ const ContentTabs = ({
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition,
+        top: offsetPosition-50,
         behavior: "smooth",
       });
     }
@@ -284,7 +284,7 @@ const ContentTabs = ({
 
         .navbar-tabs.sticky {
           position: sticky;
-          top: 110px;
+          top: 112px;
           left: 0;
           right: 0;
           z-index: 1000;

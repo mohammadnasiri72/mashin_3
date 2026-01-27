@@ -1,6 +1,9 @@
 import { getItem } from "@/services/Item/Item";
 import Video from "../../videos.html/components/Video";
 import VideoNotFound from "./VideoNotFound";
+import BoxCatVideos from "../../videos.html/components/BoxCatVideos";
+import { getCategory } from "@/services/Category/Category";
+import { getCategoryId } from "@/services/Category/CategoryId";
 
 async function pageVideosDainamic({
   params,
@@ -11,18 +14,16 @@ async function pageVideosDainamic({
 }) {
   const param = await params;
   const searchParam = await searchParams;
-  const id = Number(param.slug[0]);
+  const id = param.slug[0];
   const page = Number(searchParam.page);
   const term = String(searchParam.term);
-  if (String(id) === "NaN") {
-    return <VideoNotFound />;
-  }
+
   let videos: Items[] = [];
   try {
     videos = await getItem({
       TypeId: 1028,
       langCode: "fa",
-      CategoryIdArray: String(id),
+      CategoryIdArray: id,
       PageIndex: page || 1,
       ...(term && term !== "undefined" && { Term: term }),
       PageSize: 10,
@@ -31,22 +32,34 @@ async function pageVideosDainamic({
     return <VideoNotFound />;
   }
 
-   const banner: Items[] = await getItem({
-      TypeId: 1051,
-      langCode: "fa",
-      CategoryIdArray: "6415",
-    });
- const popularVideos: Items[] = await getItem({
+  const banner: Items[] = await getItem({
+    TypeId: 1051,
+    langCode: "fa",
+    CategoryIdArray: "6415",
+  });
+  const popularVideos: Items[] = await getItem({
     TypeId: 1028,
     langCode: "fa",
     PageIndex: 1,
     PageSize: 10,
     OrderBy: 8,
   });
+
+  const videosCat: ItemsCategory[] = await getCategory({
+    TypeId: 1028,
+    LangCode: "fa",
+    PageIndex: 1,
+    PageSize: 200,
+  });
+
+  const videoCat: ItemsCategoryId = await getCategoryId(Number(id));
+  console.log(videoCat.title);
+
   return (
     <>
       <div className="bg-[#f4f4f4]">
-        <Video popularVideos={popularVideos} videos={videos} banner={banner}/>
+        <Video popularVideos={popularVideos} videos={videos} banner={banner} titleCat={videoCat.title}/>
+        <BoxCatVideos videosCat={videosCat} />
       </div>
     </>
   );

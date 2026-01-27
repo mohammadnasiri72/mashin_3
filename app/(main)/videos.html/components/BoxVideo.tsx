@@ -5,14 +5,14 @@ import { FaCalendar, FaEye, FaPlay } from "react-icons/fa";
 import PaginationVideo from "./PaginationVideo";
 import SearchBoxVideo from "./SearchBoxVideo";
 
-function BoxVideo({ videos }: { videos: Items[] }) {
+function BoxVideo({ videos, titleCat }: { videos: Items[]; titleCat: string }) {
   return (
-    <div className="px-2 py-4">
+    <div className="px-2">
       {/* Videos List */}
       <div className="space-y-6 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
         <div className="flex sm:flex-nowrap flex-wrap items-center gap-2">
           <h2 className="whitespace-nowrap text-[#ce1a2a]! text-xl">
-            فیلم های تست و بررسی خودرو
+            {titleCat ? titleCat : " فیلم های تست و بررسی خودرو"}
           </h2>
           <SearchBoxVideo />
         </div>

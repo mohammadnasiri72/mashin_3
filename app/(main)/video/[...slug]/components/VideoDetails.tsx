@@ -56,7 +56,7 @@ function VideoDetails({
           const sectionTop = rect.top;
           const sectionBottom = rect.bottom;
 
-          if (sectionTop <= 150 && sectionBottom >= 150) {
+          if (sectionTop <= 200 && sectionBottom >= 200) {
             currentActiveKey = section.key;
             break;
           }
@@ -65,7 +65,7 @@ function VideoDetails({
             const nextSection = sections[i + 1];
             if (nextSection.ref.current) {
               const nextRect = nextSection.ref.current.getBoundingClientRect();
-              if (sectionBottom < 150 && nextRect.top > 150) {
+              if (sectionBottom < 200 && nextRect.top > 200) {
                 currentActiveKey = section.key;
                 break;
               }
@@ -102,9 +102,8 @@ function VideoDetails({
       [key: string]: React.RefObject<HTMLDivElement | null>;
     } = {
       "1": playerRef,
-      "2": infoRef,
-      "3": relatedRef,
-      "4": commentsRef,
+      "2": relatedRef,
+      "3": commentsRef,
     };
 
     const targetRef = sectionRefs[key];
@@ -126,7 +125,7 @@ function VideoDetails({
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition,
+        top: offsetPosition-50,
         behavior: "smooth",
       });
     }
@@ -225,7 +224,7 @@ function VideoDetails({
 
         .navbar-tabs.sticky {
           position: sticky;
-          top: 110px;
+          top: 112px;
           left: 0;
           right: 0;
           z-index: 1000;

@@ -57,7 +57,7 @@ function CompareCars({
           const sectionTop = rect.top;
           const sectionBottom = rect.bottom;
 
-          if (sectionTop <= 150 && sectionBottom >= 150) {
+          if (sectionTop <= 200 && sectionBottom >= 200) {
             currentActiveKey = section.key;
             break;
           }
@@ -66,7 +66,7 @@ function CompareCars({
             const nextSection = sections[i + 1];
             if (nextSection.ref.current) {
               const nextRect = nextSection.ref.current.getBoundingClientRect();
-              if (sectionBottom < 150 && nextRect.top > 150) {
+              if (sectionBottom < 200 && nextRect.top > 200) {
                 currentActiveKey = section.key;
                 break;
               }
@@ -126,7 +126,7 @@ function CompareCars({
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition,
+        top: offsetPosition-50,
         behavior: "smooth",
       });
     }
@@ -228,7 +228,7 @@ function CompareCars({
 
         .navbar-tabs.sticky {
           position: sticky;
-          top: 110px;
+          top: 112px;
           left: 0;
           right: 0;
           z-index: 1000;
