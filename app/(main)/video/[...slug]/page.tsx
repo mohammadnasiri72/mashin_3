@@ -3,6 +3,36 @@ import { getItemId } from "@/services/Item/ItemId";
 import VideoDetails from "./components/VideoDetails";
 import { getComment } from "@/services/Comment/Comment";
 
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const param = await params;
+  const searchParam = await searchParams;
+  const id = Number(searchParam.id);
+  const id2 = Number(param.slug[0]);
+  const video: ItemsId = await getItemId(id || id2);
+
+  if (video.title) {
+    return {
+      title: `ماشین3 - ${video.seoTitle ? video.seoTitle : video.title}`,
+      description: video.seoDescription,
+      openGraph: {
+        title: `ماشین3 - ${video.seoTitle ? video.seoTitle : video.title}`,
+        description: video.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 - جزئیات ویدئو",
+      description: "جزئیات ویدئو",
+    };
+  }
+}
+
 async function pageVideo({
   params,
   searchParams,

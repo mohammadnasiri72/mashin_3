@@ -1,6 +1,37 @@
 import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
 import CarBrands from "./componnents/CarBrands";
+import { getCategoryId } from "@/services/Category/CategoryId";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const param = await params;
+  const id = Number(param.slug[0]);
+
+ const carDetails: ItemsCategoryId = await getCategoryId(id);
+    if (carDetails.title) {
+      return {
+        title: `ماشین3 - ${
+          carDetails.seoTitle ? carDetails.seoTitle : carDetails.title
+        }`,
+        description: carDetails.seoDescription,
+        openGraph: {
+          title: `ماشین3 - ${
+            carDetails.seoTitle ? carDetails.seoTitle : carDetails.title
+          }`,
+          description: carDetails.seoDescription,
+        },
+      };
+    } else {
+      return {
+        title: "ماشین3 - خودروهای بازار",
+        description: "بررسی کامل تمامی برند های خودرو موجود در بازار ایران با جزئیات فنی، قیمت و نظرات کاربران",
+      };
+    }
+}
 
 async function pageReviews({ params }: { params: Promise<{ slug: string }> }) {
   const param = await params;

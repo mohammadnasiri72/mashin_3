@@ -2,6 +2,13 @@ import { getItem } from "@/services/Item/Item";
 import React from "react";
 import WhichCars from "./components/WhichCars";
 
+export async function generateMetadata() {
+  return {
+    title: "ماشین3 - مقایسه خودرو",
+    description: "مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
+  };
+}
+
 async function pageWhichCars({
   searchParams,
 }: {

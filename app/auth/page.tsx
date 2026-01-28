@@ -1,22 +1,22 @@
 "use client";
 
+import { PostLogin } from "@/services/Account/Login";
 import { PostRegister } from "@/services/Account/Register";
+import { PostResetPass } from "@/services/Account/ResetPass";
 import { generateRandomUserId, Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
-import { Button, Checkbox, Input, Tabs } from "antd";
+import { Button, Input, Tabs } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
-import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa";
 import {
   MdClose,
   MdLogin,
   MdOutlinePassword,
   MdPersonAdd,
 } from "react-icons/md";
-import { RegisterForm } from "./components/registerForm";
 import { LoginForm } from "./components/loginForm";
-import { PostLogin } from "@/services/Account/Login";
-import { PostResetPass } from "@/services/Account/ResetPass";
+import { RegisterForm } from "./components/registerForm";
 const Cookies = require("js-cookie");
 
 // تایپ‌های TypeScript (همانطور که بود)
@@ -86,7 +86,7 @@ const AuthPage: React.FC = () => {
   // هندلر تغییر مقادیر فرم ورود
   const handleLoginChange = (
     field: keyof LoginData,
-    value: string | boolean
+    value: string | boolean,
   ) => {
     setLoginData((prev) => ({
       ...prev,
@@ -105,7 +105,7 @@ const AuthPage: React.FC = () => {
   // هندلر تغییر مقادیر فرم ثبت‌نام
   const handleRegisterChange = (
     field: keyof RegisterData,
-    value: string | boolean
+    value: string | boolean,
   ) => {
     setRegisterData((prev) => ({
       ...prev,

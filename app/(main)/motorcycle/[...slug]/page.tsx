@@ -10,6 +10,40 @@ import ContentTabsMotor from "./components/ContentTabsMotor";
 import { getItem } from "@/services/Item/Item";
 import { getPollId } from "@/services/Poll/pollId";
 
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParam = await searchParams;
+  const id = Number(searchParam.id);
+  const detailsMotorcycle: ItemsId = await getItemId(Number(id));
+
+  if (detailsMotorcycle.title) {
+    return {
+      title: `ماشین3 - ${
+        detailsMotorcycle.seoTitle
+          ? detailsMotorcycle.seoTitle
+          : detailsMotorcycle.title
+      }`,
+      description: detailsMotorcycle.seoDescription,
+      openGraph: {
+        title: `ماشین3 - ${
+          detailsMotorcycle.seoTitle
+            ? detailsMotorcycle.seoTitle
+            : detailsMotorcycle.title
+        }`,
+        description: detailsMotorcycle.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 - جزئیات موتورسیکلت",
+      description: "جزئیات موتورسیکلت",
+    };
+  }
+}
+
 async function pageMotorcycleDainamic({
   searchParams,
 }: {
@@ -28,32 +62,31 @@ async function pageMotorcycleDainamic({
   });
 
   const detailsMotorcompetitor: ItemsId[] = detailsMotorcycle.properties.filter(
-    (e) => e.propertyId === 22643
+    (e) => e.propertyId === 22643,
   )[0]?.value
     ? await getItemByIds(
         detailsMotorcycle.properties.filter((e) => e.propertyId === 22643)[0]
-          ?.value
+          ?.value,
       )
     : [];
 
   const advantages = detailsMotorcycle.properties.filter(
-    (e) => e.propertyId === 22639
+    (e) => e.propertyId === 22639,
   );
 
   const disadvantages = detailsMotorcycle.properties.filter(
-    (e) => e.propertyId === 22640
+    (e) => e.propertyId === 22640,
   );
 
   const motorcyclesModel: Items[] = await getItem({
-      TypeId: 1052,
-      langCode: "fa",
-      CategoryIdArray: detailsMotorcycle.sourceLink,
-      PageIndex: 1,
-      PageSize: 5,
-    });
+    TypeId: 1052,
+    langCode: "fa",
+    CategoryIdArray: detailsMotorcycle.sourceLink,
+    PageIndex: 1,
+    PageSize: 5,
+  });
 
-    
- const pollData: PollData = await getPollId(Number(id));
+  const pollData: PollData = await getPollId(Number(id));
 
   return (
     <>
@@ -61,7 +94,7 @@ async function pageMotorcycleDainamic({
       <MotorDetails
         Attachment={Attachment}
         detailsMotorcycle={detailsMotorcycle}
-         initialPollData={pollData}
+        initialPollData={pollData}
       />
       {(advantages.length !== 0 || disadvantages.length !== 0) && (
         <FeaturesSectionMotor detailsMotorcycle={detailsMotorcycle} />

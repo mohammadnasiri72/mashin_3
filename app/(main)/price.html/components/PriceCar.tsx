@@ -76,6 +76,10 @@ function PriceCar({
   const type = searchParams.get("type");
   const router = useRouter();
 
+  const titlePage = mainCategories.find(
+    (e) => e.id === selectedCategory,
+  )?.title;
+
   // تشخیص دستگاه موبایل
   useEffect(() => {
     const checkMobile = () => {
@@ -107,7 +111,7 @@ function PriceCar({
       filtered = filtered.filter(
         (item) =>
           item.brandTitle.includes(searchText) ||
-          item.title.includes(searchText)
+          item.title.includes(searchText),
       );
     }
 
@@ -180,8 +184,8 @@ function PriceCar({
                 item.change > 0
                   ? "text-green-600"
                   : item.change < 0
-                  ? "text-red-600"
-                  : "text-gray-400"
+                    ? "text-red-600"
+                    : "text-gray-400"
               }`}
             >
               {item.change > 0 ? (
@@ -213,7 +217,7 @@ function PriceCar({
             className="text-xl sm:text-2xl font-bold text-gray-900 mb-2!"
             style={{ color: PRIMARY_COLOR }}
           >
-            قیمت خودرو
+            {titlePage ? titlePage : "قیمت خودرو"}
           </h1>
           <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
             بررسی و مقایسه قیمت خودروهای مختلف در بازار و نمایندگی‌ها
@@ -364,7 +368,7 @@ function PriceCar({
                       برندهای{" "}
                       {
                         mainCategories.find(
-                          (cat) => cat.id === selectedCategory
+                          (cat) => cat.id === selectedCategory,
                         )?.title
                       }
                     </h3>
@@ -393,7 +397,7 @@ function PriceCar({
                         <div
                           onClick={() => {
                             setSelectedBrand(
-                              selectedBrand === brand.id ? null : brand.id
+                              selectedBrand === brand.id ? null : brand.id,
                             );
                             setShowFilter(false);
                           }}
@@ -512,8 +516,8 @@ function PriceCar({
                           change > 0
                             ? "text-green-600"
                             : change < 0
-                            ? "text-red-600"
-                            : ""
+                              ? "text-red-600"
+                              : ""
                         }`}
                       >
                         {change}
@@ -558,7 +562,9 @@ function PriceCar({
         .mobile-card-enter-active {
           opacity: 1;
           transform: translateY(0);
-          transition: opacity 300ms, transform 300ms;
+          transition:
+            opacity 300ms,
+            transform 300ms;
         }
       `}</style>
     </div>

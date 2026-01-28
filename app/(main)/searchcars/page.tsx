@@ -1,8 +1,28 @@
-import React from "react";
-import SearchCarsDetails from "./components/SearchCarsDetails";
 import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
+import SearchCarsDetails from "./components/SearchCarsDetails";
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParam = await searchParams;
+  const id = Number(searchParam.id);
+  const type = Number(searchParam.type);
+  const carDetails: ItemsCategoryId = await getCategoryId(id);
+  const segmentCars: Items[] = await getItem({
+    TypeId: 1048,
+    langCode: "fa",
+  });
+  const typeCarTitle = segmentCars.find((e) => e.id === type)?.title;
+
+  return {
+    title: `ماشین3 - مدل های ${carDetails.title} ${typeCarTitle}`,
+    description: `مدل های ${carDetails.title} ${typeCarTitle}`,
+  };
+}
 
 async function pageSearchCars({
   searchParams,
@@ -20,6 +40,7 @@ async function pageSearchCars({
     PageSize: 200,
   });
   const carDetails: ItemsCategoryId = await getCategoryId(id);
+
   const carView: Items[] = await getItem({
     TypeId: 1042,
     langCode: "fa",

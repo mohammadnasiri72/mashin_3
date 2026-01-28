@@ -4,6 +4,40 @@ import { getItem } from "@/services/Item/Item";
 import React from "react";
 import CarsDetails from "../../cars/[...slug]/components/CarsDetails";
 
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParam = await searchParams;
+  const id = Number(searchParam.id);
+  const detailsMotorcycle: ItemsCategoryId = await getCategoryId(id);
+
+  if (detailsMotorcycle.title) {
+    return {
+      title: `ماشین3 - ${
+        detailsMotorcycle.seoTitle
+          ? detailsMotorcycle.seoTitle
+          : detailsMotorcycle.title
+      }`,
+      description: detailsMotorcycle.seoDescription,
+      openGraph: {
+        title: `ماشین3 - ${
+          detailsMotorcycle.seoTitle
+            ? detailsMotorcycle.seoTitle
+            : detailsMotorcycle.title
+        }`,
+        description: detailsMotorcycle.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 - لیست موتورسیکلت‌ها",
+      description: "لیست موتورسیکلت‌ها",
+    };
+  }
+}
+
 async function pageMotorcyclesDainamic({
   searchParams,
 }: {
@@ -34,10 +68,10 @@ async function pageMotorcyclesDainamic({
   });
 
   const uniqueArray = motorBrands.filter(
-    (item, index, self) => index === self.findIndex((i) => i.id === item.id)
+    (item, index, self) => index === self.findIndex((i) => i.id === item.id),
   );
   const productsWithCategories = uniqueArray.filter((product) =>
-    motorView.some((category) => category.categoryId === product.id)
+    motorView.some((category) => category.categoryId === product.id),
   );
 
   return (

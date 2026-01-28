@@ -1,6 +1,44 @@
 import { getItem } from "@/services/Item/Item";
 import CarNews from "./components/CarNews";
 import { redirect } from "next/navigation";
+import { getCategoryId } from "@/services/Category/CategoryId";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const param = await params;
+  const id = Number(param.slug[0]);
+
+  if (isNaN(id)) {
+    return {
+      title: "ماشین3 - اخبار خودرو",
+      description: "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
+    };
+  } else {
+    const newsDetails: ItemsCategoryId = await getCategoryId(id);
+    if (newsDetails.title) {
+      return {
+        title: `ماشین3 - ${
+          newsDetails.seoTitle ? newsDetails.seoTitle : newsDetails.title
+        }`,
+        description: newsDetails.seoDescription,
+        openGraph: {
+          title: `ماشین3 - ${
+            newsDetails.seoTitle ? newsDetails.seoTitle : newsDetails.title
+          }`,
+          description: newsDetails.seoDescription,
+        },
+      };
+    } else {
+      return {
+        title: "ماشین3 - اخبار خودرو",
+        description: "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
+      };
+    }
+  }
+}
 
 async function pageNewsDetails({
   params,

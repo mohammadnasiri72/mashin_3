@@ -4,6 +4,32 @@ import { getItemId } from "@/services/Item/ItemId";
 import CompareCars from "./components/CompareCars";
 import { getComment } from "@/services/Comment/Comment";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const param = await params;
+  const id = Number(param.slug[0]);
+  const whichcars: ItemsId = await getItemId(id);
+
+  if (whichcars.title) {
+    return {
+      title: `ماشین3 - ${whichcars.seoTitle ? whichcars.seoTitle : whichcars.title}`,
+      description: whichcars.seoDescription,
+      openGraph: {
+        title: `ماشین3 - ${whichcars.seoTitle ? whichcars.seoTitle : whichcars.title}`,
+        description: whichcars.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 - مقایسه خودرو",
+      description: "مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
+    };
+  }
+}
+
 async function pageWhichcarsDainamic({
   params,
   searchParams,

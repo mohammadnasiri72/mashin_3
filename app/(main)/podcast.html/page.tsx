@@ -3,14 +3,18 @@ import Podcast from "./components/Podcast";
 import { getItem } from "@/services/Item/Item";
 import { getCategory } from "@/services/Category/Category";
 
+export async function generateMetadata() {
+  return {
+    title: "ماشین3 -  پادکست های بررسی خودرو",
+    description: "پادکست های بررسی خودرو",
+  };
+}
+
 async function pagePodcast({
-  params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const param = await params;
   const searchParam = await searchParams;
   const page = Number(searchParam.page);
   const term = String(searchParam.term);
@@ -22,7 +26,7 @@ async function pagePodcast({
     ...(term && term !== "undefined" && { Term: term }),
     PageSize: 15,
   });
-   const popularNews: Items[] = await getItem({
+  const popularNews: Items[] = await getItem({
     TypeId: 5,
     langCode: "fa",
     OrderBy: 8,
@@ -45,7 +49,13 @@ async function pagePodcast({
 
   return (
     <>
-      <Podcast podcasts={podcasts} podcastsCat={podcastsCat} banner={banner} popularNews={popularNews}/>
+      <Podcast
+        podcasts={podcasts}
+        podcastsCat={podcastsCat}
+        banner={banner}
+        popularNews={popularNews}
+        titleCategory=""
+      />
     </>
   );
 }

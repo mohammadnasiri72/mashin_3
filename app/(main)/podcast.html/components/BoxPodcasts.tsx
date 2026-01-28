@@ -5,7 +5,13 @@ import AudioPlayer from "./AudioPlayer";
 import PaginationPodcasts from "./PaginationPodcasts";
 import SearchBoxPodcasts from "./SearchBoxPodcasts";
 
-function BoxPodcasts({ podcasts }: { podcasts: Items[] }) {
+function BoxPodcasts({
+  podcasts,
+  titleCategory,
+}: {
+  podcasts: Items[];
+  titleCategory: string;
+}) {
   return (
     <>
       <div className="px-2 py-4">
@@ -13,7 +19,9 @@ function BoxPodcasts({ podcasts }: { podcasts: Items[] }) {
         <div className="space-y-6 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
           <div className="flex md:flex-nowrap flex-wrap items-center gap-2">
             <h2 className="whitespace-nowrap text-[#ce1a2a]! text-xl">
-              پادکست های بررسی خودرو
+              {titleCategory
+                ? `پادکست های ${titleCategory}`
+                : " پادکست های بررسی خودرو"}
             </h2>
             <SearchBoxPodcasts />
           </div>

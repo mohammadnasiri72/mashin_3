@@ -4,15 +4,42 @@ import NewsViewDetails from "./components/NewsViewDetails";
 import { getItem } from "@/services/Item/Item";
 import { getComment } from "@/services/Comment/Comment";
 
-async function pageNewsViewDetails({
+export async function generateMetadata({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const param = await params;
-  const searchParam = await searchParams;
+  const id = Number(param.slug[0]);
+
+  const newsDetails: ItemsId = await getItemId(id);
+  if (newsDetails.title) {
+    return {
+      title: `ماشین3 - ${
+        newsDetails.seoTitle ? newsDetails.seoTitle : newsDetails.title
+      }`,
+      description: newsDetails.seoDescription,
+      openGraph: {
+        title: `ماشین3 - ${
+          newsDetails.seoTitle ? newsDetails.seoTitle : newsDetails.title
+        }`,
+        description: newsDetails.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 - اخبار خودرو",
+      description: "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
+    };
+  }
+}
+
+async function pageNewsViewDetails({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const param = await params;
   const id = Number(param.slug[0]);
   const detailsNews: ItemsId = await getItemId(Number(id));
 

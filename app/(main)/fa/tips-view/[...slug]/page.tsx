@@ -4,15 +4,39 @@ import React from "react";
 import EducationView from "./components/EducationView";
 import { getComment } from "@/services/Comment/Comment";
 
-async function pageTipView({
+export async function generateMetadata({
   params,
-  searchParams,
 }: {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const param = await params;
-  const searchParam = await searchParams;
+  const id = Number(param.slug[0]);
+
+  const education: ItemsId = await getItemId(id);
+  if (education.title) {
+    return {
+      title: `ماشین3 - ${
+        education.seoTitle ? education.seoTitle : education.title
+      }`,
+      description: education.seoDescription,
+      openGraph: {
+        title: `ماشین3 - ${
+          education.seoTitle ? education.seoTitle : education.title
+        }`,
+        description: education.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 - آموزش و نکات فنی",
+      description:
+        "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
+    };
+  }
+}
+
+async function pageTipView({ params }: { params: Promise<{ slug: string }> }) {
+  const param = await params;
   const id = Number(param.slug[0]);
 
   const education: ItemsId = await getItemId(id);

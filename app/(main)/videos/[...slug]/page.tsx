@@ -5,6 +5,32 @@ import BoxCatVideos from "../../videos.html/components/BoxCatVideos";
 import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const param = await params;
+  const id = param.slug[0];
+  const videoCat: ItemsCategoryId = await getCategoryId(Number(id));
+
+  if (videoCat.title) {
+    return {
+      title: `ماشین3 - ${videoCat.seoTitle ? videoCat.seoTitle : videoCat.title}`,
+      description: videoCat.seoDescription,
+      openGraph: {
+        title: `ماشین3 - ${videoCat.seoTitle ? videoCat.seoTitle : videoCat.title}`,
+        description: videoCat.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 -  فیلم های تست و بررسی خودرو",
+      description: " فیلم های تست و بررسی خودرو",
+    };
+  }
+}
+
 async function pageVideosDainamic({
   params,
   searchParams,

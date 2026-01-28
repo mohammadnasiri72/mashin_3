@@ -4,6 +4,13 @@ import { getItem } from "@/services/Item/Item";
 import { getCategory } from "@/services/Category/Category";
 import BoxCatVideos from "./components/BoxCatVideos";
 
+export async function generateMetadata() {
+  return {
+    title: "ماشین3 -  فیلم های تست و بررسی خودرو",
+    description: " فیلم های تست و بررسی خودرو",
+  };
+}
+
 async function pageVideo({
   searchParams,
 }: {
@@ -43,7 +50,12 @@ async function pageVideo({
   return (
     <>
       <div className="bg-[#f4f4f4]">
-        <Video popularVideos={popularVideos} videos={videos} banner={banner} titleCat={''}/>
+        <Video
+          popularVideos={popularVideos}
+          videos={videos}
+          banner={banner}
+          titleCat={""}
+        />
         <BoxCatVideos videosCat={videosCat} />
       </div>
     </>

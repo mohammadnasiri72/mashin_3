@@ -2,6 +2,46 @@ import React from "react";
 import EducationCar from "./components/EducationCar";
 import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
+import { getCategoryId } from "@/services/Category/CategoryId";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const param = await params;
+  const id = Number(param.slug[0]);
+
+  if (isNaN(id)) {
+    return {
+      title: "ماشین3 - آموزش و نکات فنی",
+      description:
+        "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
+    };
+  } else {
+    const eduDetails: ItemsCategoryId = await getCategoryId(id);
+    if (eduDetails.title) {
+      return {
+        title: `ماشین3 - ${
+          eduDetails.seoTitle ? eduDetails.seoTitle : eduDetails.title
+        }`,
+        description: eduDetails.seoDescription,
+        openGraph: {
+          title: `ماشین3 - ${
+            eduDetails.seoTitle ? eduDetails.seoTitle : eduDetails.title
+          }`,
+          description: eduDetails.seoDescription,
+        },
+      };
+    } else {
+      return {
+        title: "ماشین3 - آموزش و نکات فنی",
+        description:
+          "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
+      };
+    }
+  }
+}
 
 async function pageEducationTips({
   params,

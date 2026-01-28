@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { FaMotorcycle } from "react-icons/fa";
 import { FaCarRear } from "react-icons/fa6";
+export async function generateMetadata() {
+  return {
+    title: "ماشین3 - خودروهای بازار و موتورسیکلت‌ها",
+    description: "خودروهای بازار و موتورسیکلت‌ها",
+  };
+}
 
 function pageReviews() {
   return (
