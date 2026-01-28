@@ -1,21 +1,21 @@
 "use client";
 
+import { setToken } from "@/redux/slice/token";
+import { RootState } from "@/redux/store";
+import { mainDomainOld } from "@/utils/mainDomain";
 import { Collapse } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
-import { IoChevronDown, IoSearch } from "react-icons/io5";
+import { IoChevronDown } from "react-icons/io5";
 import { TiThMenu } from "react-icons/ti";
-import ModalLogin from "./ModalLogin";
-import LoadingSkeletonAuth from "./LoadingSkeletonAuth";
-import ProfileDropdown from "./ProfileDropdown";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { setToken } from "@/redux/slice/token";
+import LoadingSkeletonAuth from "./LoadingSkeletonAuth";
+import ModalLogin from "./ModalLogin";
+import ProfileDropdown from "./ProfileDropdown";
 import SearchBoxHeader from "./SearchBoxHeader";
 import SearchBoxHeaderMobile from "./SearchBoxHeaderMobile";
-import { mainDomainOld } from "@/utils/mainDomain";
 const Cookies = require("js-cookie");
 
 // تابع تبدیل LastMenuItem به MenuItem با ساختار سلسله‌مراتبی

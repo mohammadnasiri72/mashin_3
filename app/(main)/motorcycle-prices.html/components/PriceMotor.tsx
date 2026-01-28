@@ -1,8 +1,8 @@
 "use client";
 
-import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import { Card, Input, Table } from "antd";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Mousewheel, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -41,7 +41,7 @@ interface PriceBrands {
 const PRIMARY_COLOR = "#ce1a2a";
 const PRIMARY_LIGHT = "#fdf2f2";
 
-function PriceCar({
+function PriceMotor({
   brands,
   price,
 }: {
@@ -50,20 +50,13 @@ function PriceCar({
 }) {
   // دسته‌بندی‌های اصلی
   const mainCategories: Category[] = [
-    {
-      id: 8955,
-      title: "قیمت خودرو داخلی",
-      url: "/price.html?type=internal",
-      total: price.length,
-      type: "internal",
-    },
-    {
-      id: 8954,
-      title: "قیمت خودرو وارداتی",
-      url: "/price.html?type=import",
-      total: price.length,
-      type: "import",
-    },
+    // {
+    //   id: 0,
+    //   title: "همه دسته‌بندی‌ها",
+    //   url: "/motorcycle-prices.html?type=all",
+    //   total: price.length,
+    //   type: "all",
+    // },
   ];
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -75,6 +68,8 @@ function PriceCar({
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
   const router = useRouter();
+
+  const selectedBrandTitle = brands.find((e) => e.id === selectedBrand)?.title;
 
   const titlePage = mainCategories.find(
     (e) => e.id === selectedCategory,
@@ -120,12 +115,10 @@ function PriceCar({
 
   // تنظیم دسته‌بندی بر اساس URL
   useEffect(() => {
-    if (type === "internal") {
-      setSelectedCategory(8955);
-    } else if (type === "import") {
-      setSelectedCategory(8954);
+    if (type === "all") {
+      setSelectedCategory(0);
     } else {
-      setSelectedCategory(8955);
+      setSelectedCategory(null);
     }
   }, [type]);
 
@@ -217,10 +210,12 @@ function PriceCar({
             className="text-xl sm:text-2xl font-bold text-gray-900 mb-2!"
             style={{ color: PRIMARY_COLOR }}
           >
-            {titlePage ? titlePage : "قیمت خودرو"}
+            {selectedBrandTitle
+              ? `قیمت موتورهای ${selectedBrandTitle}`
+              : "قیمت موتور سیکلت"}
           </h1>
           <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
-            بررسی و مقایسه قیمت خودروهای مختلف در بازار و نمایندگی‌ها
+            بررسی و مقایسه قیمت موتورهای مختلف در بازار و نمایندگی‌ها
           </p>
         </div>
 
@@ -236,7 +231,7 @@ function PriceCar({
           >
             <div className="flex-1 w-full">
               <Input
-                placeholder="جستجو در برند و مدل خودرو..."
+                placeholder="جستجو در برند و مدل موتور..."
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 prefix={<SearchOutlined className="text-gray-400" />}
@@ -252,8 +247,9 @@ function PriceCar({
             }`}
           >
             <h3 className="text-lg font-bold text-gray-800 whitespace-nowrap">
-              لیست قیمت خودروها ({filteredData.length} مورد)
+              لیست قیمت موتورها ({filteredData.length} مورد)
             </h3>
+
             {/* Search and Filters for Desktop */}
             <div
               className={` flex-col sm:flex-row gap-3 items-center w-full px-5 ${
@@ -262,7 +258,7 @@ function PriceCar({
             >
               <div className="flex-1 w-full">
                 <Input
-                  placeholder="جستجو در برند و مدل خودرو..."
+                  placeholder="جستجو در برند و مدل موتور..."
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
                   prefix={<SearchOutlined className="text-gray-400" />}
@@ -272,6 +268,17 @@ function PriceCar({
                 />
               </div>
             </div>
+            {selectedBrand && (
+              <span
+                onClick={() => {
+                  setSelectedBrand(null);
+                }}
+                className="text-sm text-white! px-3 py-1 rounded cursor-pointer whitespace-nowrap ml-3"
+                style={{ backgroundColor: PRIMARY_COLOR }}
+              >
+               حذف فیلترها
+              </span>
+            )}
             <span
               onClick={() => {
                 setShowFilter(true);
@@ -288,13 +295,13 @@ function PriceCar({
             }`}
           >
             {/* برای دسکتاپ: سوایپر دسته‌بندی */}
-            <div className="">
+            {/* <div className="">
               <Card
                 className="mb-6! shadow-md border-0 rounded-xl"
                 style={{ borderColor: PRIMARY_LIGHT }}
               >
                 <h2 className="text-lg font-bold text-gray-800 mb-4! text-center">
-                  دسته‌بندی‌ها
+                  دسته‌بندی‌های قیمت موتور
                 </h2>
 
                 <Swiper
@@ -332,7 +339,7 @@ function PriceCar({
                         >
                           {category.title}
                         </span>
-                        {selectedCategory === category.id && (
+                        {searchParams.get("type") === category.type && (
                           <span
                             className="text-xs font-medium px-1.5 py-0.5 rounded-full"
                             style={{
@@ -354,24 +361,21 @@ function PriceCar({
                   ))}
                 </Swiper>
               </Card>
-            </div>
+            </div> */}
 
             {/* برای موبایل: بخش فیلتر */}
             <>
-              {selectedCategory && (
+              {
+            //   (selectedCategory || selectedCategory === 0) &&
+               (
                 <Card
                   className="mb-6! shadow-md border-0 rounded-xl"
                   style={{ borderColor: PRIMARY_LIGHT }}
                 >
                   <div className="flex items-center justify-between mb-4!">
-                    <h3 className="text-base font-bold text-gray-800">
-                      برندهای{" "}
-                      {
-                        mainCategories.find(
-                          (cat) => cat.id === selectedCategory,
-                        )?.title
-                      }
-                    </h3>
+                    <h2 className="text-lg font-bold text-gray-800 mb-4! text-center">
+                  برندهای موتور سیکلت
+                </h2>
                     <span
                       className="text-xs text-white! px-2 py-1 rounded"
                       style={{ backgroundColor: PRIMARY_COLOR }}
@@ -447,7 +451,7 @@ function PriceCar({
               ) : (
                 <div className="text-center py-12">
                   <div className="text-gray-400 text-4xl mb-4!">🚗</div>
-                  <p className="text-gray-500">خودرویی یافت نشد</p>
+                  <p className="text-gray-500">موتوریی یافت نشد</p>
                   <button
                     onClick={handleResetFilters}
                     className="mt-4 text-[#ce1a2a] hover:underline"
@@ -471,26 +475,14 @@ function PriceCar({
                   defaultSortOrder: "ascend",
                 },
                 {
-                  title: "مدل خودرو",
+                  title: "مدل موتور",
                   dataIndex: "title",
                   align: "center",
                   key: "title",
                   sorter: (a, b) => a.title.localeCompare(b.title),
                   width: 150,
                 },
-                {
-                  title: "قیمت بازار (تومان)",
-                  dataIndex: "price1",
-                  align: "center",
-                  key: "price1",
-                  sorter: (a, b) => (a.price1 || 0) - (b.price1 || 0),
-                  render: (price: number) => (
-                    <span className="font-bold text-green-600">
-                      {price ? price.toLocaleString("fa-IR") : "---"}
-                    </span>
-                  ),
-                  width: 160,
-                },
+               
                 {
                   title: "قیمت نمایندگی (تومان)",
                   dataIndex: "price2",
@@ -572,4 +564,4 @@ function PriceCar({
   );
 }
 
-export default PriceCar;
+export default PriceMotor;

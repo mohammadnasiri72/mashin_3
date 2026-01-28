@@ -192,7 +192,7 @@ function SearchBoxHeader() {
             )}
 
           {!error && !isLoading && searchResults.length > 0 && (
-            <div className="py-2">
+           
               <div>
                 {Object.entries(groupedResults).map(([type, items], index) => (
                   <div
@@ -220,7 +220,7 @@ function SearchBoxHeader() {
                           key={item.id}
                           href={item.url}
                           onClick={handleResultClick}
-                          className="flex items-center gap-3 p-4 hover:bg-gray-50 transition-colors duration-150 group"
+                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors duration-150 group"
                         >
                           <div className="shrink-0 w-12 h-12 bg-white rounded-lg overflow-hidden border border-gray-200">
                             {item.image ? (
@@ -255,7 +255,7 @@ function SearchBoxHeader() {
                   </div>
                 ))}
               </div>
-            </div>
+           
           )}
         </div>
       )}

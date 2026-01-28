@@ -113,7 +113,7 @@ const CarSpecsSection = ({
             >
               {carSpecs.map((car) => {
                 const propertyCar = Properties.filter(
-                  (e) => e.itemId === car.id
+                  (e) => e.itemId === car.id,
                 )
                   .filter((e) => e.isTechnicalProperty)
                   .slice(0, 4);
@@ -121,7 +121,7 @@ const CarSpecsSection = ({
                   <SwiperSlide key={car.id}>
                     <div className="bg-gray-100 rounded-2xl p-4">
                       {/* تصویر خودرو */}
-                      <div className="relative rounded-xl overflow-hidden mb-3 bg-[#bfbfbf] h-52">
+                      <div className="relative rounded-xl overflow-hidden mb-3 h-52">
                         <Link href={car.url} className="">
                           <div className="aspect-2/1 relative">
                             <img
@@ -132,13 +132,8 @@ const CarSpecsSection = ({
                           </div>
                         </Link>
                         <div className="absolute bottom-2 right-2">
-                          {/* <div className="text-white! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 after:bg-[#ce1a2a]">
-                          <h3 className="text-xl font-bold! text-gray-700!">
-                            {car.title}
-                          </h3>
-                        </div> */}
                           <div className="pr-3">
-                            <h3 className="text-white! font-bold! inline-block relative text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 after:bg-[#ce1a2a]">
+                            <h3 className="text-[#222]! white-on-white font-bold! inline-block relative text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 after:bg-[#ce1a2a55]">
                               {car.title}
                             </h3>
                           </div>
@@ -147,30 +142,6 @@ const CarSpecsSection = ({
 
                       {/* مشخصات فنی */}
                       <div className="grid grid-cols-2 gap-2 h-44">
-                        {/* {car.specs.map((spec, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center bg-white rounded-lg p-2"
-                        >
-                          <div className="ml-2 shrink-0">
-                            <Image
-                              src={spec.icon}
-                              alt={spec.label}
-                              width={20}
-                              height={20}
-                              className="w-5 h-5"
-                            />
-                          </div>
-                          <div className="text-xs">
-                            <div className="font-bold text-gray-900">
-                              {spec.value}
-                            </div>
-                            <div className="text-gray-500 text-[10px] mt-1">
-                              {spec.label}
-                            </div>
-                          </div>
-                        </div>
-                      ))} */}
                         {propertyCar.map((spec, index) => (
                           <div
                             key={index}
@@ -178,10 +149,10 @@ const CarSpecsSection = ({
                           >
                             <div className="text-xs">
                               <div className="font-bold text-gray-900">
-                                {spec.title}
+                                {spec.propertyValue}
                               </div>
                               <div className="text-gray-500 text-[10px]">
-                                {spec.propertyValue}
+                                {spec.title}
                               </div>
                             </div>
                           </div>

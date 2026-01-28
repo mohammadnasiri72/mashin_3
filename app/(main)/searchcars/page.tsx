@@ -9,19 +9,38 @@ export async function generateMetadata({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const searchParam = await searchParams;
-  const id = Number(searchParam.id);
-  const type = Number(searchParam.type);
-  const carDetails: ItemsCategoryId = await getCategoryId(id);
+  const brandId = Number(searchParam.brandId);
+  const modelId = Number(searchParam.modelId);
+  const typeId = Number(searchParam.typeId);
+
   const segmentCars: Items[] = await getItem({
     TypeId: 1048,
     langCode: "fa",
   });
-  const typeCarTitle = segmentCars.find((e) => e.id === type)?.title;
+  const typeCarTitle = segmentCars.find((e) => e.id === typeId)?.title;
 
-  return {
-    title: `ماشین3 - مدل های ${carDetails.title} ${typeCarTitle}`,
-    description: `مدل های ${carDetails.title} ${typeCarTitle}`,
-  };
+  if (modelId) {
+    const carDetails: ItemsCategoryId = await getCategoryId(modelId);
+    return {
+      title: `ماشین3 - مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
+      description: `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
+    };
+  } else if (brandId) {
+    const carDetails: ItemsCategoryId = await getCategoryId(brandId);
+    return {
+      title: `ماشین3 - مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
+      description: `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
+    };
+  } else {
+    return {
+      title: typeCarTitle
+        ? `ماشین3 - همه خودروهای ${typeCarTitle}`
+        : "ماشین3 - همه خودروهای ماشین3",
+      description: typeCarTitle
+        ? `ماشین3 - همه خودروهای ${typeCarTitle}`
+        : "ماشین3 - همه خودروهای ماشین3",
+    };
+  }
 }
 
 async function pageSearchCars({
@@ -30,8 +49,11 @@ async function pageSearchCars({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const searchParam = await searchParams;
-  const id = Number(searchParam.id);
-  const type = Number(searchParam.type);
+  const brandId = Number(searchParam.brandId);
+  const modelId = Number(searchParam.modelId);
+  const typeId = Number(searchParam.typeId);
+  const page = Number(searchParam.page) || 1;
+
   const carBrands: ItemsCategory[] = await getCategory({
     TypeId: 1042,
     LangCode: "fa",
@@ -39,15 +61,24 @@ async function pageSearchCars({
     PageIndex: 1,
     PageSize: 200,
   });
-  const carDetails: ItemsCategoryId = await getCategoryId(id);
+
+  let carDetails: ItemsCategoryId[] = [];
+  if (modelId) {
+    const carCategory = await getCategoryId(modelId);
+    carDetails = [carCategory];
+  } else if (brandId) {
+    const carCategory = await getCategoryId(brandId);
+    carDetails = [carCategory];
+  }
 
   const carView: Items[] = await getItem({
     TypeId: 1042,
     langCode: "fa",
-    CategoryIdArray: String(id),
-    PageIndex: 1,
-    PageSize: 200,
-    ...(type && { FilterProps: `22690=${type}` }),
+    ...(modelId && { CategoryIdArray: String(modelId) }),
+    ...(brandId && !modelId && { CategoryIdArray: String(brandId) }),
+    PageIndex: page,
+    PageSize: 20,
+    ...(typeId && { FilterProps: `22690=${typeId}` }),
   });
   const banner: Items[] = await getItem({
     TypeId: 1051,
@@ -68,7 +99,9 @@ async function pageSearchCars({
         carView={carView}
         banner={banner}
         segmentCars={segmentCars}
-        initialtype={type}
+        initialtype={typeId}
+        initialBrandId={brandId}
+        initialModelId={modelId}
       />
     </>
   );

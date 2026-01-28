@@ -1,18 +1,26 @@
-import { getCategory } from "@/services/Category/Category";
-import PriceListMotor from "./components/PriceListMotor";
+import { getPriceMotor } from "@/services/Price/PriceMotor";
+import { getPriceMotorBrands } from "@/services/Price/PriceMotorBrands";
+import PriceMotor from "./components/PriceMotor";
 
-async function pageMotorcyclePrices() {
-  const brand: ItemsCategory[] = await getCategory({
-    TypeId: 1052,
-    LangCode: "fa",
-    ParentIdArray: 6059,
-    PageIndex: 1,
-    PageSize: 200,
+async function pageMotorcyclePrices({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const searchParam = await searchParams;
+  const type = searchParam.type;
+  
+
+  const brands: PriceBrands[] = await getPriceMotorBrands(
+    type ? String(type) : "all",
+  );
+  const price: Price[] = await getPriceMotor({
+    Type: type ? String(type) : "all",
+    BrandId: -1,
   });
-
   return (
     <>
-      <PriceListMotor brand={brand} />
+      <PriceMotor brands={brands} price={price} />
     </>
   );
 }

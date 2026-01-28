@@ -1,5 +1,4 @@
-import { getPrice } from "@/services/Price/Price";
-import { getPriceBrands } from "@/services/Price/PriceBrands";
+import { getPriceCar } from "@/services/Price/PriceCar";
 import { Tabs, type TabsProps } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -23,6 +22,7 @@ function sortByAbsoluteValue(arr: any, field: string) {
 }
 
 function MarketStats() {
+  const [loading, setLoading] = useState<boolean>(true);
   const [type, setType] = useState<string>("internal");
   const [carList, setCarList] = useState<Price[]>([]);
 
@@ -31,11 +31,14 @@ function MarketStats() {
   }, [type]);
 
   const fetchCarType = async () => {
+    setLoading(true);
+    setCarList([]);
     try {
-      const price: Price[] = await getPrice({ Type: type, BrandId: -1 });
+      const price: Price[] = await getPriceCar({ Type: type, BrandId: -1 });
       setCarList(sortByAbsoluteValue(price, "change").slice(0, 10));
     } catch (err) {
     } finally {
+      setLoading(false);
     }
   };
 
@@ -68,65 +71,74 @@ function MarketStats() {
         </div>
 
         {/* محتوای تب‌ها */}
-        <div className="space-y-2 max-h-60 overflow-y-auto">
-          {carList.map((car) => (
-            <div
-              key={car.id}
-              className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200"
-            >
-              <div className="flex items-center gap-2 flex-1 min-w-0">
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
-                  {/* <img
+        {loading ? (
+          <div className="space-y-2 max-h-60 overflow-y-auto">
+            {
+              [...Array(10)].map((_, index)=>{
+                return(
+                  <div className=" bg-gray-200 animate-pulse h-10 w-full rounded" />
+                )
+              })
+            }
+          </div>
+        ) : (
+          <div className="space-y-2 max-h-60 overflow-y-auto">
+            {carList.map((car) => (
+              <div
+                key={car.id}
+                className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200"
+              >
+                <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+                    {/* <img
                     src={car.id}
                     alt={car.name}
                     className="object-cover w-full h-full rounded-lg"
                   /> */}
-                  {
-                    car.change > 0 &&
-                  <FaArrowTrendUp className="text-emerald-600" />
-                  }
-                  {
-                    car.change < 0 &&
-                  <FaArrowTrendDown className="text-red-600" />
-                  }
-                  {
-                    car.change === 0 &&
-                    <MdOutlineCompareArrows className="" />
-                  }
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-gray-900 text-sm truncate">
-                    {car.title}
-                  </h4>
-                  <p className="text-xs text-gray-500 truncate">
-                    {car.brandTitle}
-                  </p>
-                </div>
-              </div>
-              <div className="text-left ml-2 shrink-0">
-                <div className="font-bold text-gray-900 text-sm whitespace-nowrap">
-                  {car.price1.toLocaleString()}
-                </div>
-                {car.change !== 0 && (
-                  <div
-                    className={`flex items-center gap-1 text-xs ${
-                      car.change > 0 ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {car.change > 0 ? (
-                      <FaArrowUp className="w-2 h-2" />
-                    ) : (
-                      <FaArrowDown className="w-2 h-2" />
+                    {car.change > 0 && (
+                      <FaArrowTrendUp className="text-emerald-600" />
                     )}
-                    <span className="whitespace-nowrap">
-                      {car.change.toLocaleString()}
-                    </span>
+                    {car.change < 0 && (
+                      <FaArrowTrendDown className="text-red-600" />
+                    )}
+                    {car.change === 0 && (
+                      <MdOutlineCompareArrows className="" />
+                    )}
                   </div>
-                )}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-gray-900 text-sm truncate">
+                      {car.title}
+                    </h4>
+                    <p className="text-xs text-gray-500 truncate">
+                      {car.brandTitle}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-left ml-2 shrink-0">
+                  <div className="font-bold text-gray-900 text-sm whitespace-nowrap">
+                    {car.price1.toLocaleString()}
+                  </div>
+                  {car.change !== 0 && (
+                    <div
+                      className={`flex items-center gap-1 text-xs ${
+                        car.change > 0 ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {car.change > 0 ? (
+                        <FaArrowUp className="w-2 h-2" />
+                      ) : (
+                        <FaArrowDown className="w-2 h-2" />
+                      )}
+                      <span className="whitespace-nowrap">
+                        {car.change.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* دکمه مشاهده همه */}
         <Link

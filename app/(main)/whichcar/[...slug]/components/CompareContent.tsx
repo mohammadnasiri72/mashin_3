@@ -19,7 +19,6 @@ function CompareContent({
   const car1 = dataCompare[0];
   const car2 = dataCompare[1];
 
- 
   const extractPropertiesForComparison = (car: ItemsId) => {
     const properties: Record<
       string,
@@ -97,8 +96,8 @@ function CompareContent({
               dangerouslySetInnerHTML={createMarkup(
                 whichcars.body.replace(
                   /<span style="font-size: 12pt;">|<\/span>/g,
-                  ""
-                )
+                  "",
+                ),
               )}
             />
           </Card>
@@ -142,8 +141,8 @@ function CompareContent({
                   dangerouslySetInnerHTML={createMarkup(
                     car1.body.replace(
                       /<span style="font-size: 12pt;">|<\/span>/g,
-                      ""
-                    )
+                      "",
+                    ),
                   )}
                 />
               )}
@@ -177,109 +176,29 @@ function CompareContent({
                   dangerouslySetInnerHTML={createMarkup(
                     car2.body.replace(
                       /<span style="font-size: 12pt;">|<\/span>/g,
-                      ""
-                    )
+                      "",
+                    ),
                   )}
                 />
               )}
             </Card>
           </div>
         )}
-        {/* اطلاعات اضافی */}
-        {dataCompare.length === 2 && (
-          <Row gutter={[16, 16]}>
-            <Col xs={24} md={12} className="">
-              <Card className="text-center h-full bg-emerald-100!">
-                <h4 className="font-bold text-lg text-gray-800 mb-4!">
-                  اطلاعات {car1.title}
-                </h4>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div className="flex justify-between">
-                    <span>تعداد بازدید:</span>
-                    <span className="font-medium">{car1.visit || 0}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>تاریخ انتشار:</span>
-                    <span className="font-medium">
-                      {car1.created
-                        ? new Date(car1.created).toLocaleDateString("fa-IR")
-                        : "---"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>دسته‌بندی:</span>
-                    <span className="font-medium">
-                      {car1.categoryTitle || "---"}
-                    </span>
-                  </div>
-                  {car1.score > 0 && (
-                    <div className="flex justify-between">
-                      <span>امتیاز:</span>
-                      <span className="font-medium">{car1.score}/5</span>
-                    </div>
-                  )}
-                </div>
-              </Card>
-            </Col>
-
-            <Col xs={24} md={12}>
-              <Card className="text-center h-full bg-blue-100!">
-                <h4 className="font-bold text-lg text-gray-800 mb-4!">
-                  اطلاعات {car2.title}
-                </h4>
-                <div className="space-y-2 text-sm text-gray-600">
-                  <div className="flex justify-between">
-                    <span>تعداد بازدید:</span>
-                    <span className="font-medium">{car2.visit || 0}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>تاریخ انتشار:</span>
-                    <span className="font-medium">
-                      {car2.created
-                        ? new Date(car2.created).toLocaleDateString("fa-IR")
-                        : "---"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>دسته‌بندی:</span>
-                    <span className="font-medium">
-                      {car2.categoryTitle || "---"}
-                    </span>
-                  </div>
-                  {car2.score > 0 && (
-                    <div className="flex justify-between">
-                      <span>امتیاز:</span>
-                      <span className="font-medium">{car2.score}/5</span>
-                    </div>
-                  )}
-                </div>
-              </Card>
-            </Col>
-          </Row>
-        )}
 
         {/* News Tags */}
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <div className="flex flex-wrap gap-2 justify-between">
-            <Link
-              href={`/whichcars/${whichcars.categoryId}`}
-              className="bg-gray-100! px-3 py-1 rounded-full text-xs text-gray-700! hover:text-[#ce1a2a]! duration-300"
-            >
-              #{whichcars.categoryTitle}
-            </Link>
-            <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 flex-wrap">
-              <div className="flex items-center gap-1 ">
-                <FaEye className="text-[#666] text-xs" />
-                <span className="font-bold text-[#666] text-xs">
-                  {whichcars.visit}
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <FaCalendar className="text-[#666] text-xs" />
-                <span className="font-bold text-[#666] text-xs">
-                  {new Date(whichcars.created).toLocaleDateString("fa-IR")}
-                </span>
-              </div>
+        <div className=" pt-3 border-t border-gray-200">
+          <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 flex-wrap">
+            <div className="flex items-center gap-1 ">
+              <FaEye className="text-[#666] text-xs" />
+              <span className="font-bold text-[#666] text-xs">
+                {whichcars.visit}
+              </span>
+            </div>
+            <div className="flex items-center gap-1">
+              <FaCalendar className="text-[#666] text-xs" />
+              <span className="font-bold text-[#666] text-xs">
+                {new Date(whichcars.created).toLocaleDateString("fa-IR")}
+              </span>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
-import { getPrice } from "@/services/Price/Price";
-import { getPriceBrands } from "@/services/Price/PriceBrands";
+import { getPriceCar } from "@/services/Price/PriceCar";
+import { getPriceCarBrands } from "@/services/Price/PriceCarBrands";
 import { getPropertyIds } from "@/services/Property/propertyIds";
 import CarBrandPricesSection from "../components/CarBrandPricesSection";
 import CarComparisonSection from "../components/CarComparisonSection";
@@ -99,8 +99,8 @@ export default async function Home() {
     PageSize: 10,
   });
 
-  const brands: PriceBrands[] = await getPriceBrands("internal");
-  const prices: Price[] = await getPrice({
+  const brands: PriceBrands[] = await getPriceCarBrands("internal");
+  const prices: Price[] = await getPriceCar({
     Type: "internal",
     BrandId: brands[0].id,
   });

@@ -53,6 +53,8 @@ async function pageWhichcarsDainamic({
   if (ids) {
     dataCompare = await getItemByIds(String(ids));
   }
+
+  
   const popularComparisons: Items[] = await getItem({
     TypeId: 1045,
     langCode: "fa",

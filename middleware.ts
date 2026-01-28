@@ -3,8 +3,9 @@ import { getCategoryByUrl } from "./services/Category/CategoryByUrl";
 import { getCategoryId } from "./services/Category/CategoryId";
 import { getItemId } from "./services/Item/ItemId";
 import { getItemByUrl } from "./services/Item/ItemByUrl";
-import { getPriceBrands } from "./services/Price/PriceBrands";
+import { getPriceCarBrands } from "./services/Price/PriceCarBrands";
 import { getItemByIds } from "./services/Item/ItemByIds";
+import { getPriceMotorBrands } from "./services/Price/PriceMotorBrands";
 
 export async function middleware(request: Request) {
   const url = new URL(request.url);
@@ -22,14 +23,14 @@ export async function middleware(request: Request) {
             new URL((data.url + `?id=${data?.id}`).toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } catch (error: any) {
         const status = error.response?.status || error.status || 500;
         return NextResponse.redirect(
           new URL(`/error?status=${status}`, request.url),
-          { status: 301 }
+          { status: 301 },
         );
       }
     } else {
@@ -37,13 +38,13 @@ export async function middleware(request: Request) {
         const data: ItemsCategoryId = await getCategoryByUrl(decodedPathname);
         return NextResponse.redirect(
           new URL((pathname + `?id=${data?.id}`).toLowerCase(), request.url),
-          { status: 301 }
+          { status: 301 },
         );
       } catch (error: any) {
         const status = error.response?.status || error.status || 500;
         return NextResponse.redirect(
           new URL(`/error?status=${status}`, request.url),
-          { status: 301 }
+          { status: 301 },
         );
       }
     }
@@ -87,7 +88,7 @@ export async function middleware(request: Request) {
     if (!id) {
       return NextResponse.redirect(
         new URL(`/error?status=${404}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
 
@@ -105,7 +106,7 @@ export async function middleware(request: Request) {
         if (decodedDetailsUrl !== currentFullUrl) {
           return NextResponse.redirect(
             new URL(decodedDetailsUrl.toLowerCase(), request.url),
-            { status: 301 }
+            { status: 301 },
           );
         }
       }
@@ -113,7 +114,7 @@ export async function middleware(request: Request) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/motorcycle/")) {
@@ -127,7 +128,7 @@ export async function middleware(request: Request) {
           new URL(data.url.toLowerCase(), request.url),
           {
             status: 301,
-          }
+          },
         );
       }
     } else {
@@ -136,14 +137,14 @@ export async function middleware(request: Request) {
         if (data.id > 0 && id !== data?.id) {
           return NextResponse.redirect(
             new URL((pathname + `?id=${data?.id}`).toLowerCase(), request.url),
-            { status: 301 }
+            { status: 301 },
           );
         }
       } catch (error: any) {
         const status = error.response?.status || error.status || 500;
         return NextResponse.redirect(
           new URL(`/error?status=${status}`, request.url),
-          { status: 301 }
+          { status: 301 },
         );
       }
     }
@@ -160,20 +161,20 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else {
         return NextResponse.redirect(
           new URL(`/error?status=${400}`, request.url),
-          { status: 301 }
+          { status: 301 },
         );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/fa/news/")) {
@@ -190,7 +191,7 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else if (decodedPathname !== "/fa/news/اخبار-خودرو.html") {
@@ -198,14 +199,14 @@ export async function middleware(request: Request) {
           new URL("/fa/news/اخبار-خودرو.html", request.url),
           {
             status: 301,
-          }
+          },
         );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/fa/tips-view/")) {
@@ -221,7 +222,7 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else {
@@ -229,14 +230,14 @@ export async function middleware(request: Request) {
           new URL("/fa/educationtips/نکات-آموزشی.html", request.url),
           {
             status: 301,
-          }
+          },
         );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/autoservice/")) {
@@ -257,7 +258,7 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else {
@@ -265,14 +266,14 @@ export async function middleware(request: Request) {
           new URL("/autoservices.html", request.url),
           {
             status: 301,
-          }
+          },
         );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/autoservices/")) {
@@ -288,7 +289,7 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else {
@@ -296,14 +297,14 @@ export async function middleware(request: Request) {
           new URL("/autoservices.html", request.url),
           {
             status: 301,
-          }
+          },
         );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/fa/educationtips/")) {
@@ -319,7 +320,7 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else if (decodedPathname !== "/fa/educationtips/نکات-آموزشی.html") {
@@ -327,14 +328,14 @@ export async function middleware(request: Request) {
           new URL("/fa/educationtips/نکات-آموزشی.html", request.url),
           {
             status: 301,
-          }
+          },
         );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/fa/news-view/")) {
@@ -349,7 +350,7 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else {
@@ -357,33 +358,37 @@ export async function middleware(request: Request) {
           new URL("/fa/news/اخبار-خودرو.html", request.url),
           {
             status: 301,
-          }
+          },
         );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/price.html")) {
     const type = searchParams.get("type");
-    if (!type) {
+    try {
+      await getPriceCarBrands(type ? type : "internal");
+    } catch (error: any) {
+      const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
-        new URL(`/error?status=${400}`, request.url),
-        { status: 301 }
+        new URL(`/error?status=${status}`, request.url),
+        { status: 301 },
       );
-    } else {
-      try {
-        await getPriceBrands(type);
-      } catch (error: any) {
-        const status = error.response?.status || error.status || 500;
-        return NextResponse.redirect(
-          new URL(`/error?status=${status}`, request.url),
-          { status: 301 }
-        );
-      }
+    }
+  } else if (pathname.startsWith("/motorcycle-prices.html")) {
+    const type = searchParams.get("type");
+    try {
+      await getPriceMotorBrands(type ? type : "all");
+    } catch (error: any) {
+      const status = error.response?.status || error.status || 500;
+      return NextResponse.redirect(
+        new URL(`/error?status=${status}`, request.url),
+        { status: 301 },
+      );
     }
   } else if (pathname.startsWith("/whichcar/")) {
     const decodedPathname = decodeURIComponent(pathname);
@@ -397,7 +402,7 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else {
@@ -409,7 +414,7 @@ export async function middleware(request: Request) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/videos/")) {
@@ -426,7 +431,7 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else {
@@ -438,7 +443,7 @@ export async function middleware(request: Request) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/video/")) {
@@ -454,7 +459,7 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else if (!isNaN(id2)) {
@@ -464,7 +469,7 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else {
@@ -476,7 +481,7 @@ export async function middleware(request: Request) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/podcast/")) {
@@ -493,7 +498,7 @@ export async function middleware(request: Request) {
             new URL(data.url.toLowerCase(), request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       } else {
@@ -505,7 +510,7 @@ export async function middleware(request: Request) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else if (pathname.startsWith("/compare/")) {
@@ -523,22 +528,22 @@ export async function middleware(request: Request) {
           return NextResponse.redirect(
             new URL(
               `/compare/${ids.split(",").slice(0, 3).join(",")}` + "?type=car",
-              request.url
+              request.url,
             ),
             {
               status: 301,
-            }
+            },
           );
         } else {
           return NextResponse.redirect(
             new URL(
               `/compare/${ids.split(",").slice(0, 3).join(",")}` +
                 "?type=motor",
-              request.url
+              request.url,
             ),
             {
               status: 301,
-            }
+            },
           );
         }
       }
@@ -548,14 +553,14 @@ export async function middleware(request: Request) {
             new URL(`/compare/${idsRes}` + "?type=car", request.url),
             {
               status: 301,
-            }
+            },
           );
         } else {
           return NextResponse.redirect(
             new URL(`/compare/${idsRes}` + "?type=motor", request.url),
             {
               status: 301,
-            }
+            },
           );
         }
       }
@@ -564,29 +569,29 @@ export async function middleware(request: Request) {
         return NextResponse.redirect(
           new URL(
             `/compare/${ids.split(",").slice(0, 3).join(",")}` + `?type=motor`,
-            request.url
+            request.url,
           ),
           {
             status: 301,
-          }
+          },
         );
       }
       if (dataCompare[0].itemTypeId === 1042 && type !== "car") {
         return NextResponse.redirect(
           new URL(
             `/compare/${ids.split(",").slice(0, 3).join(",")}` + `?type=car`,
-            request.url
+            request.url,
           ),
           {
             status: 301,
-          }
+          },
         );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
         new URL(`/error?status=${status}`, request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   } else {
@@ -594,7 +599,7 @@ export async function middleware(request: Request) {
     if (decodedPathname !== decodedPathname.toLowerCase()) {
       return NextResponse.redirect(
         new URL(decodedPathname.toLowerCase(), request.url),
-        { status: 301 }
+        { status: 301 },
       );
     }
   }

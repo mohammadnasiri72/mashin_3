@@ -4,8 +4,8 @@ import Link from "next/link";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import "swiper/css";
 import { mainDomainOld } from "@/utils/mainDomain";
+import "swiper/css";
 
 export default function CarTypes({ segmentCars }: { segmentCars: Items[] }) {
   return (
@@ -34,7 +34,7 @@ export default function CarTypes({ segmentCars }: { segmentCars: Items[] }) {
               <SwiperSlide key={car.id}>
                 <div className="type_box text-center group">
                   <Link
-                    href={car.url || "#"}
+                    href={`searchcars?typeId=${car.id}`}
                     className="flex flex-col items-center"
                   >
                     <div className="duration-300">

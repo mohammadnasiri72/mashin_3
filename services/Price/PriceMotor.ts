@@ -1,11 +1,11 @@
 import { baseUrl } from "@/utils/mainDomain";
 
-export const getPrice = async (data: {
+export const getPriceMotor = async (data: {
   Type: string;
   BrandId: number;
 }): Promise<Price[]> => {
   try {
-    const url = new URL(`${baseUrl}api/Price`);
+    const url = new URL(`${baseUrl}api/Price/Motor`);
 
     Object.entries(data).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {

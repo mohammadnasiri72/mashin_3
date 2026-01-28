@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaCar, FaSearch } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
+import PaginationSearchCars from "./PaginationSearchCars";
 
 const { Option } = Select;
 
@@ -21,54 +22,67 @@ function SearchCarsDetails({
   banner,
   segmentCars,
   initialtype,
+  initialBrandId,
+  initialModelId,
 }: {
   carBrands: ItemsCategory[];
-  carDetails: ItemsCategoryId;
+  carDetails: ItemsCategoryId[];
   carView: Items[];
   banner: Items[];
   segmentCars: Items[];
   initialtype: number;
+  initialBrandId: number;
+  initialModelId: number;
 }) {
-  const [brand, setBrand] = useState<number | null>(
-    carDetails.id
-      ? carDetails.parentId !== 6058
-        ? carDetails.parentId
-        : carDetails.id
-      : null
-  );
   const [models, setModels] = useState<ItemsCategory[]>([]);
-  const [model, setModel] = useState<number | null>(null);
-  const [type, setType] = useState<number | null>(
-    initialtype ? initialtype : 0
+
+  const [brandId, setBrandId] = useState<number>(
+    initialBrandId ? initialBrandId : 0,
   );
-  const typeCarTitle = segmentCars.find((e) => e.id === type);
-  const typeCarTitle2 = segmentCars.find((e) => e.id === initialtype);
+
+  const [modelId, setModelId] = useState<number>(
+    initialModelId ? initialModelId : 0,
+  );
+  const [typeId, setTypeId] = useState<number>(initialtype ? initialtype : 0);
+
+  const typeCarTitle = segmentCars.find((e) => e.id === initialtype)?.title;
   const router = useRouter();
 
-
-  const fetchModelCars = async (id: number | null) => {
+  const fetchModelCars = async (id: number) => {
     try {
       const modelsCarResponse: ItemsCategory[] = await getCategory({
         TypeId: 1042,
         LangCode: "fa",
-        ParentIdArray: Number(id),
+        ParentIdArray: id,
         PageIndex: 1,
         PageSize: 200,
       });
       setModels(modelsCarResponse);
-      setModel(
-        modelsCarResponse.find((e) => e.id === carDetails.id)?.id
-          ? Number(modelsCarResponse.find((e) => e.id === carDetails.id)?.id)
-          : 0
-      );
     } catch (err) {}
   };
 
   useEffect(() => {
-    if (brand) {
-      fetchModelCars(brand);
+    if (!isNaN(initialModelId)) {
+      fetchModelCars(initialModelId);
+    } else if (!isNaN(initialBrandId)) {
+      fetchModelCars(initialBrandId);
     }
-  }, [brand]);
+  }, []);
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (brandId) params.append("brandId", String(brandId));
+    if (modelId) params.append("modelId", String(modelId));
+    if (typeId) params.append("typeId", String(typeId));
+
+    const queryString = params.toString();
+
+    if (queryString) {
+      router.push(`/searchcars?${queryString}`);
+    } else {
+      router.push("/searchcars");
+    }
+  };
 
   return (
     <>
@@ -83,12 +97,17 @@ function SearchCarsDetails({
                   <div className="lg:w-1/5 sm:w-1/3 w-full px-1">
                     <Select
                       placeholder="جستجوی برند..."
-                      value={brand}
-                      onChange={(value) => setBrand(value)}
+                      value={brandId}
+                      onChange={(value) => {
+                        setBrandId(value);
+                        setModelId(0);
+                        fetchModelCars(value);
+                      }}
                       className="dropdown_main"
                       style={{ width: "100%" }}
                       size="large"
                     >
+                      <Option value={0}>همه برندها</Option>
                       {carBrands.length > 0 &&
                         carBrands.map((e) => (
                           <Option key={e.id} value={e.id}>
@@ -99,10 +118,10 @@ function SearchCarsDetails({
                   </div>
                   <div className="lg:w-1/5 sm:w-1/3 w-full px-1 mt-3 sm:mt-0">
                     <Select
-                      disabled={!brand}
+                      disabled={!brandId}
                       placeholder="جستجوی مدل..."
-                      value={model}
-                      onChange={(value) => setModel(value)}
+                      value={modelId}
+                      onChange={(value) => setModelId(value)}
                       className="dropdown_main"
                       style={{ width: "100%" }}
                       size="large"
@@ -119,8 +138,8 @@ function SearchCarsDetails({
                   <div className="lg:w-1/5 sm:w-1/3 w-full px-1 mt-3 sm:mt-0">
                     <Select
                       placeholder="نوع خودرو..."
-                      value={type}
-                      onChange={(value) => setType(value)}
+                      value={typeId}
+                      onChange={(value) => setTypeId(value)}
                       className="dropdown_main"
                       style={{ width: "100%" }}
                       size="large"
@@ -137,18 +156,9 @@ function SearchCarsDetails({
                 </div>
                 <div className="px-3">
                   <Button
-                    disabled={!brand}
                     variant="contained"
                     className="searchCar_bt button button-wave-1 sm:w-auto w-full"
-                    onClick={() => {
-                      router.push(
-                        typeCarTitle
-                          ? `searchcars?id=${
-                              model !== 0 ? model : brand
-                            }&type=${typeCarTitle.id}`
-                          : `searchcars?id=${model !== 0 ? model : brand}`
-                      );
-                    }}
+                    onClick={handleSearch}
                     sx={{
                       backgroundColor: "#fff",
                       color: "#ce1a2a",
@@ -197,19 +207,33 @@ function SearchCarsDetails({
               {/* عنوان بخش مدل‌ها */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center">
-                  <img
-                    src={mainDomainOld + carDetails.image}
-                    alt={carDetails.title}
-                    className="object-contain w-20 h-20"
-                  />
-                  <h2 className="text-2xl font-bold text-gray-900 ">
-                    مدل‌های{" "}
-                    <span className="text-red-600">{carDetails.title}</span>{" "}
-                    <span className="text-red-600">{typeCarTitle2?.title}</span>{" "}
-                  </h2>
+                  {carDetails.length > 0 && (
+                    <img
+                      src={mainDomainOld + carDetails[0].image}
+                      alt={carDetails[0].title}
+                      className="object-contain w-20 h-20"
+                    />
+                  )}
+                  {carDetails.length > 0 && (
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      مدل‌های{" "}
+                      <span className="text-red-600">
+                        {carDetails[0].title}
+                      </span>{" "}
+                      <span className="text-red-600">{typeCarTitle}</span>{" "}
+                    </h2>
+                  )}
+                  {carDetails.length === 0 && (
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      <span className="text-red-600">
+                        همه برند های خودرو {typeCarTitle}
+                      </span>
+                    </h2>
+                  )}
                 </div>
                 <span className="text-gray-500 text-sm">
-                  {toPersianNumbers(carView.length)} مدل
+                  {carView.length > 0 ? toPersianNumbers(carView[0].total) : 0}{" "}
+                  مدل
                 </span>
               </div>
 
@@ -282,7 +306,7 @@ function SearchCarsDetails({
                     مدلی یافت نشد
                   </h3>
                   <p className="text-gray-600">
-                    در حال حاضر مدلی برای برند {carDetails.title} ثبت نشده است.
+                    با فیلترهای انتخاب شده مدلی یافت نشد.
                   </p>
                 </div>
               )}
@@ -308,6 +332,9 @@ function SearchCarsDetails({
             </div>
           </div>
         </div>
+
+        {/* صفحه بندی */}
+        <PaginationSearchCars carView={carView} />
 
         {/* استایل‌های سفارشی */}
         <style jsx global>{`
@@ -374,7 +401,6 @@ function SearchCarsDetails({
           .overflow-y-auto::-webkit-scrollbar-thumb:hover {
             background: #a1a1a1;
           }
-            
         `}</style>
       </div>
     </>

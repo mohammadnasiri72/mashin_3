@@ -1,7 +1,7 @@
 "use client";
 
-import { getPrice } from "@/services/Price/Price";
-import { getPriceBrands } from "@/services/Price/PriceBrands";
+import { getPriceCar } from "@/services/Price/PriceCar";
+import { getPriceCarBrands } from "@/services/Price/PriceCarBrands";
 import { formatPersianDate } from "@/utils/func";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,7 +29,7 @@ const CarBrandPricesSection = ({
     setLoadingBrands(true);
     setLoadingPrices(true);
     try {
-      const brands: PriceBrands[] = await getPriceBrands(type);
+      const brands: PriceBrands[] = await getPriceCarBrands(type);
       setBrands(brands);
       if (brands.length > 0) {
         fetchPrice(type, brands[0].id);
@@ -44,7 +44,7 @@ const CarBrandPricesSection = ({
   const fetchPrice = async (type: string, brandId: number) => {
     setLoadingPrices(true);
     try {
-      const price: Price[] = await getPrice({
+      const price: Price[] = await getPriceCar({
         Type: type,
         BrandId: brandId,
       });
