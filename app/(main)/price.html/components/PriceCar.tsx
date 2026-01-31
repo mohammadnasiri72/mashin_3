@@ -272,6 +272,17 @@ function PriceCar({
                 />
               </div>
             </div>
+             {selectedBrand && (
+              <span
+                onClick={() => {
+                  setSelectedBrand(null);
+                }}
+                className="text-sm text-white! px-3 py-1 rounded cursor-pointer whitespace-nowrap ml-3"
+                style={{ backgroundColor: PRIMARY_COLOR }}
+              >
+               حذف فیلترها
+              </span>
+            )}
             <span
               onClick={() => {
                 setShowFilter(true);
