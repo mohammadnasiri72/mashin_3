@@ -17,6 +17,9 @@ import {
 } from "react-icons/md";
 import { LoginForm } from "./components/loginForm";
 import { RegisterForm } from "./components/registerForm";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { setToken } from "@/redux/slice/token";
 const Cookies = require("js-cookie");
 
 // تایپ‌های TypeScript (همانطور که بود)
@@ -71,7 +74,9 @@ const AuthPage: React.FC = () => {
     password: false,
     newsletter: false,
   });
-
+  const url = useSelector(
+    (state: RootState) => state.redirectRegister.redirectRegister,
+  );
   // حالت فعال تب
   const [activeTab, setActiveTab] = useState<string>("register");
 
@@ -82,6 +87,8 @@ const AuthPage: React.FC = () => {
   const [resetPasswordEmail, setResetPasswordEmail] = useState<string>("");
   const [errResetPasswordEmail, setErrResetPasswordEmail] =
     useState<string>("");
+
+  const disPatch = useDispatch();
 
   // هندلر تغییر مقادیر فرم ورود
   const handleLoginChange = (
@@ -160,7 +167,9 @@ const AuthPage: React.FC = () => {
           title: "ورود با موفقیت انجام شد",
         });
         Cookies.set("user", JSON.stringify(result), { expires: 7 });
-        Router.push("/");
+
+        disPatch(setToken(result.token));
+        Router.push(url ? url : "/");
       }
     } catch (error: any) {
       Toast.fire({
@@ -188,7 +197,8 @@ const AuthPage: React.FC = () => {
           title: "ثبت نام شما با موفقیت انجام شد",
         });
         Cookies.set("user", JSON.stringify(result), { expires: 7 });
-        Router.push("/");
+        disPatch(setToken(result.token));
+        Router.push(url ? url : "/");
       }
     } catch (error: any) {
       Toast.fire({
