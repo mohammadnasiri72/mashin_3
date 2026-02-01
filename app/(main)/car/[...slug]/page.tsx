@@ -20,9 +20,21 @@ export async function generateMetadata({
   const detailsCar: ItemsId = await getItemId(Number(id));
 
   if (detailsCar.title) {
+    let yearText = "";
+    if (
+      detailsCar.publishCode.split("-").length > 1 &&
+      detailsCar.publishCode.split("-")[0] ===
+        detailsCar.publishCode.split("-")[1]
+    ) {
+      yearText = detailsCar.publishCode.split("-")[0];
+    } else {
+      yearText = detailsCar.publishCode;
+    }
     return {
       title: `ماشین3 - ${
-        detailsCar.seoTitle ? detailsCar.seoTitle : detailsCar.title
+        detailsCar.seoTitle
+          ? detailsCar.seoTitle
+          : detailsCar.sourceName + detailsCar.title + yearText
       }`,
       description: detailsCar.seoDescription,
       openGraph: {
@@ -50,10 +62,10 @@ async function page({
   const Attachment: ItemsAttachment[] = await getAttachment(Number(id));
   const detailsCar: ItemsId = await getItemId(Number(id));
   const detailsCarcompetitor: ItemsId[] = detailsCar.properties.filter(
-    (e) => e.propertyKey === "p1042_relatedcars"
+    (e) => e.propertyKey === "p1042_relatedcars",
   )[0]?.value
     ? await getItemByIds(
-        detailsCar.properties.filter((e) => e.propertyId === 22643)[0]?.value
+        detailsCar.properties.filter((e) => e.propertyId === 22643)[0]?.value,
       )
     : [];
 
@@ -74,9 +86,20 @@ async function page({
     PageSize: 5,
   });
 
+   let yearText = "";
+    if (
+      detailsCar.publishCode.split("-").length > 1 &&
+      detailsCar.publishCode.split("-")[0] ===
+        detailsCar.publishCode.split("-")[1]
+    ) {
+      yearText = detailsCar.publishCode.split("-")[0];
+    } else {
+      yearText = detailsCar.publishCode;
+    }
+
   return (
     <>
-      <HeroSection detailsCar={detailsCar} />
+      <HeroSection detailsCar={detailsCar} yearText={yearText}/>
       <CarDetails
         Attachment={Attachment}
         detailsCar={detailsCar}

@@ -14,13 +14,17 @@ function MainBoxAutoService({
   comments,
   id,
   banner,
-  pollData
+  pollData,
+  Latitude,
+  Longitude,
 }: {
   detailsAuto: ItemsId;
   comments: CommentResponse[];
   id: number;
   banner: Items[];
-  pollData:PollData
+  pollData: PollData;
+  Latitude: string;
+  Longitude: string;
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
@@ -130,7 +134,7 @@ function MainBoxAutoService({
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition-50,
+        top: offsetPosition - 50,
         behavior: "smooth",
       });
     }
@@ -178,12 +182,19 @@ function MainBoxAutoService({
             <div className="space-y-8 mt-6">
               {/* بخش مشخصات نمایندگی */}
               <div id="contact" className="section-anchor" ref={contactRef}>
-                <ContactUsAutoService detailsAuto={detailsAuto} />
+                <ContactUsAutoService
+                  detailsAuto={detailsAuto}
+                  Latitude={Latitude}
+                  Longitude={Longitude}
+                />
               </div>
 
               {/* بخش نظرسنجی */}
               <div id="services" className="section-anchor" ref={servicesRef}>
-                <RatingAutoService initialPollData={pollData} detailsAuto={detailsAuto}/>
+                <RatingAutoService
+                  initialPollData={pollData}
+                  detailsAuto={detailsAuto}
+                />
               </div>
             </div>
           </div>

@@ -4,10 +4,11 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Card, Input, Table } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Mousewheel, Navigation } from "swiper/modules";
+import { Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
+import { htmlToPlainText } from "@/utils/func";
 import {
   FaCar,
   FaCaretDown,
@@ -44,9 +45,17 @@ const PRIMARY_LIGHT = "#fdf2f2";
 function PriceMotor({
   brands,
   price,
+  title,
+  summary,
+  body,
+  brandIdSearchParams,
 }: {
   brands: PriceBrands[];
-  price: Price[];
+  price: Prices[];
+  title: string;
+  summary: string;
+  body: string;
+  brandIdSearchParams: number;
 }) {
   // دسته‌بندی‌های اصلی
   const mainCategories: Category[] = [
@@ -60,20 +69,17 @@ function PriceMotor({
   ];
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [selectedBrand, setSelectedBrand] = useState<number | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<number | null>(
+    brandIdSearchParams || null,
+  );
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState<Price[]>(price);
+  const [filteredData, setFilteredData] = useState<Prices[]>(price);
   const [isMobile, setIsMobile] = useState(false);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
+
   const router = useRouter();
-
-  const selectedBrandTitle = brands.find((e) => e.id === selectedBrand)?.title;
-
-  const titlePage = mainCategories.find(
-    (e) => e.id === selectedCategory,
-  )?.title;
 
   // تشخیص دستگاه موبایل
   useEffect(() => {
@@ -128,7 +134,7 @@ function PriceMotor({
   };
 
   // کامپوننت MobilePriceCard با آیکون
-  const MobilePriceCard = ({ item }: { item: Price }) => {
+  const MobilePriceCard = ({ item }: { item: Prices }) => {
     return (
       <div className="bg-white rounded-xl border border-gray-200 p-2 mb-4! shadow-sm hover:shadow-md transition-all">
         {/* هدر با نام برند و مدل */}
@@ -210,12 +216,13 @@ function PriceMotor({
             className="text-xl sm:text-2xl font-bold text-gray-900 mb-2!"
             style={{ color: PRIMARY_COLOR }}
           >
-            {selectedBrandTitle
-              ? `قیمت موتورهای ${selectedBrandTitle}`
-              : "قیمت موتور سیکلت"}
+            {title ? title : "قیمت موتورسیکلت"}
           </h1>
           <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
-            بررسی و مقایسه قیمت موتورهای مختلف در بازار و نمایندگی‌ها
+            {summary || ""}
+          </p>
+          <p className="max-w-[800px] mx-auto text-xs text-gray-500! mt-2">
+            {htmlToPlainText(body || "")}
           </p>
         </div>
 
@@ -272,22 +279,30 @@ function PriceMotor({
               <span
                 onClick={() => {
                   setSelectedBrand(null);
+                  if (brandIdSearchParams) {
+                    const baseUrl = window.location.pathname;
+                    const params = new URLSearchParams(searchParams.toString());
+                    params.delete("brandId");
+                    router.push(`${baseUrl}?${params.toString()}`);
+                  }
                 }}
                 className="text-sm text-white! px-3 py-1 rounded cursor-pointer whitespace-nowrap ml-3"
                 style={{ backgroundColor: PRIMARY_COLOR }}
               >
-               حذف فیلترها
+                حذف فیلترها
               </span>
             )}
-            <span
-              onClick={() => {
-                setShowFilter(true);
-              }}
-              className="text-sm text-white! px-3 py-1 rounded cursor-pointer whitespace-nowrap"
-              style={{ backgroundColor: PRIMARY_COLOR }}
-            >
-              نمایش فیلترها
-            </span>
+            {!brandIdSearchParams && (
+              <span
+                onClick={() => {
+                  setShowFilter(true);
+                }}
+                className="text-sm text-white! px-3 py-1 rounded cursor-pointer whitespace-nowrap"
+                style={{ backgroundColor: PRIMARY_COLOR }}
+              >
+                نمایش فیلترها
+              </span>
+            )}
           </div>
           <div
             className={`fixed bottom-0 left-0 right-0 duration-300 bg-white z-50 overflow-hidden ${
@@ -366,16 +381,15 @@ function PriceMotor({
             {/* برای موبایل: بخش فیلتر */}
             <>
               {
-            //   (selectedCategory || selectedCategory === 0) &&
-               (
+                //   (selectedCategory || selectedCategory === 0) &&
                 <Card
                   className="mb-6! shadow-md border-0 rounded-xl"
                   style={{ borderColor: PRIMARY_LIGHT }}
                 >
                   <div className="flex items-center justify-between mb-4!">
                     <h2 className="text-lg font-bold text-gray-800 mb-4! text-center">
-                  برندهای موتور سیکلت
-                </h2>
+                      برندهای موتور سیکلت
+                    </h2>
                     <span
                       className="text-xs text-white! px-2 py-1 rounded"
                       style={{ backgroundColor: PRIMARY_COLOR }}
@@ -429,7 +443,7 @@ function PriceMotor({
                     ))}
                   </Swiper>
                 </Card>
-              )}
+              }
             </>
           </div>
           {showFilter && (
@@ -482,7 +496,7 @@ function PriceMotor({
                   sorter: (a, b) => a.title.localeCompare(b.title),
                   width: 150,
                 },
-               
+
                 {
                   title: "قیمت نمایندگی (تومان)",
                   dataIndex: "price2",
@@ -490,7 +504,7 @@ function PriceMotor({
                   key: "price2",
                   sorter: (a, b) => (a.price2 || 0) - (b.price2 || 0),
                   render: (price: number) => (
-                    <span className="font-bold text-blue-600">
+                    <span className="font-bold">
                       {price ? price.toLocaleString("fa-IR") : "---"}
                     </span>
                   ),

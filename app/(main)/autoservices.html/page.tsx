@@ -1,8 +1,41 @@
 import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
-import MainBoxAutoService from "../autoservices/components/MainBoxAutoServices";
-import SidebarAutoService from "../autoservices/components/SidebarAutoServices";
+import { getItemByIds } from "@/services/Item/ItemByIds";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { headers } from "next/headers";
+import MainBoxAutoServices from "../autoservices/components/MainBoxAutoServices";
 
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const autoServiceCat: ItemsId = await getItemByUrl(decodedPathname);
+
+  if (autoServiceCat.title) {
+    return {
+      title: `${
+        autoServiceCat.seoTitle
+          ? autoServiceCat.seoTitle
+          : autoServiceCat.title + " | ماشین3"
+      }`,
+      description: autoServiceCat.seoDescription,
+      openGraph: {
+        title: `${
+          autoServiceCat.seoTitle
+            ? autoServiceCat.seoTitle
+            : autoServiceCat.title + " | ماشین3"
+        }`,
+        description: autoServiceCat.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "مراکز و نمایندگی های خدمات خودرو | ماشین3",
+      description: "مراکز و نمایندگی های خدمات خودرو",
+    };
+  }
+}
 
 async function pageAutoService({
   searchParams,
@@ -19,6 +52,13 @@ async function pageAutoService({
     PageIndex: page || 1,
     PageSize: 15,
   });
+  const ids = AutoServiceData.map((item) => item.id).join(",");
+
+  let propertyItems: ItemsId[] = [];
+  if (ids) {
+    propertyItems = await getItemByIds(ids);
+  }
+
   const brands: ItemsCategory[] = await getCategory({
     TypeId: 1050,
     LangCode: "fa",
@@ -26,22 +66,29 @@ async function pageAutoService({
     PageIndex: 1,
   });
 
-   const banner: Items[] = await getItem({
-      TypeId: 1051,
-      langCode: "fa",
-      CategoryIdArray: "6415",
-    });
+  const banner: Items[] = await getItem({
+    TypeId: 1051,
+    langCode: "fa",
+    CategoryIdArray: "6415",
+  });
+
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const autoServiceCat: ItemsId = await getItemByUrl(decodedPathname);
 
   return (
     <>
-      <div className="flex flex-wrap bg-gray-50">
-        <div className="lg:w-3/4 w-full">
-          <MainBoxAutoService AutoServiceData={AutoServiceData} brands={brands} id={id}/>
-        </div>
-        <div className="lg:w-1/4 w-full">
-          <SidebarAutoService banner={banner}/>
-        </div>
-      </div>
+      <MainBoxAutoServices
+        AutoServiceData={AutoServiceData}
+        brands={brands}
+        id={id}
+        propertyItems={propertyItems}
+        banner={banner}
+        title={autoServiceCat.title}
+        summary={autoServiceCat.summary || ""}
+      />
     </>
   );
 }

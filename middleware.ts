@@ -182,10 +182,9 @@ export async function middleware(request: Request) {
       const pathParts = pathname.split("/");
       const decodedPathname = decodeURIComponent(pathname);
       const id = Number(pathParts[3]);
+
       if (!isNaN(id)) {
         const data: ItemsCategoryId = await getCategoryId(id);
-        const decodedPathname = decodeURIComponent(pathname);
-
         if (data?.url && data.url !== decodedPathname) {
           return NextResponse.redirect(
             new URL(data.url.toLowerCase(), request.url),
@@ -202,6 +201,15 @@ export async function middleware(request: Request) {
           },
         );
       }
+
+      // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("x-pathname", pathname); // فقط مسیر
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
@@ -594,14 +602,57 @@ export async function middleware(request: Request) {
         { status: 301 },
       );
     }
-  } else {
+  } else if (pathname.startsWith("/autoservices.html")) {
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } 
+  else {
     const decodedPathname = decodeURIComponent(pathname);
     if (decodedPathname !== decodedPathname.toLowerCase()) {
       return NextResponse.redirect(
         new URL(decodedPathname.toLowerCase(), request.url),
         { status: 301 },
       );
-    }
+    } 
+    // else {
+    //   const isLikelyDynamicPage =
+    //     pathname !== "/" &&
+    //     !pathname.includes(".") && // فایل‌ها (html, css, js, png, etc)
+    //     !pathname.includes("/error") &&
+    //     pathname.split("/").length > 1; // حداقل یک بخش در مسیر
+    //   if (isLikelyDynamicPage) {
+    //     try {
+    //       const data: ItemsId = await getItemByUrl(pathname);
+    //       if (data?.url && data.url !== decodedPathname) {
+    //         return NextResponse.redirect(
+    //           new URL(data.url.toLowerCase(), request.url),
+    //           { status: 301 },
+    //         );
+    //       }
+    //       const requestHeaders = new Headers(request.headers);
+    //       requestHeaders.set("x-pathname", pathname);
+    //       requestHeaders.set("x-item-id", data?.id?.toString() || "");
+
+    //       return NextResponse.next({
+    //         request: {
+    //           headers: requestHeaders,
+    //         },
+    //       });
+    //     } catch (error: any) {
+    //       const status = error.response?.status || error.status || 500;
+    //       return NextResponse.redirect(
+    //         new URL(`/error?status=${status}`, request.url),
+    //         { status: 301 },
+    //       );
+    //     }
+    //   }
+    // }
   }
 
   return NextResponse.next();

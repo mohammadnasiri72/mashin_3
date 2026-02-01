@@ -8,9 +8,11 @@ import { Button, Form, Input, Spin } from "antd";
 import { useEffect, useState, useMemo } from "react";
 import { FaFlag, FaReply, FaThumbsDown, FaThumbsUp } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ModalLoginComment from "./ModalLoginComment";
 import { getComment } from "@/services/Comment/Comment";
+import { setRedirectRegister } from "@/redux/slice/redirectRegister";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const Cookies = require("js-cookie");
 
@@ -218,7 +220,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         const response = await postComment(data);
         form.resetFields();
         setOpenModalCommentReplay(false);
-        
+
         // بعد از ثبت کامنت جدید، کامنت‌ها را از صفحه اول مجدد بارگیری کنید
         setPageIndex(1);
         setLoadingMore(true);
@@ -243,7 +245,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         } finally {
           setLoadingMore(false);
         }
-        
+
         Toast.fire({
           icon: "success",
           title: "کامنت شما ثبت شد لطفا منتظر تایید ادمین بمانید",
@@ -266,11 +268,11 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   // تابع ساده برای بارگیری کامنت‌های بیشتر
   const handleLoadMore = async () => {
     if (loadingMore) return;
-    
+
     setLoadingMore(true);
     try {
       const nextPageIndex = pageIndex + 1;
-      
+
       const response = await getComment({
         id: Number(id),
         langCode: "fa",
@@ -281,7 +283,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
       if (response.length > 0) {
         // اضافه کردن کامنت‌های جدید به کامنت‌های موجود
-        setAllComments(prev => [...prev, ...response]);
+        setAllComments((prev) => [...prev, ...response]);
         setPageIndex(nextPageIndex);
       }
     } catch (error) {
@@ -334,14 +336,14 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       if (root.children && root.children.length > 0) {
         root.children.sort(
           (a, b) =>
-            new Date(b.created).getTime() - new Date(a.created).getTime()
+            new Date(b.created).getTime() - new Date(a.created).getTime(),
         );
       }
     });
 
     // ریشه‌ها رو بر اساس تاریخ مرتب می‌کنیم (جدیدترین اول)
     return roots.sort(
-      (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
+      (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
     );
   }, [allComments]);
 
@@ -352,6 +354,22 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
   // بررسی آیا کامنت بیشتری برای نمایش وجود دارد یا خیر
   const hasMoreComments = totalComments > allComments.length;
+
+  // ذخیره url در ریداکس برای بازگشت
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const idRedirect = searchParams.get("id");
+  const urlRedirect = idRedirect
+    ? decodeURIComponent(pathname) + `?id=${idRedirect}`
+    : decodeURIComponent(pathname);
+  const disPatch = useDispatch();
+  useEffect(() => {
+    if (openLogin) {
+      disPatch(setRedirectRegister(urlRedirect));
+    }
+  }, [openLogin]);
+
+ 
 
   return (
     <>
@@ -424,7 +442,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
                 <p className="text-xs text-gray-500 text-center mt-4">
                   ثبت دیدگاه به معنی موافقت با{" "}
-                  <a href="#" className="text-red-600 font-medium">
+                  <a
+                    href="/rules-regulations"
+                    className="text-red-600 font-medium"
+                  >
                     قوانین انتشار ماشین سه
                   </a>{" "}
                   است.
@@ -449,7 +470,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                       depth={0}
                     />
                   ))}
-                  
+
                   {/* دکمه نمایش بیشتر */}
                   {hasMoreComments && (
                     <div className="text-center mt-6 pt-4 border-t border-gray-200">

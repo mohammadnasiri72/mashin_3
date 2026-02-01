@@ -1,7 +1,11 @@
-import { getItem } from "@/services/Item/Item";
-import CarNews from "./components/CarNews";
-import { redirect } from "next/navigation";
+import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
+import { getItem } from "@/services/Item/Item";
+import { redirect } from "next/navigation";
+import CarNews from "./components/CarNews";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { headers } from "next/headers";
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 
 export async function generateMetadata({
   params,
@@ -11,32 +15,36 @@ export async function generateMetadata({
   const param = await params;
   const id = Number(param.slug[0]);
 
-  if (isNaN(id)) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const newsDetails: ItemsCategoryId | ItemsId = id
+    ? await getCategoryId(id)
+    : await getItemByUrl(decodedPathname);
+
+  if (newsDetails.title) {
     return {
-      title: "ماشین3 - اخبار خودرو",
-      description: "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
-    };
-  } else {
-    const newsDetails: ItemsCategoryId = await getCategoryId(id);
-    if (newsDetails.title) {
-      return {
-        title: `ماشین3 - ${
-          newsDetails.seoTitle ? newsDetails.seoTitle : newsDetails.title
+      title: `${
+        newsDetails.seoTitle
+          ? newsDetails.seoTitle
+          : newsDetails.title + " | ماشین3"
+      }`,
+      description: newsDetails.seoDescription,
+      openGraph: {
+        title: `${
+          newsDetails.seoTitle
+            ? newsDetails.seoTitle
+            : newsDetails.title + " | ماشین3"
         }`,
         description: newsDetails.seoDescription,
-        openGraph: {
-          title: `ماشین3 - ${
-            newsDetails.seoTitle ? newsDetails.seoTitle : newsDetails.title
-          }`,
-          description: newsDetails.seoDescription,
-        },
-      };
-    } else {
-      return {
-        title: "ماشین3 - اخبار خودرو",
-        description: "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
-      };
-    }
+      },
+    };
+  } else {
+    return {
+      title: "اخبار خودرو | ماشین3",
+      description: "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
+    };
   }
 }
 
@@ -52,6 +60,14 @@ async function pageNewsDetails({
   const page = Number(searchParam.page);
 
   const id = Number(param.slug[0]);
+
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const newsDetails: ItemsCategoryId | ItemsId = id
+    ? await getCategoryId(id)
+    : await getItemByUrl(decodedPathname);
 
   const news: Items[] = id
     ? await getItem({
@@ -82,14 +98,48 @@ async function pageNewsDetails({
     CategoryIdArray: "6415",
   });
 
+  const newsCat: ItemsCategory[] = await getCategory({
+    TypeId: 5,
+    LangCode: "fa",
+    PageIndex: 1,
+    PageSize: 50,
+  });
+
+  const tabs = [
+    {
+      key: 0,
+      href: "/fa/News/اخبار-خودرو.html",
+      label: "همه اخبار خودرو",
+    },
+  ];
+
+  // تب‌های داینامیک از داده API
+  if (newsCat.length > 0) {
+    newsCat.forEach((item) => {
+      tabs.push({
+        key: item.id,
+        href: item.url,
+        label: item.title,
+      });
+    });
+  }
+
   if (news.length > 0) {
     return (
-      <CarNews
-        id={id}
-        newsData={news}
-        popularNews={popularNews}
-        banner={banner}
-      />
+      <>
+        <BreadcrumbCategory
+          breadcrumb={newsDetails.breadcrumb}
+          title={newsDetails.title}
+        />
+        <CarNews
+          id={id}
+          newsData={news}
+          popularNews={popularNews}
+          banner={banner}
+          newsDetails={newsDetails}
+          tabConfig={tabs}
+        />
+      </>
     );
   } else {
     redirect(`/error?status=${404}`);

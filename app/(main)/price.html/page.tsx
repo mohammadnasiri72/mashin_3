@@ -8,24 +8,22 @@ export async function generateMetadata({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const searchParam = await searchParams;
-  const type = String(searchParam.type);
+  const type = searchParam.type;
+  const brandId = Number(searchParam.brandId);
 
-  if (type === "internal") {
-    return {
-      title: "ماشین3 - قیمت خودرو داخلی",
-      description: "قیمت خودرو داخلی",
-    };
-  } else if (type === "import") {
-    return {
-      title: "ماشین3 - قیمت خودرو وارداتی",
-      description: "قیمت خودرو وارداتی",
-    };
-  } else {
-    return {
-      title: "ماشین3 - قیمت خودروهای بازار",
-      description: "قیمت خودروهای بازار",
-    };
-  }
+  const price: Price = await getPriceCar({
+    Type: type ? String(type) : "internal",
+    BrandId: brandId ? brandId : -1,
+  });
+
+  return {
+    title: `ماشین3 - ${price.seoTitle ? price.seoTitle : price.title}`,
+    description: price.seoDescription,
+    openGraph: {
+      title: `ماشین3 - ${price.seoTitle ? price.seoTitle : price.title}`,
+      description: price.seoDescription,
+    },
+  };
 }
 
 async function pagePrice({
@@ -35,15 +33,27 @@ async function pagePrice({
 }) {
   const searchParam = await searchParams;
   const type = searchParam.type;
-  const brands: PriceBrands[] = await getPriceCarBrands(
+  const brandId = Number(searchParam.brandId);
+  const brands: BrandsPrice = await getPriceCarBrands(
     type ? String(type) : "internal",
   );
-  const price: Price[] = await getPriceCar({
+  const price: Price = await getPriceCar({
     Type: type ? String(type) : "internal",
-    BrandId: -1,
+    BrandId: brandId ? brandId : -1,
   });
 
-  return <PriceCar brands={brands} price={price} />;
+  return (
+    <>
+      <PriceCar
+        brands={brands.brands}
+        price={price.prices}
+        title={price.title}
+        summary={price.summary}
+        body={price.body}
+        brandIdSearchParams={brandId}
+      />
+    </>
+  );
 }
 
 export default pagePrice;

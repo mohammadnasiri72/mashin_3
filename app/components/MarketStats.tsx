@@ -24,7 +24,7 @@ function sortByAbsoluteValue(arr: any, field: string) {
 function MarketStats() {
   const [loading, setLoading] = useState<boolean>(true);
   const [type, setType] = useState<string>("internal");
-  const [carList, setCarList] = useState<Price[]>([]);
+  const [carList, setCarList] = useState<Prices[]>([]);
 
   useEffect(() => {
     fetchCarType();
@@ -34,7 +34,8 @@ function MarketStats() {
     setLoading(true);
     setCarList([]);
     try {
-      const price: Price[] = await getPriceCar({ Type: type, BrandId: -1 });
+      const priceOld: Price = await getPriceCar({ Type: type, BrandId: -1 });
+      const price: Prices[] = priceOld.prices;
       setCarList(sortByAbsoluteValue(price, "change").slice(0, 10));
     } catch (err) {
     } finally {
@@ -73,13 +74,11 @@ function MarketStats() {
         {/* محتوای تب‌ها */}
         {loading ? (
           <div className="space-y-2 max-h-60 overflow-y-auto">
-            {
-              [...Array(10)].map((_, index)=>{
-                return(
-                  <div className=" bg-gray-200 animate-pulse h-10 w-full rounded" />
-                )
-              })
-            }
+            {[...Array(10)].map((_, index) => {
+              return (
+                <div className=" bg-gray-200 animate-pulse h-10 w-full rounded" />
+              );
+            })}
           </div>
         ) : (
           <div className="space-y-2 max-h-60 overflow-y-auto">

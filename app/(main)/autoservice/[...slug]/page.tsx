@@ -14,16 +14,19 @@ export async function generateMetadata({
   const id = param.slug[0];
 
   const detailsAuto: ItemsId = await getItemId(Number(id));
-
   if (detailsAuto.title) {
     return {
-      title: `مراکز و نمایندگی های خدمات خودرو - ${
-        detailsAuto.seoTitle ? detailsAuto.seoTitle : detailsAuto.title
+      title: `${
+        detailsAuto.seoTitle
+          ? detailsAuto.seoTitle
+          : detailsAuto.title + " | ماشین3"
       }`,
       description: detailsAuto.seoDescription,
       openGraph: {
-        title: `مراکز و نمایندگی های خدمات خودرو - ${
-          detailsAuto.seoTitle ? detailsAuto.seoTitle : detailsAuto.title
+        title: `${
+          detailsAuto.seoTitle
+            ? detailsAuto.seoTitle
+            : detailsAuto.title + " | ماشین3"
         }`,
         description: detailsAuto.seoDescription,
       },
@@ -61,6 +64,13 @@ async function pageAutoservicesDetails({
     });
 
     const pollData: PollData = await getPollId(Number(id));
+    const Latitude = detailsAuto.properties.find(
+      (e) => e.propertyKey === "p1050_latitude",
+    )?.propertyValue;
+    const Longitude = detailsAuto.properties.find(
+      (e) => e.propertyKey === "p1050_longitude",
+    )?.propertyValue;
+
     return (
       <>
         <div className="flex flex-wrap bg-gray-50">
@@ -70,6 +80,8 @@ async function pageAutoservicesDetails({
             id={id}
             banner={banner}
             pollData={pollData}
+            Latitude={Latitude ? Latitude : ""}
+            Longitude={Longitude ? Longitude : ""}
           />
         </div>
       </>

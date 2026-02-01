@@ -16,7 +16,15 @@ const MapContainer = dynamic(() => import("@/app/components/MapContainer"), {
   ),
 });
 
-function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
+function ContactUsAutoService({
+  detailsAuto,
+  Latitude,
+  Longitude,
+}: {
+  detailsAuto: ItemsId;
+  Latitude: string;
+  Longitude: string;
+}) {
   const address: string | undefined =
     detailsAuto.properties.length > 0
       ? detailsAuto.properties.find((e) => e.propertyId === 22680)?.value
@@ -33,6 +41,14 @@ function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
     detailsAuto.properties.length > 0
       ? detailsAuto.properties.find((e) => e.propertyId === 22682)?.value
       : undefined;
+
+  const numbers = phone
+    ? phone
+        .split(/[\r\n,;]+/)
+        .map((num) => num.trim())
+        .filter((num) => num.length > 0 && /^0\d{10}$/.test(num))
+    : "";
+
   return (
     <>
       <Card className="rounded-xl shadow-lg">
@@ -69,7 +85,7 @@ function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
                   <div>
                     <p className="font-medium text-gray-800">تلفن</p>
                     <p className="text-gray-600 text-sm mt-1">
-                      {phone ? phone : "---"}
+                      {phone ? phone?.replace("\r\n", " - ") : "---"}
                     </p>
                   </div>
                 </div>
@@ -103,10 +119,10 @@ function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
           <div className="space-y-2">
             <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center overflow-hidden">
               <MapContainer
-                latitude={35.6892}
-                longitude={51.389}
+                latitude={Latitude ? Number(Latitude) : 35.6892}
+                longitude={Longitude ? Number(Longitude) : 51.389}
                 zoom={14}
-                markerText="نمایندگی مرکزی تهران"
+                markerText={detailsAuto.title}
                 className="w-full! h-full!"
               />
             </div>
@@ -115,6 +131,18 @@ function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
               <FaMapMarkerAlt className="ml-2" />
               مسیریابی
             </button>
+            {numbers.length > 0 && (
+              <a href={`tel:${numbers[0]}`} className="w-full">
+                {/* <button className="bg-[#ce1a2a] font-bold! cursor-pointer text-white! py-2 px-3 rounded-lg hover:bg-red-700 transition-colors flex items-center w-full">
+                  <FaPhone className="ml-2" />
+                  <span className="font-medium">تماس</span>
+                </button> */}
+                <button className="w-full cursor-pointer bg-[#ce1a2a] text-white! py-3 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center">
+                  <FaPhone className="ml-2" />
+                  تماس
+                </button>
+              </a>
+            )}
           </div>
         </div>
       </Card>

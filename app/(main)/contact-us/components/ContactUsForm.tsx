@@ -1,13 +1,21 @@
 "use client";
 
-import dynamic from "next/dynamic";
+import { RootState } from "@/redux/store";
+import { getCsrf } from "@/services/Csrf/Csrf";
+import { PostFormContact } from "@/services/Form/FormContact";
+import { htmlToPlainText, Toast, toEnglishNumber } from "@/utils/func";
 import {
   EnvironmentOutlined,
   MessageOutlined,
   PhoneOutlined,
   SendOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Form, Input, message } from "antd";
+import { Button, Card, Input } from "antd";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+import { FaMobile, FaUser } from "react-icons/fa";
+import { MdMail } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 const MapContainer = dynamic(() => import("@/app/components/MapContainer"), {
   ssr: false, // غیرفعال کردن SSR برای این کامپوننت
@@ -23,45 +31,103 @@ const MapContainer = dynamic(() => import("@/app/components/MapContainer"), {
 
 const { TextArea } = Input;
 
-// انواع TypeScript
-interface ContactFormValues {
-  name: string;
-  phone: string;
-  email: string;
-  site: string;
-  message: string;
-}
-
 interface SocialMediaBadge {
   name: string;
   color: string;
   textColor: string;
 }
 
-function ContactUsForm() {
-  const [form] = Form.useForm<ContactFormValues>();
-
-  const onFinish = async (values: ContactFormValues): Promise<void> => {
-    try {
-      // اینجا می‌توانید منطق ارسال فرم به سرور را اضافه کنید
-      message.success("پیام شما با موفقیت ارسال شد!");
-      form.resetFields();
-    } catch (error) {
-      message.error("خطا در ارسال پیام. لطفاً مجدداً تلاش کنید.");
-    }
-  };
-
-  const onFinishFailed = (errorInfo: any): void => {
-    message.error("لطفاً اطلاعات فرم را به درستی تکمیل کنید.");
-  };
-
+function ContactUsForm({
+  tel,
+  mobile,
+  address,
+  map,
+}: {
+  tel: string | undefined;
+  mobile: string | undefined;
+  address: string | undefined;
+  map: string | undefined;
+}) {
   const socialMediaBadges: SocialMediaBadge[] = [
     { name: "واتساپ", color: "bg-green-100", textColor: "text-green-800" },
     { name: "تلگرام", color: "bg-blue-100", textColor: "text-blue-800" },
     { name: "بله", color: "bg-purple-100", textColor: "text-purple-800" },
   ];
 
-  const phoneRegex: RegExp = /^09[0-9]{9}$/;
+  const token = useSelector((state: RootState) => state.token.token);
+
+  const phoneRegex = /^09[0|1|2|3|9][0-9]{8}$/;
+  const patternEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  const [loadingForm, setLoadingForm] = useState<boolean>(false);
+
+  const [formData, setFormData] = useState<{
+    langCode: string;
+    nameFamily: string;
+    email: string;
+    tel: string;
+    message: string;
+  }>({
+    langCode: "fa",
+    nameFamily: "",
+    email: "",
+    tel: "",
+    message: "",
+  });
+
+  const [formErrors, setFormErrors] = useState<{
+    nameFamily: boolean;
+    tel: boolean;
+    email: boolean;
+    message: boolean;
+  }>({
+    nameFamily: false,
+    tel: false,
+    email: false,
+    message: false,
+  });
+
+  // اعتبارسنجی فرم ورود
+  const validateForm = (): boolean => {
+    const errors: {
+      nameFamily: boolean;
+      tel: boolean;
+      email: boolean;
+      message: boolean;
+    } = {
+      nameFamily: !formData.nameFamily,
+      tel: !formData.tel || !formData.tel.match(phoneRegex),
+      email: !!formData.email && !formData.email.match(patternEmail),
+      message: !formData.message,
+    };
+
+    setFormErrors(errors);
+    return !Object.values(errors).some((error) => error);
+  };
+
+  const handleSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
+    setLoadingForm(true);
+
+    try {
+      const resultCsrf = await getCsrf();
+
+      const result = await PostFormContact(formData, resultCsrf.csrfToken);
+      Toast.fire({
+        icon: "success",
+        title: "پیام با موفقیت ارسال شد",
+      });
+    } catch (error: any) {
+      Toast.fire({
+        icon: "error",
+        title: error.response.data || "خطا در ارسال پیام",
+      });
+    } finally {
+      setLoadingForm(false);
+    }
+  };
 
   return (
     <div className="py-8">
@@ -78,7 +144,7 @@ function ContactUsForm() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-700">تلفن تبلیغات</h3>
-              <p className="text-gray-600 text-lg">02122279133</p>
+              <p className="text-gray-600 text-lg">{tel}</p>
             </div>
           </div>
 
@@ -101,12 +167,12 @@ function ContactUsForm() {
                       >
                         {badge.name}
                       </span>
-                    )
+                    ),
                   )}
                   )
                 </div>
               </div>
-              <p className="text-gray-600 text-lg">09395432010</p>
+              <p className="text-gray-600 text-lg">{mobile}</p>
             </div>
           </div>
         </div>
@@ -125,7 +191,162 @@ function ContactUsForm() {
           }
           className="shadow-lg border-t-4 border-t-[#ce1a2a]"
         >
-          <Form<ContactFormValues>
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-col">
+              <div className="flex items-center gap-0.5">
+                <span className="text-red-600">*</span>
+                <span>نام</span>
+              </div>
+              <Input
+                value={formData.nameFamily}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    nameFamily: e.target.value,
+                  }));
+                  setFormErrors((prev) => ({
+                    ...prev,
+                    nameFamily: false,
+                  }));
+                }}
+                prefix={<FaUser className="text-gray-400 ml-2" />}
+                placeholder="نام خود را وارد کنید"
+                size="large"
+                className={`rounded-lg ${
+                  formErrors.nameFamily ? "border-red-500!" : "border-gray-300!"
+                }`}
+              />
+              {formErrors.nameFamily && (
+                <div className="text-red-600 text-xs">
+                  لطفاً نام خود را وارد کنید
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-0.5">
+                <span className="text-red-600">*</span>
+                <span>موبایل</span>
+              </div>
+
+              <Input
+                value={formData.tel}
+                onChange={(e) => {
+                  const value = toEnglishNumber(e.target.value).replace(
+                    /\D/g,
+                    "",
+                  );
+                  setFormData((prev) => ({
+                    ...prev,
+                    tel: value,
+                  }));
+                  setFormErrors((prev) => ({
+                    ...prev,
+                    tel: false,
+                  }));
+                }}
+                prefix={<FaMobile className="text-gray-400 ml-2" />}
+                placeholder="موبایل خود را وارد کنید"
+                size="large"
+                className={`rounded-lg ${
+                  formErrors.tel ? "border-red-500!" : "border-gray-300!"
+                }`}
+              />
+
+              {formErrors.tel && (
+                <>
+                  {formData.tel ? (
+                    <div className="text-red-600 text-xs">
+                      لطفاً موبایل خود را به درستی وارد کنید
+                    </div>
+                  ) : (
+                    <div className="text-red-600 text-xs">
+                      لطفاً موبایل خود را وارد کنید
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <div className="flex items-center gap-0.5">
+                <span>ایمیل (اختیاری)</span>
+              </div>
+
+              <Input
+                value={formData.email}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    email: e.target.value,
+                  }));
+                  setFormErrors((prev) => ({
+                    ...prev,
+                    email: false,
+                  }));
+                }}
+                prefix={<MdMail className="text-gray-400 ml-2" />}
+                placeholder="ایمیل خود را وارد کنید"
+                size="large"
+                className={`rounded-lg ${
+                  formErrors.email ? "border-red-500!" : "border-gray-300!"
+                }`}
+              />
+
+              {formErrors.email && (
+                <div className="text-red-600 text-xs">
+                  لطفاً ایمیل خود را به درستی وارد کنید
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <div className="flex items-center gap-0.5">
+                <span className="text-red-600">*</span>
+                <span>متن پیام</span>
+              </div>
+              <TextArea
+                rows={6}
+                value={formData.message}
+                onChange={(e) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    message: e.target.value,
+                  }));
+                  setFormErrors((prev) => ({
+                    ...prev,
+                    message: false,
+                  }));
+                }}
+                placeholder="متن پیام خود را اینجا بنویسید..."
+                size="large"
+                className={`rounded-lg ${
+                  formErrors.message ? "border-red-500!" : "border-gray-300!"
+                }`}
+              />
+              {formErrors.message && (
+                <div className="text-red-600 text-xs">
+                  متن پیام نمیتواند خالی باشد
+                </div>
+              )}
+            </div>
+
+            <Button
+              onClick={handleSubmit}
+              type="primary"
+              htmlType="submit"
+              size="large"
+              className="w-full rounded-lg hover:scale-105 transition-transform"
+              style={{
+                backgroundColor: "#ce1a2a",
+                borderColor: "#ce1a2a",
+                height: "48px",
+              }}
+            >
+              {loadingForm ? "در حال ارسال..." : "ارسال پیام"}
+            </Button>
+          </div>
+
+          {/* <Form<ContactFormValues>
             form={form}
             name="contact-form"
             layout="vertical"
@@ -155,7 +376,7 @@ function ContactUsForm() {
               label="ایمیل"
               name="email"
               rules={[
-                { required: true, type: "email", message: "ایمیل معتبر نیست" },
+                { required: false, type: "email", message: "ایمیل معتبر نیست" },
               ]}
             >
               <Input
@@ -207,7 +428,7 @@ function ContactUsForm() {
                 ارسال پیام
               </Button>
             </Form.Item>
-          </Form>
+          </Form> */}
         </Card>
 
         {/* نقشه */}
@@ -222,17 +443,26 @@ function ContactUsForm() {
           }
           className="shadow-lg border-t-4 border-t-[#ce1a2a]"
         >
-          <MapContainer
-            latitude={35.6892}
-            longitude={51.389}
-            zoom={14}
-            markerText="دفتر مرکزی ماشین3"
-            className="w-full! h-96!"
-          />
+          {map ? (
+            <div>
+              <div
+                className="w-full rounded-lg overflow-hidden border border-gray-200"
+                dangerouslySetInnerHTML={{ __html: map }}
+              />
+            </div>
+          ) : (
+            <MapContainer
+              latitude={35.6892}
+              longitude={51.389}
+              zoom={14}
+              markerText="دفتر مرکزی ماشین3"
+              className="w-full! h-96!"
+            />
+          )}
 
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
             <h4 className="font-semibold text-gray-700 mb-2">آدرس:</h4>
-            <p className="text-gray-600">تهران، خیابان نمونه، پلاک ۱۲۳</p>
+            <p className="text-gray-600">{address}</p>
           </div>
         </Card>
       </div>

@@ -2,7 +2,7 @@ import { baseUrl } from "@/utils/mainDomain";
 
 export const getPriceMotorBrands = async (
   type: string,
-): Promise<PriceBrands[]> => {
+): Promise<BrandsPrice> => {
   const url = new URL(`${baseUrl}api/Price/Motor/Brand`);
   url.searchParams.append("type", type);
 

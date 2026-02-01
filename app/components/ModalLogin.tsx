@@ -1,3 +1,4 @@
+import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { setToken } from "@/redux/slice/token";
 import { PostLogin } from "@/services/Account/Login";
 import { PostResetPass } from "@/services/Account/ResetPass";
@@ -5,7 +6,7 @@ import { Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Button, Checkbox, Input } from "antd";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaLock, FaUser } from "react-icons/fa";
 import { MdClose, MdLogin } from "react-icons/md";
 import { useDispatch } from "react-redux";
@@ -79,6 +80,13 @@ function ModalLogin() {
       } catch (err) {}
     }
   }
+
+  // ذخیره url در ریداکس برای بازگشت
+  useEffect(() => {
+    if (open) {
+      disPatch(setRedirectRegister("/"));
+    }
+  }, [open]);
 
   return (
     <>

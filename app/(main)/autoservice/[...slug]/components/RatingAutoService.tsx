@@ -1,14 +1,16 @@
 "use client";
 
 import ModalLoginComment from "@/app/(main)/car/components/ModalLoginComment";
+import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { RootState } from "@/redux/store";
 import { getPollId } from "@/services/Poll/pollId";
 import { PostPollSave } from "@/services/Poll/PollSave";
 import { Toast, toPersianNumbers } from "@/utils/func";
 import { Card, Divider } from "antd";
-import { useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { FaCommentDots, FaStar } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function RatingAutoService({
   initialPollData,
@@ -89,6 +91,23 @@ function RatingAutoService({
       setOpenLoginModal(true);
     }
   };
+
+
+
+  // ذخیره url در ریداکس برای بازگشت
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const idRedirect = searchParams.get("id");
+  const urlRedirect = idRedirect
+    ? decodeURIComponent(pathname) + `?id=${idRedirect}`
+    : decodeURIComponent(pathname);
+  const disPatch = useDispatch();
+  useEffect(() => {
+    if (openLoginModal) {
+      disPatch(setRedirectRegister(urlRedirect));
+    }
+  }, [openLoginModal]);
+
 
   return (
     <>

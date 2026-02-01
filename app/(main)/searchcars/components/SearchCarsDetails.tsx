@@ -92,7 +92,7 @@ function SearchCarsDetails({
             {/* محتوای اصلی - 3/4 صفحه */}
             <div className="lg:w-3/4 w-full">
               {/* جستجو در مدل‌های این برند */}
-              <div className="bg-white rounded-2xl py-6  shadow-sm border border-gray-100 mb-6 flex justify-between">
+              <div className="bg-white rounded-2xl py-6  shadow-sm border border-gray-100 mb-6 flex justify-center">
                 <div className="flex items-center flex-wrap sm:px-4 px-1 w-full">
                   <div className="lg:w-1/5 sm:w-1/3 w-full px-1">
                     <Select
@@ -153,8 +153,8 @@ function SearchCarsDetails({
                         ))}
                     </Select>
                   </div>
-                </div>
-                <div className="px-3">
+
+                  <div className="px-3 lg:w-1/5 sm:w-1/3 w-full">
                   <Button
                     variant="contained"
                     className="searchCar_bt button button-wave-1 sm:w-auto w-full"
@@ -202,6 +202,8 @@ function SearchCarsDetails({
                     <span className="pr-2 whitespace-nowrap">جستجو خودرو</span>
                   </Button>
                 </div>
+                </div>
+                
               </div>
 
               {/* عنوان بخش مدل‌ها */}
@@ -310,6 +312,9 @@ function SearchCarsDetails({
                   </p>
                 </div>
               )}
+
+              {/* صفحه بندی */}
+              <PaginationSearchCars carView={carView} />
             </div>
 
             {/* سایدبار - 1/4 صفحه */}
@@ -332,9 +337,6 @@ function SearchCarsDetails({
             </div>
           </div>
         </div>
-
-        {/* صفحه بندی */}
-        <PaginationSearchCars carView={carView} />
 
         {/* استایل‌های سفارشی */}
         <style jsx global>{`

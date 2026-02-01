@@ -12,6 +12,20 @@ export const toPersianNumbers = (input: number | string): string => {
     .replace(/\d/g, (digit) => persianDigits[parseInt(digit)]);
 };
 
+export const toEnglishNumber = (number: string | number): string => {
+  const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
+  const arabicDigits = "٠١٢٣٤٥٦٧٨٩";
+  
+  return number
+    .toString()
+    .replace(/[۰-۹]/g, (d: string) => 
+      String(persianDigits.indexOf(d))
+    )
+    .replace(/[٠-٩]/g, (d: string) => 
+      String(arabicDigits.indexOf(d))
+    );
+};
+
 export const formatPersianDate = (dateString: string): string => {
   try {
     const persianMonths = [

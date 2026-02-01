@@ -1,6 +1,6 @@
 import axiosInstance from "../axiosInstance";
 
-export const getCsrf = async () => {
+export const getCsrf = async (): Promise<any> => {
   try {
     const response = await axiosInstance.get("/api/Csrf", {
       // withCredentials: true,

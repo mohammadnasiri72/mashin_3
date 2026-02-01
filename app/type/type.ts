@@ -160,13 +160,19 @@ interface properties {
   propertyCategoryPriority: number | null;
   isTechnicalProperty: boolean;
 }
+interface seoInfo {
+  seoTitle:string;
+  seoKeywords:string;
+  seoDescription:string;
+  seoHeadTags:string;
+}
 
 interface ItemsId {
   body: string | null;
   summary: string | null;
   breadcrumb: breadcrumb[];
   properties: properties[];
-  seoInfo: string | null;
+  seoInfo: seoInfo | null;
   id: number;
   title: string;
   categoryId: number;
@@ -246,8 +252,14 @@ interface ItemsCategory {
   total: number;
 }
 
+interface breadcrumb {
+ format:string
+ href:string
+ title:string
+}
+
 interface ItemsCategoryId {
-  breadcrumb: string | null;
+  breadcrumb: breadcrumb[];
   id: number;
   authorId: string;
   categoryKey: string;
@@ -287,7 +299,7 @@ interface PriceBrands {
   categoryKey: string;
   title: string;
   summary: string | null;
-  url: string | null;
+  seoUrl: string | null;
   parentId: number;
   parentTitle: string;
   image: string | null;
@@ -295,8 +307,30 @@ interface PriceBrands {
   isHome: boolean;
   routeId: string;
 }
+interface BrandsPrice {
+  title: string;
+  summary: string;
+  body: string;
+  seoUrl: string;
+  seoTitle: string;
+  seoKeywords: string;
+  seoDescription: string;
+  brands: PriceBrands[];
+  prices: null;
+}
 
 interface Price {
+  title: string;
+  summary: string;
+  body: string;
+  seoUrl: string;
+  seoTitle: string | null;
+  seoKeywords: string | null;
+  seoDescription: string | null;
+  brands: string | null;
+  prices: Prices[];
+}
+interface Prices {
   id: number;
   title: string;
   price1: number;
@@ -422,4 +456,11 @@ interface pollScoreDto {
 interface PollSaveParam {
   caseId: number;
   pollScoreDto: pollScoreDto[];
+}
+interface FormContact {
+  langCode: string;
+  nameFamily: string;
+  email: string;
+  tel: string;
+  message: string;
 }

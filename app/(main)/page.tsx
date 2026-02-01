@@ -1,5 +1,6 @@
 import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { getPriceCar } from "@/services/Price/PriceCar";
 import { getPriceCarBrands } from "@/services/Price/PriceCarBrands";
 import { getPropertyIds } from "@/services/Property/propertyIds";
@@ -14,6 +15,27 @@ import NewsListSection from "../components/NewsListSection";
 import NewsSection from "../components/NewsSection";
 import PopularCarsSection from "../components/PopularCarsSection";
 import VideoBannerSection from "../components/VideoBannerSection";
+
+export async function generateMetadata() {
+  const seoInfo: ItemsId = await getItemByUrl("/");
+
+  if (seoInfo.seoInfo) {
+    return {
+      title: `ماشین3 - ${seoInfo.seoInfo.seoTitle ? seoInfo.seoInfo.seoTitle : seoInfo.title}`,
+      description: seoInfo.seoInfo.seoDescription,
+      openGraph: {
+        title: `ماشین3 - ${seoInfo.seoInfo.seoTitle ? seoInfo.seoInfo.seoTitle : seoInfo.title}`,
+        description: seoInfo.seoInfo.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title:
+        "ماشین 3 - بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
+      description: "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
+    };
+  }
+}
 
 export default async function Home() {
   const slider: Items[] = await getItem({ TypeId: 6, langCode: "fa" });
@@ -64,7 +86,7 @@ export default async function Home() {
   let Properties: properties[] = [];
   if (carSpecs.length > 0) {
     Properties = await getPropertyIds(
-      carSpecs.map((item) => item.id).join(",")
+      carSpecs.map((item) => item.id).join(","),
     );
   }
 
@@ -99,10 +121,10 @@ export default async function Home() {
     PageSize: 10,
   });
 
-  const brands: PriceBrands[] = await getPriceCarBrands("internal");
-  const prices: Price[] = await getPriceCar({
+  const brands: BrandsPrice = await getPriceCarBrands("internal");
+  const prices: Price = await getPriceCar({
     Type: "internal",
-    BrandId: brands[0].id,
+    BrandId: brands.brands[0].id,
   });
 
   return (
@@ -137,7 +159,10 @@ export default async function Home() {
         <CarComparisonSection brandsCar={brandsCar} whichCars={whichCars} />
 
         {/* Car BrandPrices Section */}
-        <CarBrandPricesSection initialBrands={brands} initialPrices={prices} />
+        <CarBrandPricesSection
+          initialBrands={brands.brands}
+          initialPrices={prices.prices}
+        />
 
         {/* Motorcycle Brands Section */}
         <MotorcycleBrandsSection brands={brandMotor} />

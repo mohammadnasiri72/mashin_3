@@ -16,24 +16,24 @@ const CarBrandPricesSection = ({
   initialPrices,
 }: {
   initialBrands: PriceBrands[];
-  initialPrices: Price[];
+  initialPrices: Prices[];
 }) => {
   const [type, setType] = useState<string>("internal");
   const [loadingBrands, setLoadingBrands] = useState<boolean>(false);
   const [brands, setBrands] = useState<PriceBrands[]>(initialBrands);
   const [loadingPrices, setLoadingPrices] = useState<boolean>(false);
-  const [prices, setPrices] = useState<Price[]>(initialPrices);
+  const [prices, setPrices] = useState<Prices[]>(initialPrices);
   const [activeBrand, setActiveBrand] = useState<number>(NaN);
 
   const fetchBrands = async (type: string) => {
     setLoadingBrands(true);
     setLoadingPrices(true);
     try {
-      const brands: PriceBrands[] = await getPriceCarBrands(type);
-      setBrands(brands);
-      if (brands.length > 0) {
-        fetchPrice(type, brands[0].id);
-        setActiveBrand(brands[0].id);
+      const brands: BrandsPrice = await getPriceCarBrands(type);
+      setBrands(brands.brands);
+      if (brands.brands.length > 0) {
+        fetchPrice(type, brands.brands[0].id);
+        setActiveBrand(brands.brands[0].id);
       }
     } catch (err) {
     } finally {
@@ -44,11 +44,11 @@ const CarBrandPricesSection = ({
   const fetchPrice = async (type: string, brandId: number) => {
     setLoadingPrices(true);
     try {
-      const price: Price[] = await getPriceCar({
+      const price: Price = await getPriceCar({
         Type: type,
         BrandId: brandId,
       });
-      setPrices(price);
+      setPrices(price.prices);
     } catch (err) {
     } finally {
       setLoadingPrices(false);

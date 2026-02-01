@@ -15,13 +15,17 @@ export async function generateMetadata({
   const newsDetails: ItemsId = await getItemId(id);
   if (newsDetails.title) {
     return {
-      title: `ماشین3 - ${
-        newsDetails.seoTitle ? newsDetails.seoTitle : newsDetails.title
+      title: `${
+        newsDetails.seoTitle
+          ? newsDetails.seoTitle
+          : newsDetails.title + " | ماشین3"
       }`,
       description: newsDetails.seoDescription,
       openGraph: {
-        title: `ماشین3 - ${
-          newsDetails.seoTitle ? newsDetails.seoTitle : newsDetails.title
+        title: `${
+          newsDetails.seoTitle
+            ? newsDetails.seoTitle
+            : newsDetails.title + " | ماشین3"
         }`,
         description: newsDetails.seoDescription,
       },

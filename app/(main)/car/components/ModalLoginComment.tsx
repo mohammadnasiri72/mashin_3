@@ -77,7 +77,6 @@ function ModalLoginComment({ open, setOpen }: { open: boolean; setOpen: any }) {
 
   return (
     <>
-      {/* مودال ورود با MUI */}
       <Dialog
         open={open}
         onClose={handleClose}

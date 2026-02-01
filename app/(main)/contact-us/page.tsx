@@ -1,6 +1,7 @@
 import React from "react";
 import ContactUs from "./components/ContactUs";
 import { getItem } from "@/services/Item/Item";
+import { getSetting } from "@/services/Property/setting";
 
 export async function generateMetadata() {
   return {
@@ -15,7 +16,8 @@ async function pageContactUs() {
       langCode: "fa",
       CategoryIdArray: "6415",
     });
-  return <ContactUs banner={banner}/>;
+     const setting: SettingType[] = await getSetting();
+  return <ContactUs banner={banner} setting={setting}/>;
 }
 
 export default pageContactUs;

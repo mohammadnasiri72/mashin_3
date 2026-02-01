@@ -1,15 +1,17 @@
 "use client";
 
 import ModalLoginComment from "@/app/(main)/car/components/ModalLoginComment";
+import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { RootState } from "@/redux/store";
 import { postComment } from "@/services/Comment/postComment";
 import { formatPersianDate, Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Button, Form, Input } from "antd";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState, useMemo } from "react";
 import { FaFlag, FaReply, FaThumbsDown, FaThumbsUp } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Cookies = require("js-cookie");
 
@@ -280,6 +282,20 @@ const VideoComments: React.FC<CommentsSectionProps> = ({
     setOpenModalCommentReplay(true);
   };
 
+  // ذخیره url در ریداکس برای بازگشت
+        const pathname = usePathname();
+        const searchParams = useSearchParams();
+        const idRedirect = searchParams.get("id");
+        const urlRedirect = idRedirect
+          ? decodeURIComponent(pathname) + `?id=${idRedirect}`
+          : decodeURIComponent(pathname);
+        const disPatch = useDispatch();
+        useEffect(() => {
+          if (openLogin) {
+            disPatch(setRedirectRegister(urlRedirect));
+          }
+        }, [openLogin]);
+
   return (
     <>
       <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -348,7 +364,7 @@ const VideoComments: React.FC<CommentsSectionProps> = ({
 
                 <p className="text-xs text-gray-500 text-center mt-4">
                   ثبت دیدگاه به معنی موافقت با{" "}
-                  <a href="#" className="text-red-600 font-medium">
+                  <a href="/rules-regulations" className="text-red-600 font-medium">
                     قوانین انتشار ماشین سه
                   </a>{" "}
                   است.

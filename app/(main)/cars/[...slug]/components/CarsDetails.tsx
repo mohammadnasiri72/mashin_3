@@ -1,25 +1,29 @@
 "use client";
 
-import NewsBlogForm from "@/app/components/NewsBlogForm";
-import { createMarkup, toPersianNumbers } from "@/utils/func";
+import { toPersianNumbers } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useState } from "react";
-import { FaCar, FaInfoCircle, FaSearch, FaStar } from "react-icons/fa";
+import { FaCar, FaSearch } from "react-icons/fa";
 import MarketStats from "../../../../components/MarketStats";
+import ShowSummary from "./ShowSummary";
 
 const CarsDetails = ({
   carBrands,
   carDetails,
   carView,
   banner,
+  carBrands2,
 }: {
   carBrands: ItemsCategory[];
   carDetails: ItemsCategoryId;
   carView: Items[];
   banner: Items[];
+  carBrands2: Items[];
 }) => {
   const [carBrandsFilter, setCarBrandsFilter] = useState(carBrands);
+  const [carBrandsFilter2, setCarBrandsFilter2] = useState(carBrands2);
+
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
@@ -34,12 +38,18 @@ const CarsDetails = ({
                   onChange={(e) => {
                     if (!e.target.value) {
                       setCarBrandsFilter([...carBrands]);
+                      setCarBrandsFilter2([...carBrands2]);
                     } else {
                       setCarBrandsFilter([
                         ...carBrands.filter(
                           (ev) =>
                             ev.title.includes(e.target.value) ||
-                            ev.parentTitle.includes(e.target.value)
+                            ev.parentTitle.includes(e.target.value),
+                        ),
+                      ]);
+                      setCarBrandsFilter2([
+                        ...carBrands2.filter((ev) =>
+                          ev.title.includes(e.target.value),
                         ),
                       ]);
                     }
@@ -53,7 +63,7 @@ const CarsDetails = ({
             </div>
 
             {/* عنوان بخش مدل‌ها */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <img
                   src={mainDomainOld + carDetails.image}
@@ -67,9 +77,11 @@ const CarsDetails = ({
                 </h2>
               </div>
               <span className="text-gray-500 text-sm">
-                {toPersianNumbers(carBrands.length)} مدل
+                {toPersianNumbers(carBrands.length || carBrands2.length)} مدل
               </span>
             </div>
+
+            <ShowSummary text={carDetails.summary} />
 
             {/* گرید مدل‌های خودرو */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -84,8 +96,17 @@ const CarsDetails = ({
                     <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
                       <Link
                         href={
-                          carView.filter((c) => c.categoryId === car.id)[0]
-                            ?.url || ""
+                          carView
+                            .filter((c) => c.categoryId === car.id)
+                            .sort((a, b) => {
+                              const yearA = parseInt(
+                                a.publishCode.split("-")[0],
+                              );
+                              const yearB = parseInt(
+                                b.publishCode.split("-")[0],
+                              );
+                              return yearB - yearA;
+                            })[0]?.url || ""
                         }
                       >
                         <img
@@ -97,6 +118,11 @@ const CarsDetails = ({
                       <div className="sm:flex hidden flex-col gap-1 absolute top-0 -right-1 translate-x-full group-hover:translate-x-0 group-hover:right-0 duration-300">
                         {carView
                           .filter((c) => c.categoryId === car.id)
+                          .sort((a, b) => {
+                            const yearA = parseInt(a.publishCode.split("-")[0]);
+                            const yearB = parseInt(b.publishCode.split("-")[0]);
+                            return yearB - yearA;
+                          })
                           .map((ca) => (
                             <Link
                               href={ca.url}
@@ -160,10 +186,73 @@ const CarsDetails = ({
                   </div>
                 </div>
               ))}
+              {carBrandsFilter2.map((car) => (
+                <div
+                  key={car.id}
+                  //   href={car.url + `?id=${car.id}`}
+                  className="group block"
+                >
+                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
+                    {/* تصویر خودرو */}
+                    <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
+                      <Link
+                        href={
+                          carView
+                            .filter((c) => c.categoryId === car.id)
+                            .sort((a, b) => {
+                              const yearA = parseInt(
+                                a.publishCode.split("-")[0],
+                              );
+                              const yearB = parseInt(
+                                b.publishCode.split("-")[0],
+                              );
+                              return yearB - yearA;
+                            })[0]?.url || ""
+                        }
+                      >
+                        <img
+                          src={mainDomainOld + car.image}
+                          alt={car.title}
+                          className="object-contain w-full h-full p-2 hover:scale-105 transition-transform duration-300"
+                        />
+                      </Link>
+                    </div>
+
+                    {/* اطلاعات خودرو */}
+                    <div className="flex-1">
+                      <Link
+                        href={
+                          carView.filter((c) => c.categoryId === car.id)[0]
+                            ?.url || ""
+                        }
+                        onClick={(e) => {
+                          e.preventDefault();
+                        }}
+                      >
+                        <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
+                          {car.parentId} {car.title}
+                        </h3>
+                      </Link>
+
+                      {car.summary && car.summary !== "<!DOCTYPE html>" && (
+                        <div
+                          className="text-gray-600 text-sm line-clamp-3 mb-4 text-justify"
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              car.summary.length > 150
+                                ? car.summary.substring(0, 150) + "..."
+                                : car.summary,
+                          }}
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* پیام زمانی که مدلی وجود ندارد */}
-            {carBrands.length === 0 && (
+            {carBrands.length === 0 && carBrands2.length === 0 && (
               <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
                 <FaCar className="text-gray-400 text-4xl mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-gray-900 mb-2">

@@ -1,7 +1,8 @@
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
+import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
 import CarBrands from "./componnents/CarBrands";
-import { getCategoryId } from "@/services/Category/CategoryId";
 
 export async function generateMetadata({
   params,
@@ -11,31 +12,34 @@ export async function generateMetadata({
   const param = await params;
   const id = Number(param.slug[0]);
 
- const carDetails: ItemsCategoryId = await getCategoryId(id);
-    if (carDetails.title) {
-      return {
-        title: `ماشین3 - ${
+  const carDetails: ItemsCategoryId = await getCategoryId(id);
+  if (carDetails.title) {
+    return {
+      title: `${
+        carDetails.seoTitle ? carDetails.seoTitle : carDetails.title
+      } | ماشین3`,
+      description: carDetails.seoDescription,
+      openGraph: {
+        title: `${
           carDetails.seoTitle ? carDetails.seoTitle : carDetails.title
-        }`,
+        } | ماشین3`,
         description: carDetails.seoDescription,
-        openGraph: {
-          title: `ماشین3 - ${
-            carDetails.seoTitle ? carDetails.seoTitle : carDetails.title
-          }`,
-          description: carDetails.seoDescription,
-        },
-      };
-    } else {
-      return {
-        title: "ماشین3 - خودروهای بازار",
-        description: "بررسی کامل تمامی برند های خودرو موجود در بازار ایران با جزئیات فنی، قیمت و نظرات کاربران",
-      };
-    }
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 - خودروهای بازار",
+      description:
+        "بررسی کامل تمامی برند های خودرو موجود در بازار ایران با جزئیات فنی، قیمت و نظرات کاربران",
+    };
+  }
 }
 
 async function pageReviews({ params }: { params: Promise<{ slug: string }> }) {
   const param = await params;
   const id = Number(param.slug[0]);
+
+  const carDetails: ItemsCategoryId = await getCategoryId(id);
 
   let brand: ItemsCategory[] = [];
 
@@ -63,7 +67,12 @@ async function pageReviews({ params }: { params: Promise<{ slug: string }> }) {
     });
   }
 
-  return <CarBrands carBrands={brand} banner={banner} />;
+  return (
+    <>
+      <BreadcrumbCategory breadcrumb={carDetails.breadcrumb} title={carDetails.title}/>
+      <CarBrands carBrands={brand} banner={banner} carDetails={carDetails} />
+    </>
+  );
 }
 
 export default pageReviews;

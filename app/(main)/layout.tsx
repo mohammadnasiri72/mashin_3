@@ -7,13 +7,13 @@ import BannerTop from "../components/BannerTop";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
-export const metadata: Metadata = {
-  title: "ماشین 3 - بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
-  description: "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
-  alternates: {
-    canonical: `${baseUrl}/`,
-  },
-};
+// export const metadata: Metadata = {
+//   title: "ماشین 3 - بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
+//   description: "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
+//   alternates: {
+//     canonical: `${baseUrl}/`,
+//   },
+// };
 
 export default async function RootLayout({
   children,

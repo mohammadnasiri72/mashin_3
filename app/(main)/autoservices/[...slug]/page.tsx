@@ -1,8 +1,8 @@
 import { getCategory } from "@/services/Category/Category";
-import { getItem } from "@/services/Item/Item";
-import MainBoxAutoServices from "../components/MainBoxAutoServices";
-import SidebarAutoServices from "../components/SidebarAutoServices";
 import { getCategoryId } from "@/services/Category/CategoryId";
+import { getItem } from "@/services/Item/Item";
+import { getItemByIds } from "@/services/Item/ItemByIds";
+import MainBoxAutoServices from "../components/MainBoxAutoServices";
 
 export async function generateMetadata({
   params,
@@ -16,22 +16,24 @@ export async function generateMetadata({
 
   if (autoServiceCat.title) {
     return {
-      title: `مراکز و نمایندگی های خدمات خودرو - ${
-        autoServiceCat.seoTitle ? autoServiceCat.seoTitle : autoServiceCat.title
+      title: `${
+        autoServiceCat.seoTitle
+          ? autoServiceCat.seoTitle
+          : autoServiceCat.title + " | ماشین3"
       }`,
       description: autoServiceCat.seoDescription,
       openGraph: {
-        title: `مراکز و نمایندگی های خدمات خودرو - ${
+        title: `${
           autoServiceCat.seoTitle
             ? autoServiceCat.seoTitle
-            : autoServiceCat.title
+            : autoServiceCat.title + " | ماشین3"
         }`,
         description: autoServiceCat.seoDescription,
       },
     };
   } else {
     return {
-      title: "مراکز و نمایندگی های خدمات خودرو",
+      title: "مراکز و نمایندگی های خدمات خودرو | ماشین3",
       description: "مراکز و نمایندگی های خدمات خودرو",
     };
   }
@@ -67,20 +69,25 @@ async function pageAutoServiceDetails({
     langCode: "fa",
     CategoryIdArray: "6415",
   });
+  const ids = AutoServiceData.map((item) => item.id).join(",");
+  let propertyItems: ItemsId[] = [];
+  if (ids) {
+    propertyItems = await getItemByIds(ids);
+  }
+
+  const autoServiceCat = await getCategoryId(Number(id));
+
   return (
     <>
-      <div className="flex flex-wrap bg-gray-50">
-        <div className="lg:w-3/4 w-full">
-          <MainBoxAutoServices
-            AutoServiceData={AutoServiceData}
-            brands={brands}
-            id={id}
-          />
-        </div>
-        <div className="lg:w-1/4 w-full">
-          <SidebarAutoServices banner={banner} />
-        </div>
-      </div>
+      <MainBoxAutoServices
+        AutoServiceData={AutoServiceData}
+        brands={brands}
+        id={id}
+        propertyItems={propertyItems}
+        banner={banner}
+        title={autoServiceCat.title}
+        summary={autoServiceCat.summary || ""}
+      />
     </>
   );
 }

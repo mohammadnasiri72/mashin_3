@@ -1,13 +1,14 @@
 "use client";
 
-import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import { Card, Input, Table } from "antd";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Mousewheel, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
+import { htmlToPlainText } from "@/utils/func";
 import {
   FaCar,
   FaCaretDown,
@@ -44,9 +45,17 @@ const PRIMARY_LIGHT = "#fdf2f2";
 function PriceCar({
   brands,
   price,
+  title,
+  summary,
+  body,
+  brandIdSearchParams,
 }: {
   brands: PriceBrands[];
-  price: Price[];
+  price: Prices[];
+  title: string;
+  summary: string;
+  body: string;
+  brandIdSearchParams: number;
 }) {
   // دسته‌بندی‌های اصلی
   const mainCategories: Category[] = [
@@ -67,18 +76,18 @@ function PriceCar({
   ];
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [selectedBrand, setSelectedBrand] = useState<number | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<number | null>(
+    brandIdSearchParams || null,
+  );
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState<Price[]>(price);
+  const [filteredData, setFilteredData] = useState<Prices[]>(price);
   const [isMobile, setIsMobile] = useState(false);
   const [showFilter, setShowFilter] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
   const router = useRouter();
 
-  const titlePage = mainCategories.find(
-    (e) => e.id === selectedCategory,
-  )?.title;
+ 
 
   // تشخیص دستگاه موبایل
   useEffect(() => {
@@ -135,7 +144,7 @@ function PriceCar({
   };
 
   // کامپوننت MobilePriceCard با آیکون
-  const MobilePriceCard = ({ item }: { item: Price }) => {
+  const MobilePriceCard = ({ item }: { item: Prices }) => {
     return (
       <div className="bg-white rounded-xl border border-gray-200 p-2 mb-4! shadow-sm hover:shadow-md transition-all">
         {/* هدر با نام برند و مدل */}
@@ -217,10 +226,13 @@ function PriceCar({
             className="text-xl sm:text-2xl font-bold text-gray-900 mb-2!"
             style={{ color: PRIMARY_COLOR }}
           >
-            {titlePage ? titlePage : "قیمت خودرو"}
+            {title ? title : "قیمت خودرو"}
           </h1>
           <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
-            بررسی و مقایسه قیمت خودروهای مختلف در بازار و نمایندگی‌ها
+            {summary || ""}
+          </p>
+          <p className="max-w-[800px] mx-auto text-xs text-gray-500! mt-2">
+            {htmlToPlainText(body || "")}
           </p>
         </div>
 
@@ -272,26 +284,34 @@ function PriceCar({
                 />
               </div>
             </div>
-             {selectedBrand && (
+            {selectedBrand && (
               <span
                 onClick={() => {
                   setSelectedBrand(null);
+                  if (brandIdSearchParams) {
+                    const baseUrl = window.location.pathname;
+                    const params = new URLSearchParams(searchParams.toString());
+                    params.delete("brandId");
+                    router.push(`${baseUrl}?${params.toString()}`);
+                  }
                 }}
                 className="text-sm text-white! px-3 py-1 rounded cursor-pointer whitespace-nowrap ml-3"
                 style={{ backgroundColor: PRIMARY_COLOR }}
               >
-               حذف فیلترها
+                حذف فیلترها
               </span>
             )}
-            <span
-              onClick={() => {
-                setShowFilter(true);
-              }}
-              className="text-sm text-white! px-3 py-1 rounded cursor-pointer whitespace-nowrap"
-              style={{ backgroundColor: PRIMARY_COLOR }}
-            >
-              نمایش فیلترها
-            </span>
+            {!brandIdSearchParams && (
+              <span
+                onClick={() => {
+                  setShowFilter(true);
+                }}
+                className="text-sm text-white! px-3 py-1 rounded cursor-pointer whitespace-nowrap"
+                style={{ backgroundColor: PRIMARY_COLOR }}
+              >
+                نمایش فیلترها
+              </span>
+            )}
           </div>
           <div
             className={`fixed bottom-0 left-0 right-0 duration-300 bg-white z-50 overflow-hidden ${
@@ -496,7 +516,7 @@ function PriceCar({
                   key: "price1",
                   sorter: (a, b) => (a.price1 || 0) - (b.price1 || 0),
                   render: (price: number) => (
-                    <span className="font-bold text-green-600">
+                    <span className="font-bold">
                       {price ? price.toLocaleString("fa-IR") : "---"}
                     </span>
                   ),
@@ -509,7 +529,7 @@ function PriceCar({
                   key: "price2",
                   sorter: (a, b) => (a.price2 || 0) - (b.price2 || 0),
                   render: (price: number) => (
-                    <span className="font-bold text-blue-600">
+                    <span className="font-bold ">
                       {price ? price.toLocaleString("fa-IR") : "---"}
                     </span>
                   ),

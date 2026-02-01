@@ -19,13 +19,17 @@ const CarNews = ({
   newsData,
   popularNews,
   banner,
+  newsDetails,
+  tabConfig,
 }: {
   id: number;
   newsData: Items[];
   popularNews: Items[];
   banner: Items[];
+  newsDetails: ItemsCategoryId | ItemsId;
+  tabConfig: { key: number; href: string; label: string }[];
 }) => {
-  const [activeTab, setActiveTab] = useState<string>("all");
+  const [activeTab, setActiveTab] = useState<number>(0);
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -47,53 +51,11 @@ const CarNews = ({
     });
   };
 
-  // تعریف تب‌ها و URL مربوطه
-  const tabConfig = [
-    {
-      key: "all",
-      href: "/fa/News/اخبار-خودرو.html",
-      label: "همه اخبار خودرو",
-    },
-    {
-      key: "salePresale",
-      href: "/fa/News/6593/شرایط-فروش-و-پیش-فروش-خودرو.html",
-      label: "شرایط فروش و پیش فروش خودرو",
-    },
-    {
-      key: "market",
-      href: "/fa/News/6323/اخبار-بازار-خودرو.html",
-      label: "اخبار بازار خودرو",
-    },
-    {
-      key: "test",
-      href: "/fa/News/6430/تست-خودرو.html",
-      label: "تست خودرو",
-    },
-    {
-      key: "review",
-      href: "/fa/News/6448/بررسی-خودرو.html",
-      label: "بررسی خودرو",
-    },
-    {
-      key: "ads",
-      href: "/fa/News/6510/آگهی.html",
-      label: "آگهی",
-    },
-  ];
-
   useEffect(() => {
-    if (id === 6510) {
-      setActiveTab("ads");
-    } else if (id === 6448) {
-      setActiveTab("review");
-    } else if (id === 6430) {
-      setActiveTab("test");
-    } else if (id === 6323) {
-      setActiveTab("market");
-    } else if (id === 6593) {
-      setActiveTab("salePresale");
+    if (id) {
+      setActiveTab(id);
     } else {
-      setActiveTab("all");
+      setActiveTab(0);
     }
   }, [id]);
 
@@ -104,10 +66,16 @@ const CarNews = ({
           {/* هدر صفحه */}
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
-              <span className="text-red-600">اخبار خودرو</span>
+              <span className="text-red-600">
+                {newsDetails ? newsDetails.title : "اخبار خودرو"}
+              </span>
             </h1>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              آخرین اخبار و تحلیل‌های بازار خودرو ایران
+              {newsDetails
+                ? htmlToPlainText(
+                    newsDetails.summary ? newsDetails.summary : "",
+                  )
+                : "آخرین اخبار و تحلیل‌های بازار خودرو ایران"}
             </p>
           </div>
 
