@@ -3,12 +3,44 @@ import Video from "./components/Video";
 import { getItem } from "@/services/Item/Item";
 import { getCategory } from "@/services/Category/Category";
 import BoxCatVideos from "./components/BoxCatVideos";
+import { headers } from "next/headers";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { mainDomainOld } from "@/utils/mainDomain";
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 
 export async function generateMetadata() {
-  return {
-    title: "ماشین3 -  فیلم های تست و بررسی خودرو",
-    description: " فیلم های تست و بررسی خودرو",
-  };
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const videoCat: ItemsId = await getItemByUrl(decodedPathname);
+  const seoUrl = `${mainDomainOld}${videoCat?.seoUrl}`;
+
+  if (videoCat.title) {
+    return {
+      title: `${videoCat.seoInfo?.seoTitle ? videoCat?.seoInfo?.seoTitle : videoCat.title + " | ماشین3"}`,
+      description: videoCat.seoInfo?.seoDescription,
+      keywords: videoCat.seoInfo?.seoKeywords
+        ? videoCat.seoInfo?.seoKeywords
+        : videoCat.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
+      openGraph: {
+        title: `${videoCat.seoInfo?.seoTitle ? videoCat?.seoInfo?.seoTitle : videoCat.title + " | ماشین3"}`,
+        description: videoCat.seoInfo?.seoDescription,
+      },
+      other: {
+        seoHeadTags: videoCat?.seoInfo?.seoHeadTags,
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 -  فیلم های تست و بررسی خودرو",
+      description: " فیلم های تست و بررسی خودرو",
+    };
+  }
 }
 
 async function pageVideo({
@@ -47,8 +79,20 @@ async function pageVideo({
     CategoryIdArray: "6415",
   });
 
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const videoCat: ItemsId = await getItemByUrl(decodedPathname);
+
   return (
     <>
+      <div className="mb-4!">
+        <BreadcrumbCategory
+          breadcrumb={videoCat.breadcrumb}
+          title={videoCat.title}
+        />
+      </div>
       <div className="bg-[#f4f4f4]">
         <Video
           popularVideos={popularVideos}

@@ -1,6 +1,8 @@
 import { getPriceCar } from "@/services/Price/PriceCar";
 import { getPriceCarBrands } from "@/services/Price/PriceCarBrands";
 import PriceCar from "./components/PriceCar";
+import { mainDomainOld } from "@/utils/mainDomain";
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 
 export async function generateMetadata({
   searchParams,
@@ -15,6 +17,28 @@ export async function generateMetadata({
     Type: type ? String(type) : "internal",
     BrandId: brandId ? brandId : -1,
   });
+  const seoUrl = `${mainDomainOld}${price?.seoUrl}`;
+
+  if (price.title) {
+    return {
+      title: `${price.seoTitle ? price.seoTitle : price.title + " | ماشین3"}`,
+      description: price.seoDescription,
+      keywords: price?.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
+      openGraph: {
+        title: `${price.seoTitle ? price.seoTitle : price.title + " | ماشین3"}`,
+        description: price.seoDescription,
+      },
+    };
+  } else {
+    return {
+      title: "لیست قیمت خودروهای بازار | ماشین3",
+      description: "لیست قیمت خودروهای بازار",
+    };
+  }
 
   return {
     title: `ماشین3 - ${price.seoTitle ? price.seoTitle : price.title}`,
@@ -44,6 +68,9 @@ async function pagePrice({
 
   return (
     <>
+      <div className="mb-4!">
+        <BreadcrumbCategory breadcrumb={[]} title={price.title} />
+      </div>
       <PriceCar
         brands={brands.brands}
         price={price.prices}

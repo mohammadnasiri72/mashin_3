@@ -3,6 +3,7 @@ import { getItemId } from "@/services/Item/ItemId";
 import React from "react";
 import EducationView from "./components/EducationView";
 import { getComment } from "@/services/Comment/Comment";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata({
   params,
@@ -11,19 +12,26 @@ export async function generateMetadata({
 }) {
   const param = await params;
   const id = Number(param.slug[0]);
-
   const education: ItemsId = await getItemId(id);
+  const seoUrl = `${mainDomainOld}${education?.seoUrl}`;
+
   if (education.title) {
     return {
-      title: `ماشین3 - ${
-        education.seoTitle ? education.seoTitle : education.title
-      }`,
-      description: education.seoDescription,
+      title: `${education.seoInfo?.seoTitle ? education?.seoInfo?.seoTitle : education.title + " | ماشین3"}`,
+      description: education.seoInfo?.seoDescription,
+      keywords: education.seoInfo?.seoKeywords
+        ? education.seoInfo?.seoKeywords
+        : education.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
-        title: `ماشین3 - ${
-          education.seoTitle ? education.seoTitle : education.title
-        }`,
-        description: education.seoDescription,
+        title: `${education.seoInfo?.seoTitle ? education?.seoInfo?.seoTitle : education.title + " | ماشین3"}`,
+        description: education.seoInfo?.seoDescription,
+      },
+      other: {
+        seoHeadTags: education?.seoInfo?.seoHeadTags,
       },
     };
   } else {

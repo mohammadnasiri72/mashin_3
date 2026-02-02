@@ -339,6 +339,14 @@ export async function middleware(request: Request) {
           },
         );
       }
+      // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("x-pathname", pathname); // فقط مسیر
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
@@ -611,15 +619,41 @@ export async function middleware(request: Request) {
         headers: requestHeaders,
       },
     });
-  } 
-  else {
+  } else if (pathname.startsWith("/podcast.html")) {
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } else if (pathname.startsWith("/videos.html")) {
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } else if (pathname.startsWith("/whichcars.html")) {
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } else {
     const decodedPathname = decodeURIComponent(pathname);
     if (decodedPathname !== decodedPathname.toLowerCase()) {
       return NextResponse.redirect(
         new URL(decodedPathname.toLowerCase(), request.url),
         { status: 301 },
       );
-    } 
+    }
     // else {
     //   const isLikelyDynamicPage =
     //     pathname !== "/" &&

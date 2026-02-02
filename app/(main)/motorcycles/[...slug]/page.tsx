@@ -3,6 +3,8 @@ import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
 import React from "react";
 import CarsDetails from "../../cars/[...slug]/components/CarsDetails";
+import { mainDomainOld } from "@/utils/mainDomain";
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 
 export async function generateMetadata({
   searchParams,
@@ -12,22 +14,31 @@ export async function generateMetadata({
   const searchParam = await searchParams;
   const id = Number(searchParam.id);
   const detailsMotorcycle: ItemsCategoryId = await getCategoryId(id);
+  const seoUrl = `${mainDomainOld}${detailsMotorcycle?.seoUrl}`;
 
   if (detailsMotorcycle.title) {
     return {
-      title: `ماشین3 - ${
+      title: `${
         detailsMotorcycle.seoTitle
           ? detailsMotorcycle.seoTitle
-          : detailsMotorcycle.title
+          : detailsMotorcycle.title + " | ماشین3"
       }`,
       description: detailsMotorcycle.seoDescription,
+      keywords: detailsMotorcycle?.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
-        title: `ماشین3 - ${
+        title: `${
           detailsMotorcycle.seoTitle
             ? detailsMotorcycle.seoTitle
-            : detailsMotorcycle.title
+            : detailsMotorcycle.title + " | ماشین3"
         }`,
         description: detailsMotorcycle.seoDescription,
+      },
+      other: {
+        seoHeadTags: detailsMotorcycle?.headTags,
       },
     };
   } else {
@@ -74,13 +85,31 @@ async function pageMotorcyclesDainamic({
     motorView.some((category) => category.categoryId === product.id),
   );
 
+  let motorBrands2: Items[] = [];
+  if (motorBrands.length === 0) {
+    motorBrands2 = await getItem({
+      TypeId: 1052,
+      langCode: "fa",
+      CategoryIdArray: String(id),
+      PageIndex: 1,
+      PageSize: 200,
+    });
+  }
+
   return (
-    <CarsDetails
-      carBrands={productsWithCategories}
-      carDetails={motorDetails}
-      carView={motorView}
-      banner={banner}
-    />
+    <>
+      <BreadcrumbCategory
+        breadcrumb={motorDetails.breadcrumb}
+        title={motorDetails.title}
+      />
+      <CarsDetails
+        carBrands={productsWithCategories}
+        carDetails={motorDetails}
+        carView={motorView}
+        banner={banner}
+        carBrands2={motorBrands2}
+      />
+    </>
   );
 }
 

@@ -1,7 +1,9 @@
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
+import { mainDomainOld } from "@/utils/mainDomain";
 import MainBoxAutoServices from "../components/MainBoxAutoServices";
 
 export async function generateMetadata({
@@ -13,6 +15,7 @@ export async function generateMetadata({
   const id = param.slug[0];
 
   const autoServiceCat = await getCategoryId(Number(id));
+  const seoUrl = `${mainDomainOld}${autoServiceCat?.seoUrl}`;
 
   if (autoServiceCat.title) {
     return {
@@ -22,6 +25,11 @@ export async function generateMetadata({
           : autoServiceCat.title + " | ماشین3"
       }`,
       description: autoServiceCat.seoDescription,
+      keywords: autoServiceCat?.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
         title: `${
           autoServiceCat.seoTitle
@@ -29,6 +37,9 @@ export async function generateMetadata({
             : autoServiceCat.title + " | ماشین3"
         }`,
         description: autoServiceCat.seoDescription,
+      },
+      other: {
+        seoHeadTags: autoServiceCat?.headTags,
       },
     };
   } else {
@@ -79,6 +90,10 @@ async function pageAutoServiceDetails({
 
   return (
     <>
+      <BreadcrumbCategory
+        breadcrumb={autoServiceCat.breadcrumb}
+        title={autoServiceCat.title}
+      />
       <MainBoxAutoServices
         AutoServiceData={AutoServiceData}
         brands={brands}

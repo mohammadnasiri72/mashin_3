@@ -4,6 +4,8 @@ import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { headers } from "next/headers";
 import MainBoxAutoServices from "../autoservices/components/MainBoxAutoServices";
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -11,22 +13,25 @@ export async function generateMetadata() {
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
   const autoServiceCat: ItemsId = await getItemByUrl(decodedPathname);
+  const seoUrl = `${mainDomainOld}${autoServiceCat?.seoUrl}`;
 
   if (autoServiceCat.title) {
     return {
-      title: `${
-        autoServiceCat.seoTitle
-          ? autoServiceCat.seoTitle
-          : autoServiceCat.title + " | ماشین3"
-      }`,
-      description: autoServiceCat.seoDescription,
+      title: `${autoServiceCat.seoInfo?.seoTitle ? autoServiceCat?.seoInfo?.seoTitle : autoServiceCat.title + " | ماشین3"}`,
+      description: autoServiceCat.seoInfo?.seoDescription,
+      keywords: autoServiceCat.seoInfo?.seoKeywords
+        ? autoServiceCat.seoInfo?.seoKeywords
+        : autoServiceCat.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
-        title: `${
-          autoServiceCat.seoTitle
-            ? autoServiceCat.seoTitle
-            : autoServiceCat.title + " | ماشین3"
-        }`,
-        description: autoServiceCat.seoDescription,
+        title: `${autoServiceCat.seoInfo?.seoTitle ? autoServiceCat?.seoInfo?.seoTitle : autoServiceCat.title + " | ماشین3"}`,
+        description: autoServiceCat.seoInfo?.seoDescription,
+      },
+      other: {
+        seoHeadTags: autoServiceCat?.seoInfo?.seoHeadTags,
       },
     };
   } else {
@@ -80,6 +85,10 @@ async function pageAutoService({
 
   return (
     <>
+      <BreadcrumbCategory
+        breadcrumb={autoServiceCat.breadcrumb}
+        title={autoServiceCat.title}
+      />
       <MainBoxAutoServices
         AutoServiceData={AutoServiceData}
         brands={brands}

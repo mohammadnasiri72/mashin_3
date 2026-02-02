@@ -1,23 +1,72 @@
 import { createMarkup } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Card } from "antd";
+import { Fancybox } from "@fancyapps/ui";
 import Image from "next/image";
 import Link from "next/link";
 import { FaCalendar, FaEye } from "react-icons/fa";
+import { useEffect } from "react";
 
 function EducationContent({ education }: { education: ItemsId }) {
+   useEffect(() => {
+      Fancybox.bind("[data-fancybox='main-img']", {
+        Toolbar: {
+          display: {
+            left: [],
+            middle: [],
+            right: ["close"],
+          },
+        },
+        Thumbs: {
+          type: "classic",
+        },
+        Images: {
+          zoom: true,
+        },
+        Carousel: {
+          infinite: true,
+        },
+      });
+  
+      return () => {
+        Fancybox.destroy();
+      };
+    }, []);
+     // Increase z-index for fancybox
+      useEffect(() => {
+        const style = document.createElement("style");
+        style.innerHTML = `
+          .fancybox__container { 
+            z-index: 999999 !important; 
+          }
+          .fancybox__backdrop {
+            background: rgba(0, 0, 0, 0.8);
+          }
+        `;
+        document.head.appendChild(style);
+        return () => {
+          document.head.removeChild(style);
+        };
+      }, []);
   return (
     <Card className="rounded-xl shadow-lg">
       <div className="space-y-6">
         {/* تصویر اصلی */}
         {education.image && (
-          <div className="w-full bg-gray-200 rounded-xl overflow-hidden relative">
-            <img
-              src={mainDomainOld + education.image}
-              alt={education.title}
-              className="object-contain w-full h-full"
-            />
-          </div>
+          
+            <a
+              href={mainDomainOld + education.image}
+              data-fancybox="main-img"
+              data-caption={education.title}
+              aria-label={education.title}
+            >
+              <img
+                className="float-start! w-96 pl-5"
+                src={mainDomainOld + education.image}
+                alt={education.title}
+              />
+            </a>
+          
         )}
 
         {/* محتوای HTML */}

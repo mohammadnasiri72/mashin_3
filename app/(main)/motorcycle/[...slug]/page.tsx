@@ -9,6 +9,7 @@ import { getItemByIds } from "@/services/Item/ItemByIds";
 import ContentTabsMotor from "./components/ContentTabsMotor";
 import { getItem } from "@/services/Item/Item";
 import { getPollId } from "@/services/Poll/pollId";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata({
   searchParams,
@@ -18,24 +19,27 @@ export async function generateMetadata({
   const searchParam = await searchParams;
   const id = Number(searchParam.id);
   const detailsMotorcycle: ItemsId = await getItemId(Number(id));
+  const seoUrl = `${mainDomainOld}${detailsMotorcycle?.seoUrl}`;
 
   if (detailsMotorcycle.title) {
     return {
-      title: `ماشین3 - ${
-        detailsMotorcycle.seoTitle
-          ? detailsMotorcycle.seoTitle
-          : detailsMotorcycle.title
-      }`,
-      description: detailsMotorcycle.seoDescription,
-      openGraph: {
-        title: `ماشین3 - ${
-          detailsMotorcycle.seoTitle
-            ? detailsMotorcycle.seoTitle
-            : detailsMotorcycle.title
-        }`,
-        description: detailsMotorcycle.seoDescription,
-      },
-    };
+          title: `${detailsMotorcycle.seoInfo?.seoTitle ? detailsMotorcycle?.seoInfo?.seoTitle : detailsMotorcycle.title + " | ماشین3"}`,
+          description: detailsMotorcycle.seoInfo?.seoDescription,
+          keywords: detailsMotorcycle.seoInfo?.seoKeywords
+            ? detailsMotorcycle.seoInfo?.seoKeywords
+            : detailsMotorcycle.seoKeywords,
+          metadataBase: new URL(mainDomainOld),
+          alternates: {
+            canonical: seoUrl,
+          },
+          openGraph: {
+            title: `${detailsMotorcycle.seoInfo?.seoTitle ? detailsMotorcycle?.seoInfo?.seoTitle : detailsMotorcycle.title + " | ماشین3"}`,
+            description: detailsMotorcycle.seoInfo?.seoDescription,
+          },
+          other: {
+            seoHeadTags: detailsMotorcycle?.seoInfo?.seoHeadTags,
+          },
+        };
   } else {
     return {
       title: "ماشین3 - جزئیات موتورسیکلت",

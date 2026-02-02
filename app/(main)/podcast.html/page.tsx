@@ -1,13 +1,43 @@
-import React from "react";
-import Podcast from "./components/Podcast";
-import { getItem } from "@/services/Item/Item";
 import { getCategory } from "@/services/Category/Category";
+import { getItem } from "@/services/Item/Item";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import Podcast from "./components/Podcast";
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 
 export async function generateMetadata() {
-  return {
-    title: "ماشین3 -  پادکست های بررسی خودرو",
-    description: "پادکست های بررسی خودرو",
-  };
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const podcastDetails: ItemsId = await getItemByUrl(decodedPathname);
+  const seoUrl = `${mainDomainOld}${podcastDetails?.seoUrl}`;
+
+  if (podcastDetails.title) {
+    return {
+      title: `${podcastDetails.seoInfo?.seoTitle ? podcastDetails?.seoInfo?.seoTitle : podcastDetails.title + " | ماشین3"}`,
+      description: podcastDetails.seoInfo?.seoDescription,
+      keywords: podcastDetails.seoInfo?.seoKeywords
+        ? podcastDetails.seoInfo?.seoKeywords
+        : podcastDetails.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
+      openGraph: {
+        title: `${podcastDetails.seoInfo?.seoTitle ? podcastDetails?.seoInfo?.seoTitle : podcastDetails.title + " | ماشین3"}`,
+        description: podcastDetails.seoInfo?.seoDescription,
+      },
+      other: {
+        seoHeadTags: podcastDetails?.seoInfo?.seoHeadTags,
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 -  پادکست های بررسی خودرو",
+      description: "پادکست های بررسی خودرو",
+    };
+  }
 }
 
 async function pagePodcast({
@@ -47,8 +77,19 @@ async function pagePodcast({
     CategoryIdArray: "6415",
   });
 
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const podcastDetails: ItemsId = await getItemByUrl(decodedPathname);
+
   return (
     <>
+     <div className="mb-3!">
+       <BreadcrumbCategory
+        breadcrumb={podcastDetails.breadcrumb}
+        title={podcastDetails.title}
+      />
+     </div>
       <Podcast
         podcasts={podcasts}
         podcastsCat={podcastsCat}

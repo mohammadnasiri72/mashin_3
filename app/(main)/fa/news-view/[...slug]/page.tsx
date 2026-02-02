@@ -3,6 +3,7 @@ import { getItemId } from "@/services/Item/ItemId";
 import NewsViewDetails from "./components/NewsViewDetails";
 import { getItem } from "@/services/Item/Item";
 import { getComment } from "@/services/Comment/Comment";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata({
   params,
@@ -13,21 +14,25 @@ export async function generateMetadata({
   const id = Number(param.slug[0]);
 
   const newsDetails: ItemsId = await getItemId(id);
+  const seoUrl = `${mainDomainOld}${newsDetails?.seoUrl}`;
+
   if (newsDetails.title) {
     return {
-      title: `${
-        newsDetails.seoTitle
-          ? newsDetails.seoTitle
-          : newsDetails.title + " | ماشین3"
-      }`,
-      description: newsDetails.seoDescription,
+      title: `${newsDetails.seoInfo?.seoTitle ? newsDetails?.seoInfo?.seoTitle : newsDetails.title + " | ماشین3"}`,
+      description: newsDetails.seoInfo?.seoDescription,
+      keywords: newsDetails.seoInfo?.seoKeywords
+        ? newsDetails.seoInfo?.seoKeywords
+        : newsDetails.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
-        title: `${
-          newsDetails.seoTitle
-            ? newsDetails.seoTitle
-            : newsDetails.title + " | ماشین3"
-        }`,
-        description: newsDetails.seoDescription,
+        title: `${newsDetails.seoInfo?.seoTitle ? newsDetails?.seoInfo?.seoTitle : newsDetails.title + " | ماشین3"}`,
+        description: newsDetails.seoInfo?.seoDescription,
+      },
+      other: {
+        seoHeadTags: newsDetails?.seoInfo?.seoHeadTags,
       },
     };
   } else {

@@ -3,6 +3,7 @@ import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
 import CarBrands from "./componnents/CarBrands";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata({
   params,
@@ -13,17 +14,31 @@ export async function generateMetadata({
   const id = Number(param.slug[0]);
 
   const carDetails: ItemsCategoryId = await getCategoryId(id);
+  const seoUrl = `${mainDomainOld}${carDetails?.seoUrl}`;
+
   if (carDetails.title) {
     return {
       title: `${
-        carDetails.seoTitle ? carDetails.seoTitle : carDetails.title
-      } | ماشین3`,
+        carDetails.seoTitle
+          ? carDetails.seoTitle
+          : carDetails.title + " | ماشین3"
+      }`,
       description: carDetails.seoDescription,
+      keywords: carDetails?.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
         title: `${
-          carDetails.seoTitle ? carDetails.seoTitle : carDetails.title
-        } | ماشین3`,
+          carDetails.seoTitle
+            ? carDetails.seoTitle
+            : carDetails.title + " | ماشین3"
+        }`,
         description: carDetails.seoDescription,
+      },
+      other: {
+        seoHeadTags: carDetails?.headTags,
       },
     };
   } else {
@@ -69,7 +84,10 @@ async function pageReviews({ params }: { params: Promise<{ slug: string }> }) {
 
   return (
     <>
-      <BreadcrumbCategory breadcrumb={carDetails.breadcrumb} title={carDetails.title}/>
+      <BreadcrumbCategory
+        breadcrumb={carDetails.breadcrumb}
+        title={carDetails.title}
+      />
       <CarBrands carBrands={brand} banner={banner} carDetails={carDetails} />
     </>
   );

@@ -1,6 +1,7 @@
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { htmlToPlainText } from "@/utils/func";
+import { mainDomainOld } from "@/utils/mainDomain";
 import { notFound } from "next/navigation";
 
 export async function generateMetadata({
@@ -11,14 +12,26 @@ export async function generateMetadata({
   const param = await params;
   const slugArray = Array.isArray(param.slug) ? param.slug : [param.slug];
   const path = slugArray.length > 0 ? "/" + slugArray.join("/") : "/";
-  const dataPage = await getItemByUrl(path);
+  const dataPage:ItemsId = await getItemByUrl(path);
+  const seoUrl = `${mainDomainOld}${dataPage?.seoUrl}`;
+
   if (dataPage.title) {
     return {
       title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
       description: dataPage.seoInfo?.seoDescription,
+      keywords: dataPage.seoInfo?.seoKeywords
+        ? dataPage.seoInfo?.seoKeywords
+        : dataPage.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
         title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
         description: dataPage.seoInfo?.seoDescription,
+      },
+      other: {
+        seoHeadTags: dataPage?.seoInfo?.seoHeadTags,
       },
     };
   } else {

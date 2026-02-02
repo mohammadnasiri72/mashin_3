@@ -3,6 +3,7 @@ import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
 import CarsDetails from "./components/CarsDetails";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata({
   searchParams,
@@ -13,18 +14,31 @@ export async function generateMetadata({
   const id = searchParam.id;
 
   const carDetails: ItemsCategoryId = await getCategoryId(Number(id));
+  const seoUrl = `${mainDomainOld}${carDetails?.seoUrl}`;
 
   if (carDetails.title) {
     return {
-      title: `ماشین3 - ${
-        carDetails.seoTitle ? carDetails.seoTitle : carDetails.title
+      title: `${
+        carDetails.seoTitle
+          ? carDetails.seoTitle
+          : carDetails.title + " | ماشین3"
       }`,
       description: carDetails.seoDescription,
+      keywords: carDetails?.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
-        title: `ماشین3 - ${
-          carDetails.seoTitle ? carDetails.seoTitle : carDetails.title
+        title: `${
+          carDetails.seoTitle
+            ? carDetails.seoTitle
+            : carDetails.title + " | ماشین3"
         }`,
         description: carDetails.seoDescription,
+      },
+      other: {
+        seoHeadTags: carDetails?.headTags,
       },
     };
   } else {

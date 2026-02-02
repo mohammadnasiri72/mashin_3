@@ -6,6 +6,7 @@ import CarNews from "./components/CarNews";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { headers } from "next/headers";
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata({
   params,
@@ -15,36 +16,72 @@ export async function generateMetadata({
   const param = await params;
   const id = Number(param.slug[0]);
 
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname");
-  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  if (isNaN(id)) {
+    const headersList = await headers();
+    const pathname = headersList.get("x-pathname");
+    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+    const newsDetails: ItemsId = await getItemByUrl(decodedPathname);
+    const seoUrl = `${mainDomainOld}${newsDetails?.seoUrl}`;
+    if (newsDetails.title) {
+      return {
+        title: `${newsDetails.seoInfo?.seoTitle ? newsDetails?.seoInfo?.seoTitle : newsDetails.title + " | ماشین3"}`,
+        description: newsDetails.seoInfo?.seoDescription,
+        keywords: newsDetails.seoInfo?.seoKeywords
+          ? newsDetails.seoInfo?.seoKeywords
+          : newsDetails.seoKeywords,
+        metadataBase: new URL(mainDomainOld),
+        alternates: {
+          canonical: seoUrl,
+        },
+        openGraph: {
+          title: `${newsDetails.seoInfo?.seoTitle ? newsDetails?.seoInfo?.seoTitle : newsDetails.title + " | ماشین3"}`,
+          description: newsDetails.seoInfo?.seoDescription,
+        },
+        other: {
+          seoHeadTags: newsDetails?.seoInfo?.seoHeadTags,
+        },
+      };
+    } else {
+      return {
+        title: "اخبار خودرو | ماشین3",
+        description: "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
+      };
+    }
+  } else {
+    const newsDetails: ItemsCategoryId = await getCategoryId(id);
+    const seoUrl = `${mainDomainOld}${newsDetails?.seoUrl}`;
 
-  const newsDetails: ItemsCategoryId | ItemsId = id
-    ? await getCategoryId(id)
-    : await getItemByUrl(decodedPathname);
-
-  if (newsDetails.title) {
-    return {
-      title: `${
-        newsDetails.seoTitle
-          ? newsDetails.seoTitle
-          : newsDetails.title + " | ماشین3"
-      }`,
-      description: newsDetails.seoDescription,
-      openGraph: {
+    if (newsDetails.title) {
+      return {
         title: `${
           newsDetails.seoTitle
             ? newsDetails.seoTitle
             : newsDetails.title + " | ماشین3"
         }`,
         description: newsDetails.seoDescription,
-      },
-    };
-  } else {
-    return {
-      title: "اخبار خودرو | ماشین3",
-      description: "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
-    };
+        keywords: newsDetails?.seoKeywords,
+        metadataBase: new URL(mainDomainOld),
+        alternates: {
+          canonical: seoUrl,
+        },
+        openGraph: {
+          title: `${
+            newsDetails.seoTitle
+              ? newsDetails.seoTitle
+              : newsDetails.title + " | ماشین3"
+          }`,
+          description: newsDetails.seoDescription,
+        },
+        other: {
+          seoHeadTags: newsDetails?.headTags,
+        },
+      };
+    } else {
+      return {
+        title: "اخبار خودرو | ماشین3",
+        description: "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
+      };
+    }
   }
 }
 

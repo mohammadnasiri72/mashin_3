@@ -2,6 +2,8 @@ import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
 import SearchCarsDetails from "./components/SearchCarsDetails";
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata({
   searchParams,
@@ -21,24 +23,68 @@ export async function generateMetadata({
 
   if (modelId) {
     const carDetails: ItemsCategoryId = await getCategoryId(modelId);
+    const seoUrl = `${mainDomainOld}${carDetails?.seoUrl}`;
     return {
-      title: `ماشین3 - مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
-      description: `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
+      title: carDetails.seoTitle
+        ? carDetails.seoTitle
+        : `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""} | ماشین3`,
+      description: carDetails.seoDescription
+        ? carDetails.seoDescription
+        : `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
+      keywords: carDetails?.seoKeywords,
+
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
+      openGraph: {
+        title: carDetails.seoTitle
+          ? carDetails.seoTitle
+          : `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""} | ماشین3`,
+        description: carDetails.seoDescription
+          ? carDetails.seoDescription
+          : `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
+      },
+      other: {
+        seoHeadTags: carDetails?.headTags,
+      },
     };
   } else if (brandId) {
     const carDetails: ItemsCategoryId = await getCategoryId(brandId);
+    const seoUrl = `${mainDomainOld}${carDetails?.seoUrl}`;
     return {
-      title: `ماشین3 - مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
-      description: `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
+      title: carDetails.seoTitle
+        ? carDetails.seoTitle
+        : `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""} | ماشین3`,
+      description: carDetails.seoDescription
+        ? carDetails.seoDescription
+        : `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
+      keywords: carDetails?.seoKeywords,
+
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
+      openGraph: {
+        title: carDetails.seoTitle
+          ? carDetails.seoTitle
+          : `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""} | ماشین3`,
+        description: carDetails.seoDescription
+          ? carDetails.seoDescription
+          : `مدل های ${carDetails.title} ${typeCarTitle ? typeCarTitle : ""}`,
+      },
+      other: {
+        seoHeadTags: carDetails?.headTags,
+      },
     };
   } else {
     return {
       title: typeCarTitle
-        ? `ماشین3 - همه خودروهای ${typeCarTitle}`
-        : "ماشین3 - همه خودروهای ماشین3",
+        ? `همه خودروهای ${typeCarTitle} | ماشین3`
+        : "همه خودروهای ماشین3",
       description: typeCarTitle
-        ? `ماشین3 - همه خودروهای ${typeCarTitle}`
-        : "ماشین3 - همه خودروهای ماشین3",
+        ? `همه خودروهای ${typeCarTitle} | ماشین3`
+        : "همه خودروهای ماشین3",
     };
   }
 }
@@ -91,8 +137,19 @@ async function pageSearchCars({
     langCode: "fa",
   });
 
+
+  const typeCarTitle = segmentCars.find((e) => e.id === typeId)?.title;
+
   return (
     <>
+      <BreadcrumbCategory
+        breadcrumb={carDetails.length > 0 ? carDetails[0].breadcrumb : []}
+        title={
+          carDetails.length > 0
+            ? carDetails[0].title
+            : ` همه برند های خودرو ${typeCarTitle ? typeCarTitle : ""}`
+        }
+      />
       <SearchCarsDetails
         carBrands={carBrands}
         carDetails={carDetails}

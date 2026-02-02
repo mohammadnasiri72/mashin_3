@@ -1,12 +1,43 @@
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getItem } from "@/services/Item/Item";
-import React from "react";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
 import WhichCars from "./components/WhichCars";
 
 export async function generateMetadata() {
-  return {
-    title: "ماشین3 - مقایسه خودرو",
-    description: "مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
-  };
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const whichCarsCat: ItemsId = await getItemByUrl(decodedPathname);
+  const seoUrl = `${mainDomainOld}${whichCarsCat?.seoUrl}`;
+
+  if (whichCarsCat.title) {
+    return {
+      title: `${whichCarsCat.seoInfo?.seoTitle ? whichCarsCat?.seoInfo?.seoTitle : whichCarsCat.title + " | ماشین3"}`,
+      description: whichCarsCat.seoInfo?.seoDescription,
+      keywords: whichCarsCat.seoInfo?.seoKeywords
+        ? whichCarsCat.seoInfo?.seoKeywords
+        : whichCarsCat.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
+      openGraph: {
+        title: `${whichCarsCat.seoInfo?.seoTitle ? whichCarsCat?.seoInfo?.seoTitle : whichCarsCat.title + " | ماشین3"}`,
+        description: whichCarsCat.seoInfo?.seoDescription,
+      },
+      other: {
+        seoHeadTags: whichCarsCat?.seoInfo?.seoHeadTags,
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 - مقایسه خودرو",
+      description: "مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
+    };
+  }
 }
 
 async function pageWhichCars({
@@ -39,8 +70,17 @@ async function pageWhichCars({
     CategoryIdArray: "6415",
   });
 
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const whichCarsCat: ItemsId = await getItemByUrl(decodedPathname);
+
   return (
     <>
+      <BreadcrumbCategory
+        breadcrumb={whichCarsCat.breadcrumb}
+        title={whichCarsCat.title}
+      />
       <WhichCars
         whichCars={whichCars}
         popularComparisons={popularComparisons}

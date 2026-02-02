@@ -3,6 +3,7 @@ import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getItemId } from "@/services/Item/ItemId";
 import CompareCars from "./components/CompareCars";
 import { getComment } from "@/services/Comment/Comment";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata({
   params,
@@ -12,14 +13,25 @@ export async function generateMetadata({
   const param = await params;
   const id = Number(param.slug[0]);
   const whichcars: ItemsId = await getItemId(id);
+  const seoUrl = `${mainDomainOld}${whichcars?.seoUrl}`;
 
   if (whichcars.title) {
     return {
-      title: `ماشین3 - ${whichcars.seoTitle ? whichcars.seoTitle : whichcars.title}`,
-      description: whichcars.seoDescription,
+      title: `${whichcars.seoInfo?.seoTitle ? whichcars?.seoInfo?.seoTitle : whichcars.title + " | ماشین3"}`,
+      description: whichcars.seoInfo?.seoDescription,
+      keywords: whichcars.seoInfo?.seoKeywords
+        ? whichcars.seoInfo?.seoKeywords
+        : whichcars.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
-        title: `ماشین3 - ${whichcars.seoTitle ? whichcars.seoTitle : whichcars.title}`,
-        description: whichcars.seoDescription,
+        title: `${whichcars.seoInfo?.seoTitle ? whichcars?.seoInfo?.seoTitle : whichcars.title + " | ماشین3"}`,
+        description: whichcars.seoInfo?.seoDescription,
+      },
+      other: {
+        seoHeadTags: whichcars?.seoInfo?.seoHeadTags,
       },
     };
   } else {
@@ -54,7 +66,6 @@ async function pageWhichcarsDainamic({
     dataCompare = await getItemByIds(String(ids));
   }
 
-  
   const popularComparisons: Items[] = await getItem({
     TypeId: 1045,
     langCode: "fa",

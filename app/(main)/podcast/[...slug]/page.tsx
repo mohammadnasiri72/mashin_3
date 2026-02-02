@@ -2,6 +2,8 @@ import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
 import Podcast from "../../podcast.html/components/Podcast";
 import { getCategoryId } from "@/services/Category/CategoryId";
+import { mainDomainOld } from "@/utils/mainDomain";
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 
 export async function generateMetadata({
   params,
@@ -11,18 +13,27 @@ export async function generateMetadata({
   const param = await params;
   const id = Number(param.slug[0]);
   const podcasts: ItemsCategoryId = await getCategoryId(id);
+  const seoUrl = `${mainDomainOld}${podcasts?.seoUrl}`;
 
   if (podcasts.title) {
     return {
-      title: `ماشین3 - ${
-        podcasts.seoTitle ? podcasts.seoTitle : podcasts.title
+      title: `${
+        podcasts.seoTitle ? podcasts.seoTitle : podcasts.title + " | ماشین3"
       }`,
       description: podcasts.seoDescription,
+      keywords: podcasts?.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
-        title: `ماشین3 - ${
-          podcasts.seoTitle ? podcasts.seoTitle : podcasts.title
+        title: `${
+          podcasts.seoTitle ? podcasts.seoTitle : podcasts.title + " | ماشین3"
         }`,
         description: podcasts.seoDescription,
+      },
+      other: {
+        seoHeadTags: podcasts?.headTags,
       },
     };
   } else {
@@ -80,12 +91,16 @@ async function pagePodcastDainamic({
 
   return (
     <>
+      <BreadcrumbCategory
+        breadcrumb={podcastsCa.breadcrumb}
+        title={podcastsCa.title}
+      />
       <Podcast
         podcasts={podcasts}
         podcastsCat={podcastsCat}
         banner={banner}
         popularNews={popularNews}
-        titleCategory={podcastsCa.title ? podcastsCa.title : ''}
+        titleCategory={podcastsCa.title ? podcastsCa.title : ""}
       />
     </>
   );

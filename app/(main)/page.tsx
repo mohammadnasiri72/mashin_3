@@ -15,17 +15,29 @@ import NewsListSection from "../components/NewsListSection";
 import NewsSection from "../components/NewsSection";
 import PopularCarsSection from "../components/PopularCarsSection";
 import VideoBannerSection from "../components/VideoBannerSection";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata() {
-  const seoInfo: ItemsId = await getItemByUrl("/");
+  const dataPage: ItemsId = await getItemByUrl("/");
+  const seoUrl = `${mainDomainOld}${dataPage?.seoUrl}`;
 
-  if (seoInfo.seoInfo) {
+  if (dataPage.title) {
     return {
-      title: `ماشین3 - ${seoInfo.seoInfo.seoTitle ? seoInfo.seoInfo.seoTitle : seoInfo.title}`,
-      description: seoInfo.seoInfo.seoDescription,
+      title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
+      description: dataPage.seoInfo?.seoDescription,
+      keywords: dataPage.seoInfo?.seoKeywords
+        ? dataPage.seoInfo?.seoKeywords
+        : dataPage.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
-        title: `ماشین3 - ${seoInfo.seoInfo.seoTitle ? seoInfo.seoInfo.seoTitle : seoInfo.title}`,
-        description: seoInfo.seoInfo.seoDescription,
+        title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
+        description: dataPage.seoInfo?.seoDescription,
+      },
+      other: {
+        seoHeadTags: dataPage?.seoInfo?.seoHeadTags,
       },
     };
   } else {

@@ -2,6 +2,7 @@ import { getItem } from "@/services/Item/Item";
 import { getItemId } from "@/services/Item/ItemId";
 import VideoDetails from "./components/VideoDetails";
 import { getComment } from "@/services/Comment/Comment";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata({
   params,
@@ -15,14 +16,25 @@ export async function generateMetadata({
   const id = Number(searchParam.id);
   const id2 = Number(param.slug[0]);
   const video: ItemsId = await getItemId(id || id2);
+  const seoUrl = `${mainDomainOld}${video?.seoUrl}`;
 
   if (video.title) {
     return {
-      title: `ماشین3 - ${video.seoTitle ? video.seoTitle : video.title}`,
-      description: video.seoDescription,
+      title: `${video.seoInfo?.seoTitle ? video?.seoInfo?.seoTitle : video.title + " | ماشین3"}`,
+      description: video.seoInfo?.seoDescription,
+      keywords: video.seoInfo?.seoKeywords
+        ? video.seoInfo?.seoKeywords
+        : video.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
-        title: `ماشین3 - ${video.seoTitle ? video.seoTitle : video.title}`,
-        description: video.seoDescription,
+        title: `${video.seoInfo?.seoTitle ? video?.seoInfo?.seoTitle : video.title + " | ماشین3"}`,
+        description: video.seoInfo?.seoDescription,
+      },
+      other: {
+        seoHeadTags: video?.seoInfo?.seoHeadTags,
       },
     };
   } else {

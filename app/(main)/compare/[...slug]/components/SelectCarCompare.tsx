@@ -56,8 +56,8 @@ function SelectCarCompare({
           dataCompare.length === 2
             ? "lg:flex hidden"
             : dataCompare.length === 1 || dataCompare.length === 0
-            ? "flex"
-            : "hidden"
+              ? "flex"
+              : "hidden"
         }`}
       >
         <Select
@@ -104,7 +104,7 @@ function SelectCarCompare({
           {firstModelsCarList.length > 0 &&
             firstModelsCarList.map((e) => (
               <Option key={e.id} value={e.id}>
-                {e.title}
+                {e.title} {e.publishCode}
               </Option>
             ))}
         </Select>

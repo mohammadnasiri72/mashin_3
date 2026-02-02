@@ -4,6 +4,8 @@ import VideoNotFound from "./VideoNotFound";
 import BoxCatVideos from "../../videos.html/components/BoxCatVideos";
 import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
+import { mainDomainOld } from "@/utils/mainDomain";
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 
 export async function generateMetadata({
   params,
@@ -13,14 +15,27 @@ export async function generateMetadata({
   const param = await params;
   const id = param.slug[0];
   const videoCat: ItemsCategoryId = await getCategoryId(Number(id));
+  const seoUrl = `${mainDomainOld}${videoCat?.seoUrl}`;
 
   if (videoCat.title) {
     return {
-      title: `ماشین3 - ${videoCat.seoTitle ? videoCat.seoTitle : videoCat.title}`,
+      title: `${
+        videoCat.seoTitle ? videoCat.seoTitle : videoCat.title + " | ماشین3"
+      }`,
       description: videoCat.seoDescription,
+      keywords: videoCat?.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
-        title: `ماشین3 - ${videoCat.seoTitle ? videoCat.seoTitle : videoCat.title}`,
+        title: `${
+          videoCat.seoTitle ? videoCat.seoTitle : videoCat.title + " | ماشین3"
+        }`,
         description: videoCat.seoDescription,
+      },
+      other: {
+        seoHeadTags: videoCat?.headTags,
       },
     };
   } else {
@@ -82,6 +97,12 @@ async function pageVideosDainamic({
 
   return (
     <>
+      <div className="mb-4!">
+        <BreadcrumbCategory
+          breadcrumb={videoCat.breadcrumb}
+          title={videoCat.title}
+        />
+      </div>
       <div className="bg-[#f4f4f4]">
         <Video
           popularVideos={popularVideos}

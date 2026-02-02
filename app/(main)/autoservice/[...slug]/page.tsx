@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getComment } from "@/services/Comment/Comment";
 import { getItem } from "@/services/Item/Item";
 import { getPollId } from "@/services/Poll/pollId";
+import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata({
   params,
@@ -14,21 +15,25 @@ export async function generateMetadata({
   const id = param.slug[0];
 
   const detailsAuto: ItemsId = await getItemId(Number(id));
+  const seoUrl = `${mainDomainOld}${detailsAuto?.seoUrl}`;
+
   if (detailsAuto.title) {
     return {
-      title: `${
-        detailsAuto.seoTitle
-          ? detailsAuto.seoTitle
-          : detailsAuto.title + " | ماشین3"
-      }`,
-      description: detailsAuto.seoDescription,
+      title: `${detailsAuto.seoInfo?.seoTitle ? detailsAuto?.seoInfo?.seoTitle : detailsAuto.title + " | ماشین3"}`,
+      description: detailsAuto.seoInfo?.seoDescription,
+      keywords: detailsAuto.seoInfo?.seoKeywords
+        ? detailsAuto.seoInfo?.seoKeywords
+        : detailsAuto.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
       openGraph: {
-        title: `${
-          detailsAuto.seoTitle
-            ? detailsAuto.seoTitle
-            : detailsAuto.title + " | ماشین3"
-        }`,
-        description: detailsAuto.seoDescription,
+        title: `${detailsAuto.seoInfo?.seoTitle ? detailsAuto?.seoInfo?.seoTitle : detailsAuto.title + " | ماشین3"}`,
+        description: detailsAuto.seoInfo?.seoDescription,
+      },
+      other: {
+        seoHeadTags: detailsAuto?.seoInfo?.seoHeadTags,
       },
     };
   } else {
