@@ -1,6 +1,6 @@
 "use client";
 
-import { toPersianNumbers } from "@/utils/func";
+import { createpublishCode, toPersianNumbers } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useState } from "react";
@@ -24,6 +24,7 @@ const CarsDetails = ({
   const [carBrandsFilter, setCarBrandsFilter] = useState(carBrands);
   const [carBrandsFilter2, setCarBrandsFilter2] = useState(carBrands2);
 
+  console.log(carView);
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
@@ -129,7 +130,8 @@ const CarsDetails = ({
                               key={ca.id}
                               className="bg-[#ce1a2a] rounded-lg px-2 py-1 text-white! hover:bg-red-800 duration-300"
                             >
-                              {ca.sourceName} {ca.title} {ca.publishCode}
+                              {ca.sourceName} {ca.title}{" "}
+                              {createpublishCode(ca.publishCode)}
                             </Link>
                           ))}
                       </div>
@@ -149,7 +151,7 @@ const CarsDetails = ({
                                 <span> {ca.sourceName} </span>{" "}
                                 <span>{ca.title}</span>
                               </div>{" "}
-                              <span>{ca.publishCode}</span>
+                              <span>{createpublishCode(ca.publishCode)}</span>
                             </div>
                           </Link>
                         ))}
@@ -195,21 +197,7 @@ const CarsDetails = ({
                   <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
                     {/* تصویر خودرو */}
                     <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
-                      <Link
-                        href={
-                          carView
-                            .filter((c) => c.categoryId === car.id)
-                            .sort((a, b) => {
-                              const yearA = parseInt(
-                                a.publishCode.split("-")[0],
-                              );
-                              const yearB = parseInt(
-                                b.publishCode.split("-")[0],
-                              );
-                              return yearB - yearA;
-                            })[0]?.url || ""
-                        }
-                      >
+                      <Link href={car?.url || "#"}>
                         <img
                           src={mainDomainOld + car.image}
                           alt={car.title}
@@ -230,7 +218,7 @@ const CarsDetails = ({
                         }}
                       >
                         <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
-                          {car.parentId} {car.title}
+                          {car.title} {createpublishCode(car.publishCode)}
                         </h3>
                       </Link>
 

@@ -17,7 +17,7 @@ import "swiper/css/thumbs";
 import { RootState } from "@/redux/store";
 import { PostPollSave } from "@/services/Poll/PollSave";
 import { getPollId } from "@/services/Poll/pollId";
-import { Toast, toPersianNumbers } from "@/utils/func";
+import { createpublishCode, Toast, toPersianNumbers } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import { Skeleton } from "antd";
@@ -50,7 +50,7 @@ const MotorDetails = ({
   const user = Cookies.get("user");
 
   const specifications = detailsMotorcycle.properties.filter(
-    (e) => e.isTechnicalProperty
+    (e) => e.isTechnicalProperty,
   );
 
   // Initialize Fancybox
@@ -109,7 +109,7 @@ const MotorDetails = ({
     setPollSaveData((prev) => {
       // بررسی می‌کنیم آیا این سوال قبلاً در آرایه وجود دارد یا نه
       const existingQuestionIndex = prev.pollScoreDto.findIndex(
-        (item) => item.questionId === questionId
+        (item) => item.questionId === questionId,
       );
 
       let newPollScoreDto;
@@ -290,12 +290,12 @@ const MotorDetails = ({
                       disabled={
                         isSubmitting ||
                         Object.values(userRatings).some(
-                          (rating) => rating === 0
+                          (rating) => rating === 0,
                         )
                       }
                       className={`w-full cursor-pointer py-3 px-6 rounded-lg font-bold transition-all duration-300 flex items-center justify-center ${
                         Object.values(userRatings).some(
-                          (rating) => rating === 0
+                          (rating) => rating === 0,
                         )
                           ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                           : "bg-[#ce1a2a] text-white! hover:bg-[#b01625]"
@@ -374,7 +374,7 @@ const MotorDetails = ({
                 </div>
                 <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap">
                   <FaCalendarDays className="inline ml-1" />
-                  {detailsMotorcycle.publishCode}
+                  {createpublishCode(detailsMotorcycle.publishCode)}
                 </div>
               </div>
 
@@ -494,7 +494,9 @@ const MotorDetails = ({
 
         .product-gallery-thumbs .swiper-slide {
           opacity: 0.6;
-          transition: opacity 0.3s ease, border-color 0.3s ease;
+          transition:
+            opacity 0.3s ease,
+            border-color 0.3s ease;
           overflow: hidden;
         }
 

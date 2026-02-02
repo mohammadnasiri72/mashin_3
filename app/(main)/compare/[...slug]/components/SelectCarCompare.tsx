@@ -1,6 +1,7 @@
 "use client";
 
 import { getItem } from "@/services/Item/Item";
+import { createpublishCode } from "@/utils/func";
 import { Button, Select } from "antd";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -104,7 +105,7 @@ function SelectCarCompare({
           {firstModelsCarList.length > 0 &&
             firstModelsCarList.map((e) => (
               <Option key={e.id} value={e.id}>
-                {e.title} {e.publishCode}
+                {e.title} {createpublishCode(e.publishCode)}
               </Option>
             ))}
         </Select>

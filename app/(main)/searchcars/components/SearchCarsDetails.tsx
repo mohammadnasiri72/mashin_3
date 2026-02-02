@@ -2,7 +2,7 @@
 
 import MarketStats from "@/app/components/MarketStats";
 import { getCategory } from "@/services/Category/Category";
-import { toPersianNumbers } from "@/utils/func";
+import { createpublishCode, toPersianNumbers } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Button } from "@mui/material";
 import { Select } from "antd";
@@ -273,7 +273,7 @@ function SearchCarsDetails({
                                   <span> {ca.sourceName} </span>{" "}
                                   <span>{ca.title}</span>
                                 </div>{" "}
-                                <span>{ca.publishCode}</span>
+                                <span>{createpublishCode(ca.publishCode) }</span>
                               </div>
                             </Link>
                           ))}
@@ -291,7 +291,7 @@ function SearchCarsDetails({
                           }}
                         >
                           <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
-                            {car.title} {car.publishCode}
+                            {car.title} {createpublishCode(car.publishCode)}
                           </h3>
                         </Link>
                       </div>

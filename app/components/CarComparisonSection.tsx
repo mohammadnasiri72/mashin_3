@@ -1,6 +1,7 @@
 "use client";
 
 import { getItem } from "@/services/Item/Item";
+import { createpublishCode } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Select } from "antd";
 import Link from "next/link";
@@ -135,7 +136,7 @@ const CarComparisonSection = ({
                     {firstModelsCarList.length > 0 &&
                       firstModelsCarList.map((e) => (
                         <Option key={e.id} value={e.id}>
-                          {e.title}
+                          {e.title} {createpublishCode(e.publishCode)}
                         </Option>
                       ))}
                   </Select>
@@ -196,7 +197,7 @@ const CarComparisonSection = ({
                     {secModelsCarList.length > 0 &&
                       secModelsCarList.map((e) => (
                         <Option key={e.id} value={e.id}>
-                          {e.title}
+                          {e.title} {createpublishCode(e.publishCode)}
                         </Option>
                       ))}
                   </Select>

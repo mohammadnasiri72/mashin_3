@@ -1,13 +1,12 @@
 "use client";
 
+import { createpublishCode } from "@/utils/func";
 import Link from "next/link";
 
 const HeroSection = ({
   detailsCar,
-  yearText,
 }: {
   detailsCar: ItemsId;
-  yearText: string;
 }) => {
   return (
     <section
@@ -21,7 +20,7 @@ const HeroSection = ({
         <div className="text-white! sm:w-auto w-full">
           <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center">
             <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative sm:text-3xl text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ce1a2a]">
-              {detailsCar.sourceName} {detailsCar.title} {yearText}
+              {detailsCar.sourceName} {detailsCar.title} {createpublishCode(detailsCar.publishCode)}
             </h3>
           </div>
           {/* Breadcrumb */}

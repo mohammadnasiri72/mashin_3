@@ -39,15 +39,6 @@ export async function generateMetadata({
       description: "لیست قیمت خودروهای بازار",
     };
   }
-
-  return {
-    title: `ماشین3 - ${price.seoTitle ? price.seoTitle : price.title}`,
-    description: price.seoDescription,
-    openGraph: {
-      title: `ماشین3 - ${price.seoTitle ? price.seoTitle : price.title}`,
-      description: price.seoDescription,
-    },
-  };
 }
 
 async function pagePrice({
@@ -65,6 +56,7 @@ async function pagePrice({
     Type: type ? String(type) : "internal",
     BrandId: brandId ? brandId : -1,
   });
+console.log(price);
 
   return (
     <>

@@ -9,6 +9,7 @@ import { getComment } from "@/services/Comment/Comment";
 import { getPollId } from "@/services/Poll/pollId";
 import { getItem } from "@/services/Item/Item";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { createpublishCode } from "@/utils/func";
 
 export async function generateMetadata({
   searchParams,
@@ -22,18 +23,10 @@ export async function generateMetadata({
   const seoUrl = `${mainDomainOld}${detailsCar?.seoUrl}`;
 
   if (detailsCar.title) {
-    let yearText = "";
-    if (
-      detailsCar.publishCode.split("-").length > 1 &&
-      detailsCar.publishCode.split("-")[0] ===
-        detailsCar.publishCode.split("-")[1]
-    ) {
-      yearText = detailsCar.publishCode.split("-")[0];
-    } else {
-      yearText = detailsCar.publishCode;
-    }
+    let yearText = createpublishCode(detailsCar.publishCode);
+
     return {
-      title: `${detailsCar.seoInfo?.seoTitle ? detailsCar?.seoInfo?.seoTitle : detailsCar.sourceName + detailsCar.title + yearText + " | ماشین3"}`,
+      title: `${detailsCar.seoInfo?.seoTitle ? detailsCar?.seoInfo?.seoTitle : detailsCar.sourceName + " " + detailsCar.title + " " + yearText + " | ماشین3"}`,
       description: detailsCar.seoInfo?.seoDescription,
       keywords: detailsCar.seoInfo?.seoKeywords
         ? detailsCar.seoInfo?.seoKeywords
@@ -43,7 +36,7 @@ export async function generateMetadata({
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${detailsCar.seoInfo?.seoTitle ? detailsCar?.seoInfo?.seoTitle : detailsCar.sourceName + detailsCar.title + yearText + " | ماشین3"}`,
+        title: `${detailsCar.seoInfo?.seoTitle ? detailsCar?.seoInfo?.seoTitle : detailsCar.sourceName + " " + detailsCar.title + " " + yearText + " | ماشین3"}`,
         description: detailsCar.seoInfo?.seoDescription,
       },
       other: {
@@ -92,20 +85,9 @@ async function page({
     PageSize: 5,
   });
 
-  let yearText = "";
-  if (
-    detailsCar.publishCode.split("-").length > 1 &&
-    detailsCar.publishCode.split("-")[0] ===
-      detailsCar.publishCode.split("-")[1]
-  ) {
-    yearText = detailsCar.publishCode.split("-")[0];
-  } else {
-    yearText = detailsCar.publishCode;
-  }
-
   return (
     <>
-      <HeroSection detailsCar={detailsCar} yearText={yearText} />
+      <HeroSection detailsCar={detailsCar} />
       <CarDetails
         Attachment={Attachment}
         detailsCar={detailsCar}

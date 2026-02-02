@@ -129,3 +129,18 @@ export const createInitialUserData = () => {
     roles: [],
   };
 };
+
+
+export const createpublishCode = (publishCode:string) => {
+  if (
+      publishCode.split("-").length > 1 &&
+      publishCode.split("-")[0] ===
+      publishCode.split("-")[1]
+    ) {
+     return publishCode.split("-")[0];
+    } else {
+      return publishCode;
+    }
+};
+
+

@@ -17,7 +17,7 @@ import "swiper/css/thumbs";
 import { RootState } from "@/redux/store";
 import { PostPollSave } from "@/services/Poll/PollSave";
 import { getPollId } from "@/services/Poll/pollId";
-import { Toast, toPersianNumbers } from "@/utils/func";
+import { createpublishCode, Toast, toPersianNumbers } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import { Skeleton } from "antd";
@@ -46,12 +46,11 @@ const CarDetails = ({
     pollScoreDto: [],
   });
 
-
   const token = useSelector((state: RootState) => state.token.token);
   const user = Cookies.get("user");
 
   const specifications = detailsCar.properties.filter(
-    (e) => e.isTechnicalProperty
+    (e) => e.isTechnicalProperty,
   );
 
   // Initialize Fancybox
@@ -110,7 +109,7 @@ const CarDetails = ({
     setPollSaveData((prev) => {
       // بررسی می‌کنیم آیا این سوال قبلاً در آرایه وجود دارد یا نه
       const existingQuestionIndex = prev.pollScoreDto.findIndex(
-        (item) => item.questionId === questionId
+        (item) => item.questionId === questionId,
       );
 
       let newPollScoreDto;
@@ -160,8 +159,6 @@ const CarDetails = ({
     } finally {
       setIsSubmitting(false);
     }
-
-   
   };
 
   const handleCancelRating = () => {
@@ -293,12 +290,12 @@ const CarDetails = ({
                       disabled={
                         isSubmitting ||
                         Object.values(userRatings).some(
-                          (rating) => rating === 0
+                          (rating) => rating === 0,
                         )
                       }
                       className={`w-full cursor-pointer py-3 px-6 rounded-lg font-bold transition-all duration-300 flex items-center justify-center ${
                         Object.values(userRatings).some(
-                          (rating) => rating === 0
+                          (rating) => rating === 0,
                         )
                           ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                           : "bg-[#ce1a2a] text-white! hover:bg-[#b01625]"
@@ -320,7 +317,7 @@ const CarDetails = ({
                 </div>
               ) : (
                 // Display Mode
-                <div className="bg-gray-50 py-3 px-4 rounded-lg flex md:flex-nowrap flex-wrap">
+                <div className="bg-gray-50 py-3 rounded-lg flex md:flex-nowrap flex-wrap">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
                     {pollData.pollDetails.map((rating, index) => (
                       <div key={index} className="text-center">
@@ -347,13 +344,15 @@ const CarDetails = ({
                       </div>
                     ))}
                   </div>
-                  <button
-                    onClick={() => setIsRatingMode(true)}
-                    className="mt-4 md:mt-0 mr-2 bg-red-50 duration-300 rounded-lg text-[#ce1a2a] hover:bg-[#ce1a2a] hover:text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
-                  >
-                    <FaCommentDots className="ml-2" />
-                    نظر دادن
-                  </button>
+                  <div className="pr-2">
+                    <button
+                      onClick={() => setIsRatingMode(true)}
+                      className="mt-4 md:mt-0 mr-2 duration-300 rounded-lg bg-[#ce1a2a] hover:bg-red-700 text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
+                    >
+                      <FaCommentDots className="ml-2" />
+                      نظر دادن
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
@@ -373,11 +372,12 @@ const CarDetails = ({
                 </Link>
                 <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap">
                   <FaStar className="inline ml-1" />
-                 امتیاز کاربران {pollData.pollScore} از ۱۰
+                  امتیاز کاربران
+                  {pollData.pollScore > 0 ? `${pollData.pollScore} از ۱۰` : ""}
                 </div>
                 <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap">
                   <FaCalendarDays className="inline ml-1" />
-                 {detailsCar.publishCode}
+                  {createpublishCode(detailsCar.publishCode)}
                 </div>
               </div>
 
@@ -497,7 +497,9 @@ const CarDetails = ({
 
         .product-gallery-thumbs .swiper-slide {
           opacity: 0.6;
-          transition: opacity 0.3s ease, border-color 0.3s ease;
+          transition:
+            opacity 0.3s ease,
+            border-color 0.3s ease;
           overflow: hidden;
         }
 
