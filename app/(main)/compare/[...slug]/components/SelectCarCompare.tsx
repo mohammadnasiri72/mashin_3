@@ -88,7 +88,7 @@ function SelectCarCompare({
             ))}
         </Select>
         <Select
-        aria-label="جستجوی مدل..."
+          aria-label="جستجوی مدل..."
           disabled={firstCarBrand === 0}
           value={firstCarModel ? firstCarModel : null}
           onChange={(value) => setFirstCarModel(value)}
@@ -105,11 +105,15 @@ function SelectCarCompare({
           }}
         >
           {firstModelsCarList.length > 0 &&
-            firstModelsCarList.map((e) => (
-              <Option key={e.id} value={e.id}>
-                {e.title} {createpublishCode(e.publishCode)}
-              </Option>
-            ))}
+            firstModelsCarList
+              .filter(
+                (item1) => !dataCompare.some((item2) => item2.id === item1.id),
+              )
+              .map((e) => (
+                <Option key={e.id} value={e.id}>
+                  {e.title} {createpublishCode(e.publishCode)}
+                </Option>
+              ))}
         </Select>
         <Button
           disabled={firstCarModel === 0}

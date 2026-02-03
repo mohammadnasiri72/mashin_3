@@ -1,5 +1,6 @@
 "use client";
 
+import CustomPagination from "@/app/components/CustomPagination";
 import {
   estimateReadTime,
   formatPersianDate,
@@ -8,8 +9,8 @@ import {
 } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { FaCalendar, FaEye } from "react-icons/fa";
-import PaginationEducation from "./PaginationEducation";
 import SideBarEducation from "./SideBarEducation";
 
 const EducationCar = ({
@@ -17,14 +18,15 @@ const EducationCar = ({
   educationPopular,
   educationCat,
   id,
-  banner
+  banner,
 }: {
   education: Items[];
   educationPopular: Items[];
   educationCat: ItemsCategory[];
   id: number;
-  banner:Items[]
+  banner: Items[];
 }) => {
+  const searchParams = useSearchParams();
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4">
@@ -111,7 +113,7 @@ const EducationCar = ({
                             </div>
 
                             {/* متا اطلاعات */}
-                            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 mt-2">
+                            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-700 mt-2">
                               <div className="flex items-center gap-1">
                                 <FaCalendar />
                                 <span>{formatPersianDate(item.created)}</span>
@@ -156,13 +158,20 @@ const EducationCar = ({
               </div>
 
               {/* صفحه بندی */}
-              <PaginationEducation education={education} />
+              <CustomPagination
+                total={education[0].total}
+                currentPage={Number(searchParams.get("page")) || 1}
+                pageSize={15}
+              />
             </div>
           </div>
 
           {/* سایدبار - 1/4 صفحه */}
           <div className="lg:w-1/4 w-full">
-            <SideBarEducation educationPopular={educationPopular} banner={banner}/>
+            <SideBarEducation
+              educationPopular={educationPopular}
+              banner={banner}
+            />
           </div>
         </div>
       </div>

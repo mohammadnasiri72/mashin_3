@@ -1,14 +1,14 @@
 "use client";
 
-import "@fancyapps/ui/dist/fancybox/fancybox.css";
-import { Fancybox } from "@fancyapps/ui";
 import { getAttachment } from "@/services/Attachment/Attachment";
-import { createMarkup } from "@/utils/func";
+import { createMarkup, createpublishCode } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { Fancybox } from "@fancyapps/ui";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { Card, Tooltip } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { IoClose } from "react-icons/io5";
 import SelectCarCompare from "./SelectCarCompare";
 
@@ -152,7 +152,8 @@ function CompareClient({
                     <div className="text-center">
                       <Link href={car.url}>
                         <h3 className="sm:text-xl text-sm font-bold text-[#ce1a2a]! sm:text-gray-700! sm:hover:text-[#ce1a2a]! duration-300">
-                          {car.sourceName} {car.title}
+                          {car.sourceName} {car.title}{" "}
+                          {createpublishCode(car.publishCode)}
                         </h3>
                       </Link>
                     </div>

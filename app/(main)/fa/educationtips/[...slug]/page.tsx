@@ -25,7 +25,9 @@ export async function generateMetadata({
     if (dataPage && dataPage.title) {
       return {
         title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-        description: dataPage.seoInfo?.seoDescription,
+        description: dataPage.seoInfo?.seoDescription
+          ? dataPage.seoInfo?.seoDescription
+          : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
         keywords: dataPage.seoInfo?.seoKeywords
           ? dataPage.seoInfo?.seoKeywords
           : dataPage.seoKeywords,
@@ -35,7 +37,9 @@ export async function generateMetadata({
         },
         openGraph: {
           title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-          description: dataPage.seoInfo?.seoDescription,
+          description: dataPage.seoInfo?.seoDescription
+            ? dataPage.seoInfo?.seoDescription
+            : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
         },
         other: {
           seoHeadTags: dataPage?.seoInfo?.seoHeadTags,
@@ -58,7 +62,9 @@ export async function generateMetadata({
             ? eduDetails.seoTitle
             : eduDetails.title + " | ماشین3"
         }`,
-        description: eduDetails.seoDescription,
+        description: eduDetails.seoDescription
+          ? eduDetails.seoDescription
+          : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
         keywords: eduDetails?.seoKeywords,
         metadataBase: new URL(mainDomainOld),
         alternates: {
@@ -70,7 +76,9 @@ export async function generateMetadata({
               ? eduDetails.seoTitle
               : eduDetails.title + " | ماشین3"
           }`,
-          description: eduDetails.seoDescription,
+          description: eduDetails.seoDescription
+            ? eduDetails.seoDescription
+            : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
         },
         other: {
           seoHeadTags: eduDetails?.headTags,

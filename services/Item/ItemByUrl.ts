@@ -16,7 +16,6 @@ export const getItemByUrl = async (url: string): Promise<ItemsId | null> => {
     console.error("خطا در دریافت ItemsByUrl:", error);
      // اگر خطای 404 بود، null برگردانید
     if (error.response?.status === 404) {
-      console.log('Item not found for URL:', url);
       return null;
     }
     throw error;

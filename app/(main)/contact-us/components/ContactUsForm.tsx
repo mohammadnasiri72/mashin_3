@@ -143,7 +143,7 @@ function ContactUsForm({
               <PhoneOutlined className="text-white! text-xl" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-700">تلفن تبلیغات</h3>
+              <h2 className="font-semibold text-gray-700">تلفن تبلیغات</h2>
               <p className="text-gray-600 text-lg">{tel}</p>
             </div>
           </div>
@@ -154,9 +154,9 @@ function ContactUsForm({
             </div>
             <div>
               <div className="flex items-center">
-                <h3 className="font-semibold text-gray-700 pl-1">
+                <h2 className="font-semibold text-gray-700 pl-1">
                   پیام در شبکه‌های اجتماعی
-                </h3>
+                </h2>
                 <div className="flex gap-2">
                   (
                   {socialMediaBadges.map(
@@ -461,7 +461,7 @@ function ContactUsForm({
           )}
 
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <h4 className="font-semibold text-gray-700 mb-2">آدرس:</h4>
+            <h3 className="font-semibold text-gray-700 mb-2">آدرس:</h3>
             <p className="text-gray-600">{address}</p>
           </div>
         </Card>

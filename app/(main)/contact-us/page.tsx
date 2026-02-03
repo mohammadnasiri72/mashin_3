@@ -19,7 +19,9 @@ export async function generateMetadata({
   if (dataPage && dataPage.title) {
     return {
       title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-      description: dataPage.seoInfo?.seoDescription,
+      description: dataPage.seoInfo?.seoDescription
+        ? dataPage.seoInfo?.seoDescription
+        : "تماس با ما",
       keywords: dataPage.seoInfo?.seoKeywords
         ? dataPage.seoInfo?.seoKeywords
         : dataPage.seoKeywords,
@@ -29,7 +31,9 @@ export async function generateMetadata({
       },
       openGraph: {
         title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-        description: dataPage.seoInfo?.seoDescription,
+        description: dataPage.seoInfo?.seoDescription
+          ? dataPage.seoInfo?.seoDescription
+          : "تماس با ما",
       },
       other: {
         seoHeadTags: dataPage?.seoInfo?.seoHeadTags,

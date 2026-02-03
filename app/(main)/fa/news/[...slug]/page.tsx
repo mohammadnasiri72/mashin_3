@@ -25,7 +25,9 @@ export async function generateMetadata({
     if (newsDetails && newsDetails.title) {
       return {
         title: `${newsDetails.seoInfo?.seoTitle ? newsDetails?.seoInfo?.seoTitle : newsDetails.title + " | ماشین3"}`,
-        description: newsDetails.seoInfo?.seoDescription,
+        description: newsDetails.seoInfo?.seoDescription
+          ? newsDetails.seoInfo?.seoDescription
+          : "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
         keywords: newsDetails.seoInfo?.seoKeywords
           ? newsDetails.seoInfo?.seoKeywords
           : newsDetails.seoKeywords,
@@ -35,7 +37,9 @@ export async function generateMetadata({
         },
         openGraph: {
           title: `${newsDetails.seoInfo?.seoTitle ? newsDetails?.seoInfo?.seoTitle : newsDetails.title + " | ماشین3"}`,
-          description: newsDetails.seoInfo?.seoDescription,
+          description: newsDetails.seoInfo?.seoDescription
+            ? newsDetails.seoInfo?.seoDescription
+            : "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
         },
         other: {
           seoHeadTags: newsDetails?.seoInfo?.seoHeadTags,
@@ -58,7 +62,9 @@ export async function generateMetadata({
             ? newsDetails.seoTitle
             : newsDetails.title + " | ماشین3"
         }`,
-        description: newsDetails.seoDescription,
+        description: newsDetails.seoDescription
+          ? newsDetails.seoDescription
+          : "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
         keywords: newsDetails?.seoKeywords,
         metadataBase: new URL(mainDomainOld),
         alternates: {
@@ -70,7 +76,9 @@ export async function generateMetadata({
               ? newsDetails.seoTitle
               : newsDetails.title + " | ماشین3"
           }`,
-          description: newsDetails.seoDescription,
+          description: newsDetails.seoDescription
+            ? newsDetails.seoDescription
+            : "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
         },
         other: {
           seoHeadTags: newsDetails?.headTags,
