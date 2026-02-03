@@ -72,7 +72,7 @@ const CarFinderSection = ({
         </div>
 
         {/* Search Form */}
-        <div className="flex justify-center items-center w-full px-5">
+        <div className="flex justify-center items-center w-full px-5 flex-wrap">
           <div className="lg:w-1/5 sm:w-1/3 w-full px-1">
             <Select
               aria-label="select brand"
@@ -135,7 +135,7 @@ const CarFinderSection = ({
                 ))}
             </Select>
           </div>
-          <div className="lg:w-1/5 sm:w-1/3 w-full px-1 mt-3 sm:mt-0">
+          <div className="lg:w-1/5 sm:w-full px-1 mt-3 lg:mt-0">
             <Button
               variant="contained"
               className="searchCar_bt button button-wave-1 sm:w-auto w-full"

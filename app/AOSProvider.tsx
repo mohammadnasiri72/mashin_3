@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
+import { useEffect } from "react";
 
 interface AOSProviderProps {
   children: React.ReactNode;

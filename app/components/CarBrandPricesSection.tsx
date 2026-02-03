@@ -11,6 +11,8 @@ import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
+import AOS from "aos";
+
 const CarBrandPricesSection = ({
   initialBrands,
   initialPrices,
@@ -24,6 +26,15 @@ const CarBrandPricesSection = ({
   const [loadingPrices, setLoadingPrices] = useState<boolean>(false);
   const [prices, setPrices] = useState<Prices[]>(initialPrices);
   const [activeBrand, setActiveBrand] = useState<number>(NaN);
+
+  useEffect(() => {
+    if (!loadingPrices && prices.length > 0) {
+      // کمی تاخیر برای اطمینان از رندر شدن DOM
+      setTimeout(() => {
+        AOS.refresh();
+      }, 300);
+    }
+  }, [loadingPrices, prices]);
 
   const fetchBrands = async (type: string) => {
     setLoadingBrands(true);
@@ -198,7 +209,7 @@ const CarBrandPricesSection = ({
 
           {/* محتوای مرتبط با برند انتخاب شده */}
           {!loadingPrices && (
-            <div className="related-content ">
+            <div className="related-content">
               <div className="flex flex-wrap -mx-2 -mt-5!">
                 {prices.slice(0, 9).map((item) => (
                   <div
