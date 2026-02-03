@@ -13,10 +13,10 @@ export async function generateMetadata() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const videoCat: ItemsId = await getItemByUrl(decodedPathname);
+  const videoCat: ItemsId | null = await getItemByUrl(decodedPathname);
   const seoUrl = `${mainDomainOld}${videoCat?.seoUrl}`;
 
-  if (videoCat.title) {
+  if (videoCat && videoCat.title) {
     return {
       title: `${videoCat.seoInfo?.seoTitle ? videoCat?.seoInfo?.seoTitle : videoCat.title + " | ماشین3"}`,
       description: videoCat.seoInfo?.seoDescription,
@@ -83,16 +83,18 @@ async function pageVideo({
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const videoCat: ItemsId = await getItemByUrl(decodedPathname);
+  const videoCat: ItemsId | null = await getItemByUrl(decodedPathname);
 
   return (
     <>
-      <div className="mb-4!">
-        <BreadcrumbCategory
-          breadcrumb={videoCat.breadcrumb}
-          title={videoCat.title}
-        />
-      </div>
+      {videoCat && (
+        <div className="mb-4!">
+          <BreadcrumbCategory
+            breadcrumb={videoCat.breadcrumb}
+            title={videoCat.title}
+          />
+        </div>
+      )}
       <div className="bg-[#f4f4f4]">
         <Video
           popularVideos={popularVideos}

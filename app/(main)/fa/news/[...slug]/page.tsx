@@ -20,9 +20,9 @@ export async function generateMetadata({
     const headersList = await headers();
     const pathname = headersList.get("x-pathname");
     const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-    const newsDetails: ItemsId = await getItemByUrl(decodedPathname);
+    const newsDetails: ItemsId | null = await getItemByUrl(decodedPathname);
     const seoUrl = `${mainDomainOld}${newsDetails?.seoUrl}`;
-    if (newsDetails.title) {
+    if (newsDetails && newsDetails.title) {
       return {
         title: `${newsDetails.seoInfo?.seoTitle ? newsDetails?.seoInfo?.seoTitle : newsDetails.title + " | ماشین3"}`,
         description: newsDetails.seoInfo?.seoDescription,
@@ -102,7 +102,7 @@ async function pageNewsDetails({
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const newsDetails: ItemsCategoryId | ItemsId = id
+  const newsDetails: ItemsCategoryId | ItemsId | null = id
     ? await getCategoryId(id)
     : await getItemByUrl(decodedPathname);
 
@@ -164,18 +164,22 @@ async function pageNewsDetails({
   if (news.length > 0) {
     return (
       <>
-        <BreadcrumbCategory
-          breadcrumb={newsDetails.breadcrumb}
-          title={newsDetails.title}
-        />
-        <CarNews
-          id={id}
-          newsData={news}
-          popularNews={popularNews}
-          banner={banner}
-          newsDetails={newsDetails}
-          tabConfig={tabs}
-        />
+        {newsDetails && (
+          <BreadcrumbCategory
+            breadcrumb={newsDetails.breadcrumb}
+            title={newsDetails.title}
+          />
+        )}
+        {newsDetails && (
+          <CarNews
+            id={id}
+            newsData={news}
+            popularNews={popularNews}
+            banner={banner}
+            newsDetails={newsDetails}
+            tabConfig={tabs}
+          />
+        )}
       </>
     );
   } else {

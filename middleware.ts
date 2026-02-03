@@ -133,8 +133,8 @@ export async function middleware(request: Request) {
       }
     } else {
       try {
-        const data: ItemsId = await getItemByUrl(decodedPathname);
-        if (data.id > 0 && id !== data?.id) {
+        const data: ItemsId | null = await getItemByUrl(decodedPathname);
+        if (data && data.id > 0 && id !== data?.id) {
           return NextResponse.redirect(
             new URL((pathname + `?id=${data?.id}`).toLowerCase(), request.url),
             { status: 301 },

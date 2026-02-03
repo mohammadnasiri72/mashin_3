@@ -18,10 +18,10 @@ import VideoBannerSection from "../components/VideoBannerSection";
 import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata() {
-  const dataPage: ItemsId = await getItemByUrl("/");
+  const dataPage: ItemsId | null = await getItemByUrl("/");
   const seoUrl = `${mainDomainOld}${dataPage?.seoUrl}`;
 
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     return {
       title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
       description: dataPage.seoInfo?.seoDescription,

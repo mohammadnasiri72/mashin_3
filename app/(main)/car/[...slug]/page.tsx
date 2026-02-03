@@ -27,7 +27,9 @@ export async function generateMetadata({
 
     return {
       title: `${detailsCar.seoInfo?.seoTitle ? detailsCar?.seoInfo?.seoTitle : detailsCar.sourceName + " " + detailsCar.title + " " + yearText + " | ماشین3"}`,
-      description: detailsCar.seoInfo?.seoDescription,
+      description: detailsCar.seoInfo?.seoDescription
+        ? detailsCar.seoInfo?.seoDescription
+        : "مشخصات خودرو",
       keywords: detailsCar.seoInfo?.seoKeywords
         ? detailsCar.seoInfo?.seoKeywords
         : detailsCar.seoKeywords,
@@ -37,7 +39,9 @@ export async function generateMetadata({
       },
       openGraph: {
         title: `${detailsCar.seoInfo?.seoTitle ? detailsCar?.seoInfo?.seoTitle : detailsCar.sourceName + " " + detailsCar.title + " " + yearText + " | ماشین3"}`,
-        description: detailsCar.seoInfo?.seoDescription,
+        description: detailsCar.seoInfo?.seoDescription
+          ? detailsCar.seoInfo?.seoDescription
+          : "مشخصات خودرو",
       },
       other: {
         seoHeadTags: detailsCar?.seoInfo?.seoHeadTags,

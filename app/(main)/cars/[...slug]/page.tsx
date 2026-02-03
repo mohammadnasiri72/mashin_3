@@ -23,7 +23,9 @@ export async function generateMetadata({
           ? carDetails.seoTitle
           : carDetails.title + " | ماشین3"
       }`,
-      description: carDetails.seoDescription,
+      description: carDetails.seoDescription
+        ? carDetails.seoDescription
+        : "مشخصات خودرو",
       keywords: carDetails?.seoKeywords,
       metadataBase: new URL(mainDomainOld),
       alternates: {
@@ -35,7 +37,9 @@ export async function generateMetadata({
             ? carDetails.seoTitle
             : carDetails.title + " | ماشین3"
         }`,
-        description: carDetails.seoDescription,
+        description: carDetails.seoDescription
+          ? carDetails.seoDescription
+          : "مشخصات خودرو",
       },
       other: {
         seoHeadTags: carDetails?.headTags,

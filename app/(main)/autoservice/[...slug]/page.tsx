@@ -20,7 +20,7 @@ export async function generateMetadata({
   if (detailsAuto.title) {
     return {
       title: `${detailsAuto.seoInfo?.seoTitle ? detailsAuto?.seoInfo?.seoTitle : detailsAuto.title + " | ماشین3"}`,
-      description: detailsAuto.seoInfo?.seoDescription,
+      description: detailsAuto.seoInfo?.seoDescription ? detailsAuto.seoInfo?.seoDescription : "مراکز و نمایندگی های خدمات خودرو",
       keywords: detailsAuto.seoInfo?.seoKeywords
         ? detailsAuto.seoInfo?.seoKeywords
         : detailsAuto.seoKeywords,
@@ -30,7 +30,7 @@ export async function generateMetadata({
       },
       openGraph: {
         title: `${detailsAuto.seoInfo?.seoTitle ? detailsAuto?.seoInfo?.seoTitle : detailsAuto.title + " | ماشین3"}`,
-        description: detailsAuto.seoInfo?.seoDescription,
+        description: detailsAuto.seoInfo?.seoDescription ? detailsAuto.seoInfo?.seoDescription : "مراکز و نمایندگی های خدمات خودرو",
       },
       other: {
         seoHeadTags: detailsAuto?.seoInfo?.seoHeadTags,

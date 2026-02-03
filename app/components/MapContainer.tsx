@@ -18,7 +18,7 @@ type MapRefType = HTMLDivElement | null;
 // آیکون سفارشی برای marker
 const createCustomIcon = () => {
   return L.divIcon({
-    html: `<div class="relative">
+    html: `<div class="relative" aria-label="موقعیت نمایندگی" role="img">
       <div class="w-12 h-12 bg-red-600 rounded-full opacity-20 animate-ping"></div>
       <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <svg class="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 20 20">

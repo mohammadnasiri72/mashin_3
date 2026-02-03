@@ -2,7 +2,7 @@ import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { htmlToPlainText } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 export async function generateMetadata({
   params,
@@ -12,13 +12,15 @@ export async function generateMetadata({
   const param = await params;
   const slugArray = Array.isArray(param.slug) ? param.slug : [param.slug];
   const path = slugArray.length > 0 ? "/" + slugArray.join("/") : "/";
-  const dataPage:ItemsId = await getItemByUrl(path);
+  const dataPage: ItemsId | null = await getItemByUrl(path);
   const seoUrl = `${mainDomainOld}${dataPage?.seoUrl}`;
 
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     return {
       title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-      description: dataPage.seoInfo?.seoDescription,
+      description: dataPage.seoInfo?.seoDescription
+        ? dataPage.seoInfo?.seoDescription
+        : "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
       keywords: dataPage.seoInfo?.seoKeywords
         ? dataPage.seoInfo?.seoKeywords
         : dataPage.seoKeywords,
@@ -28,7 +30,9 @@ export async function generateMetadata({
       },
       openGraph: {
         title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-        description: dataPage.seoInfo?.seoDescription,
+        description: dataPage.seoInfo?.seoDescription
+          ? dataPage.seoInfo?.seoDescription
+          : "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
       },
       other: {
         seoHeadTags: dataPage?.seoInfo?.seoHeadTags,
@@ -53,6 +57,14 @@ async function pageDynamic({
     const slugArray = Array.isArray(param.slug) ? param.slug : [param.slug];
     const path = slugArray.length > 0 ? "/" + slugArray.join("/") : "/";
     const dataPage = await getItemByUrl(path);
+
+    // اگر داده‌ای نبود - throw خطای 404
+    if (!dataPage || !dataPage.id) {
+      const error = new Error("Page not found");
+      (error as any).status = 404;
+      throw error;
+    }
+
     return (
       <>
         <BreadcrumbCategory
@@ -64,8 +76,17 @@ async function pageDynamic({
         </div>
       </>
     );
-  } catch (err) {
-    notFound();
+  } catch (err: any) {
+    console.error("Error in pageDynamic:", err);
+
+    // فقط برای خطاهای 404 از notFound استفاده کن
+    if (err?.status === 404) {
+      notFound();
+    }
+
+    // برای سایر خطاها redirect کن
+    redirect(`/error?status=${err?.status ? err?.status : "500"}`);
+    // notFound();
   }
 }
 

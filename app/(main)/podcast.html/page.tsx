@@ -10,10 +10,10 @@ export async function generateMetadata() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  const podcastDetails: ItemsId = await getItemByUrl(decodedPathname);
+  const podcastDetails: ItemsId | null = await getItemByUrl(decodedPathname);
   const seoUrl = `${mainDomainOld}${podcastDetails?.seoUrl}`;
 
-  if (podcastDetails.title) {
+  if (podcastDetails && podcastDetails.title) {
     return {
       title: `${podcastDetails.seoInfo?.seoTitle ? podcastDetails?.seoInfo?.seoTitle : podcastDetails.title + " | ماشین3"}`,
       description: podcastDetails.seoInfo?.seoDescription,
@@ -80,16 +80,18 @@ async function pagePodcast({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  const podcastDetails: ItemsId = await getItemByUrl(decodedPathname);
+  const podcastDetails: ItemsId | null = await getItemByUrl(decodedPathname);
 
   return (
     <>
-     <div className="mb-3!">
-       <BreadcrumbCategory
-        breadcrumb={podcastDetails.breadcrumb}
-        title={podcastDetails.title}
-      />
-     </div>
+      {podcastDetails && (
+        <div className="mb-3!">
+          <BreadcrumbCategory
+            breadcrumb={podcastDetails.breadcrumb}
+            title={podcastDetails.title}
+          />
+        </div>
+      )}
       <Podcast
         podcasts={podcasts}
         podcastsCat={podcastsCat}

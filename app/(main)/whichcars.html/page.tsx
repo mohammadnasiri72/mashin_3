@@ -10,10 +10,10 @@ export async function generateMetadata() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const whichCarsCat: ItemsId = await getItemByUrl(decodedPathname);
+  const whichCarsCat: ItemsId | null = await getItemByUrl(decodedPathname);
   const seoUrl = `${mainDomainOld}${whichCarsCat?.seoUrl}`;
 
-  if (whichCarsCat.title) {
+  if (whichCarsCat && whichCarsCat.title) {
     return {
       title: `${whichCarsCat.seoInfo?.seoTitle ? whichCarsCat?.seoInfo?.seoTitle : whichCarsCat.title + " | ماشین3"}`,
       description: whichCarsCat.seoInfo?.seoDescription,
@@ -73,14 +73,16 @@ async function pageWhichCars({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  const whichCarsCat: ItemsId = await getItemByUrl(decodedPathname);
+  const whichCarsCat: ItemsId | null = await getItemByUrl(decodedPathname);
 
   return (
     <>
-      <BreadcrumbCategory
-        breadcrumb={whichCarsCat.breadcrumb}
-        title={whichCarsCat.title}
-      />
+      {whichCarsCat && (
+        <BreadcrumbCategory
+          breadcrumb={whichCarsCat.breadcrumb}
+          title={whichCarsCat.title}
+        />
+      )}
       <WhichCars
         whichCars={whichCars}
         popularComparisons={popularComparisons}

@@ -76,7 +76,7 @@ const CarsDetails = ({
                   <span className="text-red-600">({carDetails.seoTitle})</span>
                 </h2>
               </div>
-              <span className="text-gray-500 text-sm">
+              <span className="text-gray-700 text-sm">
                 {toPersianNumbers(carBrands.length || carBrands2.length)} مدل
               </span>
             </div>

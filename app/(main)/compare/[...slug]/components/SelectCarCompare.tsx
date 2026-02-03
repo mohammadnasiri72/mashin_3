@@ -62,6 +62,7 @@ function SelectCarCompare({
         }`}
       >
         <Select
+          aria-label="جستجوی برند..."
           value={firstCarBrand ? firstCarBrand : null}
           onChange={(value) => {
             setFirstCarBrand(value);
@@ -87,6 +88,7 @@ function SelectCarCompare({
             ))}
         </Select>
         <Select
+        aria-label="جستجوی مدل..."
           disabled={firstCarBrand === 0}
           value={firstCarModel ? firstCarModel : null}
           onChange={(value) => setFirstCarModel(value)}

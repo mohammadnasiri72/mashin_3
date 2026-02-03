@@ -20,9 +20,7 @@ function RatingAutoService({
   detailsAuto: ItemsId;
 }) {
   const token = useSelector((state: RootState) => state.token.token);
-
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isRatingMode, setIsRatingMode] = useState<boolean>(false);
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
   const [pollData, setPollData] = useState<PollData>(initialPollData);
   const [userRatings, setUserRatings] = useState<{ [key: number]: number }>({});
@@ -70,7 +68,6 @@ function RatingAutoService({
       setIsSubmitting(true);
       try {
         await PostPollSave(pollSaveData, token);
-        setIsRatingMode(false);
         try {
           const res = await getPollId(Number(detailsAuto.id));
           setPollData(res);
@@ -122,7 +119,7 @@ function RatingAutoService({
             <span className="text-xs font-bold px-1">
               {toPersianNumbers(initialPollData.pollScore / 2)}
             </span>
-            <span className="text-xs text-[#0005]">(امتیاز از {toPersianNumbers(initialPollData.pollNumber)} نظر)</span>
+            <span className="text-xs text-[#222]">(امتیاز از {toPersianNumbers(initialPollData.pollNumber)} نظر)</span>
           </div>
         </div>
 
@@ -170,7 +167,7 @@ function RatingAutoService({
                           className={`w-8 h-8 cursor-pointer flex items-center justify-center rounded-full transition-all duration-200 ${
                             index + 1 <= userRatings[poll.questionId]
                               ? "bg-[#ce1a2a] text-white"
-                              : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                           }`}
                         >
                           <span className="text-sm font-bold">

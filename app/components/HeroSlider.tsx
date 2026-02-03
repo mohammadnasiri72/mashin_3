@@ -33,6 +33,8 @@ export default function HeroSlider({ slider }: { slider: Items[] }) {
                     src={mainDomain + slide.image}
                     alt={slide.summary || slide.title}
                     className="object-cover w-full h-96"
+                    loading="eager"
+                    fetchPriority="high"
                   />
 
                   {/* Content Overlay */}

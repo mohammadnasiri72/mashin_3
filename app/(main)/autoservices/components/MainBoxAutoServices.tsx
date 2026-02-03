@@ -8,6 +8,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FaCar, FaClock, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import SidebarAutoService from "../../autoservice/[...slug]/components/SidebarAutoService";
+import CustomPagination from "@/app/components/CustomPagination";
 
 const { Option } = Select;
 
@@ -147,6 +148,7 @@ function MainBoxAutoServices({
                         برند خودرو
                       </label>
                       <Select
+                        aria-label="انتخاب برند..."
                         value={selectedBrand}
                         onChange={(value: number | null) => {
                           if (value) {
@@ -181,6 +183,7 @@ function MainBoxAutoServices({
                         استان
                       </label>
                       <Select
+                        aria-label="جستجوی استان..."
                         value={selectedProvince}
                         onChange={handleProvinceChange}
                         placeholder="جستجوی استان..."
@@ -282,9 +285,9 @@ function MainBoxAutoServices({
                           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
                             <div className="flex-1">
                               <Link href={service.url}>
-                                <h3 className="font-bold text-gray-800 text-xl mb-2! hover:text-[#ce1a2a]! transition-colors">
+                                <h2 className="font-bold text-gray-800 text-xl mb-2! hover:text-[#ce1a2a]! transition-colors">
                                   {service.title}
-                                </h3>
+                                </h2>
                               </Link>
 
                               <div className="flex flex-wrap gap-2 mb-3 items-start">
@@ -361,7 +364,7 @@ function MainBoxAutoServices({
               </div>
 
               {/* صفحه‌بندی */}
-              {AutoServiceData.length > 0 && (
+              {/* {AutoServiceData.length > 0 && (
                 <div className="p-3 flex justify-center items-center">
                   <Pagination
                     onChange={(page) => {
@@ -380,6 +383,13 @@ function MainBoxAutoServices({
                   />
                   <span>{AutoServiceData[0].total} مورد</span>
                 </div>
+              )} */}
+              {AutoServiceData.length > 0 && (
+                <CustomPagination
+                  total={AutoServiceData[0].total}
+                  pageSize={15}
+                  currentPage={Number(searchParams.get("page")) || 1}
+                />
               )}
 
               {/* پیام عدم وجود داده */}

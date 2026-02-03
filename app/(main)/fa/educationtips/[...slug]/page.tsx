@@ -20,9 +20,9 @@ export async function generateMetadata({
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
   if (isNaN(id)) {
-    const dataPage: ItemsId = await getItemByUrl(decodedPathname);
+    const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
     const seoUrl = `${mainDomainOld}${dataPage?.seoUrl}`;
-    if (dataPage.title) {
+    if (dataPage && dataPage.title) {
       return {
         title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
         description: dataPage.seoInfo?.seoDescription,
@@ -131,16 +131,18 @@ async function pageEducationTips({
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const educationDetails: ItemsId | ItemsCategoryId = isNaN(id)
+  const educationDetails: ItemsId | ItemsCategoryId | null = isNaN(id)
     ? await getItemByUrl(decodedPathname)
     : await getCategoryId(id);
 
   return (
     <>
-      <BreadcrumbCategory
-        breadcrumb={educationDetails.breadcrumb}
-        title={educationDetails.title}
-      />
+      {educationDetails && (
+        <BreadcrumbCategory
+          breadcrumb={educationDetails.breadcrumb}
+          title={educationDetails.title}
+        />
+      )}
       <EducationCar
         education={education}
         educationPopular={educationPopular}

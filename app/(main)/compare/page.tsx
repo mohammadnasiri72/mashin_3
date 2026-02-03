@@ -3,12 +3,14 @@ import SelectType from "./components/SelectType";
 import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata() {
-  const dataPage: ItemsId = await getItemByUrl("/compare");
+  const dataPage: ItemsId | null = await getItemByUrl("/compare");
   const seoUrl = `${mainDomainOld}${dataPage?.seoUrl}`;
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     return {
       title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-      description: dataPage.seoInfo?.seoDescription,
+      description: dataPage.seoInfo?.seoDescription
+        ? dataPage.seoInfo?.seoDescription
+        : "مقایسه خودروهای بازار",
       keywords: dataPage.seoInfo?.seoKeywords
         ? dataPage.seoInfo?.seoKeywords
         : dataPage.seoKeywords,
@@ -18,7 +20,9 @@ export async function generateMetadata() {
       },
       openGraph: {
         title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-        description: dataPage.seoInfo?.seoDescription,
+        description: dataPage.seoInfo?.seoDescription
+          ? dataPage.seoInfo?.seoDescription
+          : "مقایسه خودروهای بازار",
       },
       other: {
         seoHeadTags: dataPage?.seoInfo?.seoHeadTags,

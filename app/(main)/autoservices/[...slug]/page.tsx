@@ -24,7 +24,9 @@ export async function generateMetadata({
           ? autoServiceCat.seoTitle
           : autoServiceCat.title + " | ماشین3"
       }`,
-      description: autoServiceCat.seoDescription,
+      description: autoServiceCat.seoDescription
+        ? autoServiceCat.seoDescription
+        : "مراکز و نمایندگی های خدمات خودرو",
       keywords: autoServiceCat?.seoKeywords,
       metadataBase: new URL(mainDomainOld),
       alternates: {
@@ -36,7 +38,9 @@ export async function generateMetadata({
             ? autoServiceCat.seoTitle
             : autoServiceCat.title + " | ماشین3"
         }`,
-        description: autoServiceCat.seoDescription,
+        description: autoServiceCat.seoDescription
+          ? autoServiceCat.seoDescription
+          : "مراکز و نمایندگی های خدمات خودرو",
       },
       other: {
         seoHeadTags: autoServiceCat?.headTags,

@@ -94,7 +94,7 @@ function ContactUsAutoService({
           <img
             src={mainDomainOld + detailsAuto.image}
             alt={detailsAuto.categoryTitle}
-            className="w-16 h-16 rounded-lg bg-white ml-4"
+            className="w-16 rounded-lg bg-white ml-4"
           />
           <h3 className="text-xl font-bold text-gray-800 ">
             مشخصات {detailsAuto.title}

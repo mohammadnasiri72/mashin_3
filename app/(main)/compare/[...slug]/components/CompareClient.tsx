@@ -64,8 +64,6 @@ function CompareClient({
     };
   }, []);
 
-  const [attachments, setAttachments] = useState<ItemsAttachment[]>([]);
-
   const router = useRouter();
 
   const mergePropertiesToArrayValues = (data: ItemsId[]) => {
@@ -95,7 +93,6 @@ function CompareClient({
   const getAttachmentHandler = async (id: number) => {
     try {
       const Attachment: ItemsAttachment[] = await getAttachment(id);
-      setAttachments(Attachment);
       Fancybox.show(
         [
           dataCompare.find((e) => e.id === id)?.image,
@@ -104,7 +101,7 @@ function CompareClient({
           src: mainDomainOld + img,
           thumb: mainDomainOld + img,
         })),
-        { startIndex: 0 }
+        { startIndex: 0 },
       );
     } catch (err) {}
   };
@@ -179,7 +176,7 @@ function CompareClient({
                 key={item.title}
                 className="py-3 border-b border-dashed border-[#0005] "
               >
-                <h3 className="sm:text-lg text-sm text-teal-600! mb-7!">
+                <h3 className="sm:text-lg text-sm text-teal-800! mb-7!">
                   {item.title}
                 </h3>
                 <div className="flex gap-2">
@@ -205,7 +202,7 @@ function CompareClient({
             {dataCompare.length > 0 &&
               dataCompare.map((car, index) => {
                 const advantages = car.properties.filter(
-                  (e) => e.propertyId === 22639
+                  (e) => e.propertyId === 22639,
                 );
 
                 return (
@@ -229,7 +226,7 @@ function CompareClient({
                               <div
                                 className="text-gray-600 text-justify sm:text-sm! text-xs!"
                                 dangerouslySetInnerHTML={createMarkup(
-                                  advantage.value
+                                  advantage.value,
                                 )}
                               />
                             </li>
@@ -250,7 +247,7 @@ function CompareClient({
             {dataCompare.length > 0 &&
               dataCompare.map((car, index) => {
                 const disadvantages = car.properties.filter(
-                  (e) => e.propertyId === 22640
+                  (e) => e.propertyId === 22640,
                 );
                 return (
                   <div
@@ -271,7 +268,7 @@ function CompareClient({
                               <div
                                 className="text-gray-700 leading-8 text-justify sm:text-sm! text-xs!"
                                 dangerouslySetInnerHTML={createMarkup(
-                                  disadvantage.value
+                                  disadvantage.value,
                                 )}
                               />
                             </li>

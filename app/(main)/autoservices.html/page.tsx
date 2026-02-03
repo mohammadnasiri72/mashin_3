@@ -12,10 +12,10 @@ export async function generateMetadata() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const autoServiceCat: ItemsId = await getItemByUrl(decodedPathname);
+  const autoServiceCat: ItemsId | null = await getItemByUrl(decodedPathname);
   const seoUrl = `${mainDomainOld}${autoServiceCat?.seoUrl}`;
 
-  if (autoServiceCat.title) {
+  if (autoServiceCat && autoServiceCat.title) {
     return {
       title: `${autoServiceCat.seoInfo?.seoTitle ? autoServiceCat?.seoInfo?.seoTitle : autoServiceCat.title + " | ماشین3"}`,
       description: autoServiceCat.seoInfo?.seoDescription,
@@ -81,23 +81,27 @@ async function pageAutoService({
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const autoServiceCat: ItemsId = await getItemByUrl(decodedPathname);
+  const autoServiceCat: ItemsId | null = await getItemByUrl(decodedPathname);
 
   return (
     <>
-      <BreadcrumbCategory
-        breadcrumb={autoServiceCat.breadcrumb}
-        title={autoServiceCat.title}
-      />
-      <MainBoxAutoServices
-        AutoServiceData={AutoServiceData}
-        brands={brands}
-        id={id}
-        propertyItems={propertyItems}
-        banner={banner}
-        title={autoServiceCat.title}
-        summary={autoServiceCat.summary || ""}
-      />
+      {autoServiceCat && (
+        <BreadcrumbCategory
+          breadcrumb={autoServiceCat.breadcrumb}
+          title={autoServiceCat.title}
+        />
+      )}
+      {autoServiceCat && (
+        <MainBoxAutoServices
+          AutoServiceData={AutoServiceData}
+          brands={brands}
+          id={id}
+          propertyItems={propertyItems}
+          banner={banner}
+          title={autoServiceCat.title}
+          summary={autoServiceCat.summary || ""}
+        />
+      )}
     </>
   );
 }
