@@ -1,25 +1,22 @@
 "use client";
 
 import { SearchOutlined } from "@ant-design/icons";
-import { Card, Input, Table } from "antd";
+import { Card, Input, Table, Tabs } from "antd";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Mousewheel } from "swiper/modules";
+import { useEffect, useMemo, useRef, useState } from "react";
+import "swiper/css";
+import "swiper/css/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper styles
 import { htmlToPlainText } from "@/utils/func";
 import {
-  FaCar,
   FaCaretDown,
   FaCaretUp,
   FaDollarSign,
+  FaMotorcycle,
   FaStore,
 } from "react-icons/fa";
 import { MdPriceChange } from "react-icons/md";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 
 // Types
 interface Category {
@@ -57,15 +54,16 @@ function PriceMotor({
   body: string;
   brandIdSearchParams: number;
 }) {
-  // دسته‌بندی‌های اصلی
+  // دسته‌بندی‌های اصلی - فعلاً یک دسته‌بندی "همه" داریم
+  // TODO: اگر در آینده دسته‌بندی‌های بیشتری اضافه شد، این آرایه را بروزرسانی کنید
   const mainCategories: Category[] = [
-    // {
-    //   id: 0,
-    //   title: "همه دسته‌بندی‌ها",
-    //   url: "/motorcycle-prices.html?type=all",
-    //   total: price.length,
-    //   type: "all",
-    // },
+    {
+      id: 0,
+      title: "همه موتورسیکلت‌ها",
+      url: "/motorcycle-prices.html?type=all",
+      total: price.length,
+      type: "all",
+    },
   ];
 
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -73,33 +71,30 @@ function PriceMotor({
     brandIdSearchParams || null,
   );
   const [searchText, setSearchText] = useState("");
-  const [filteredData, setFilteredData] = useState<Prices[]>(price);
-  const [isMobile, setIsMobile] = useState(false);
-  const [showFilter, setShowFilter] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
-
   const router = useRouter();
+  const swiperRef = useRef<any>(null);
 
-  // تشخیص دستگاه موبایل
+  // تنظیم دسته‌بندی بر اساس URL
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    // فعلاً فقط یک دسته‌بندی "all" داریم
+    setSelectedCategory(0);
+  }, [type]);
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  // سورت برندها بر اساس حروف الفبا با useMemo
+  const sortedBrands = useMemo(() => {
+    return [...brands].sort((a, b) => a.title.localeCompare(b.title, "fa"));
+  }, [brands]);
 
   // فیلتر کردن برندها بر اساس دسته‌بندی انتخاب شده
-  const filteredBrands = selectedCategory
-    ? brands.filter((brand) => brand.parentId === selectedCategory)
-    : brands;
+  const filteredBrands = useMemo(() => {
+    if (!selectedCategory) return sortedBrands;
+    return sortedBrands.filter((brand) => brand.parentId === selectedCategory);
+  }, [sortedBrands, selectedCategory]);
 
-  // اعمال فیلترها
-  useEffect(() => {
+  // اعمال فیلترها با useMemo
+  const filteredData = useMemo(() => {
     let filtered = price;
 
     // فیلتر بر اساس برند انتخاب شده
@@ -109,38 +104,84 @@ function PriceMotor({
 
     // فیلتر بر اساس جستجو
     if (searchText) {
+      const searchLower = searchText.toLowerCase();
       filtered = filtered.filter(
         (item) =>
-          item.brandTitle.includes(searchText) ||
-          item.title.includes(searchText),
+          item.brandTitle?.toLowerCase().includes(searchLower) ||
+          item.title?.toLowerCase().includes(searchLower),
       );
     }
 
-    setFilteredData(filtered);
-  }, [selectedBrand, searchText, price]);
+    return filtered;
+  }, [price, selectedBrand, searchText]);
 
-  // تنظیم دسته‌بندی بر اساس URL
-  useEffect(() => {
-    if (type === "all") {
-      setSelectedCategory(0);
-    } else {
-      setSelectedCategory(null);
-    }
-  }, [type]);
+  // گروه‌بندی داده‌ها بر اساس برند
+  const groupedData = useMemo(() => {
+    const grouped: Record<number, Prices[]> = {};
+
+    filteredData.forEach((item) => {
+      if (!grouped[item.brandId]) {
+        grouped[item.brandId] = [];
+      }
+      grouped[item.brandId].push(item);
+    });
+
+    return grouped;
+  }, [filteredData]);
+
+  // پیدا کردن نام برند بر اساس ID - با حافظه‌سازی
+  const getBrandNameById = useMemo(() => {
+    const brandMap = new Map<number, string>();
+    brands.forEach((brand) => {
+      brandMap.set(brand.id, brand.title);
+    });
+
+    return (brandId: number): string => {
+      return brandMap.get(brandId) || `برند ${brandId}`;
+    };
+  }, [brands]);
 
   const handleResetFilters = () => {
     setSelectedBrand(null);
     setSearchText("");
+    if (brandIdSearchParams) {
+      const baseUrl = window.location.pathname;
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("brandId");
+      router.push(`${baseUrl}?${params.toString()}`);
+    }
   };
+
+  const handleBrandSelect = (brandId: number) => {
+    setSelectedBrand(selectedBrand === brandId ? null : brandId);
+  };
+
+  const handleTabChange = (activeKey: string) => {
+    const category = mainCategories.find((cat) => cat.type === activeKey);
+    if (category) {
+      setSelectedBrand(null);
+      router.push(category.url);
+    }
+  };
+
+  // ساخت آیتم‌های تب‌ها
+  // TODO: اگر در آینده دسته‌بندی‌های بیشتری اضافه شد، این تب‌ها به صورت داینامیک نمایش داده می‌شوند
+  const tabItems = mainCategories.map((category) => ({
+    key: category.type,
+    label: (
+      <div className="px-2 py-1">
+        <span className="font-medium text-sm">{category.title}</span>
+      </div>
+    ),
+  }));
 
   // کامپوننت MobilePriceCard با آیکون
   const MobilePriceCard = ({ item }: { item: Prices }) => {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-2 mb-4! shadow-sm hover:shadow-md transition-all">
-        {/* هدر با نام برند و مدل */}
-        <div className="flex items-center gap-3 mb-2! pb-1 border-b border-gray-100">
+      <div className="bg-white rounded-xl border border-gray-200 p-2 mb-4 shadow-sm hover:shadow-md transition-all">
+        <div className="flex items-center gap-3 mb-2 pb-1 border-b border-gray-100">
           <div className="w-10 h-10 rounded-full bg-[#fdf2f2] flex items-center justify-center">
-            <FaCar className="text-[#ce1a2a] text-xl" />
+            <FaMotorcycle className="text-[#ce1a2a] text-xl" />
           </div>
           <div className="flex-1">
             <h3 className="font-bold text-gray-900 text-sm">{item.title}</h3>
@@ -148,9 +189,7 @@ function PriceMotor({
           </div>
         </div>
 
-        {/* اطلاعات قیمت */}
         <div className="space-y-3">
-          {/* قیمت بازار */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <FaDollarSign className="text-gray-700 text-sm" />
@@ -161,7 +200,6 @@ function PriceMotor({
             </span>
           </div>
 
-          {/* قیمت نمایندگی */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <FaStore className="text-gray-700 text-sm" />
@@ -172,7 +210,6 @@ function PriceMotor({
             </span>
           </div>
 
-          {/* تغییر قیمت */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <MdPriceChange className="text-gray-700 text-sm" />
@@ -207,371 +244,436 @@ function PriceMotor({
     );
   };
 
+  // ستون‌های جدول برای دسکتاپ
+  const tableColumns = [
+    {
+      title: "مدل موتورسیکلت",
+      dataIndex: "title",
+      align: "center" as const,
+      key: "title",
+      sorter: (a: Prices, b: Prices) => a.title.localeCompare(b.title, "fa"),
+      width: 200,
+      defaultSortOrder: "ascend" as const,
+    },
+    {
+      title: "قیمت بازار (تومان)",
+      dataIndex: "price1",
+      align: "center" as const,
+      key: "price1",
+      sorter: (a: Prices, b: Prices) => (a.price1 || 0) - (b.price1 || 0),
+      render: (price: number) => (
+        <span className="font-bold">
+          {price ? price.toLocaleString("fa-IR") : "---"}
+        </span>
+      ),
+      width: 180,
+    },
+    {
+      title: "قیمت نمایندگی (تومان)",
+      dataIndex: "price2",
+      align: "center" as const,
+      key: "price2",
+      sorter: (a: Prices, b: Prices) => (a.price2 || 0) - (b.price2 || 0),
+      render: (price: number) => (
+        <span className="font-bold ">
+          {price ? price.toLocaleString("fa-IR") : "---"}
+        </span>
+      ),
+      width: 180,
+    },
+    {
+      title: "تغییر قیمت",
+      key: "priceChange",
+      align: "center" as const,
+      sorter: (a: Prices, b: Prices) => (a.change || 0) - (b.change || 0),
+      render: (_: any, record: Prices) => {
+        const change = record.change;
+        return (
+          <span
+            className={`font-bold min-w-20 text-center border-0 flex items-center justify-center ${
+              change > 0 ? "text-green-600" : change < 0 ? "text-red-600" : ""
+            }`}
+          >
+            {change}
+            {change > 0 ? (
+              <FaCaretUp className="text-xl" />
+            ) : change < 0 ? (
+              <FaCaretDown className="text-xl" />
+            ) : (
+              ""
+            )}
+          </span>
+        );
+      },
+      width: 120,
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-gray-50 py-4 px-3 sm:px-4 lg:px-8">
+    <div
+      className="min-h-screen bg-gray-50 py-3 px-3 sm:px-4 lg:px-6 relative"
+      dir="rtl"
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-6!">
+        <div className="text-center mb-5">
           <h1
-            className="text-xl sm:text-2xl font-bold text-gray-900 mb-2!"
+            className="text-xl sm:text-2xl font-bold text-gray-900 mb-1.5!"
             style={{ color: PRIMARY_COLOR }}
           >
             {title ? title : "قیمت موتورسیکلت"}
           </h1>
-          <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">
+          <p className="text-gray-600 text-xs max-w-2xl mx-auto">
             {summary || ""}
           </p>
-          <p className="max-w-[800px] mx-auto text-xs text-gray-500! mt-2">
+          <p className="max-w-[800px] mx-auto text-xs text-gray-500 mt-1.5">
             {htmlToPlainText(body || "")}
           </p>
         </div>
 
-        {/* Results - موبایل: کارت‌ها، دسکتاپ: جدول */}
-        <Card
-          className="shadow-md border-0 rounded-xl overflow-hidden"
-          style={{ borderColor: PRIMARY_LIGHT }}
-        >
-          <div
-            className={` flex-col sm:flex-row gap-3 items-center w-full mb-4! ${
-              isMobile ? "flex" : "hidden"
-            }`}
-          >
-            <div className="flex-1 w-full">
-              <Input
-                placeholder="جستجو در برند و مدل موتور..."
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                prefix={<SearchOutlined className="text-gray-400" />}
-                className="rounded-lg hover:border-[#ce1a2a] focus:border-[#ce1a2a] focus:shadow-sm"
-                size="large"
-                style={{ borderColor: "#e5e7eb" }}
-              />
-            </div>
-          </div>
-          <div
-            className={`flex justify-between items-center mb-4! ${
-              isMobile ? "flex-wrap" : "flex-nowrap"
-            }`}
-          >
-            <h3 className="text-lg font-bold text-gray-800 whitespace-nowrap">
-              لیست قیمت موتورها ({filteredData.length} مورد)
-            </h3>
-
-            {/* Search and Filters for Desktop */}
-            <div
-              className={` flex-col sm:flex-row gap-3 items-center w-full px-5 ${
-                isMobile ? "hidden" : "flex"
-              }`}
-            >
-              <div className="flex-1 w-full">
-                <Input
-                  placeholder="جستجو در برند و مدل موتور..."
-                  value={searchText}
-                  onChange={(e) => setSearchText(e.target.value)}
-                  prefix={<SearchOutlined className="text-gray-400" />}
-                  className="rounded-lg hover:border-[#ce1a2a] focus:border-[#ce1a2a] focus:shadow-sm"
-                  size="large"
-                  style={{ borderColor: "#e5e7eb" }}
-                />
-              </div>
-            </div>
-            {selectedBrand && (
-              <span
-                onClick={() => {
-                  setSelectedBrand(null);
-                  if (brandIdSearchParams) {
-                    const baseUrl = window.location.pathname;
-                    const params = new URLSearchParams(searchParams.toString());
-                    params.delete("brandId");
-                    router.push(`${baseUrl}?${params.toString()}`);
-                  }
-                }}
-                className="text-sm text-white! px-3 py-1 rounded cursor-pointer whitespace-nowrap ml-3"
-                style={{ backgroundColor: PRIMARY_COLOR }}
-              >
-                حذف فیلترها
-              </span>
-            )}
-            {!brandIdSearchParams && (
-              <span
-                onClick={() => {
-                  setShowFilter(true);
-                }}
-                className="text-sm text-white! px-3 py-1 rounded cursor-pointer whitespace-nowrap"
-                style={{ backgroundColor: PRIMARY_COLOR }}
-              >
-                نمایش فیلترها
-              </span>
-            )}
-          </div>
-          <div
-            className={`fixed bottom-0 left-0 right-0 duration-300 bg-white z-50 overflow-hidden ${
-              showFilter ? "max-h-96" : "max-h-0"
-            }`}
-          >
-            {/* برای دسکتاپ: سوایپر دسته‌بندی */}
-            {/* <div className="">
-              <Card
-                className="mb-6! shadow-md border-0 rounded-xl"
-                style={{ borderColor: PRIMARY_LIGHT }}
-              >
-                <h2 className="text-lg font-bold text-gray-800 mb-4! text-center">
-                  دسته‌بندی‌های قیمت موتور
-                </h2>
-
-                <Swiper
-                  modules={[Navigation, Mousewheel]}
-                  spaceBetween={12}
-                  slidesPerView={"auto"}
-                  centeredSlides={false}
-                  mousewheel={{ forceToAxis: true }}
-                  navigation={false}
-                  className="category-swiper"
-                  dir="rtl"
-                >
-                  {mainCategories.map((category) => (
-                    <SwiperSlide
-                      key={category.id}
-                      className="w-auto! max-w-none!"
-                    >
-                      <div
-                        onClick={() => {
-                          router.push(category.url);
-                          setSelectedBrand(null);
-                        }}
-                        className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 cursor-pointer transition-all duration-300 ${
-                          selectedCategory === category.id
-                            ? "bg-slate-700 text-white!"
-                            : "bg-slate-200 hover:bg-slate-300 hover:text-[#ce1a2a]!"
-                        }`}
-                      >
-                        <span
-                          className={`font-medium text-sm whitespace-nowrap ${
-                            selectedCategory === category.id
-                              ? "text-white!"
-                              : "text-gray-700"
-                          }`}
-                        >
-                          {category.title}
-                        </span>
-                        {searchParams.get("type") === category.type && (
-                          <span
-                            className="text-xs font-medium px-1.5 py-0.5 rounded-full"
-                            style={{
-                              backgroundColor:
-                                selectedCategory === category.id
-                                  ? PRIMARY_COLOR
-                                  : "#e5e7eb",
-                              color:
-                                selectedCategory === category.id
-                                  ? "white"
-                                  : "#6b7280",
-                            }}
-                          >
-                            {category.total}
-                          </span>
-                        )}
-                      </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </Card>
-            </div> */}
-
-            {/* برای موبایل: بخش فیلتر */}
-            <>
-              {
-                //   (selectedCategory || selectedCategory === 0) &&
-                <Card
-                  className="mb-6! shadow-md border-0 rounded-xl"
-                  style={{ borderColor: PRIMARY_LIGHT }}
-                >
-                  <div className="flex items-center justify-between mb-4!">
-                    <h2 className="text-lg font-bold text-gray-800 mb-4! text-center">
-                      برندهای موتور سیکلت
-                    </h2>
-                    <span
-                      className="text-xs text-white! px-2 py-1 rounded"
-                      style={{ backgroundColor: PRIMARY_COLOR }}
-                    >
-                      {filteredBrands.length} برند
-                    </span>
-                  </div>
-
-                  <Swiper
-                    modules={[Mousewheel]}
-                    spaceBetween={8}
-                    slidesPerView={"auto"}
-                    centeredSlides={false}
-                    mousewheel={{ forceToAxis: true }}
-                    navigation={false}
-                    dir="rtl"
-                  >
-                    {filteredBrands.map((brand) => (
-                      <SwiperSlide
-                        key={brand.id}
-                        className="w-auto! max-w-none!"
-                      >
-                        <div
-                          onClick={() => {
-                            setSelectedBrand(
-                              selectedBrand === brand.id ? null : brand.id,
-                            );
-                            setShowFilter(false);
-                          }}
-                          className={`inline-flex items-center rounded-lg px-3 py-2 cursor-pointer transition-all duration-300 min-w-[100px] justify-center ${
-                            selectedBrand === brand.id
-                              ? "text-white! shadow-sm"
-                              : "bg-slate-200! hover:bg-slate-300!  text-gray-700 hover:text-[#ce1a2a]!"
-                          }`}
-                          style={{
-                            backgroundColor:
-                              selectedBrand === brand.id
-                                ? PRIMARY_COLOR
-                                : "white",
-                            borderColor:
-                              selectedBrand === brand.id
-                                ? PRIMARY_COLOR
-                                : "#d1d5db",
-                          }}
-                        >
-                          <span className="font-medium text-sm whitespace-nowrap">
-                            {brand.title}
-                          </span>
-                        </div>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                </Card>
-              }
-            </>
-          </div>
-          {showFilter && (
-            <div
-              onClick={() => {
-                setShowFilter(false);
+        {/* Tab برای دسته‌بندی‌ها - فعلاً یک تب داریم */}
+        {/* TODO: اگر در آینده دسته‌بندی‌های بیشتری اضافه شد، این تب‌ها نمایش داده می‌شوند */}
+        {mainCategories.length > 1 && (
+          <div className="mb-4">
+            <Tabs
+              activeKey={selectedCategory === 0 ? "all" : ""}
+              onChange={handleTabChange}
+              centered
+              className="custom-tabs"
+              tabBarStyle={{
+                margin: 0,
+                padding: 0,
+                border: "none",
+                borderBottom: "none",
               }}
-              className="fixed inset-0 bg-[#0008] z-40"
+              size="small"
+              items={tabItems}
             />
-          )}
+          </div>
+        )}
 
-          {isMobile ? (
-            // نمایش کارتی برای موبایل
-            <div className="space-y-4">
-              {filteredData.length > 0 ? (
-                filteredData.map((item) => (
-                  <MobilePriceCard key={item.id} item={item} />
-                ))
-              ) : (
-                <div className="text-center py-12">
-                  <div className="text-gray-400 text-4xl mb-4!">🚗</div>
-                  <p className="text-gray-500">موتوریی یافت نشد</p>
+        {/* جستجو */}
+        <div className="mb-4 max-w-2xl mx-auto">
+          <Input
+            placeholder="جستجو در برند و مدل موتورسیکلت..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            prefix={<SearchOutlined className="text-gray-400" />}
+            className="rounded-lg hover:border-[#ce1a2a] focus:border-[#ce1a2a] focus:shadow-sm transition-all duration-300 shadow-sm"
+            size="large"
+            style={{
+              borderColor: "#e5e7eb",
+              backgroundColor: "white",
+            }}
+            allowClear
+          />
+        </div>
+
+        {/* Swiper برای برندها */}
+        {selectedCategory !== null && filteredBrands.length > 0 && (
+          <div className="mb-5 px-1">
+            <Swiper
+              spaceBetween={6}
+              slidesPerView={3.5}
+              onSwiper={(swiper) => (swiperRef.current = swiper)}
+              dir="rtl"
+              loop={false}
+              className="carType_slider"
+              breakpoints={{
+                320: {
+                  slidesPerView: 3.5,
+                  spaceBetween: 6,
+                },
+                480: {
+                  slidesPerView: 6.5,
+                  spaceBetween: 6,
+                },
+                640: {
+                  slidesPerView: 8.5,
+                  spaceBetween: 8,
+                },
+                768: {
+                  slidesPerView: 12.5,
+                  spaceBetween: 8,
+                },
+                1024: {
+                  slidesPerView: 14.5,
+                  spaceBetween: 10,
+                },
+              }}
+            >
+              {filteredBrands.map((brand) => (
+                <SwiperSlide key={brand.id}>
                   <button
-                    onClick={handleResetFilters}
-                    className="mt-4 text-[#ce1a2a] hover:underline"
+                    onClick={() => handleBrandSelect(brand.id)}
+                    className={`flex flex-col items-center justify-center rounded-lg p-1.5 cursor-pointer transition-all duration-200 min-w-[70px] ${
+                      selectedBrand === brand.id
+                        ? "text-white shadow scale-105"
+                        : "bg-white hover:bg-gray-50 text-gray-700 hover:text-[#ce1a2a] border border-gray-200 hover:border-[#ce1a2a] hover:shadow-sm"
+                    }`}
+                    style={{
+                      backgroundColor:
+                        selectedBrand === brand.id ? PRIMARY_COLOR : undefined,
+                      borderColor:
+                        selectedBrand === brand.id ? PRIMARY_COLOR : undefined,
+                    }}
                   >
-                    پاک کردن فیلترها
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            // نمایش جدول برای دسکتاپ
-            <Table
-              columns={[
-                {
-                  title: "برند",
-                  dataIndex: "brandTitle",
-                  align: "center",
-                  key: "brandTitle",
-                  sorter: (a, b) => a.brandTitle.localeCompare(b.brandTitle),
-                  width: 120,
-                  defaultSortOrder: "ascend",
-                },
-                {
-                  title: "مدل موتور",
-                  dataIndex: "title",
-                  align: "center",
-                  key: "title",
-                  sorter: (a, b) => a.title.localeCompare(b.title),
-                  width: 150,
-                },
-
-                {
-                  title: "قیمت نمایندگی (تومان)",
-                  dataIndex: "price2",
-                  align: "center",
-                  key: "price2",
-                  sorter: (a, b) => (a.price2 || 0) - (b.price2 || 0),
-                  render: (price: number) => (
-                    <span className="font-bold">
-                      {price ? price.toLocaleString("fa-IR") : "---"}
+                    <span className="font-medium text-xs text-center line-clamp-1">
+                      {brand.title}
                     </span>
-                  ),
-                  width: 160,
-                },
-                {
-                  title: "تغییر قیمت",
-                  key: "priceChange",
-                  align: "center",
-                  sorter: (a, b) => (a.change || 0) - (b.change || 0),
-                  render: (_, record) => {
-                    const change = record.change;
-                    return (
-                      <span
-                        className={`font-bold min-w-20 text-center border-0 flex items-center justify-center ${
-                          change > 0
-                            ? "text-green-600"
-                            : change < 0
-                              ? "text-red-600"
-                              : ""
-                        }`}
-                      >
-                        {change}
-                        {change > 0 ? (
-                          <FaCaretUp className="text-xl" />
-                        ) : change < 0 ? (
-                          <FaCaretDown className="text-xl" />
-                        ) : (
-                          ""
-                        )}
-                      </span>
-                    );
-                  },
-                  width: 120,
-                },
-              ]}
-              dataSource={filteredData}
-              rowKey="id"
-              pagination={false}
-              scroll={{ x: 800 }}
-              size="middle"
-              className="compact-table"
-            />
+                  </button>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        )}
+
+        {/* نمایش نتایج */}
+        <div className="space-y-6">
+          {Object.keys(groupedData).length > 0 ? (
+            Object.entries(groupedData)
+              .sort(([brandIdA], [brandIdB]) => {
+                const brandNameA = getBrandNameById(parseInt(brandIdA));
+                const brandNameB = getBrandNameById(parseInt(brandIdB));
+                return brandNameA.localeCompare(brandNameB, "fa");
+              })
+              .map(([brandId, items]) => {
+                const brandName = getBrandNameById(parseInt(brandId));
+                return (
+                  <Card
+                    key={brandId}
+                    className="shadow-sm border-0 rounded-lg overflow-hidden animate-fadeInUp"
+                    style={{ borderColor: PRIMARY_LIGHT }}
+                  >
+                    {/* سرتیتر برند */}
+                    <div
+                      className="p-2.5 mb-3 rounded-lg"
+                      style={{
+                        backgroundColor: PRIMARY_LIGHT,
+                        borderBottom: `2px solid ${PRIMARY_COLOR}`,
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
+                            <FaMotorcycle className="text-[#ce1a2a] text-base" />
+                          </div>
+                          <div>
+                            <h2 className="text-base font-bold text-gray-900">
+                              قیمت موتورسیکلت {brandName}
+                            </h2>
+                          </div>
+                        </div>
+                        <div
+                          className="px-2 py-0.5 rounded-full text-white text-xs font-medium"
+                          style={{ backgroundColor: PRIMARY_COLOR }}
+                        >
+                          {items.length.toLocaleString("fa-IR")} مدل
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* جدول برند */}
+                    <Table
+                      columns={tableColumns}
+                      dataSource={items}
+                      rowKey="id"
+                      pagination={false}
+                      scroll={{ x: 800 }}
+                      size="small"
+                      className="compact-table"
+                      locale={{
+                        emptyText: "مدلی برای این برند یافت نشد",
+                      }}
+                    />
+                  </Card>
+                );
+              })
+          ) : (
+            <Card
+              className="text-center py-8 animate-fadeIn border-0 shadow-sm"
+              bodyStyle={{ padding: "32px 12px" }}
+            >
+              <div className="text-gray-400 text-3xl mb-3">🏍️</div>
+              <p className="text-gray-500 mb-1.5">موتورسیکلتی یافت نشد</p>
+              {(selectedBrand || searchText) && (
+                <button
+                  onClick={handleResetFilters}
+                  className="text-[#ce1a2a] hover:underline transition-colors text-xs"
+                >
+                  پاک کردن فیلترها
+                </button>
+              )}
+            </Card>
           )}
-        </Card>
+        </div>
       </div>
 
       {/* استایل‌های سفارشی */}
       <style jsx global>{`
-        @media (max-width: 768px) {
-          .ant-card-body {
-            padding: 16px !important;
+        /* استایل برای Tab - اگر در آینده تب‌های بیشتری اضافه شد */
+        .custom-tabs .ant-tabs-nav-wrap {
+          border: none !important;
+          border-bottom: none !important;
+        }
+        .custom-tabs .ant-tabs-nav,
+        .custom-tabs .ant-tabs-nav-wrap,
+        .custom-tabs .ant-tabs-nav-list,
+        .custom-tabs .ant-tabs-ink-bar {
+          border: none !important;
+        }
+
+        .custom-tabs .ant-tabs-nav::before {
+          border-bottom: none !important;
+        }
+        .custom-tabs .ant-tabs-nav {
+          border: none !important;
+          border-bottom: none !important;
+        }
+        .custom-tabs .ant-tabs-nav-list {
+          border: none !important;
+          border-bottom: none !important;
+        }
+
+        .custom-tabs .ant-tabs-tab {
+          margin: 0 4px !important;
+          padding: 0 !important;
+          border-radius: 6px !important;
+          transition: all 0.3s ease !important;
+          background-color: #e5e7eb !important;
+        }
+
+        .custom-tabs .ant-tabs-tab:hover {
+          background-color: #e5e7eb !important;
+        }
+
+        .custom-tabs .ant-tabs-tab.ant-tabs-tab-active {
+          background-color: ${PRIMARY_COLOR} !important;
+        }
+
+        .custom-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+          color: white !important;
+        }
+
+        .custom-tabs .ant-tabs-tab.ant-tabs-tab-active .bg-gray-100 {
+          background-color: rgba(255, 255, 255, 0.3) !important;
+          color: white !important;
+        }
+
+        .custom-tabs .ant-tabs-ink-bar {
+          height: 0px !important;
+        }
+
+        /* انیمیشن‌ها */
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
           }
         }
 
-        /* انیمیشن برای کارت‌های موبایل */
-        .mobile-card-enter {
-          opacity: 0;
-          transform: translateY(10px);
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(8px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
-        .mobile-card-enter-active {
-          opacity: 1;
-          transform: translateY(0);
-          transition:
-            opacity 300ms,
-            transform 300ms;
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+
+        .animate-fadeInUp {
+          animation: fadeInUp 0.2s ease-out;
+        }
+
+        /* استایل برای جدول‌ها */
+        .compact-table .ant-table-thead > tr > th {
+          background-color: #f8fafc !important;
+          font-weight: 600 !important;
+          color: #374151 !important;
+          font-size: 12px !important;
+          padding: 10px 6px !important;
+        }
+
+        .compact-table .ant-table-tbody > tr > td {
+          padding: 10px 6px !important;
+          font-size: 12px !important;
+        }
+
+        .compact-table .ant-table-tbody > tr:hover > td {
+          background-color: #fdf2f2 !important;
+        }
+
+        /* خط‌بندی متن */
+        .line-clamp-1 {
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        /* کاهش padding‌ها */
+        .ant-card-body {
+          padding: 12px !important;
+        }
+
+        /* بهبود نمایش در حالت موبایل */
+        @media (max-width: 640px) {
+          h1 {
+            font-size: 18px !important;
+          }
+
+          .custom-tabs .ant-tabs-nav {
+            width: 100% !important;
+          }
+
+          .custom-tabs .ant-tabs-tab {
+            margin: 0 2px !important;
+          }
+
+          .compact-table .ant-table-thead > tr > th,
+          .compact-table .ant-table-tbody > tr > td {
+            padding: 8px 4px !important;
+            font-size: 11px !important;
+          }
+
+          /* Tab کوچک‌تر در موبایل */
+          .ant-tabs-tab {
+            font-size: 13px !important;
+          }
+
+          .ant-tabs-tab .bg-gray-100 {
+            font-size: 10px !important;
+            padding: 1px 3px !important;
+          }
+        }
+
+        /* کاهش فاصله‌ها در تبلت */
+        @media (max-width: 768px) {
+          .py-3 {
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+          }
+
+          .px-3 {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+          }
+
+          .mb-5 {
+            margin-bottom: 20px !important;
+          }
+
+          .mb-4 {
+            margin-bottom: 16px !important;
+          }
         }
       `}</style>
     </div>

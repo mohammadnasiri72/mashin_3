@@ -24,7 +24,6 @@ const CarsDetails = ({
   const [carBrandsFilter, setCarBrandsFilter] = useState(carBrands);
   const [carBrandsFilter2, setCarBrandsFilter2] = useState(carBrands2);
 
-  console.log(carView);
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">

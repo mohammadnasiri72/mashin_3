@@ -1,6 +1,7 @@
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Card } from "antd";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { FaClock, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import { MdNumbers } from "react-icons/md";
 
@@ -25,6 +26,7 @@ function ContactUsAutoService({
   Latitude: string;
   Longitude: string;
 }) {
+
   const address: string | undefined =
     detailsAuto.properties.length > 0
       ? detailsAuto.properties.find((e) => e.propertyId === 22680)?.value
@@ -48,6 +50,42 @@ function ContactUsAutoService({
         .map((num) => num.trim())
         .filter((num) => num.length > 0 && /^0\d{10}$/.test(num))
     : "";
+
+  const handleNavigation = () => {
+    const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${Latitude},${Longitude}`;
+
+    // تشخیص دستگاه
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    const isAndroid = /Android/.test(navigator.userAgent);
+
+    if (isIOS) {
+      // برای iOS از maps خاص استفاده می‌کنیم
+      const iosMapsUrl = `maps://maps.google.com/maps?daddr=${Latitude},${Longitude}`;
+      window.location.href = iosMapsUrl;
+
+      // فال‌بک بعد از 500ms اگر کار نکرد
+      setTimeout(() => {
+        if (!document.hidden) {
+          window.open(mapsUrl, "_blank");
+        }
+      }, 500);
+    } else if (isAndroid) {
+      // برای اندروید از geo URI استفاده می‌کنیم
+      const geoUrl = `geo:${Latitude},${Longitude}?q=${Latitude},${Longitude}`;
+      window.location.href = geoUrl;
+
+      // فال‌بک بعد از 500ms اگر کار نکرد
+      setTimeout(() => {
+        if (!document.hidden) {
+          window.open(mapsUrl, "_blank");
+        }
+      }, 500);
+    } else {
+      // برای سایر دستگاه‌ها مستقیماً به گوگل مپس
+      window.open(mapsUrl, "_blank");
+    }
+  };
 
   return (
     <>
@@ -127,10 +165,19 @@ function ContactUsAutoService({
               />
             </div>
 
-            <button className="w-full cursor-pointer bg-teal-600 text-white! py-3 rounded-lg font-medium hover:bg-teal-700 transition-colors flex items-center justify-center">
-              <FaMapMarkerAlt className="ml-2" />
-              مسیریابی
-            </button>
+            {Latitude && Longitude && (
+              <Link
+                href={`https://www.google.com/maps/dir/?api=1&destination=${Latitude},${Longitude}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation();
+                }}
+                className="w-full cursor-pointer bg-teal-600! text-white! py-3 rounded-lg font-medium hover:bg-teal-700! transition-colors! flex items-center justify-center"
+              >
+                <FaMapMarkerAlt className="ml-2" />
+                مسیریابی
+              </Link>
+            )}
             {numbers.length > 0 && (
               <a href={`tel:${numbers[0]}`} className="w-full">
                 {/* <button className="bg-[#ce1a2a] font-bold! cursor-pointer text-white! py-2 px-3 rounded-lg hover:bg-red-700 transition-colors flex items-center w-full">

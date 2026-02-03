@@ -87,6 +87,42 @@ function MainBoxAutoServices({
     });
   };
 
+  const handleNavigation = (Latitude: string, Longitude: string) => {
+    const mapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${Latitude},${Longitude}`;
+
+    // تشخیص دستگاه
+    const isIOS =
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    const isAndroid = /Android/.test(navigator.userAgent);
+
+    if (isIOS) {
+      // برای iOS از maps خاص استفاده می‌کنیم
+      const iosMapsUrl = `maps://maps.google.com/maps?daddr=${Latitude},${Longitude}`;
+      window.location.href = iosMapsUrl;
+
+      // فال‌بک بعد از 500ms اگر کار نکرد
+      setTimeout(() => {
+        if (!document.hidden) {
+          window.open(mapsUrl, "_blank");
+        }
+      }, 500);
+    } else if (isAndroid) {
+      // برای اندروید از geo URI استفاده می‌کنیم
+      const geoUrl = `geo:${Latitude},${Longitude}?q=${Latitude},${Longitude}`;
+      window.location.href = geoUrl;
+
+      // فال‌بک بعد از 500ms اگر کار نکرد
+      setTimeout(() => {
+        if (!document.hidden) {
+          window.open(mapsUrl, "_blank");
+        }
+      }, 500);
+    } else {
+      // برای سایر دستگاه‌ها مستقیماً به گوگل مپس
+      window.open(mapsUrl, "_blank");
+    }
+  };
+
   return (
     <>
       {/* هدر */}
@@ -197,6 +233,12 @@ function MainBoxAutoServices({
                   const tel = propertyItem?.properties.find(
                     (e) => e.propertyKey === "p1050_servicetel",
                   )?.propertyValue;
+                  const Latitude = propertyItem?.properties.find(
+                    (e) => e.propertyKey === "p1050_latitude",
+                  )?.propertyValue;
+                  const Longitude = propertyItem?.properties.find(
+                    (e) => e.propertyKey === "p1050_longitude",
+                  )?.propertyValue;
 
                   const numbers = tel
                     ? tel
@@ -206,7 +248,6 @@ function MainBoxAutoServices({
                           (num) => num.length > 0 && /^0\d{10}$/.test(num),
                         )
                     : "";
-
 
                   return (
                     <Card
@@ -298,10 +339,19 @@ function MainBoxAutoServices({
                                 </button>
                               </a>
                             )}
-                            {/* <button className="bg-gray-100 font-bold! cursor-pointer text-[#ce1a2a] py-2 px-3 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors flex items-center">
-                          <FaMapMarkerAlt className="ml-2" />
-                          مسیریابی
-                        </button> */}
+                            {Latitude && Longitude && (
+                              <Link
+                                href={`https://www.google.com/maps/dir/?api=1&destination=${Latitude},${Longitude}`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleNavigation(Latitude, Longitude);
+                                }}
+                                className="bg-gray-100! font-bold! cursor-pointer text-[#ce1a2a]! py-2 px-3 rounded-lg hover:bg-[#ce1a2a]! hover:text-white! duration-300 flex items-center"
+                              >
+                                <FaMapMarkerAlt className="ml-2" />
+                                مسیریابی
+                              </Link>
+                            )}
                           </div>
                         </div>
                       </div>

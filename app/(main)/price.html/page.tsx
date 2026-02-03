@@ -56,13 +56,10 @@ async function pagePrice({
     Type: type ? String(type) : "internal",
     BrandId: brandId ? brandId : -1,
   });
-console.log(price);
 
   return (
     <>
-      <div className="mb-4!">
-        <BreadcrumbCategory breadcrumb={[]} title={price.title} />
-      </div>
+      <BreadcrumbCategory breadcrumb={[]} title={price.title} />
       <PriceCar
         brands={brands.brands}
         price={price.prices}
