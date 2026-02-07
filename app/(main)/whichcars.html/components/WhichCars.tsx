@@ -1,5 +1,6 @@
 "use client";
 
+import CustomPagination from "@/app/components/CustomPagination";
 import {
   formatPersianDate,
   htmlToPlainText,
@@ -7,15 +8,15 @@ import {
 } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { FaCalendar, FaEye } from "react-icons/fa";
-import PaginationwhichCars from "./PaginationwhichCars";
 import SearchBoxWhichCars from "./SearchBoxWhichCars";
 import SideBarWhichCars from "./SideBarWhichCars";
 
 const WhichCars = ({
   whichCars,
   popularComparisons,
-  banner
+  banner,
 }: {
   whichCars: Items[];
   popularComparisons: Items[];
@@ -32,6 +33,8 @@ const WhichCars = ({
     }
     return { car1: "", car2: "" };
   };
+
+  const searchParams = useSearchParams();
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
@@ -138,13 +141,22 @@ const WhichCars = ({
                 })}
               </div>
 
-              <PaginationwhichCars whichCars={whichCars} />
+              {whichCars.length > 0 && (
+                <CustomPagination
+                  total={whichCars[0].total}
+                  pageSize={15}
+                  currentPage={Number(searchParams.get("page")) || 1}
+                />
+              )}
             </div>
           </div>
 
           {/* سایدبار - 1/4 صفحه */}
           <div className="lg:w-1/4 w-full">
-            <SideBarWhichCars popularComparisons={popularComparisons} banner={banner}/>
+            <SideBarWhichCars
+              popularComparisons={popularComparisons}
+              banner={banner}
+            />
           </div>
         </div>
       </div>

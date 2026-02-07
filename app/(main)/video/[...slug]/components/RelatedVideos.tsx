@@ -33,7 +33,7 @@ function RelatedVideos({ relatedVideos }: { relatedVideos: Items[] }) {
                       <h3 className="font-medium text-gray-800 line-clamp-2 group-hover:text-[#ce1a2a] transition-colors">
                         {relatedVideo.title}
                       </h3>
-                      <div className="flex items-center justify-between mt-2 text-sm text-gray-500">
+                      <div className="flex items-center justify-between mt-2 text-sm text-gray-700">
                         <span>{relatedVideo.visit} بازدید</span>
                         <span>
                           {new Date(relatedVideo.created).toLocaleDateString(
@@ -47,7 +47,7 @@ function RelatedVideos({ relatedVideos }: { relatedVideos: Items[] }) {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-700">
               <p>ویدئوی مرتبطی یافت نشد</p>
             </div>
           )}

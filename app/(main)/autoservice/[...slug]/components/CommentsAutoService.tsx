@@ -114,6 +114,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
           <div className="cm_buttons flex items-center gap-2">
             {comment.parentId === -1 && (
               <button
+                aria-label="Reply"
                 onClick={() => {
                   if (token) {
                     onReply(comment.id);
@@ -130,11 +131,17 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 <FaReply className="mr-1 text-purple-500 text-lg group-hover:-rotate-360 duration-500" />
               </button>
             )}
-            <button className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors">
+            <button
+              aria-label="ThumbsDown"
+              className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors"
+            >
               <FaThumbsDown className="mr-1 group-hover:animate-pulse text-red-500 text-lg" />
             </button>
 
-            <button className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors">
+            <button
+              aria-label="ThumbsUp"
+              className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors"
+            >
               <FaThumbsUp className="mr-1 group-hover:animate-pulse text-green-500 text-lg" />
             </button>
           </div>
@@ -266,14 +273,14 @@ const CommentsAutoService: React.FC<CommentsSectionProps> = ({
       if (root.children && root.children.length > 0) {
         root.children.sort(
           (a, b) =>
-            new Date(b.created).getTime() - new Date(a.created).getTime()
+            new Date(b.created).getTime() - new Date(a.created).getTime(),
         );
       }
     });
 
     // ریشه‌ها رو بر اساس تاریخ مرتب می‌کنیم (جدیدترین اول)
     return roots.sort(
-      (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
+      (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
     );
   }, [comments]);
 
@@ -283,18 +290,18 @@ const CommentsAutoService: React.FC<CommentsSectionProps> = ({
   };
 
   // ذخیره url در ریداکس برای بازگشت
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const idRedirect = searchParams.get("id");
-    const urlRedirect = idRedirect
-      ? decodeURIComponent(pathname) + `?id=${idRedirect}`
-      : decodeURIComponent(pathname);
-    const disPatch = useDispatch();
-    useEffect(() => {
-      if (openLogin) {
-        disPatch(setRedirectRegister(urlRedirect));
-      }
-    }, [openLogin]);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const idRedirect = searchParams.get("id");
+  const urlRedirect = idRedirect
+    ? decodeURIComponent(pathname) + `?id=${idRedirect}`
+    : decodeURIComponent(pathname);
+  const disPatch = useDispatch();
+  useEffect(() => {
+    if (openLogin) {
+      disPatch(setRedirectRegister(urlRedirect));
+    }
+  }, [openLogin]);
 
   return (
     <>
@@ -364,7 +371,10 @@ const CommentsAutoService: React.FC<CommentsSectionProps> = ({
 
                 <p className="text-xs text-gray-500 text-center mt-4">
                   ثبت دیدگاه به معنی موافقت با{" "}
-                  <a href="/rules-regulations" className="text-red-600 font-medium">
+                  <a
+                    href="/rules-regulations"
+                    className="text-red-600 font-medium"
+                  >
                     قوانین انتشار ماشین سه
                   </a>{" "}
                   است.

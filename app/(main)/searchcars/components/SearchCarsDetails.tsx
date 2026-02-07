@@ -1,5 +1,6 @@
 "use client";
 
+import CustomPagination from "@/app/components/CustomPagination";
 import MarketStats from "@/app/components/MarketStats";
 import { getCategory } from "@/services/Category/Category";
 import { createpublishCode, toPersianNumbers } from "@/utils/func";
@@ -7,11 +8,10 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { Button } from "@mui/material";
 import { Select } from "antd";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaCar, FaSearch } from "react-icons/fa";
+import { FaCar } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
-import PaginationSearchCars from "./PaginationSearchCars";
 
 const { Option } = Select;
 
@@ -47,6 +47,7 @@ function SearchCarsDetails({
 
   const typeCarTitle = segmentCars.find((e) => e.id === initialtype)?.title;
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const fetchModelCars = async (id: number) => {
     try {
@@ -96,6 +97,7 @@ function SearchCarsDetails({
                 <div className="flex items-center flex-wrap sm:px-4 px-1 w-full">
                   <div className="lg:w-1/5 sm:w-1/3 w-full px-1">
                     <Select
+                      aria-label="جستجوی برند..."
                       placeholder="جستجوی برند..."
                       value={brandId}
                       onChange={(value) => {
@@ -118,6 +120,7 @@ function SearchCarsDetails({
                   </div>
                   <div className="lg:w-1/5 sm:w-1/3 w-full px-1 mt-3 sm:mt-0">
                     <Select
+                      aria-label="جستجوی مدل..."
                       disabled={!brandId}
                       placeholder="جستجوی مدل..."
                       value={modelId}
@@ -137,6 +140,7 @@ function SearchCarsDetails({
                   </div>
                   <div className="lg:w-1/5 sm:w-1/3 w-full px-1 mt-3 sm:mt-0">
                     <Select
+                      aria-label="نوع خودرو..."
                       placeholder="نوع خودرو..."
                       value={typeId}
                       onChange={(value) => setTypeId(value)}
@@ -155,55 +159,56 @@ function SearchCarsDetails({
                   </div>
 
                   <div className="px-3 lg:w-1/5 sm:w-1/3 w-full">
-                  <Button
-                    variant="contained"
-                    className="searchCar_bt button button-wave-1 sm:w-auto w-full"
-                    onClick={handleSearch}
-                    sx={{
-                      backgroundColor: "#fff",
-                      color: "#ce1a2a",
-                      borderRadius: "4px",
-                      padding: "8px 16px",
-                      fontSize: "13px",
-                      fontWeight: 600,
-                      position: "relative",
-                      overflow: "hidden",
-                      "&::after": {
-                        content: '""',
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        width: "5px",
-                        height: "5px",
-                        backgroundColor: "#ce1a2a",
-                        opacity: 0,
-                        borderRadius: "50%",
-                        transform: "scale(0, 0) translate(-50%)",
-                        transformOrigin: "50% 50%",
-                      },
-                      "&:hover::after": {
-                        animation: "wave-1 0.6s ease-out",
-                      },
-                      "@keyframes wave-1": {
-                        "0%": {
-                          transform: "scale(0, 0)",
-                          opacity: 0.5,
-                        },
-                        "100%": {
-                          transform: "scale(20, 20)",
+                    <Button
+                      variant="contained"
+                      className="searchCar_bt button button-wave-1 sm:w-auto w-full"
+                      onClick={handleSearch}
+                      sx={{
+                        backgroundColor: "#fff",
+                        color: "#ce1a2a",
+                        borderRadius: "4px",
+                        padding: "8px 16px",
+                        fontSize: "13px",
+                        fontWeight: 600,
+                        position: "relative",
+                        overflow: "hidden",
+                        "&::after": {
+                          content: '""',
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          width: "5px",
+                          height: "5px",
+                          backgroundColor: "#ce1a2a",
                           opacity: 0,
+                          borderRadius: "50%",
+                          transform: "scale(0, 0) translate(-50%)",
+                          transformOrigin: "50% 50%",
                         },
-                      },
-                    }}
-                  >
-                    <span>
-                      <IoSearch />
-                    </span>
-                    <span className="pr-2 whitespace-nowrap">جستجو خودرو</span>
-                  </Button>
+                        "&:hover::after": {
+                          animation: "wave-1 0.6s ease-out",
+                        },
+                        "@keyframes wave-1": {
+                          "0%": {
+                            transform: "scale(0, 0)",
+                            opacity: 0.5,
+                          },
+                          "100%": {
+                            transform: "scale(20, 20)",
+                            opacity: 0,
+                          },
+                        },
+                      }}
+                    >
+                      <span>
+                        <IoSearch />
+                      </span>
+                      <span className="pr-2 whitespace-nowrap">
+                        جستجو خودرو
+                      </span>
+                    </Button>
+                  </div>
                 </div>
-                </div>
-                
               </div>
 
               {/* عنوان بخش مدل‌ها */}
@@ -233,7 +238,7 @@ function SearchCarsDetails({
                     </h2>
                   )}
                 </div>
-                <span className="text-gray-500 text-sm">
+                <span className="text-gray-700 text-sm">
                   {carView.length > 0 ? toPersianNumbers(carView[0].total) : 0}{" "}
                   مدل
                 </span>
@@ -273,7 +278,7 @@ function SearchCarsDetails({
                                   <span> {ca.sourceName} </span>{" "}
                                   <span>{ca.title}</span>
                                 </div>{" "}
-                                <span>{createpublishCode(ca.publishCode) }</span>
+                                <span>{createpublishCode(ca.publishCode)}</span>
                               </div>
                             </Link>
                           ))}
@@ -314,7 +319,13 @@ function SearchCarsDetails({
               )}
 
               {/* صفحه بندی */}
-              <PaginationSearchCars carView={carView} />
+              {carView.length > 0 && (
+                <CustomPagination
+                  total={carView[0].total}
+                  pageSize={20}
+                  currentPage={Number(searchParams.get("page")) || 1}
+                />
+              )}
             </div>
 
             {/* سایدبار - 1/4 صفحه */}

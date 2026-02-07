@@ -364,26 +364,6 @@ function MainBoxAutoServices({
               </div>
 
               {/* صفحه‌بندی */}
-              {/* {AutoServiceData.length > 0 && (
-                <div className="p-3 flex justify-center items-center">
-                  <Pagination
-                    onChange={(page) => {
-                      const params = new URLSearchParams(
-                        searchParams.toString(),
-                      );
-                      params.set("page", page.toString());
-                      router.push(`${pathname}?${params.toString()}`, {
-                        scroll: false,
-                      });
-                    }}
-                    total={AutoServiceData[0].total}
-                    showSizeChanger={false}
-                    defaultPageSize={15}
-                    current={Number(searchParams.get("page")) || 1}
-                  />
-                  <span>{AutoServiceData[0].total} مورد</span>
-                </div>
-              )} */}
               {AutoServiceData.length > 0 && (
                 <CustomPagination
                   total={AutoServiceData[0].total}

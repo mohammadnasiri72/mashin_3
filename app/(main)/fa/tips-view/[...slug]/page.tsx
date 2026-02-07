@@ -18,7 +18,9 @@ export async function generateMetadata({
   if (education.title) {
     return {
       title: `${education.seoInfo?.seoTitle ? education?.seoInfo?.seoTitle : education.title + " | ماشین3"}`,
-      description: education.seoInfo?.seoDescription,
+      description: education.seoInfo?.seoDescription
+        ? education.seoInfo?.seoDescription
+        : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
       keywords: education.seoInfo?.seoKeywords
         ? education.seoInfo?.seoKeywords
         : education.seoKeywords,
@@ -28,7 +30,9 @@ export async function generateMetadata({
       },
       openGraph: {
         title: `${education.seoInfo?.seoTitle ? education?.seoInfo?.seoTitle : education.title + " | ماشین3"}`,
-        description: education.seoInfo?.seoDescription,
+        description: education.seoInfo?.seoDescription
+          ? education.seoInfo?.seoDescription
+          : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
       },
       other: {
         seoHeadTags: education?.seoInfo?.seoHeadTags,

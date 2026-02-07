@@ -23,23 +23,27 @@ export async function generateMetadata({
 
   if (detailsMotorcycle.title) {
     return {
-          title: `${detailsMotorcycle.seoInfo?.seoTitle ? detailsMotorcycle?.seoInfo?.seoTitle : detailsMotorcycle.title + " | ماشین3"}`,
-          description: detailsMotorcycle.seoInfo?.seoDescription,
-          keywords: detailsMotorcycle.seoInfo?.seoKeywords
-            ? detailsMotorcycle.seoInfo?.seoKeywords
-            : detailsMotorcycle.seoKeywords,
-          metadataBase: new URL(mainDomainOld),
-          alternates: {
-            canonical: seoUrl,
-          },
-          openGraph: {
-            title: `${detailsMotorcycle.seoInfo?.seoTitle ? detailsMotorcycle?.seoInfo?.seoTitle : detailsMotorcycle.title + " | ماشین3"}`,
-            description: detailsMotorcycle.seoInfo?.seoDescription,
-          },
-          other: {
-            seoHeadTags: detailsMotorcycle?.seoInfo?.seoHeadTags,
-          },
-        };
+      title: `${detailsMotorcycle.seoInfo?.seoTitle ? detailsMotorcycle?.seoInfo?.seoTitle : detailsMotorcycle.title + " | ماشین3"}`,
+      description: detailsMotorcycle.seoInfo?.seoDescription
+        ? detailsMotorcycle.seoInfo?.seoDescription
+        : "جزئیات موتورسیکلت",
+      keywords: detailsMotorcycle.seoInfo?.seoKeywords
+        ? detailsMotorcycle.seoInfo?.seoKeywords
+        : detailsMotorcycle.seoKeywords,
+      metadataBase: new URL(mainDomainOld),
+      alternates: {
+        canonical: seoUrl,
+      },
+      openGraph: {
+        title: `${detailsMotorcycle.seoInfo?.seoTitle ? detailsMotorcycle?.seoInfo?.seoTitle : detailsMotorcycle.title + " | ماشین3"}`,
+        description: detailsMotorcycle.seoInfo?.seoDescription
+          ? detailsMotorcycle.seoInfo?.seoDescription
+          : "جزئیات موتورسیکلت",
+      },
+      other: {
+        seoHeadTags: detailsMotorcycle?.seoInfo?.seoHeadTags,
+      },
+    };
   } else {
     return {
       title: "ماشین3 - جزئیات موتورسیکلت",

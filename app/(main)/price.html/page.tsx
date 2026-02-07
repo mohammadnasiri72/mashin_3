@@ -22,7 +22,9 @@ export async function generateMetadata({
   if (price.title) {
     return {
       title: `${price.seoTitle ? price.seoTitle : price.title + " | ماشین3"}`,
-      description: price.seoDescription,
+      description: price.seoDescription
+        ? price.seoDescription
+        : "لیست قیمت خودروهای بازار",
       keywords: price?.seoKeywords,
       metadataBase: new URL(mainDomainOld),
       alternates: {
@@ -30,7 +32,9 @@ export async function generateMetadata({
       },
       openGraph: {
         title: `${price.seoTitle ? price.seoTitle : price.title + " | ماشین3"}`,
-        description: price.seoDescription,
+        description: price.seoDescription
+          ? price.seoDescription
+          : "لیست قیمت خودروهای بازار",
       },
     };
   } else {

@@ -22,7 +22,9 @@ export async function generateMetadata({
       title: `${
         videoCat.seoTitle ? videoCat.seoTitle : videoCat.title + " | ماشین3"
       }`,
-      description: videoCat.seoDescription,
+      description: videoCat.seoDescription
+        ? videoCat.seoDescription
+        : "فیلم های تست و بررسی خودرو",
       keywords: videoCat?.seoKeywords,
       metadataBase: new URL(mainDomainOld),
       alternates: {
@@ -32,7 +34,9 @@ export async function generateMetadata({
         title: `${
           videoCat.seoTitle ? videoCat.seoTitle : videoCat.title + " | ماشین3"
         }`,
-        description: videoCat.seoDescription,
+        description: videoCat.seoDescription
+          ? videoCat.seoDescription
+          : "فیلم های تست و بررسی خودرو",
       },
       other: {
         seoHeadTags: videoCat?.headTags,
@@ -41,7 +45,7 @@ export async function generateMetadata({
   } else {
     return {
       title: "ماشین3 -  فیلم های تست و بررسی خودرو",
-      description: " فیلم های تست و بررسی خودرو",
+      description: "فیلم های تست و بررسی خودرو",
     };
   }
 }

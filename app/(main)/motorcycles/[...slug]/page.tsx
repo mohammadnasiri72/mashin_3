@@ -23,7 +23,9 @@ export async function generateMetadata({
           ? detailsMotorcycle.seoTitle
           : detailsMotorcycle.title + " | ماشین3"
       }`,
-      description: detailsMotorcycle.seoDescription,
+      description: detailsMotorcycle.seoDescription
+        ? detailsMotorcycle.seoDescription
+        : "لیست موتورسیکلت‌ها",
       keywords: detailsMotorcycle?.seoKeywords,
       metadataBase: new URL(mainDomainOld),
       alternates: {
@@ -35,7 +37,9 @@ export async function generateMetadata({
             ? detailsMotorcycle.seoTitle
             : detailsMotorcycle.title + " | ماشین3"
         }`,
-        description: detailsMotorcycle.seoDescription,
+        description: detailsMotorcycle.seoDescription
+          ? detailsMotorcycle.seoDescription
+          : "لیست موتورسیکلت‌ها",
       },
       other: {
         seoHeadTags: detailsMotorcycle?.headTags,

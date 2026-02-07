@@ -55,7 +55,7 @@ function RelatedEducation({
                       <h3 className="font-medium text-gray-800 line-clamp-2 group-hover:text-[#ce1a2a] transition-colors text-sm leading-tight">
                         {related.title}
                       </h3>
-                      <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                      <div className="flex items-center justify-between mt-2 text-xs text-gray-600">
                         <span>{related.visit} بازدید</span>
                         <span>
                           {new Date(related.created).toLocaleDateString(
@@ -69,7 +69,7 @@ function RelatedEducation({
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-600">
               <div className="text-4xl mb-2">📚</div>
               <p>مطلب مرتبطی یافت نشد</p>
             </div>

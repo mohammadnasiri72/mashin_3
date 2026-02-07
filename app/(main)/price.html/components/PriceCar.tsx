@@ -194,7 +194,9 @@ function PriceCar({
             <FaCar className="text-[#ce1a2a] text-xl" />
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-gray-900 text-sm">{item.title}</h3>
+            <span className="font-bold text-gray-900 text-sm">
+              {item.title}
+            </span>
             <p className="text-gray-600 text-xs mt-1">{item.brandTitle}</p>
           </div>
         </div>
@@ -327,12 +329,12 @@ function PriceCar({
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-5">
-          <h1
+          <span
             className="text-xl sm:text-2xl font-bold text-gray-900 mb-1.5!"
             style={{ color: PRIMARY_COLOR }}
           >
             {title ? title : "قیمت خودرو"}
-          </h1>
+          </span>
           <p className="text-gray-600 text-xs max-w-2xl mx-auto">
             {summary || ""}
           </p>
@@ -466,9 +468,9 @@ function PriceCar({
                             <FaCar className="text-[#ce1a2a] text-base" />
                           </div>
                           <div>
-                            <h2 className="text-base font-bold text-gray-900">
+                            <span className="text-base font-bold text-gray-900">
                               قیمت خودرو {brandName}
-                            </h2>
+                            </span>
                           </div>
                         </div>
                         <div

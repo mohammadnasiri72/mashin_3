@@ -30,7 +30,7 @@ function RelatedCompare({
                     <h3 className="font-medium text-gray-800 line-clamp-2 group-hover:text-[#ce1a2a]! transition-colors h-10">
                       {compare.title}
                     </h3>
-                    <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                    <div className="flex items-center justify-between mt-2 text-xs text-gray-700">
                       <span>{compare.visit} بازدید</span>
                       <span>
                         {new Date(compare.created).toLocaleDateString("fa-IR")}

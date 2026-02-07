@@ -83,6 +83,7 @@ function BoxVideo({ videos, titleCat }: { videos: Items[]; titleCat: string }) {
           </div>
         ))}
       </div>
+
       <PaginationVideo videos={videos} />
     </div>
   );

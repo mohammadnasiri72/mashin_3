@@ -20,7 +20,7 @@ export async function generateMetadata({
       title: `${
         podcasts.seoTitle ? podcasts.seoTitle : podcasts.title + " | ماشین3"
       }`,
-      description: podcasts.seoDescription,
+      description: podcasts.seoDescription ? podcasts.seoDescription : "لیست پادکست‌های ماشین3",
       keywords: podcasts?.seoKeywords,
       metadataBase: new URL(mainDomainOld),
       alternates: {
@@ -30,7 +30,7 @@ export async function generateMetadata({
         title: `${
           podcasts.seoTitle ? podcasts.seoTitle : podcasts.title + " | ماشین3"
         }`,
-        description: podcasts.seoDescription,
+        description: podcasts.seoDescription ? podcasts.seoDescription : "لیست پادکست‌های ماشین3",
       },
       other: {
         seoHeadTags: podcasts?.headTags,

@@ -1,9 +1,15 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { FaPlay, FaPause, FaVolumeUp, FaVolumeMute, FaRedo } from 'react-icons/fa';
-import { getItemId } from '@/services/Item/ItemId';
-import { mainDomain } from '@/utils/mainDomain';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  FaPlay,
+  FaPause,
+  FaVolumeUp,
+  FaVolumeMute,
+  FaRedo,
+} from "react-icons/fa";
+import { getItemId } from "@/services/Item/ItemId";
+import { mainDomain } from "@/utils/mainDomain";
 
 interface Items {
   id: number;
@@ -39,9 +45,9 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
       setError(null);
 
       const details: ItemsId = await getItemId(id);
-      
+
       const audioProperty = details.properties?.find(
-        (prop: Property) => prop.propertyKey === "p1047_padcastfile"
+        (prop: Property) => prop.propertyKey === "p1047_padcastfile",
       );
 
       if (audioProperty?.value) {
@@ -71,23 +77,29 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
       if (!audioSrc) {
         const url = await fetchAudioUrl(podcast.id);
         setAudioSrc(url);
-        
+
         setTimeout(() => {
-          audio.play().then(() => {
-            setIsPlaying(true);
-          }).catch(error => {
-            console.error("❌ خطا در پخش:", error);
-            setError("خطا در پخش فایل صوتی");
-          });
+          audio
+            .play()
+            .then(() => {
+              setIsPlaying(true);
+            })
+            .catch((error) => {
+              console.error("❌ خطا در پخش:", error);
+              setError("خطا در پخش فایل صوتی");
+            });
         }, 100);
       } else {
         if (audio.paused) {
-          audio.play().then(() => {
-            setIsPlaying(true);
-          }).catch(error => {
-            console.error("❌ خطا در پخش:", error);
-            setError("خطا در پخش فایل صوتی");
-          });
+          audio
+            .play()
+            .then(() => {
+              setIsPlaying(true);
+            })
+            .catch((error) => {
+              console.error("❌ خطا در پخش:", error);
+              setError("خطا در پخش فایل صوتی");
+            });
         } else {
           audio.pause();
           setIsPlaying(false);
@@ -169,7 +181,7 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
     if (isNaN(time)) return "0:00";
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
   // بازنشانی پلیر
@@ -180,7 +192,7 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
     setError(null);
     if (audioRef.current) {
       audioRef.current.pause();
-      audioRef.current.src = '';
+      audioRef.current.src = "";
     }
   };
 
@@ -188,31 +200,29 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
   const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="w-full bg-linear-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-red-200 p-4 lg:p-6" dir="ltr">
-      
+    <div
+      className="w-full bg-linear-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-red-200 p-4 lg:p-6"
+      dir="ltr"
+    >
       {/* هدر پلیر */}
       <div className="flex items-start justify-between mb-4" dir="rtl">
         <div className="flex-1 min-w-0">
           <h3 className="font-bold text-gray-800 text-lg lg:text-xl line-clamp-2 leading-tight">
             {podcast.title}
           </h3>
-          <p className="text-gray-600 text-sm mt-1">
-            {podcast.categoryTitle}
-          </p>
+          <p className="text-gray-600 text-sm mt-1">{podcast.categoryTitle}</p>
         </div>
       </div>
 
-     
-
       {/* کنترل‌های اصلی */}
       <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6">
-        
         {/* دکمه پلی/پاز */}
         <div className="flex items-center justify-center lg:justify-start">
           <button
+            aria-label="Play or Pause btn"
             onClick={handlePlayClick}
             disabled={isLoading}
-            className="w-16 h-16 lg:w-20 lg:h-20 bg-gradient-to-br from-[#ce1a2a] to-[#a01522] text-white! rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+            className="w-16 h-16 lg:w-20 lg:h-20 bg-linear-to-br from-[#ce1a2a] to-[#a01522] text-white! rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
           >
             {isLoading ? (
               <div className="w-6 h-6 lg:w-7 lg:h-7 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -226,22 +236,22 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
 
         {/* کنترل‌های پخش و صدا */}
         <div className="flex-1 space-y-4">
-          
           {/* نوار پیشرفت */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs text-gray-500">
               <span>{formatTime(currentTime)}</span>
               <span>{formatTime(duration)}</span>
             </div>
-            
+
             <div className="relative">
               <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div 
-                  className="h-full bg-gradient-to-r from-[#ce1a2a] to-[#e53e3e] rounded-full transition-all duration-200"
+                <div
+                  className="h-full bg-linear-to-r from-[#ce1a2a] to-[#e53e3e] rounded-full transition-all duration-200"
                   style={{ width: `${progressPercentage}%` }}
                 />
               </div>
               <input
+                aria-label="range podcast"
                 type="range"
                 min="0"
                 max={duration || 0}
@@ -255,10 +265,10 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
 
           {/* کنترل حجم صدا */}
           <div className="flex items-center justify-between lg:justify-start lg:gap-4">
-            
             {/* کنترل حجم */}
             <div className="flex items-center gap-3 order-2 lg:order-1">
               <button
+                aria-label="VolumeUp"
                 onClick={toggleMute}
                 disabled={!audioSrc || isLoading}
                 className="text-gray-600 hover:text-gray-800 transition-colors p-2 disabled:opacity-50"
@@ -275,12 +285,13 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
               <div className="w-24 lg:w-32">
                 <div className="relative">
                   <div className="w-full h-1.5 bg-gray-200 rounded-full">
-                    <div 
-                      className="h-full bg-gradient-to-r from-gray-400 to-gray-600 rounded-full transition-all duration-200"
+                    <div
+                      className="h-full bg-linear-to-r from-gray-400 to-gray-600 rounded-full transition-all duration-200"
                       style={{ width: `${isMuted ? 0 : volume * 100}%` }}
                     />
                   </div>
                   <input
+                    aria-label="range volume"
                     type="range"
                     min="0"
                     max="1"
@@ -293,17 +304,19 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
                 </div>
               </div>
             </div>
-
-           
           </div>
         </div>
       </div>
 
       {/* نمایش خطا */}
       {error && (
-        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm flex items-center justify-between" dir="rtl">
+        <div
+          className="mt-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm flex items-center justify-between"
+          dir="rtl"
+        >
           <span>{error}</span>
-          <button 
+          <button
+            aria-label="تلاش مجدد"
             onClick={resetPlayer}
             className="text-red-800 hover:text-red-900 font-medium text-xs bg-red-100 px-3 py-1 rounded-lg transition-colors"
           >
@@ -322,7 +335,7 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         onError={(e) => {
-          console.error('❌ خطای audio:', e);
+          console.error("❌ خطای audio:", e);
           setError("خطا در پخش فایل صوتی");
         }}
       />

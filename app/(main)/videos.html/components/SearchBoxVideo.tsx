@@ -32,6 +32,7 @@ function SearchBoxVideo() {
           onPressEnter={handleSearch} // اضافه کردن این خط
         />
         <Button
+          aria-label="Search btn"
           type="primary"
           size="large"
           onClick={handleSearch}

@@ -24,7 +24,9 @@ export async function generateMetadata() {
   if (dataPage && dataPage.title) {
     return {
       title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-      description: dataPage.seoInfo?.seoDescription,
+      description: dataPage.seoInfo?.seoDescription
+        ? dataPage.seoInfo?.seoDescription
+        : "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
       keywords: dataPage.seoInfo?.seoKeywords
         ? dataPage.seoInfo?.seoKeywords
         : dataPage.seoKeywords,
@@ -34,7 +36,9 @@ export async function generateMetadata() {
       },
       openGraph: {
         title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-        description: dataPage.seoInfo?.seoDescription,
+        description: dataPage.seoInfo?.seoDescription
+          ? dataPage.seoInfo?.seoDescription
+          : "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
       },
       other: {
         seoHeadTags: dataPage?.seoInfo?.seoHeadTags,

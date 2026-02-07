@@ -48,7 +48,7 @@ function SideBarCompareCars({
                     </h4>
 
                     {/* متا اطلاعات */}
-                    <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 mt-2 group-hover:text-white!">
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-gray-700 mt-2 group-hover:text-white!">
                       <div className="flex items-center gap-1">
                         <FaCalendar />
                         <span>{formatPersianDate(comparison.created)}</span>

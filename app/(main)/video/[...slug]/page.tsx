@@ -21,7 +21,7 @@ export async function generateMetadata({
   if (video.title) {
     return {
       title: `${video.seoInfo?.seoTitle ? video?.seoInfo?.seoTitle : video.title + " | ماشین3"}`,
-      description: video.seoInfo?.seoDescription,
+      description: video.seoInfo?.seoDescription ? video.seoInfo?.seoDescription : "جزئیات ویدئو",
       keywords: video.seoInfo?.seoKeywords
         ? video.seoInfo?.seoKeywords
         : video.seoKeywords,
@@ -31,7 +31,7 @@ export async function generateMetadata({
       },
       openGraph: {
         title: `${video.seoInfo?.seoTitle ? video?.seoInfo?.seoTitle : video.title + " | ماشین3"}`,
-        description: video.seoInfo?.seoDescription,
+        description: video.seoInfo?.seoDescription ? video.seoInfo?.seoDescription : "جزئیات ویدئو",
       },
       other: {
         seoHeadTags: video?.seoInfo?.seoHeadTags,

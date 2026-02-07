@@ -73,9 +73,9 @@ const CarBrands = ({
                             />
                           </div>
 
-                          <h3 className="font-bold text-gray-900 text-lg">
+                          <h2 className="font-bold! text-gray-900 text-lg">
                             {brand.title}
-                          </h3>
+                          </h2>
                         </div>
                       </div>
                     </Link>

@@ -1,14 +1,13 @@
 "use client";
 
+import CustomPagination from "@/app/components/CustomPagination";
 import MarketStats from "@/app/components/MarketStats";
-import NewsBlogForm from "@/app/components/NewsBlogForm";
 import {
   formatPersianDate,
   htmlToPlainText,
   toPersianNumbers,
 } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
-import { Pagination } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -34,14 +33,14 @@ const CarNews = ({
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const page = searchParams.get("page");
+  // const page = searchParams.get("page");
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 500,
-      behavior: "smooth",
-    });
-  }, [page]);
+  // useEffect(() => {
+  //   window.scrollTo({
+  //     top: 500,
+  //     behavior: "smooth",
+  //   });
+  // }, [page]);
 
   const handleChangPageIndex = (page: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -141,7 +140,7 @@ const CarNews = ({
                           )}
 
                           {/* متا اطلاعات */}
-                          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 mt-2">
+                          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 mt-2">
                             <div className="flex items-center gap-1">
                               <FaCalendar />
                               <span>{formatPersianDate(news.created)}</span>
@@ -160,18 +159,11 @@ const CarNews = ({
 
                 {/* صفحه بندی */}
                 {newsData.length > 0 && (
-                  <div className="p-3 flex justify-center items-center">
-                    <Pagination
-                      onChange={(page) => {
-                        handleChangPageIndex(page);
-                      }}
-                      total={newsData[0].total}
-                      showSizeChanger={false}
-                      defaultPageSize={20}
-                      current={Number(searchParams.get("page")) || 1}
-                    />
-                    <span>{newsData[0].total} مورد</span>
-                  </div>
+                  <CustomPagination
+                    total={newsData[0].total}
+                    pageSize={20}
+                    currentPage={Number(searchParams.get("page")) || 1}
+                  />
                 )}
               </div>
             </div>
@@ -203,7 +195,7 @@ const CarNews = ({
                             <h4 className="font-medium text-gray-900 text-sm leading-tight group-hover:text-white! transition-colors line-clamp-2">
                               {news.title}
                             </h4>
-                            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 mt-2 group-hover:text-white!">
+                            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 mt-2 group-hover:text-white!">
                               <div className="flex items-center gap-1">
                                 <FaCalendar />
                                 <span>{formatPersianDate(news.created)}</span>

@@ -18,7 +18,7 @@ export async function generateMetadata({
   if (whichcars.title) {
     return {
       title: `${whichcars.seoInfo?.seoTitle ? whichcars?.seoInfo?.seoTitle : whichcars.title + " | ماشین3"}`,
-      description: whichcars.seoInfo?.seoDescription,
+      description: whichcars.seoInfo?.seoDescription ? whichcars.seoInfo?.seoDescription :"مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
       keywords: whichcars.seoInfo?.seoKeywords
         ? whichcars.seoInfo?.seoKeywords
         : whichcars.seoKeywords,
@@ -28,7 +28,7 @@ export async function generateMetadata({
       },
       openGraph: {
         title: `${whichcars.seoInfo?.seoTitle ? whichcars?.seoInfo?.seoTitle : whichcars.title + " | ماشین3"}`,
-        description: whichcars.seoInfo?.seoDescription,
+        description: whichcars.seoInfo?.seoDescription ? whichcars.seoInfo?.seoDescription :"مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
       },
       other: {
         seoHeadTags: whichcars?.seoInfo?.seoHeadTags,
