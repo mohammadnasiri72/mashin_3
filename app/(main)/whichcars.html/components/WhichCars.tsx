@@ -103,7 +103,7 @@ const WhichCars = ({
                                   {carNames.car1}
                                 </span>
                               </div>
-                              <div className="text-gray-400 font-bold">VS</div>
+                              <div className="text-gray-700 font-bold">VS</div>
                               <div className="flex items-center gap-2">
                                 <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
                                 <span className="font-medium text-blue-700 whitespace-nowrap sm:text-sm text-xs">
