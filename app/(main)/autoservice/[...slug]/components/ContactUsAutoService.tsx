@@ -26,7 +26,6 @@ function ContactUsAutoService({
   Latitude: string;
   Longitude: string;
 }) {
-
   const address: string | undefined =
     detailsAuto.properties.length > 0
       ? detailsAuto.properties.find((e) => e.propertyId === 22680)?.value
@@ -180,11 +179,10 @@ function ContactUsAutoService({
             )}
             {numbers.length > 0 && (
               <a href={`tel:${numbers[0]}`} className="w-full">
-                {/* <button className="bg-[#ce1a2a] font-bold! cursor-pointer text-white! py-2 px-3 rounded-lg hover:bg-red-700 transition-colors flex items-center w-full">
-                  <FaPhone className="ml-2" />
-                  <span className="font-medium">تماس</span>
-                </button> */}
-                <button className="w-full cursor-pointer bg-[#ce1a2a] text-white! py-3 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center">
+                <button
+                  aria-label="تماس"
+                  className="w-full cursor-pointer bg-[#ce1a2a] text-white! py-3 rounded-lg font-medium hover:bg-red-700 transition-colors flex items-center justify-center"
+                >
                   <FaPhone className="ml-2" />
                   تماس
                 </button>

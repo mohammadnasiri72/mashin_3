@@ -28,6 +28,7 @@ export default function Error({
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button
+              aria-label="تلاش مجدد"
               onClick={reset}
               className="flex items-center justify-center gap-2 bg-gray-200 text-gray-800! px-6 py-3 rounded-lg hover:bg-gray-300 transition-colors cursor-pointer"
             >

@@ -384,6 +384,7 @@ const AuthPage: React.FC = () => {
             </div>
 
             <Button
+              aria-label="ارسال لینک بازیابی"
               type="primary"
               size="large"
               block

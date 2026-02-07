@@ -182,6 +182,7 @@ function ModalLoginComment({ open, setOpen }: { open: boolean; setOpen: any }) {
             </Checkbox>
 
             <Button
+              aria-label="فراموشی رمز"
               onClick={ResetPasswordHandler}
               type="link"
               className="text-xs! p-0! h-auto!"
@@ -199,6 +200,7 @@ function ModalLoginComment({ open, setOpen }: { open: boolean; setOpen: any }) {
           </div>
           <div className="mt-3">
             <Button
+              aria-label="ورود به حساب"
               onClick={loginHandler}
               type="primary"
               size="middle"

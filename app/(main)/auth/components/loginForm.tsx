@@ -81,6 +81,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       </Checkbox>
 
       <Button
+        aria-label="فراموشی رمز عبور"
         type="link"
         onClick={onResetPassword}
         className="text-xs! p-0! h-auto! text-blue-600 hover:text-blue-800"
@@ -90,6 +91,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
     </div>
 
     <Button
+      aria-label="ورود به حساب"
       disabled={loading}
       type="primary"
       size="large"

@@ -116,6 +116,7 @@ function SelectCarCompare({
               ))}
         </Select>
         <Button
+          aria-label="ثبت"
           disabled={firstCarModel === 0}
           onClick={handleAddCarToCompare}
           size="large"

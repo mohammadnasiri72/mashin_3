@@ -156,7 +156,7 @@ function SearchBoxHeader() {
 
         {/* نشانگر کمتر از 3 کاراکتر */}
         {term.trim().length > 0 && (
-          <button
+          <button aria-label="بستن"
             onClick={() => {
               setShowResults(false);
               setTerm("");

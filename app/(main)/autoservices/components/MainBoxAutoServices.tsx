@@ -211,6 +211,7 @@ function MainBoxAutoServices({
                   {/* دکمه پاک کردن فیلترها */}
                   {pathname !== "/autoservices.html" && (
                     <button
+                      aria-label="پاک کردن فیلترها"
                       onClick={clearFilters}
                       className="bg-gray-500 cursor-pointer text-white! px-6 py-2 rounded-lg font-medium hover:bg-gray-600 transition-colors whitespace-nowrap mt-6 lg:mt-0"
                     >
@@ -336,7 +337,10 @@ function MainBoxAutoServices({
                           <div className="flex gap-3 items-start text-xs!">
                             {numbers.length > 0 && (
                               <a href={`tel:${numbers[0]}`} className="">
-                                <button className="bg-[#ce1a2a] font-bold! cursor-pointer text-white! py-2 px-3 rounded-lg hover:bg-red-700 transition-colors flex items-center">
+                                <button
+                                  aria-label="تماس"
+                                  className="bg-[#ce1a2a] font-bold! cursor-pointer text-white! py-2 px-3 rounded-lg hover:bg-red-700 transition-colors flex items-center"
+                                >
                                   <FaPhone className="ml-2" />
                                   <span className="font-medium">تماس</span>
                                 </button>
@@ -383,6 +387,7 @@ function MainBoxAutoServices({
                     با تغییر فیلترها مجدداً تلاش کنید
                   </p>
                   <button
+                    aria-label="نمایش همه نمایندگی‌ها"
                     onClick={clearFilters}
                     className="bg-[#ce1a2a] text-white! cursor-pointer px-6 py-2 rounded-lg font-medium hover:bg-red-700 transition-colors"
                   >

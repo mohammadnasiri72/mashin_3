@@ -210,6 +210,7 @@ const CarComparisonSection = ({
                   مقایسه
                 </h4>
                 <button
+                  aria-label="مقایسه"
                   onClick={handleCompare}
                   className="w-full bg-white cursor-pointer button-wave-1 text-[#ce1a2a]!  font-semibold py-3 rounded-xl transition-colors duration-300 relative overflow-hidden"
                 >

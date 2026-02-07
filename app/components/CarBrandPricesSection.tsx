@@ -102,6 +102,7 @@ const CarBrandPricesSection = ({
           {/* تب‌ها */}
           <div className="flex gap-4">
             <button
+              aria-label="خودرو وارداتی"
               className={`px-4 py-2 text-gray-600 font-medium text-sm cursor-pointer whitespace-nowrap ${
                 type === "import"
                   ? "text-[#ce1a2a]! font-extrabold! text-[20px]!"
@@ -115,6 +116,7 @@ const CarBrandPricesSection = ({
               خودرو وارداتی
             </button>
             <button
+              aria-label="خودرو داخلی"
               className={`px-4 py-2 font-medium cursor-pointer whitespace-nowrap ${
                 type === "internal"
                   ? "text-[#ce1a2a]! font-extrabold! text-[20px]!"

@@ -115,7 +115,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
           <div className="cm_buttons flex items-center gap-2">
             {comment.parentId === -1 && (
               <button
-                aria-label="Reply"
+                aria-label="ارسال کامنت"
                 onClick={() => {
                   if (token) {
                     onReply(comment.id);
@@ -133,14 +133,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
               </button>
             )}
             <button
-              aria-label="ThumbsDown"
+              aria-label="نپسندیدن"
               className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors"
             >
               <FaThumbsDown className="mr-1 group-hover:animate-pulse text-red-500 text-lg" />
             </button>
 
             <button
-              aria-label="ThumbsUp"
+              aria-label="پسندیدن"
               className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors"
             >
               <FaThumbsUp className="mr-1 group-hover:animate-pulse text-green-500 text-lg" />
@@ -436,6 +436,7 @@ const EducationComments: React.FC<CommentsSectionProps> = ({
 
                 <Form.Item>
                   <Button
+                    aria-label="ثبت دیدگاه"
                     type="primary"
                     htmlType="submit"
                     size="large"
@@ -480,6 +481,7 @@ const EducationComments: React.FC<CommentsSectionProps> = ({
                   {hasMoreComments && (
                     <div className="text-center mt-6 pt-4 border-t border-gray-200">
                       <button
+                        aria-label="نمایش نظرات بیشتر"
                         onClick={handleLoadMore}
                         disabled={loadingMore}
                         className="min-w-48 bg-white hover:bg-gray-50 border border-red-200 text-red-600 hover:text-red-700 hover:border-red-300 transition-all py-2 px-6 rounded-lg font-medium"
@@ -594,6 +596,7 @@ const EducationComments: React.FC<CommentsSectionProps> = ({
 
                 <Form.Item>
                   <Button
+                    aria-label="ارسال پاسخ"
                     type="primary"
                     htmlType="submit"
                     size="large"

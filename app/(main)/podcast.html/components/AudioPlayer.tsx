@@ -219,7 +219,7 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
         {/* دکمه پلی/پاز */}
         <div className="flex items-center justify-center lg:justify-start">
           <button
-            aria-label="Play or Pause btn"
+            aria-label={isPlaying ? 'توقف':'پخش'}
             onClick={handlePlayClick}
             disabled={isLoading}
             className="w-16 h-16 lg:w-20 lg:h-20 bg-linear-to-br from-[#ce1a2a] to-[#a01522] text-white! rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
@@ -268,7 +268,7 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
             {/* کنترل حجم */}
             <div className="flex items-center gap-3 order-2 lg:order-1">
               <button
-                aria-label="VolumeUp"
+                aria-label={isMuted || volume === 0 ? 'بی صدا' : 'افزایش صدا'}
                 onClick={toggleMute}
                 disabled={!audioSrc || isLoading}
                 className="text-gray-600 hover:text-gray-800 transition-colors p-2 disabled:opacity-50"

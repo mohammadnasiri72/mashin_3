@@ -136,7 +136,7 @@ const CarFinderSection = ({
             </Select>
           </div>
           <div className="lg:w-1/5 sm:w-full px-1 mt-3 lg:mt-0">
-            <Button
+            <Button aria-label="جستجو خودرو"
               variant="contained"
               className="searchCar_bt button button-wave-1 sm:w-auto w-full"
               onClick={handleSearch}

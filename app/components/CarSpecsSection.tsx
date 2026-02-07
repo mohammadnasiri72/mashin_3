@@ -62,14 +62,14 @@ const CarSpecsSection = ({
               {/* دکمه‌های ناوبری زیر متن */}
               <div className="flex gap-2 justify-center lg:justify-center mt-6">
                 <button
-                  aria-label="FaArrowRightLong"
+                  aria-label="بعدی"
                   onClick={handleNext}
                   className="w-10 h-10 cursor-pointer bg-[#c2c2c2] rounded-full flex items-center justify-center hover:bg-[#ce1a2a] text-white! transition-colors"
                 >
                   <FaArrowRightLong />
                 </button>
                 <button
-                  aria-label="FaArrowLeftLong"
+                  aria-label="قبلی"
                   onClick={handlePrev}
                   className="w-10 h-10 cursor-pointer bg-[#c2c2c2] rounded-full flex items-center justify-center hover:bg-[#ce1a2a] text-white! transition-colors"
                 >

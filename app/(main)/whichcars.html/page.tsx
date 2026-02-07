@@ -11,6 +11,7 @@ export async function generateMetadata() {
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
   const whichCarsCat: ItemsId | null = await getItemByUrl(decodedPathname);
+
   const seoUrl = `${mainDomainOld}${whichCarsCat?.seoUrl}`;
 
   if (whichCarsCat && whichCarsCat.title) {

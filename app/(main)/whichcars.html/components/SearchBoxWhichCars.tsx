@@ -32,6 +32,7 @@ function SearchBoxWhichCars() {
           onPressEnter={handleSearch} // اضافه کردن این خط
         />
         <Button
+          aria-label="جستجو"
           type="primary"
           size="large"
           onClick={handleSearch}

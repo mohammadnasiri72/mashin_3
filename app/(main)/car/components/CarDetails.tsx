@@ -213,6 +213,7 @@ const CarDetails = ({
                       ثبت نظر و امتیاز شما
                     </h3>
                     <button
+                      aria-label="انصراف"
                       onClick={handleCancelRating}
                       className="text-sm text-[#ce1a2a]! hover:text-white! hover:bg-[#ce1a2a]! bg-slate-100 cursor-pointer px-3 py-1 rounded-lg duration-300"
                     >
@@ -241,6 +242,7 @@ const CarDetails = ({
                             const score = index + 1;
                             return (
                               <button
+                                aria-label="امتیاز"
                                 key={score}
                                 type="button"
                                 onClick={() =>
@@ -286,6 +288,7 @@ const CarDetails = ({
                   {/* Submit Button */}
                   <div className="pt-4 border-t border-gray-200">
                     <button
+                      aria-label="ثبت نظر"
                       onClick={handleSubmitRating}
                       disabled={
                         isSubmitting ||
@@ -346,6 +349,7 @@ const CarDetails = ({
                   </div>
                   <div className="pr-2">
                     <button
+                      aria-label="نظر دادن"
                       onClick={() => setIsRatingMode(true)}
                       className="mt-4 md:mt-0 mr-2 duration-300 rounded-lg bg-[#ce1a2a] hover:bg-red-700 text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
                     >

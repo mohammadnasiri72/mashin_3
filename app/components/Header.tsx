@@ -68,14 +68,14 @@ export default function Header({
   setting: SettingType[];
 }) {
   const menuItems = convertApiMenuToHierarchical(
-    menu.find((m) => m.menuKey === "primary")?.menuItems || []
+    menu.find((m) => m.menuKey === "primary")?.menuItems || [],
   );
 
   const logoSrc: string | undefined = setting.find(
-    (e) => e.propertyKey === "site_logo"
+    (e) => e.propertyKey === "site_logo",
   )?.propertyValue;
   const logoTitle: string | undefined = setting.find(
-    (e) => e.propertyKey === "site_title"
+    (e) => e.propertyKey === "site_title",
   )?.propertyValue;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -131,6 +131,7 @@ export default function Header({
         {item.children ? (
           <>
             <button
+              aria-label={item.title}
               onClick={() => setIsOpen(!isOpen)}
               className="flex items-center cursor-pointer justify-between w-full py-4 text-gray-700 text-right text-sm font-medium"
             >
@@ -189,6 +190,7 @@ export default function Header({
           />
         </Link>
         <button
+          aria-label="FiX"
           onClick={() => setIsMenuOpen(false)}
           className="text-gray-500 cursor-pointer p-2 hover:bg-gray-100 rounded-lg transition-colors"
         >
@@ -324,7 +326,7 @@ export default function Header({
 
             {/* Close Button */}
             <button
-              aria-label="Menu Icon"
+              aria-label="منو"
               className="text-white! cursor-pointer p-2 text-2xl hover:bg-[#d1182b] rounded-lg transition-all duration-300"
               onClick={() => setIsMenuOpen((e) => !e)}
             >

@@ -119,7 +119,7 @@ const WhichCars = ({
                           </div>
 
                           {/* متا اطلاعات */}
-                          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-400 mt-2">
+                          <div className="flex flex-wrap items-center gap-4 text-xs text-gray-700 mt-2">
                             <div className="flex items-center gap-1">
                               <FaCalendar />
                               <span>

@@ -33,7 +33,7 @@ function RatingAutoService({
     setPollSaveData((prev) => {
       // بررسی می‌کنیم آیا این سوال قبلاً در آرایه وجود دارد یا نه
       const existingQuestionIndex = prev.pollScoreDto.findIndex(
-        (item) => item.questionId === questionId
+        (item) => item.questionId === questionId,
       );
 
       let newPollScoreDto;
@@ -89,8 +89,6 @@ function RatingAutoService({
     }
   };
 
-
-
   // ذخیره url در ریداکس برای بازگشت
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -105,7 +103,6 @@ function RatingAutoService({
     }
   }, [openLoginModal]);
 
-
   return (
     <>
       <ModalLoginComment open={openLoginModal} setOpen={setOpenLoginModal} />
@@ -119,7 +116,9 @@ function RatingAutoService({
             <span className="text-xs font-bold px-1">
               {toPersianNumbers(initialPollData.pollScore / 2)}
             </span>
-            <span className="text-xs text-[#222]">(امتیاز از {toPersianNumbers(initialPollData.pollNumber)} نظر)</span>
+            <span className="text-xs text-[#222]">
+              (امتیاز از {toPersianNumbers(initialPollData.pollNumber)} نظر)
+            </span>
           </div>
         </div>
 
@@ -132,7 +131,8 @@ function RatingAutoService({
             ضمنا چنانچه هر نظر، شکایت و یا حتی پیشنهادی در مورد نحوه ارایه خدمات
             این مرکز مد نظرتان می باشد در بخش نظرات اعلام بفرمایید. ماشین 3
             نظرات و کامنت های شما را به دقت بررسی کرده و به منظور رفع عیوب و
-            بهبود خدمات این مرکز با مدیران ارشد نمایندگی در میان خواهد گذاشت.{" "}
+            بهبود خدمات این مرکز با مدیران ارشد نمایندگی در میان خواهد
+            گذاشت.{" "}
           </p>
         </div>
 
@@ -159,6 +159,7 @@ function RatingAutoService({
                     {[...Array(10)].map((_, index) => {
                       return (
                         <button
+                          aria-label="شماره امتیاز"
                           key={index}
                           type="button"
                           onClick={() =>
@@ -202,6 +203,7 @@ function RatingAutoService({
           {/* Submit Button */}
           <div className="pt-4 border-t border-gray-200">
             <button
+              aria-label="ثبت نظر"
               onClick={handleSubmitRating}
               disabled={
                 isSubmitting ||
@@ -210,7 +212,7 @@ function RatingAutoService({
               className={`w-full cursor-pointer py-3 px-6 rounded-lg font-bold transition-all duration-300 flex items-center justify-center 
                                   ${
                                     Object.values(userRatings).some(
-                                      (rating) => rating === 0
+                                      (rating) => rating === 0,
                                     )
                                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                                       : "bg-[#ce1a2a] text-white! hover:bg-[#b01625]"

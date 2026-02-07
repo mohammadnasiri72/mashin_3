@@ -160,7 +160,7 @@ function VideoPlayer({ video }: { video: ItemsId }) {
             {/* دکمه‌های عمل */}
             <div className="flex items-center gap-2">
               {/* دکمه مشاهده در آپارات */}
-              <button
+              <button aria-label="مشاهده در آپارات"
                 onClick={handleViewOnAparat}
                 className="flex items-center whitespace-nowrap cursor-pointer gap-2 bg-[#ce1a2a] text-white! py-2 px-4 rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium text-sm shadow-sm"
               >

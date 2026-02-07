@@ -160,6 +160,7 @@ function SearchCarsDetails({
 
                   <div className="px-3 lg:w-1/5 sm:w-1/3 w-full">
                     <Button
+                      aria-label="جستجو خودرو"
                       variant="contained"
                       className="searchCar_bt button button-wave-1 sm:w-auto w-full"
                       onClick={handleSearch}

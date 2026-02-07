@@ -92,6 +92,7 @@ function ModalLogin() {
     <>
       {/* دکمه باز کردن مودال */}
       <button
+        aria-label="ورود"
         onClick={handleOpen}
         className="font-bold cursor-pointer whitespace-nowrap text-[#ce1a2a]! text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_0_5px_rgba(206,26,42)]"
       >
@@ -207,6 +208,7 @@ function ModalLogin() {
             </Checkbox>
 
             <Button
+              aria-label="فراموشی رمز"
               onClick={ResetPasswordHandler}
               type="link"
               className="text-xs! p-0! h-auto!"
@@ -224,6 +226,7 @@ function ModalLogin() {
           </div>
           <div className="mt-3">
             <Button
+              aria-label="ورود به حساب"
               onClick={loginHandler}
               disabled={loading}
               type="primary"

@@ -98,14 +98,14 @@ export default function ErrorContent() {
             </div>
             <div
               className={`text-6xl font-bold ${getErrorColor(
-                errorInfo.status
+                errorInfo.status,
               )} relative mb-4`}
             >
               {errorInfo.status}
             </div>
             <div
               className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-white shadow-lg ${getErrorColor(
-                errorInfo.status
+                errorInfo.status,
               )} bg-opacity-20`}
             >
               {getErrorIcon(errorInfo.status)}
@@ -125,6 +125,7 @@ export default function ErrorContent() {
           {/* Creative Buttons */}
           <div className="flex flex-wrap gap-3 justify-center">
             <button
+              aria-label="صفحه اصلی"
               onClick={() => router.push("/")}
               className="flex items-center cursor-pointer gap-2 px-6 py-3 bg-linear-to-r from-red-400 to-[#ce1a2a] text-white! rounded-full hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-medium shadow-sm"
             >

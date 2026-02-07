@@ -405,6 +405,7 @@ function PriceMotor({
               {filteredBrands.map((brand) => (
                 <SwiperSlide key={brand.id}>
                   <button
+                    aria-label={brand.title}
                     onClick={() => handleBrandSelect(brand.id)}
                     className={`flex flex-col items-center justify-center rounded-lg p-1.5 cursor-pointer transition-all duration-200 min-w-[70px] ${
                       selectedBrand === brand.id
@@ -498,6 +499,7 @@ function PriceMotor({
               <p className="text-gray-500 mb-1.5">موتورسیکلتی یافت نشد</p>
               {(selectedBrand || searchText) && (
                 <button
+                  aria-label="پاک کردن فیلترها"
                   onClick={handleResetFilters}
                   className="text-[#ce1a2a] hover:underline transition-colors text-xs"
                 >

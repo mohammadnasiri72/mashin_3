@@ -14,7 +14,7 @@ interface RegisterFormProps {
   registerErrors: RegisterErrors;
   onRegisterChange: (
     field: keyof RegisterData,
-    value: string | boolean
+    value: string | boolean,
   ) => void;
   onRegister: () => void;
   loading: boolean;
@@ -115,6 +115,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     </div>
 
     <Button
+      aria-label="ایجاد حساب کاربری"
       disabled={loading}
       type="primary"
       size="large"

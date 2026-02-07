@@ -114,7 +114,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
           <div className="cm_buttons flex items-center gap-2">
             {comment.parentId === -1 && (
               <button
-                aria-label="Reply"
+                aria-label="ارسال کامنت"
                 onClick={() => {
                   if (token) {
                     onReply(comment.id);
@@ -132,14 +132,14 @@ const CommentItem: React.FC<CommentItemProps> = ({
               </button>
             )}
             <button
-              aria-label="ThumbsDown"
+              aria-label="نپسندیدن"
               className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors"
             >
               <FaThumbsDown className="mr-1 group-hover:animate-pulse text-red-500 text-lg" />
             </button>
 
             <button
-              aria-label="ThumbsUp"
+              aria-label="پسندیدن"
               className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors"
             >
               <FaThumbsUp className="mr-1 group-hover:animate-pulse text-green-500 text-lg" />
@@ -360,6 +360,7 @@ const VideoComments: React.FC<CommentsSectionProps> = ({
 
                 <Form.Item>
                   <Button
+                    aria-label="ثبت دیدگاه"
                     type="primary"
                     htmlType="submit"
                     size="large"
@@ -491,6 +492,7 @@ const VideoComments: React.FC<CommentsSectionProps> = ({
 
                 <Form.Item>
                   <Button
+                    aria-label="ارسال پاسخ"
                     type="primary"
                     htmlType="submit"
                     size="large"

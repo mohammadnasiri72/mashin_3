@@ -331,6 +331,7 @@ function ContactUsForm({
             </div>
 
             <Button
+              aria-label="ارسال پیام"
               onClick={handleSubmit}
               type="primary"
               htmlType="submit"
@@ -345,92 +346,7 @@ function ContactUsForm({
               {loadingForm ? "در حال ارسال..." : "ارسال پیام"}
             </Button>
           </div>
-
-          {/* <Form<ContactFormValues>
-            form={form}
-            name="contact-form"
-            layout="vertical"
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-            autoComplete="off"
-            dir="rtl"
-          >
-            <Form.Item<ContactFormValues>
-              label="نام"
-              name="name"
-              rules={[
-                {
-                  required: true,
-                  message: "لطفاً نام خود را وارد کنید",
-                },
-              ]}
-            >
-              <Input
-                size="large"
-                placeholder="نام خود را وارد کنید"
-                className="rounded-lg"
-              />
-            </Form.Item>
-
-            <Form.Item<ContactFormValues>
-              label="ایمیل"
-              name="email"
-              rules={[
-                { required: false, type: "email", message: "ایمیل معتبر نیست" },
-              ]}
-            >
-              <Input
-                size="large"
-                placeholder="example@domain.com"
-                className="rounded-lg"
-              />
-            </Form.Item>
-
-            <Form.Item<ContactFormValues>
-              label="سایت"
-              name="site"
-              rules={[{ required: true, message: "لطفاً سایت را وارد کنید" }]}
-            >
-              <Input
-                size="large"
-                placeholder="سایت خود را وارد کنید"
-                className="rounded-lg"
-              />
-            </Form.Item>
-
-            <Form.Item<ContactFormValues>
-              label="پیام"
-              name="message"
-              rules={[
-                { required: true, message: "لطفاً پیام خود را وارد کنید" },
-                { min: 10, message: "پیام باید حداقل 10 کاراکتر باشد" },
-              ]}
-            >
-              <TextArea
-                rows={6}
-                placeholder="متن پیام خود را اینجا بنویسید..."
-                className="rounded-lg"
-              />
-            </Form.Item>
-
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                size="large"
-                className="w-full rounded-lg hover:scale-105 transition-transform"
-                style={{
-                  backgroundColor: "#ce1a2a",
-                  borderColor: "#ce1a2a",
-                  height: "48px",
-                }}
-              >
-                ارسال پیام
-              </Button>
-            </Form.Item>
-          </Form> */}
         </Card>
-
         {/* نقشه */}
         <Card
           title={

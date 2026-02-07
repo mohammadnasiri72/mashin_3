@@ -68,7 +68,7 @@ const ShowSummary: React.FC<ExpandableTextProps> = ({
       </div>
 
       {showButton && (
-        <button
+        <button aria-label={isExpanded ? "نمایش کمتر" : "نمایش بیشتر"}
           onClick={handleToggle}
           className="cursor-pointer flex items-center justify-center gap-2 w-full py-2 text-sm font-medium text-red-600 hover:text-red-800 transition-colors duration-300 group"
         >

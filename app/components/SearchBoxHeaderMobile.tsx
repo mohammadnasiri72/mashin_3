@@ -187,7 +187,7 @@ function SearchBoxHeaderMobile() {
                 />
                 
               </div>
-              <button
+              <button aria-label="بستن"
                 onClick={handleCloseModal}
                 className="text-white! text-lg font-bold mr-2"
               >
