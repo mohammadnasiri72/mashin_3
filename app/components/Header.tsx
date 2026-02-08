@@ -19,6 +19,7 @@ import ModalLogin from "./ModalLogin";
 import ProfileDropdown from "./ProfileDropdown";
 import SearchBoxHeader from "./SearchBoxHeader";
 import SearchBoxHeaderMobile from "./SearchBoxHeaderMobile";
+import RegisterLink from "./RegisterLink";
 const Cookies = require("js-cookie");
 
 // تابع تبدیل LastMenuItem به MenuItem با ساختار سلسله‌مراتبی
@@ -80,10 +81,6 @@ export default function Header({
   const logoTitle: string | undefined = setting.find(
     (e) => e.propertyKey === "site_title",
   )?.propertyValue;
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const params = searchParams.toString();
-  const fullUrl = params ? `${pathname}?${params}` : pathname;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -218,6 +215,8 @@ export default function Header({
     </div>
   );
 
+ 
+
   return (
     <div
       className={`sticky-header z-10001!  ${isSticky ? "sticky-active" : ""}`}
@@ -320,16 +319,9 @@ export default function Header({
                       </button>
                       <ModalLogin open={open} setOpen={setOpen} />
 
-                      <Link
-                        href="/auth"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          disPatch(setRedirectRegister(fullUrl));
-                        }}
-                        className="bg-[#ce1a2a] text-white! font-bold text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_0_5px_rgba(206,26,42)] hover:bg-[#d1182b]"
-                      >
-                        ثبت‌نام
-                      </Link>
+                      <RegisterLink />
+
+                      
                     </div>
                   )}
                   {token && !isLoading && <ProfileDropdown />}

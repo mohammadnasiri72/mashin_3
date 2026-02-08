@@ -33,15 +33,17 @@ interface DividerItem {
 type MenuItemType = MenuItem | DividerItem;
 
 export default function ProfileDropdown() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const disPatch = useDispatch();
 
   const user = Cookies.get("user");
   const name = user ? JSON.parse(user)?.displayName : "";
-  const token = useSelector((state: RootState) => state.token.token);
+  const token: string = useSelector((state: RootState) => state.token.token);
 
   const handleLogout = async () => {
+    setLoading(true);
     try {
       if (token) {
         await PostSignOut(token);
@@ -61,6 +63,7 @@ export default function ProfileDropdown() {
       });
       disPatch(setToken(""));
       setOpen(false);
+      setLoading(false);
     }
   };
 
@@ -125,7 +128,7 @@ export default function ProfileDropdown() {
             >
               <LogoutOutlined />
               <span className="flex items-center gap-2 w-full text-right">
-                خروج از حساب
+                {loading ? "در حال خروج" : "خروج از حساب"}
               </span>
             </div>
           </div>

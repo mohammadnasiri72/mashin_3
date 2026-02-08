@@ -1,3 +1,5 @@
+"use client";
+
 import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { setToken } from "@/redux/slice/token";
 import { PostLogin } from "@/services/Account/Login";
