@@ -1,6 +1,6 @@
 "use client";
 
-import ModalLoginComment from "@/app/(main)/car/components/ModalLoginComment";
+import ModalLogin from "@/app/components/ModalLogin";
 import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { RootState } from "@/redux/store";
 import { postComment } from "@/services/Comment/postComment";
@@ -8,7 +8,7 @@ import { formatPersianDate, Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Button, Form, Input } from "antd";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaFlag, FaReply, FaThumbsDown, FaThumbsUp } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
@@ -507,7 +507,7 @@ const CommentsAutoService: React.FC<CommentsSectionProps> = ({
         </DialogContent>
       </Dialog>
 
-      <ModalLoginComment open={openLogin} setOpen={setOpenLogin} />
+      <ModalLogin open={openLogin} setOpen={setOpenLogin} />
 
       <style jsx global>{`
         .comment-form.sticky {

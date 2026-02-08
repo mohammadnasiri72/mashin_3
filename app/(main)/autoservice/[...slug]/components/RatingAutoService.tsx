@@ -1,6 +1,6 @@
 "use client";
 
-import ModalLoginComment from "@/app/(main)/car/components/ModalLoginComment";
+import ModalLogin from "@/app/components/ModalLogin";
 import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { RootState } from "@/redux/store";
 import { getPollId } from "@/services/Poll/pollId";
@@ -105,7 +105,7 @@ function RatingAutoService({
 
   return (
     <>
-      <ModalLoginComment open={openLoginModal} setOpen={setOpenLoginModal} />
+      <ModalLogin open={openLoginModal} setOpen={setOpenLoginModal} />
       <Card className="rounded-xl shadow-lg">
         <div className="flex justify-between items-center">
           <span className="text-xl font-bold text-gray-800 mb-6!">

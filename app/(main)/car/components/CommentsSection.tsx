@@ -1,18 +1,18 @@
 "use client";
 
+import ModalLogin from "@/app/components/ModalLogin";
+import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { RootState } from "@/redux/store";
+import { getComment } from "@/services/Comment/Comment";
 import { postComment } from "@/services/Comment/postComment";
 import { formatPersianDate, Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Button, Form, Input, Spin } from "antd";
-import { useEffect, useState, useMemo } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { FaFlag, FaReply, FaThumbsDown, FaThumbsUp } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import ModalLoginComment from "./ModalLoginComment";
-import { getComment } from "@/services/Comment/Comment";
-import { setRedirectRegister } from "@/redux/slice/redirectRegister";
-import { usePathname, useSearchParams } from "next/navigation";
 
 const Cookies = require("js-cookie");
 
@@ -611,7 +611,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         </DialogContent>
       </Dialog>
 
-      <ModalLoginComment open={openLogin} setOpen={setOpenLogin} />
+      <ModalLogin open={openLogin} setOpen={setOpenLogin} />
 
       <style jsx global>{`
         .comment-form.sticky {

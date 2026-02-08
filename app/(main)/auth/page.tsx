@@ -20,6 +20,7 @@ import { RegisterForm } from "./components/registerForm";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { setToken } from "@/redux/slice/token";
+import { getCsrf } from "@/services/Csrf/Csrf";
 const Cookies = require("js-cookie");
 
 // تایپ‌های TypeScript (همانطور که بود)
@@ -223,7 +224,11 @@ const AuthPage: React.FC = () => {
     }
 
     try {
-      const result = await PostResetPass(resetPasswordEmail);
+      const resultCsrf = await getCsrf();
+      const result = await PostResetPass(
+        resetPasswordEmail,
+        resultCsrf.csrfToken,
+      );
       Toast.fire({
         icon: "success",
         title: "رمز عبور ارسال شد",
@@ -244,11 +249,8 @@ const AuthPage: React.FC = () => {
       <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* هدر */}
-          <div className="bg-red-600  text-center py-6 px-4">
-            <h1 className="text-2xl font-bold mb-2 text-white!">
-              سامانه احراز هویت
-            </h1>
-            <p className="text-red-100 opacity-90">
+          <div className="bg-[#ce1a2a]  text-center py-6 px-4">
+            <p className="text-red-100 opacity-90 font-bold">
               به حساب کاربری خود وارد شوید یا ثبت‌نام کنید
             </p>
           </div>
@@ -306,7 +308,10 @@ const AuthPage: React.FC = () => {
           <div className="bg-gray-50 px-6 py-4 text-center border-t border-gray-200">
             <p className="text-sm text-gray-600">
               با ورود یا ثبت‌نام، با{" "}
-              <a href="/terms" className="text-blue-600 hover:text-blue-800">
+              <a
+                href="/rules-regulations"
+                className="text-blue-600 hover:text-blue-800"
+              >
                 قوانین و مقررات
               </a>{" "}
               موافقت می‌کنید

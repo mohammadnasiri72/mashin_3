@@ -2,19 +2,21 @@ import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { setToken } from "@/redux/slice/token";
 import { PostLogin } from "@/services/Account/Login";
 import { PostResetPass } from "@/services/Account/ResetPass";
+import { getCsrf } from "@/services/Csrf/Csrf";
 import { Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Button, Checkbox, Input } from "antd";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaLock, FaUser } from "react-icons/fa";
-import { MdClose, MdLogin } from "react-icons/md";
+import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+import { MdClose, MdLogin, MdOutlinePassword } from "react-icons/md";
 import { useDispatch } from "react-redux";
 const Cookies = require("js-cookie");
 
-function ModalLogin() {
+function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
   const [loading, setLoading] = useState(false);
-  const [open, setOpen] = useState(false);
+
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
@@ -22,7 +24,13 @@ function ModalLogin() {
     errUserName: false,
     errPassword: false,
   });
+  const [resetPasswordModal, setResetPasswordModal] = useState<boolean>(false);
+  const [resetPasswordEmail, setResetPasswordEmail] = useState<string>("");
+  const [errResetPasswordEmail, setErrResetPasswordEmail] =
+    useState<string>("");
+
   const disPatch = useDispatch();
+  const pathname = usePathname();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -67,20 +75,6 @@ function ModalLogin() {
     }
   }
 
-  async function ResetPasswordHandler() {
-    if (!userName) {
-      setErrorForm((prev) => ({
-        ...prev,
-        errUserName: true,
-      }));
-    }
-    if (userName) {
-      try {
-        const dataResetPass = await PostResetPass(userName);
-      } catch (err) {}
-    }
-  }
-
   // ذخیره url در ریداکس برای بازگشت
   useEffect(() => {
     if (open) {
@@ -88,20 +82,41 @@ function ModalLogin() {
     }
   }, [open]);
 
+  // هندلر بازیابی رمز عبور
+  const handleResetPassword = async (): Promise<void> => {
+    if (!resetPasswordEmail) {
+      setErrResetPasswordEmail("لطفا ایمیل خود را وارد کنید");
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(resetPasswordEmail)) {
+      setErrResetPasswordEmail("ایمیل معتبر نیست");
+      return;
+    }
+
+    try {
+      const resultCsrf = await getCsrf();
+      const result = await PostResetPass(
+        resetPasswordEmail,
+        resultCsrf.csrfToken,
+      );
+      Toast.fire({
+        icon: "success",
+        title: "رمز عبور ارسال شد",
+      });
+    } catch (error: any) {
+      Toast.fire({
+        icon: "error",
+        title: error.response.data || "خطا در بازیابی رمز عبور",
+      });
+    } finally {
+      setResetPasswordModal(false);
+      setResetPasswordEmail("");
+    }
+  };
+
   return (
     <>
-      {/* دکمه باز کردن مودال */}
-      <button
-        aria-label="ورود"
-        onClick={handleOpen}
-        className="font-bold cursor-pointer whitespace-nowrap text-[#ce1a2a]! text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_0_5px_rgba(206,26,42)]"
-      >
-        <div className="flex items-center gap-0.5">
-          <MdLogin className="text-lg" />
-          <span>ورود</span>
-        </div>
-      </button>
-
       {/* مودال ورود با MUI */}
       <Dialog
         open={open}
@@ -112,7 +127,7 @@ function ModalLogin() {
           sx: {
             borderRadius: "12px",
             boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
-            maxWidth: "380px",
+            maxWidth: "580px",
           },
         }}
       >
@@ -171,7 +186,7 @@ function ModalLogin() {
               </span>
             )}
           </div>
-          <div>
+          <div className="mt-5">
             <span>
               <span className="text-red-600">*</span> رمز عبور{" "}
             </span>
@@ -200,31 +215,45 @@ function ModalLogin() {
           </div>
           <div className="flex justify-between items-center mt-3">
             <Checkbox
-              className="select-none"
+              className="select-none text-xs!"
               checked={remember}
               onChange={() => setRemember((e) => !e)}
             >
               مرا به خاطر بسپار
             </Checkbox>
+          </div>
 
-            <Button
-              aria-label="فراموشی رمز"
-              onClick={ResetPasswordHandler}
-              type="link"
-              className="text-xs! p-0! h-auto!"
-            >
-              فراموشی رمز
-            </Button>
+          <div className="flex justify-center items-center flex-wrap mt-10">
+            <div className=" w-full md:w-1/2 md:pl-1">
+              <div
+                onClick={() => setResetPasswordModal(true)}
+                className="border bg-white! border-blue-600! hover:border-blue-800! rounded-sm! w-full! text-blue-600! hover:text-blue-800! duration-300! flex! cursor-pointer text-center! py-2! font-bold! hover:bg-blue-200! justify-center"
+              >
+                <div className="flex items-center gap-1">
+                  <FaLock />
+                  <span className="text-xs">فراموشی رمز</span>
+                </div>
+              </div>
+            </div>
+            <div className=" w-full md:w-1/2 md:pr-1">
+              <Link
+                href={"/auth"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  disPatch(setRedirectRegister(pathname));
+                  setOpen(false);
+                }}
+                className="border text-xs border-blue-600! hover:border-blue-800! rounded-sm! w-full! text-blue-600! hover:text-blue-800! duration-300! text-center! py-2 font-bold! hover:bg-blue-200! flex! justify-center"
+              >
+                <div className="flex items-center gap-1">
+                  <FaUser />
+                  <span className="text-xs">ساخت حساب کاربری</span>
+                </div>
+              </Link>
+            </div>
           </div>
-          <div className="pr-5">
-            <Link
-              href={"/auth"}
-              className="text-xs! p-0! h-auto! text-[#1677ff]! hover:text-[#69b1ff]!"
-            >
-              ساخت حساب کاربری
-            </Link>
-          </div>
-          <div className="mt-3">
+
+          <div className="mt-3 w-full">
             <Button
               aria-label="ورود به حساب"
               onClick={loginHandler}
@@ -249,6 +278,89 @@ function ModalLogin() {
                   <span> ورود به حساب</span>
                 )}
               </div>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* مودال بازیابی رمز عبور */}
+      <Dialog
+        open={resetPasswordModal}
+        onClose={() => setResetPasswordModal(false)}
+        maxWidth="xs"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: "12px",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            bgcolor: "#ce1a2a",
+            color: "white",
+            textAlign: "center",
+            fontSize: "1.1rem",
+            fontWeight: "bold",
+            py: 2,
+            position: "relative",
+          }}
+        >
+          بازیابی رمز عبور
+          <IconButton
+            onClick={() => setResetPasswordModal(false)}
+            sx={{
+              position: "absolute",
+              left: 8,
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "white",
+            }}
+          >
+            <MdClose size={18} />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent sx={{ py: 3, px: 3 }}>
+          <div className="space-y-4">
+            <p className="text-gray-600 text-sm text-center mt-3!">
+              لطفا ایمیل خود را وارد کنید. لینک بازیابی رمز عبور برای شما ارسال
+              خواهد شد.
+            </p>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                <span className="text-red-600">*</span> ایمیل
+              </label>
+              <Input
+                value={resetPasswordEmail}
+                onChange={(e) => {
+                  setResetPasswordEmail(e.target.value);
+                  setErrResetPasswordEmail("");
+                }}
+                prefix={<FaEnvelope className="text-gray-400 ml-2" />}
+                placeholder="ایمیل خود را وارد کنید"
+                size="large"
+                className="rounded-lg"
+              />
+              {errResetPasswordEmail && (
+                <span className="text-[#ce1a2a] text-xs">
+                  {errResetPasswordEmail}
+                </span>
+              )}
+            </div>
+
+            <Button
+              aria-label="ارسال لینک بازیابی"
+              type="primary"
+              size="large"
+              block
+              onClick={handleResetPassword}
+              className="h-12 rounded-lg bg-blue-600 hover:bg-blue-700 border-none font-bold flex items-center justify-center gap-2"
+            >
+              <MdOutlinePassword className="text-lg" />
+              ارسال لینک بازیابی
             </Button>
           </div>
         </DialogContent>

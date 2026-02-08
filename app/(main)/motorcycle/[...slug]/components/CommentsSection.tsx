@@ -1,6 +1,6 @@
 "use client";
 
-import ModalLoginComment from "@/app/(main)/car/components/ModalLoginComment";
+import ModalLogin from "@/app/components/ModalLogin";
 import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { RootState } from "@/redux/store";
 import { getComment } from "@/services/Comment/Comment";
@@ -616,7 +616,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         </DialogContent>
       </Dialog>
 
-      <ModalLoginComment open={openLogin} setOpen={setOpenLogin} />
+      <ModalLogin open={openLogin} setOpen={setOpenLogin} />
 
       <style jsx global>{`
         .comment-form.sticky {

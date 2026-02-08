@@ -1,14 +1,17 @@
 "use client";
 
+import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { setToken } from "@/redux/slice/token";
 import { RootState } from "@/redux/store";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Collapse } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { IoChevronDown } from "react-icons/io5";
+import { MdLogin } from "react-icons/md";
 import { TiThMenu } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import LoadingSkeletonAuth from "./LoadingSkeletonAuth";
@@ -77,10 +80,11 @@ export default function Header({
   const logoTitle: string | undefined = setting.find(
     (e) => e.propertyKey === "site_title",
   )?.propertyValue;
-
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [open, setOpen] = useState(false);
   const token = useSelector((state: RootState) => state.token.token);
   const disPatch = useDispatch();
   useEffect(() => {
@@ -301,10 +305,24 @@ export default function Header({
                   {isLoading && <LoadingSkeletonAuth />}
                   {!token && !isLoading && (
                     <div className="flex items-center space-x-3 space-x-reverse">
-                      <ModalLogin />
+                      <button
+                        aria-label="ورود"
+                        onClick={() => setOpen(true)}
+                        className="font-bold cursor-pointer whitespace-nowrap text-[#ce1a2a]! text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_0_5px_rgba(206,26,42)]"
+                      >
+                        <div className="flex items-center gap-0.5">
+                          <MdLogin className="text-lg" />
+                          <span>ورود</span>
+                        </div>
+                      </button>
+                      <ModalLogin open={open} setOpen={setOpen} />
 
                       <Link
                         href="/auth"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          disPatch(setRedirectRegister(pathname));
+                        }}
                         className="bg-[#ce1a2a] text-white! font-bold text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_0_5px_rgba(206,26,42)] hover:bg-[#d1182b]"
                       >
                         ثبت‌نام

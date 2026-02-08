@@ -75,7 +75,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       <Checkbox
         checked={loginData.remember}
         onChange={(e) => onLoginChange("remember", e.target.checked)}
-        className="text-gray-700"
+        className="text-gray-700 text-xs!"
       >
         مرا به خاطر بسپار
       </Checkbox>
