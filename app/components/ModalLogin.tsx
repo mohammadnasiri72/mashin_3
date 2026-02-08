@@ -7,7 +7,7 @@ import { Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Button, Checkbox, Input } from "antd";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { MdClose, MdLogin, MdOutlinePassword } from "react-icons/md";
@@ -31,6 +31,9 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
 
   const disPatch = useDispatch();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const params = searchParams.toString();
+  const fullUrl = params ? `${pathname}?${params}` : pathname;
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -226,7 +229,9 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
           <div className="flex justify-center items-center flex-wrap mt-10">
             <div className=" w-full md:w-1/2 md:pl-1">
               <div
-                onClick={() => setResetPasswordModal(true)}
+                onClick={() => {
+                  setResetPasswordModal(true);
+                }}
                 className="border bg-white! border-blue-600! hover:border-blue-800! rounded-sm! w-full! text-blue-600! hover:text-blue-800! duration-300! flex! cursor-pointer text-center! py-2! font-bold! hover:bg-blue-200! justify-center"
               >
                 <div className="flex items-center gap-1">
@@ -240,7 +245,7 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
                 href={"/auth"}
                 onClick={(e) => {
                   e.preventDefault();
-                  disPatch(setRedirectRegister(pathname));
+                  disPatch(setRedirectRegister(fullUrl));
                   setOpen(false);
                 }}
                 className="border text-xs border-blue-600! hover:border-blue-800! rounded-sm! w-full! text-blue-600! hover:text-blue-800! duration-300! text-center! py-2 font-bold! hover:bg-blue-200! flex! justify-center"

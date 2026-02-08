@@ -7,7 +7,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { Collapse } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { IoChevronDown } from "react-icons/io5";
@@ -81,6 +81,9 @@ export default function Header({
     (e) => e.propertyKey === "site_title",
   )?.propertyValue;
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const params = searchParams.toString();
+  const fullUrl = params ? `${pathname}?${params}` : pathname;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -321,7 +324,7 @@ export default function Header({
                         href="/auth"
                         onClick={(e) => {
                           e.preventDefault();
-                          disPatch(setRedirectRegister(pathname));
+                          disPatch(setRedirectRegister(fullUrl));
                         }}
                         className="bg-[#ce1a2a] text-white! font-bold text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_0_5px_rgba(206,26,42)] hover:bg-[#d1182b]"
                       >
