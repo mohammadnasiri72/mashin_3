@@ -12,9 +12,13 @@ import { FaCalendar, FaEye } from "react-icons/fa";
 function CompareContent({
   whichcars,
   dataCompare,
+  id1,
+  id2,
 }: {
   whichcars: ItemsId;
   dataCompare: ItemsId[];
+  id1: number;
+  id2: number;
 }) {
   const car1 = dataCompare[0];
   const car2 = dataCompare[1];
@@ -107,6 +111,8 @@ function CompareContent({
             car1={car1}
             car2={car2}
             comparisonTableData={comparisonTableData}
+            id1={id1}
+            id2={id2}
           />
         )}
         {dataCompare.length === 2 && (

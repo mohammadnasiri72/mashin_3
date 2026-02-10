@@ -196,9 +196,9 @@ function VideoDetails({
           </div>
 
           {/* سایدبار */}
-          <div className="lg:w-1/4 w-full">
+          <aside className="lg:w-1/4 w-full">
             <SidebarVideo popularVideos={popularVideos} banner={banner} />
-          </div>
+          </aside>
         </div>
 
         {/* بخش نظرات */}

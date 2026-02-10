@@ -407,9 +407,9 @@ function MainBoxAutoServices({
           </div>
         </div>
 
-        <div className="lg:w-1/4 w-full">
+        <aside className="lg:w-1/4 w-full">
           <SidebarAutoService banner={banner} />
-        </div>
+        </aside>
       </div>
     </>
   );

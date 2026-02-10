@@ -167,12 +167,12 @@ const EducationCar = ({
           </div>
 
           {/* سایدبار - 1/4 صفحه */}
-          <div className="lg:w-1/4 w-full">
+          <aside className="lg:w-1/4 w-full">
             <SideBarEducation
               educationPopular={educationPopular}
               banner={banner}
             />
-          </div>
+          </aside>
         </div>
       </div>
 

@@ -12,6 +12,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Card, Input } from "antd";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useState } from "react";
 import { FaMobile, FaUser } from "react-icons/fa";
 import { MdMail } from "react-icons/md";
@@ -35,6 +36,7 @@ interface SocialMediaBadge {
   name: string;
   color: string;
   textColor: string;
+  href: string;
 }
 
 function ContactUsForm({
@@ -49,9 +51,24 @@ function ContactUsForm({
   map: string | undefined;
 }) {
   const socialMediaBadges: SocialMediaBadge[] = [
-    { name: "واتساپ", color: "bg-green-100", textColor: "text-green-800" },
-    { name: "تلگرام", color: "bg-blue-100", textColor: "text-blue-800" },
-    { name: "بله", color: "bg-purple-100", textColor: "text-purple-800" },
+    {
+      name: "واتساپ",
+      color: "bg-green-100",
+      textColor: "text-green-800",
+      href: "https://web.whatsapp.com/send/?phone=9893935432010",
+    },
+    {
+      name: "تلگرام",
+      color: "bg-blue-100",
+      textColor: "text-blue-800",
+      href: "https://t.me/activeidea",
+    },
+    {
+      name: "بله",
+      color: "bg-purple-100",
+      textColor: "text-purple-800",
+      href: "https://ble.ir/activeidea",
+    },
   ];
 
   const token = useSelector((state: RootState) => state.token.token);
@@ -161,12 +178,15 @@ function ContactUsForm({
                   (
                   {socialMediaBadges.map(
                     (badge: SocialMediaBadge, index: number) => (
-                      <span
+                      <Link
+                        href={badge.href}
                         key={index}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className={`text-xs ${badge.color} ${badge.textColor} px-2 py-1 rounded-full`}
                       >
                         {badge.name}
-                      </span>
+                      </Link>
                     ),
                   )}
                   )

@@ -136,6 +136,14 @@ async function pageNewsDetails({
     PageIndex: 1,
     PageSize: 5,
   });
+  const offerNews: Items[] = await getItem({
+    TypeId: 5,
+    langCode: "fa",
+    CategoryIdArray: "6593",
+    PageIndex: 1,
+    PageSize: 5,
+  });
+
 
   const banner: Items[] = await getItem({
     TypeId: 1051,
@@ -183,6 +191,7 @@ async function pageNewsDetails({
             id={id}
             newsData={news}
             popularNews={popularNews}
+            offerNews={offerNews}
             banner={banner}
             newsDetails={newsDetails}
             tabConfig={tabs}

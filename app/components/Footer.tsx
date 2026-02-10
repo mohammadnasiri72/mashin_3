@@ -3,6 +3,7 @@
 import { mainDomain, mainDomainOld } from "@/utils/mainDomain";
 import Image from "next/image";
 import Link from "next/link";
+import ScrollToTopButton from "./ScrollToTopButton";
 
 interface FooterLink {
   href: string;
@@ -18,18 +19,17 @@ const Footer = ({
   setting: SettingType[];
   Social: Items[];
 }) => {
-
   const logoSrc: string | undefined = setting.find(
-    (e) => e.propertyKey === "site_logo"
+    (e) => e.propertyKey === "site_logo",
   )?.propertyValue;
   const logoTitle: string | undefined = setting.find(
-    (e) => e.propertyKey === "site_title"
+    (e) => e.propertyKey === "site_title",
   )?.propertyValue;
   const copyright: string | undefined = setting.find(
-    (e) => e.propertyKey === "site_copyright"
+    (e) => e.propertyKey === "site_copyright",
   )?.propertyValue;
   const footerDescription: string | undefined = setting.find(
-    (e) => e.propertyKey === "site_footer_description"
+    (e) => e.propertyKey === "site_footer_description",
   )?.propertyValue;
   // پیدا کردن منوی فوتر
   const footerMenu = menu.find((m) => m.menuKey === "menufooter");

@@ -76,7 +76,10 @@ function MarketStats() {
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {[...Array(10)].map((_, index) => {
               return (
-                <div className=" bg-gray-200 animate-pulse h-10 w-full rounded" />
+                <div
+                  key={index}
+                  className=" bg-gray-200 animate-pulse h-10 w-full rounded"
+                />
               );
             })}
           </div>

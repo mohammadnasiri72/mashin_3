@@ -5,17 +5,18 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
-function SearchBoxWhichCars() {
+function SearchBoxBestChoice() {
   const [term, setTerm] = useState("");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+
   const termSearchparams = searchParams.get("term");
-    useEffect(() => {
-      if (termSearchparams) {
-        setTerm(termSearchparams);
-      }
-    }, [termSearchparams]);
+  useEffect(() => {
+    if (termSearchparams) {
+      setTerm(termSearchparams);
+    }
+  }, [termSearchparams]);
 
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams.toString());
@@ -29,7 +30,7 @@ function SearchBoxWhichCars() {
     <div className="w-full">
       <Space.Compact style={{ width: "100%" }}>
         <Input
-          placeholder="جستجو در مقایسه‌ها"
+          placeholder="جستجو در بهترین خودروها"
           size="large"
           value={term}
           onChange={(e) => {
@@ -51,4 +52,4 @@ function SearchBoxWhichCars() {
   );
 }
 
-export default SearchBoxWhichCars;
+export default SearchBoxBestChoice;

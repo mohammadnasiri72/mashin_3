@@ -17,6 +17,8 @@ function CompareCars({
   comments,
   id,
   banner,
+  id1,
+  id2,
 }: {
   whichcars: ItemsId;
   dataCompare: ItemsId[];
@@ -25,6 +27,8 @@ function CompareCars({
   comments: CommentResponse[];
   id: number;
   banner: Items[];
+  id1: number;
+  id2: number;
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
@@ -126,7 +130,7 @@ function CompareCars({
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition-50,
+        top: offsetPosition - 50,
         behavior: "smooth",
       });
     }
@@ -180,7 +184,12 @@ function CompareCars({
             {/* بخش محتوای اصلی مقایسه */}
 
             <div id="content" className="section-anchor" ref={contentRef}>
-              <CompareContent whichcars={whichcars} dataCompare={dataCompare} />
+              <CompareContent
+                whichcars={whichcars}
+                dataCompare={dataCompare}
+                id1={id1}
+                id2={id2}
+              />
             </div>
 
             {/* بخش مقایسه های مرتبط */}
@@ -192,12 +201,12 @@ function CompareCars({
           </div>
         </div>
         {/* سایدبار */}
-        <div className="lg:w-1/4 w-full">
+        <aside className="lg:w-1/4 w-full">
           <SideBarCompareCars
             popularComparisons={popularComparisons}
             banner={banner}
           />
-        </div>
+        </aside>
       </div>
 
       {/* بخش نظرات */}

@@ -18,7 +18,9 @@ export async function generateMetadata() {
   if (autoServiceCat && autoServiceCat.title) {
     return {
       title: `${autoServiceCat.seoInfo?.seoTitle ? autoServiceCat?.seoInfo?.seoTitle : autoServiceCat.title + " | ماشین3"}`,
-      description: autoServiceCat.seoInfo?.seoDescription,
+      description: autoServiceCat.seoInfo?.seoDescription
+        ? autoServiceCat.seoInfo?.seoDescription
+        : "مراکز و نمایندگی های خدمات خودرو",
       keywords: autoServiceCat.seoInfo?.seoKeywords
         ? autoServiceCat.seoInfo?.seoKeywords
         : autoServiceCat.seoKeywords,
@@ -28,7 +30,9 @@ export async function generateMetadata() {
       },
       openGraph: {
         title: `${autoServiceCat.seoInfo?.seoTitle ? autoServiceCat?.seoInfo?.seoTitle : autoServiceCat.title + " | ماشین3"}`,
-        description: autoServiceCat.seoInfo?.seoDescription,
+        description: autoServiceCat.seoInfo?.seoDescription
+          ? autoServiceCat.seoInfo?.seoDescription
+          : "مراکز و نمایندگی های خدمات خودرو",
       },
       other: {
         seoHeadTags: autoServiceCat?.seoInfo?.seoHeadTags,

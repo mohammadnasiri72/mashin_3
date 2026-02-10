@@ -23,9 +23,9 @@ function Podcast({
           <BoxCatPodcasts podcastsCat={podcastsCat} />
           <BoxPodcasts podcasts={podcasts} titleCategory={titleCategory}/>
         </div>
-        <div className="lg:w-1/4 w-full">
+        <aside className="lg:w-1/4 w-full">
           <SidebarPodcasts popularNews={popularNews} banner={banner} />
-        </div>
+        </aside>
       </div>
     </>
   );

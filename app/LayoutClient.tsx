@@ -1,13 +1,14 @@
 "use client";
 
 import { store } from "@/redux/store";
+import { createInitialUserData } from "@/utils/func";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { ConfigProvider } from "antd";
 import fa_IR from "antd/locale/fa_IR";
 import { ReactNode, useEffect } from "react";
 import { Provider } from "react-redux";
 import AOSProvider from "./AOSProvider";
-import { createInitialUserData } from "@/utils/func";
+import ScrollToTopButton from "./components/ScrollToTopButton";
 const Cookies = require("js-cookie");
 
 interface LayoutClientProps {
@@ -18,7 +19,9 @@ function LayoutClient({ children }: LayoutClientProps) {
   const user = Cookies.get("user");
   useEffect(() => {
     if (!user) {
-      Cookies.set("user", JSON.stringify(createInitialUserData()), { expires: 7 });
+      Cookies.set("user", JSON.stringify(createInitialUserData()), {
+        expires: 7,
+      });
     }
   }, []);
 
@@ -40,6 +43,7 @@ function LayoutClient({ children }: LayoutClientProps) {
           </Provider>
         </ConfigProvider>
       </AntdRegistry>
+      <ScrollToTopButton />
     </>
   );
 }

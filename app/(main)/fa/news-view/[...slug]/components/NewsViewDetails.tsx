@@ -231,9 +231,9 @@ function NewsViewDetails({
           </div>
 
           {/* سایدبار */}
-          <div className="lg:w-1/4 w-full ">
+          <aside className="lg:w-1/4 w-full ">
             <SidebarNewsView popularNews={popularNews} banner={banner} />
-          </div>
+          </aside>
         </div>
 
         {/* بخش نظرات */}

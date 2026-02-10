@@ -19,9 +19,9 @@ function Video({
         <div className="lg:w-3/4 w-full">
           <BoxVideo videos={videos} titleCat={titleCat}/>
         </div>
-        <div className="lg:w-1/4 w-full">
+        <aside className="lg:w-1/4 w-full">
           <SidebarVideo popularVideos={popularVideos} banner={banner} />
-        </div>
+        </aside>
       </div>
     </>
   );

@@ -1,13 +1,11 @@
 "use client";
 
-import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { setToken } from "@/redux/slice/token";
 import { RootState } from "@/redux/store";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Collapse } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { IoChevronDown } from "react-icons/io5";
@@ -17,9 +15,9 @@ import { useDispatch, useSelector } from "react-redux";
 import LoadingSkeletonAuth from "./LoadingSkeletonAuth";
 import ModalLogin from "./ModalLogin";
 import ProfileDropdown from "./ProfileDropdown";
+import RegisterLink from "./RegisterLink";
 import SearchBoxHeader from "./SearchBoxHeader";
 import SearchBoxHeaderMobile from "./SearchBoxHeaderMobile";
-import RegisterLink from "./RegisterLink";
 const Cookies = require("js-cookie");
 
 // تابع تبدیل LastMenuItem به MenuItem با ساختار سلسله‌مراتبی
@@ -215,8 +213,6 @@ export default function Header({
     </div>
   );
 
- 
-
   return (
     <div
       className={`sticky-header z-10001!  ${isSticky ? "sticky-active" : ""}`}
@@ -306,11 +302,11 @@ export default function Header({
                 <div className="w-44 ">
                   {isLoading && <LoadingSkeletonAuth />}
                   {!token && !isLoading && (
-                    <div className="flex items-center space-x-3 space-x-reverse">
+                    <div className="flex items-center space-x-3 space-x-reverse gap-2">
                       <button
                         aria-label="ورود"
                         onClick={() => setOpen(true)}
-                        className="font-bold cursor-pointer whitespace-nowrap text-[#ce1a2a]! text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_0_5px_rgba(206,26,42)]"
+                        className="font-bold cursor-pointer whitespace-nowrap text-[#ce1a2a]! text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_5px_1px_rgba(206,26,42)]"
                       >
                         <div className="flex items-center gap-0.5">
                           <MdLogin className="text-lg" />
@@ -320,8 +316,6 @@ export default function Header({
                       <ModalLogin open={open} setOpen={setOpen} />
 
                       <RegisterLink />
-
-                      
                     </div>
                   )}
                   {token && !isLoading && <ProfileDropdown />}

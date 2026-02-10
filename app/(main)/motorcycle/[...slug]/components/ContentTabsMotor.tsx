@@ -218,13 +218,13 @@ const ContentTabsMotor = ({
         />
       </div>
       <div className=" flex lg:flex-row-reverse gap-3 lg:flex-nowrap flex-wrap">
-        <div className="lg:w-1/4 w-full mt-6">
+        <aside className="lg:w-1/4 w-full mt-6">
           <Sidebar
             detailsMotorcompetitor={detailsMotorcompetitor}
             detailsMotorcycle={detailsMotorcycle}
             motorcyclesModel={motorcyclesModel}
           />
-        </div>
+        </aside>
         <div className="lg:w-3/4 w-full ">
           {/* Content Area */}
           <div className="flex items-start gap-6 lg:flex-nowrap flex-wrap-reverse mt-6">

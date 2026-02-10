@@ -17,10 +17,12 @@ const WhichCars = ({
   whichCars,
   popularComparisons,
   banner,
+  whichCarsCat,
 }: {
   whichCars: Items[];
   popularComparisons: Items[];
   banner: Items[];
+  whichCarsCat: ItemsId | null;
 }) => {
   // استخراج نام خودروها از عنوان برای نمایش بهتر
   const extractCarNames = (title: string) => {
@@ -33,6 +35,7 @@ const WhichCars = ({
     }
     return { car1: "", car2: "" };
   };
+  
 
   const searchParams = useSearchParams();
 
@@ -42,10 +45,10 @@ const WhichCars = ({
         {/* هدر صفحه */}
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            <span className="text-[#ce1a2a]">مقایسه خودرو</span>
+            <span className="text-[#ce1a2a]">{whichCarsCat?.title}</span>
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید
+            {whichCarsCat?.summary}
           </p>
         </div>
 
@@ -152,12 +155,12 @@ const WhichCars = ({
           </div>
 
           {/* سایدبار - 1/4 صفحه */}
-          <div className="lg:w-1/4 w-full">
+          <aside className="lg:w-1/4 w-full">
             <SideBarWhichCars
               popularComparisons={popularComparisons}
               banner={banner}
             />
-          </div>
+          </aside>
         </div>
       </div>
 

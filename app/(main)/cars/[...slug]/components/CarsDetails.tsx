@@ -253,7 +253,7 @@ const CarsDetails = ({
           </div>
 
           {/* سایدبار - 1/4 صفحه */}
-          <div className="lg:w-1/4 w-full">
+          <aside className="lg:w-1/4 w-full">
             <div className="space-y-6">
               {banner.length > 0 &&
                 banner.map((ban) => (
@@ -269,7 +269,7 @@ const CarsDetails = ({
               {/* آمار بازار */}
               <MarketStats />
             </div>
-          </div>
+          </aside>
         </div>
       </div>
 

@@ -27,9 +27,9 @@ function ContactUs({
         <div className="lg:w-3/4 w-full p-2">
           <ContactUsForm tel={tel} mobile={mobile} address={address} map={map}/>
         </div>
-        <div className="lg:w-1/4 w-full">
+        <aside className="lg:w-1/4 w-full">
           <SideBarContact banner={banner} />
-        </div>
+        </aside>
       </div>
     </>
   );

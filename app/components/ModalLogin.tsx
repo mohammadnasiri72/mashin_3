@@ -234,7 +234,7 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
                 onClick={() => {
                   setResetPasswordModal(true);
                 }}
-                className="border bg-white! border-blue-600! hover:border-blue-800! rounded-sm! w-full! text-blue-600! hover:text-blue-800! duration-300! flex! cursor-pointer text-center! py-2! font-bold! hover:bg-blue-200! justify-center"
+                className="border bg-white! border-gray-600! hover:border-gray-800! rounded-sm! w-full! text-gray-600! hover:text-gray-800! duration-300! flex! cursor-pointer text-center! py-2! font-bold! hover:bg-gray-200! justify-center"
               >
                 <div className="flex items-center gap-1">
                   <FaLock />
@@ -250,7 +250,7 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
                   disPatch(setRedirectRegister(fullUrl));
                   setOpen(false);
                 }}
-                className="border text-xs border-blue-600! hover:border-blue-800! rounded-sm! w-full! text-blue-600! hover:text-blue-800! duration-300! text-center! py-2 font-bold! hover:bg-blue-200! flex! justify-center"
+                className="border text-xs border-gray-600! hover:border-gray-800! rounded-sm! w-full! text-gray-600! hover:text-gray-800! duration-300! text-center! py-2 font-bold! hover:bg-gray-200! flex! justify-center"
               >
                 <div className="flex items-center gap-1">
                   <FaUser />
@@ -364,7 +364,7 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
               size="large"
               block
               onClick={handleResetPassword}
-              className="h-12 rounded-lg bg-blue-600 hover:bg-blue-700 border-none font-bold flex items-center justify-center gap-2"
+              className="h-12 rounded-lg bg-gray-600 hover:bg-gray-700 border-none font-bold flex items-center justify-center gap-2"
             >
               <MdOutlinePassword className="text-lg" />
               ارسال لینک بازیابی

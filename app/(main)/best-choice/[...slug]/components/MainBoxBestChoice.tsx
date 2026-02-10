@@ -3,37 +3,48 @@
 import type { TabsProps } from "antd";
 import { Card, Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
-import CommentsAutoService from "./CommentsAutoService";
-import ContactUsAutoService from "./ContactUsAutoService";
-import HeroSectionAutoService from "./HeroSectionAutoService";
-import RatingAutoService from "./RatingAutoService";
-import SidebarAutoService from "./SidebarAutoService";
+import HeroSectionBestChoice from "./HeroSectionBestChoice";
+import DescBestChoice from "./DescBestChoice";
+import GalleryBestChoice from "./GalleryBestChoice";
+import CompetitorsBestChoice from "./CompetitorsBestChoice";
+import SidebarBestChoice from "./SidebarBestChoice";
+import CommentsBestChoice from "./CommentsBestChoice";
+// import CommentsAutoService from "./CommentsAutoService";
+// import ContactUsAutoService from "./ContactUsAutoService";
+// import HeroSectionAutoService from "./HeroSectionAutoService";
+// import RatingAutoService from "./RatingAutoService";
+// import SidebarAutoService from "./SidebarAutoService";
 
-function MainBoxAutoService({
-  detailsAuto,
+function MainBoxBestChoice({
+  detailsBest,
   comments,
   id,
   banner,
-  pollData,
-  Latitude,
-  Longitude,
+  Attachment,
+  competitorsCar,
+  popularBestChoices
 }: {
-  detailsAuto: ItemsId;
+  detailsBest: ItemsId;
   comments: CommentResponse[];
   id: number;
   banner: Items[];
-  pollData: PollData;
-  Latitude: string;
-  Longitude: string;
+  Attachment: ItemsAttachment[];
+  competitorsCar: ItemsId[];
+  popularBestChoices:Items[]
 }) {
+  const title = detailsBest.properties.find(
+    (e) => e.propertyKey === "p1043_carname",
+  )?.propertyValue;
+
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
   const navbarRef = useRef<HTMLDivElement>(null);
 
   // رفرنس‌های مربوط به هر بخش
   const commentsRef = useRef<HTMLDivElement>(null);
-  const contactRef = useRef<HTMLDivElement>(null);
-  const servicesRef = useRef<HTMLDivElement>(null);
+  const descRef = useRef<HTMLDivElement>(null);
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const competitorsRef = useRef<HTMLDivElement>(null);
 
   // هندل کردن اسکرول و sticky navbar
   useEffect(() => {
@@ -44,9 +55,10 @@ function MainBoxAutoService({
       }
 
       const sections = [
-        { key: "1", ref: contactRef },
-        { key: "2", ref: servicesRef },
-        { key: "3", ref: commentsRef },
+        { key: "1", ref: descRef },
+        { key: "2", ref: galleryRef },
+        { key: "3", ref: competitorsRef },
+        { key: "4", ref: commentsRef },
       ];
 
       let currentActiveKey = activeKey;
@@ -110,9 +122,10 @@ function MainBoxAutoService({
     const sectionRefs: {
       [key: string]: React.RefObject<HTMLDivElement | null>;
     } = {
-      "1": contactRef,
-      "2": servicesRef,
-      "3": commentsRef,
+      "1": descRef,
+      "2": galleryRef,
+      "3": competitorsRef,
+      "4": commentsRef,
     };
 
     const targetRef = sectionRefs[key];
@@ -140,25 +153,44 @@ function MainBoxAutoService({
     }
   };
 
+  const labelR: string = title ? `رقبای ${title}` : "رقبا";
+
   const items: TabsProps["items"] = [
+    ...(detailsBest
+      ? [
+          {
+            key: "1",
+            label: "محتوای اصلی ",
+          },
+        ]
+      : []),
+    ...(Attachment.length > 0
+      ? [
+          {
+            key: "2",
+            label: "گالری تصاویر",
+          },
+        ]
+      : []),
+    ...(competitorsCar.length > 0
+      ? [
+          {
+            key: "3",
+            label: `${labelR}`,
+          },
+        ]
+      : []),
+
     {
-      key: "1",
-      label: "مشخصات نمایندگی",
-    },
-    {
-      key: "2",
-      label: "نظرسنجی",
-    },
-    {
-      key: "3",
-      label: "نظرات مشتریان",
+      key: "4",
+      label: "نظرات کاربران",
     },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50 w-full">
       {/* هدر صفحه */}
-      <HeroSectionAutoService detailsAuto={detailsAuto} />
+      <HeroSectionBestChoice detailsBest={detailsBest} />
       {/* باکس تب ها */}
       <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 z-10000!">
         <Card
@@ -175,39 +207,52 @@ function MainBoxAutoService({
         </Card>
       </div>
       <div>
-        <div className="flex flex-wrap items-start py-8">
+        <div className="flex flex-wrap items-start py-3">
           {/* محتوای اصلی */}
 
           <div className="lg:w-3/4 w-full px-2">
-            <div className="space-y-8 mt-6">
-              {/* بخش مشخصات نمایندگی */}
-              <div id="contact" className="section-anchor" ref={contactRef}>
-                <ContactUsAutoService
-                  detailsAuto={detailsAuto}
-                  Latitude={Latitude}
-                  Longitude={Longitude}
-                />
+            <div className="space-y-8">
+              {/* بخش محتوا اصلی */}
+              <div id="desc" className="section-anchor" ref={descRef}>
+                <DescBestChoice detailsBest={detailsBest} title={title}/>
               </div>
 
-              {/* بخش نظرسنجی */}
-              <div id="services" className="section-anchor" ref={servicesRef}>
-                <RatingAutoService
-                  initialPollData={pollData}
-                  detailsAuto={detailsAuto}
-                />
-              </div>
+              {/* بخش گالری تصاویر */}
+              {Attachment.length > 0 && (
+                <div id="gallery" className="section-anchor" ref={galleryRef}>
+                  <GalleryBestChoice
+                    detailsBest={detailsBest}
+                    Attachment={Attachment}
+                    title={title}
+                  />
+                </div>
+              )}
+
+              {/* بخش رقبا */}
+              {competitorsCar.length > 0 && (
+                <div
+                  id="competitors"
+                  className="section-anchor"
+                  ref={competitorsRef}
+                >
+                  <CompetitorsBestChoice
+                    competitorsCar={competitorsCar}
+                    title={title}
+                  />
+                </div>
+              )}
             </div>
           </div>
 
           {/* سایدبار */}
           <aside className="lg:w-1/4 w-full mt-6 lg:mt-0">
-            <SidebarAutoService banner={banner} />
+            <SidebarBestChoice banner={banner} popularBestChoices={popularBestChoices}/>
           </aside>
         </div>
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor" ref={commentsRef}>
-          <CommentsAutoService
-            detailsAuto={detailsAuto}
+          <CommentsBestChoice
+            detailsBest={detailsBest}
             comments={comments}
             id={id}
           />
@@ -282,4 +327,4 @@ function MainBoxAutoService({
   );
 }
 
-export default MainBoxAutoService;
+export default MainBoxBestChoice;

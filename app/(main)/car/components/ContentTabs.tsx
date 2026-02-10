@@ -219,13 +219,13 @@ const ContentTabs = ({
         />
       </div>
       <div className=" flex lg:flex-row-reverse gap-3 lg:flex-nowrap flex-wrap">
-        <div className="lg:w-1/4 w-full mt-6">
+        <aside className="lg:w-1/4 w-full mt-6">
           <Sidebar
             detailsCarcompetitor={detailsCarcompetitor}
             detailsCar={detailsCar}
             carsModel={carsModel}
           />
-        </div>
+        </aside>
         <div className="lg:w-3/4 w-full ">
           {/* Navigation Tabs */}
 

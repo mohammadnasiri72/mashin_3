@@ -17,6 +17,7 @@ const CarNews = ({
   id,
   newsData,
   popularNews,
+  offerNews,
   banner,
   newsDetails,
   tabConfig,
@@ -24,6 +25,7 @@ const CarNews = ({
   id: number;
   newsData: Items[];
   popularNews: Items[];
+  offerNews: Items[];
   banner: Items[];
   newsDetails: ItemsCategoryId | ItemsId;
   tabConfig: { key: number; href: string; label: string }[];
@@ -169,8 +171,51 @@ const CarNews = ({
             </div>
 
             {/* سایدبار - 1/4 صفحه */}
-            <div className="lg:w-1/4 w-full">
+            <aside className="lg:w-1/4 w-full">
               <div className="space-y-6">
+                {/*اخبار فروش ویژه*/}
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4! border-b pb-2">
+                   اخبار فروش ویژه
+                  </h3>
+                  <div className="space-y-4">
+                    {offerNews.map((news) => (
+                      <Link
+                        key={news.id}
+                        href={`/news/${news.id}`}
+                        className="block group"
+                      >
+                        <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors">
+                          <div className="w-16 h-12 bg-gray-200 rounded shrink-0 overflow-hidden">
+                            <img
+                              src={mainDomainOld + news.image}
+                              alt={news.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-gray-900 text-sm leading-tight group-hover:text-white! transition-colors line-clamp-2">
+                              {news.title}
+                            </h4>
+                            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 mt-2 group-hover:text-white!">
+                              <div className="flex items-center gap-1">
+                                <FaCalendar />
+                                <span>{formatPersianDate(news.created)}</span>
+                              </div>
+
+                              <div className="flex items-center gap-1">
+                                <FaEye className="w-3 h-3" />
+                                <span>
+                                  {toPersianNumbers(news.visit)} بازدید
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
                 {/* محبوب‌ترین اخبار */}
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                   <h3 className="text-lg font-bold text-gray-900 mb-4! border-b pb-2">
@@ -227,7 +272,7 @@ const CarNews = ({
                 {/* آمار بازار */}
                 <MarketStats />
               </div>
-            </div>
+            </aside>
           </div>
         </div>
 

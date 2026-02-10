@@ -18,7 +18,9 @@ export async function generateMetadata({
   if (whichcars.title) {
     return {
       title: `${whichcars.seoInfo?.seoTitle ? whichcars?.seoInfo?.seoTitle : whichcars.title + " | ماشین3"}`,
-      description: whichcars.seoInfo?.seoDescription ? whichcars.seoInfo?.seoDescription :"مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
+      description: whichcars.seoInfo?.seoDescription
+        ? whichcars.seoInfo?.seoDescription
+        : "مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
       keywords: whichcars.seoInfo?.seoKeywords
         ? whichcars.seoInfo?.seoKeywords
         : whichcars.seoKeywords,
@@ -28,7 +30,9 @@ export async function generateMetadata({
       },
       openGraph: {
         title: `${whichcars.seoInfo?.seoTitle ? whichcars?.seoInfo?.seoTitle : whichcars.title + " | ماشین3"}`,
-        description: whichcars.seoInfo?.seoDescription ? whichcars.seoInfo?.seoDescription :"مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
+        description: whichcars.seoInfo?.seoDescription
+          ? whichcars.seoInfo?.seoDescription
+          : "مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
       },
       other: {
         seoHeadTags: whichcars?.seoInfo?.seoHeadTags,
@@ -95,6 +99,15 @@ async function pageWhichcarsDainamic({
     pageIndex: 1,
   });
 
+  const id1 = Number(
+    dataCompare[0].properties.find((e) => e.propertyKey === "p1044_relatedcar")
+      ?.propertyValue,
+  );
+  const id2 = Number(
+    dataCompare[1].properties.find((e) => e.propertyKey === "p1044_relatedcar")
+      ?.propertyValue,
+  );
+
   return (
     <>
       <CompareCars
@@ -106,6 +119,8 @@ async function pageWhichcarsDainamic({
           .slice(0, 16)}
         comments={comments}
         id={Number(id)}
+        id1={id1}
+        id2={id2}
         banner={banner}
       />
     </>
