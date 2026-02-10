@@ -12,28 +12,38 @@ export async function generateMetadata({
 }) {
   const param = await params;
   const id = Number(param.slug[0]);
-  const podcasts: ItemsCategoryId = await getCategoryId(id);
-  const seoUrl = `${mainDomainOld}${podcasts?.seoUrl}`;
+  const dataPage: ItemsCategoryId = await getCategoryId(id);
 
-  if (podcasts.title) {
+  if (dataPage.title) {
+    const title = `${
+      dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
+    }`;
+    const description = dataPage.seoDescription
+      ? dataPage.seoDescription
+      : dataPage.title;
+    const keywords = dataPage?.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.headTags;
+
     return {
-      title: `${
-        podcasts.seoTitle ? podcasts.seoTitle : podcasts.title + " | ماشین3"
-      }`,
-      description: podcasts.seoDescription ? podcasts.seoDescription : "لیست پادکست‌های ماشین3",
-      keywords: podcasts?.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${
-          podcasts.seoTitle ? podcasts.seoTitle : podcasts.title + " | ماشین3"
-        }`,
-        description: podcasts.seoDescription ? podcasts.seoDescription : "لیست پادکست‌های ماشین3",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: podcasts?.headTags,
+        seoHeadTags,
       },
     };
   } else {

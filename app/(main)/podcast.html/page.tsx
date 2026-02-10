@@ -10,26 +10,38 @@ export async function generateMetadata() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  const podcastDetails: ItemsId | null = await getItemByUrl(decodedPathname);
-  const seoUrl = `${mainDomainOld}${podcastDetails?.seoUrl}`;
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  if (podcastDetails && podcastDetails.title) {
+  if (dataPage && dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+
     return {
-      title: `${podcastDetails.seoInfo?.seoTitle ? podcastDetails?.seoInfo?.seoTitle : podcastDetails.title + " | ماشین3"}`,
-      description: podcastDetails.seoInfo?.seoDescription,
-      keywords: podcastDetails.seoInfo?.seoKeywords
-        ? podcastDetails.seoInfo?.seoKeywords
-        : podcastDetails.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${podcastDetails.seoInfo?.seoTitle ? podcastDetails?.seoInfo?.seoTitle : podcastDetails.title + " | ماشین3"}`,
-        description: podcastDetails.seoInfo?.seoDescription,
+        title,
+        description,
       },
       other: {
-        seoHeadTags: podcastDetails?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {

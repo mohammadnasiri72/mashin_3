@@ -15,26 +15,37 @@ export async function generateMetadata({
   const searchParam = await searchParams;
   const id = Number(searchParam.id);
   const id2 = Number(param.slug[0]);
-  const video: ItemsId = await getItemId(id || id2);
-  const seoUrl = `${mainDomainOld}${video?.seoUrl}`;
+  const dataPage: ItemsId = await getItemId(id || id2);
 
-  if (video.title) {
+  if (dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
     return {
-      title: `${video.seoInfo?.seoTitle ? video?.seoInfo?.seoTitle : video.title + " | ماشین3"}`,
-      description: video.seoInfo?.seoDescription ? video.seoInfo?.seoDescription : "جزئیات ویدئو",
-      keywords: video.seoInfo?.seoKeywords
-        ? video.seoInfo?.seoKeywords
-        : video.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${video.seoInfo?.seoTitle ? video?.seoInfo?.seoTitle : video.title + " | ماشین3"}`,
-        description: video.seoInfo?.seoDescription ? video.seoInfo?.seoDescription : "جزئیات ویدئو",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: video?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {

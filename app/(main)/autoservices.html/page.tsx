@@ -12,30 +12,38 @@ export async function generateMetadata() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const autoServiceCat: ItemsId | null = await getItemByUrl(decodedPathname);
-  const seoUrl = `${mainDomainOld}${autoServiceCat?.seoUrl}`;
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  if (autoServiceCat && autoServiceCat.title) {
+  if (dataPage && dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+    
     return {
-      title: `${autoServiceCat.seoInfo?.seoTitle ? autoServiceCat?.seoInfo?.seoTitle : autoServiceCat.title + " | ماشین3"}`,
-      description: autoServiceCat.seoInfo?.seoDescription
-        ? autoServiceCat.seoInfo?.seoDescription
-        : "مراکز و نمایندگی های خدمات خودرو",
-      keywords: autoServiceCat.seoInfo?.seoKeywords
-        ? autoServiceCat.seoInfo?.seoKeywords
-        : autoServiceCat.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${autoServiceCat.seoInfo?.seoTitle ? autoServiceCat?.seoInfo?.seoTitle : autoServiceCat.title + " | ماشین3"}`,
-        description: autoServiceCat.seoInfo?.seoDescription
-          ? autoServiceCat.seoInfo?.seoDescription
-          : "مراکز و نمایندگی های خدمات خودرو",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: autoServiceCat?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {

@@ -4,28 +4,37 @@ import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata() {
   const dataPage: ItemsId | null = await getItemByUrl("/compare");
-  const seoUrl = `${mainDomainOld}${dataPage?.seoUrl}`;
+
   if (dataPage && dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+
     return {
-      title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-      description: dataPage.seoInfo?.seoDescription
-        ? dataPage.seoInfo?.seoDescription
-        : "مقایسه خودروهای بازار",
-      keywords: dataPage.seoInfo?.seoKeywords
-        ? dataPage.seoInfo?.seoKeywords
-        : dataPage.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-        description: dataPage.seoInfo?.seoDescription
-          ? dataPage.seoInfo?.seoDescription
-          : "مقایسه خودروهای بازار",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: dataPage?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {

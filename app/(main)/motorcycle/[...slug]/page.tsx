@@ -18,30 +18,37 @@ export async function generateMetadata({
 }) {
   const searchParam = await searchParams;
   const id = Number(searchParam.id);
-  const detailsMotorcycle: ItemsId = await getItemId(Number(id));
-  const seoUrl = `${mainDomainOld}${detailsMotorcycle?.seoUrl}`;
+  const dataPage: ItemsId = await getItemId(Number(id));
 
-  if (detailsMotorcycle.title) {
+  if (dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
     return {
-      title: `${detailsMotorcycle.seoInfo?.seoTitle ? detailsMotorcycle?.seoInfo?.seoTitle : detailsMotorcycle.title + " | ماشین3"}`,
-      description: detailsMotorcycle.seoInfo?.seoDescription
-        ? detailsMotorcycle.seoInfo?.seoDescription
-        : "جزئیات موتورسیکلت",
-      keywords: detailsMotorcycle.seoInfo?.seoKeywords
-        ? detailsMotorcycle.seoInfo?.seoKeywords
-        : detailsMotorcycle.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${detailsMotorcycle.seoInfo?.seoTitle ? detailsMotorcycle?.seoInfo?.seoTitle : detailsMotorcycle.title + " | ماشین3"}`,
-        description: detailsMotorcycle.seoInfo?.seoDescription
-          ? detailsMotorcycle.seoInfo?.seoDescription
-          : "جزئیات موتورسیکلت",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: detailsMotorcycle?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {

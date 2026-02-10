@@ -388,6 +388,14 @@ export async function middleware(request: Request) {
     const type = searchParams.get("type");
     try {
       await getPriceCarBrands(type ? type : "internal");
+      // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("x-pathname", pathname); // فقط مسیر
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
@@ -399,6 +407,14 @@ export async function middleware(request: Request) {
     const type = searchParams.get("type");
     try {
       await getPriceMotorBrands(type ? type : "all");
+      // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("x-pathname", pathname); // فقط مسیر
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
       return NextResponse.redirect(
@@ -677,6 +693,15 @@ export async function middleware(request: Request) {
       );
     }
   } else if (pathname.startsWith("/best-choices.html")) {
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } else if (pathname.startsWith("/searchcars")) {
     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-pathname", pathname); // فقط مسیر

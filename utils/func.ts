@@ -1,5 +1,6 @@
 const moment = require("moment-jalaali");
 import Swal from "sweetalert2";
+import { mainDomainOld } from "./mainDomain";
 
 export const createMarkup = (html: string) => {
   return { __html: html };
@@ -15,15 +16,11 @@ export const toPersianNumbers = (input: number | string): string => {
 export const toEnglishNumber = (number: string | number): string => {
   const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
   const arabicDigits = "٠١٢٣٤٥٦٧٨٩";
-  
+
   return number
     .toString()
-    .replace(/[۰-۹]/g, (d: string) => 
-      String(persianDigits.indexOf(d))
-    )
-    .replace(/[٠-٩]/g, (d: string) => 
-      String(arabicDigits.indexOf(d))
-    );
+    .replace(/[۰-۹]/g, (d: string) => String(persianDigits.indexOf(d)))
+    .replace(/[٠-٩]/g, (d: string) => String(arabicDigits.indexOf(d)));
 };
 
 export const formatPersianDate = (dateString: string): string => {
@@ -130,17 +127,13 @@ export const createInitialUserData = () => {
   };
 };
 
-
-export const createpublishCode = (publishCode:string) => {
+export const createpublishCode = (publishCode: string) => {
   if (
-      publishCode.split("-").length > 1 &&
-      publishCode.split("-")[0] ===
-      publishCode.split("-")[1]
-    ) {
-     return publishCode.split("-")[0];
-    } else {
-      return publishCode;
-    }
+    publishCode.split("-").length > 1 &&
+    publishCode.split("-")[0] === publishCode.split("-")[1]
+  ) {
+    return publishCode.split("-")[0];
+  } else {
+    return publishCode;
+  }
 };
-
-

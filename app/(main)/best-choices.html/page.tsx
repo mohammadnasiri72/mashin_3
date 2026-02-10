@@ -10,31 +10,38 @@ export async function generateMetadata() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const bestCat: ItemsId | null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  const seoUrl = `${mainDomainOld}${bestCat?.seoUrl}`;
+  if (dataPage && dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
 
-  if (bestCat && bestCat.title) {
     return {
-      title: `${bestCat.seoInfo?.seoTitle ? bestCat?.seoInfo?.seoTitle : bestCat.title + " | ماشین3"}`,
-      description: bestCat.seoInfo?.seoDescription
-        ? bestCat.seoInfo?.seoDescription
-        : "بهترین انتخاب",
-      keywords: bestCat.seoInfo?.seoKeywords
-        ? bestCat.seoInfo?.seoKeywords
-        : bestCat.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${bestCat.seoInfo?.seoTitle ? bestCat?.seoInfo?.seoTitle : bestCat.title + " | ماشین3"}`,
-        description: bestCat.seoInfo?.seoDescription
-          ? bestCat.seoInfo?.seoDescription
-          : "بهترین انتخاب",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: bestCat?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {
@@ -79,7 +86,6 @@ async function pageBestChoices({
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
   const bestCat: ItemsId | null = await getItemByUrl(decodedPathname);
-
 
   return (
     <>

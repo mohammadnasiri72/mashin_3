@@ -10,31 +10,40 @@ export async function generateMetadata() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const whichCarsCat: ItemsId | null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  const seoUrl = `${mainDomainOld}${whichCarsCat?.seoUrl}`;
+  // const seoUrl = `${mainDomainOld}${whichCarsCat?.seoUrl}`;
 
-  if (whichCarsCat && whichCarsCat.title) {
+  if (dataPage && dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+
     return {
-      title: `${whichCarsCat.seoInfo?.seoTitle ? whichCarsCat?.seoInfo?.seoTitle : whichCarsCat.title + " | ماشین3"}`,
-      description: whichCarsCat.seoInfo?.seoDescription
-        ? whichCarsCat.seoInfo?.seoDescription
-        : "مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
-      keywords: whichCarsCat.seoInfo?.seoKeywords
-        ? whichCarsCat.seoInfo?.seoKeywords
-        : whichCarsCat.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${whichCarsCat.seoInfo?.seoTitle ? whichCarsCat?.seoInfo?.seoTitle : whichCarsCat.title + " | ماشین3"}`,
-        description: whichCarsCat.seoInfo?.seoDescription
-          ? whichCarsCat.seoInfo?.seoDescription
-          : "مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: whichCarsCat?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {

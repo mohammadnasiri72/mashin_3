@@ -13,36 +13,37 @@ export async function generateMetadata({
 }) {
   const searchParam = await searchParams;
   const id = Number(searchParam.id);
-  const detailsMotorcycle: ItemsCategoryId = await getCategoryId(id);
-  const seoUrl = `${mainDomainOld}${detailsMotorcycle?.seoUrl}`;
+  const dataPage: ItemsCategoryId = await getCategoryId(id);
 
-  if (detailsMotorcycle.title) {
+  if (dataPage.title) {
+    const title = `${
+      dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
+    }`;
+    const description = dataPage.seoDescription
+      ? dataPage.seoDescription
+      : dataPage.title;
+    const keywords = dataPage?.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.headTags;
     return {
-      title: `${
-        detailsMotorcycle.seoTitle
-          ? detailsMotorcycle.seoTitle
-          : detailsMotorcycle.title + " | ماشین3"
-      }`,
-      description: detailsMotorcycle.seoDescription
-        ? detailsMotorcycle.seoDescription
-        : "لیست موتورسیکلت‌ها",
-      keywords: detailsMotorcycle?.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${
-          detailsMotorcycle.seoTitle
-            ? detailsMotorcycle.seoTitle
-            : detailsMotorcycle.title + " | ماشین3"
-        }`,
-        description: detailsMotorcycle.seoDescription
-          ? detailsMotorcycle.seoDescription
-          : "لیست موتورسیکلت‌ها",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: detailsMotorcycle?.headTags,
+        seoHeadTags,
       },
     };
   } else {

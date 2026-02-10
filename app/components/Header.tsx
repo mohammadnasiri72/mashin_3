@@ -18,6 +18,7 @@ import ProfileDropdown from "./ProfileDropdown";
 import RegisterLink from "./RegisterLink";
 import SearchBoxHeader from "./SearchBoxHeader";
 import SearchBoxHeaderMobile from "./SearchBoxHeaderMobile";
+import { Tooltip } from "antd";
 const Cookies = require("js-cookie");
 
 // تابع تبدیل LastMenuItem به MenuItem با ساختار سلسله‌مراتبی
@@ -223,96 +224,100 @@ export default function Header({
           isSticky ? "sticky" : ""
         }`}
       >
-        <div className="max-w-[1560px] mx-auto px-4 py-3 h-16 flex flex-col justify-center">
-          <div className="flex items-center">
+        <div className="max-w-[2000px] mx-auto px-4 py-3 h-16 flex flex-col justify-center">
+          <div className="flex items-center w-full">
             {/* Logo and Menu Section */}
-            <div className="w-auto lg:w-2/3 xl:w-7/12 flex items-center">
-              <div className="flex flex-wrap w-full items-center">
-                {/* Logo */}
-                <div className="w-full lg:w-2/12 xl:w-2/12 flex items-center lg:pr-4">
-                  <Link href="/">
-                    <img
-                      src={mainDomainOld + logoSrc}
-                      alt={logoTitle}
-                      className="max-w-28!"
-                      loading="eager"
-                      fetchPriority="high"
-                    />
-                  </Link>
-                </div>
+            <div className="flex w-full items-center">
+              {/* Logo */}
+              <div className="w-auto flex items-center lg:pr-4">
+                <Link href="/">
+                  <img
+                    src={mainDomainOld + logoSrc}
+                    alt={logoTitle}
+                    className="max-w-28!"
+                    loading="eager"
+                    fetchPriority="high"
+                  />
+                </Link>
+              </div>
 
-                {/* Desktop Menu */}
-                <div className="hidden lg:block lg:w-10/12 xl:w-10/12">
-                  <nav className="flex items-center space-x-1 space-x-reverse">
-                    {menuItems.length > 0 &&
-                      menuItems.map((item, index) => (
-                        <div key={index} className="relative group">
-                          <Link
-                            href={item.url}
-                            className="flex items-center text-[13px] whitespace-nowrap font-medium text-[#222]! hover:bg-[#ce1a2a] hover:text-white! rounded-lg px-2 py-2 duration-300 transition-all"
-                          >
-                            {item.title}
-                            {item.children && (
-                              <IoChevronDown className="mr-1 text-xs transition-transform duration-300 group-hover:rotate-180" />
-                            )}
-                          </Link>
-
-                          {/* Dropdown Menu */}
+              {/* Desktop Menu */}
+              <div className="hidden lg:block  ">
+                <nav className="flex items-center space-x-1 space-x-reverse">
+                  {menuItems.length > 0 &&
+                    menuItems.map((item, index) => (
+                      <div key={index} className="relative group">
+                        <Link
+                          href={item.url}
+                          className="flex items-center text-[13px] whitespace-nowrap font-medium text-[#222]! hover:bg-[#ce1a2a] hover:text-white! rounded-lg px-2 py-2 duration-300 transition-all"
+                        >
+                          {item.title}
                           {item.children && (
-                            <div className="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
-                              <div className="bg-white rounded-lg shadow-lg border border-gray-200 min-w-[230px] py-2">
-                                {item.children.map((child, childIndex) => (
-                                  <Link
-                                    key={childIndex}
-                                    href={child.url}
-                                    className="block px-4 py-3 text-sm text-gray-700 hover:text-white! hover:bg-[#ce1a2a]! transition-all duration-200 border-b border-gray-100 last:border-b-0"
-                                  >
-                                    {child.title}
-                                  </Link>
-                                ))}
-                              </div>
-                            </div>
+                            <IoChevronDown className="mr-1 text-xs transition-transform duration-300 group-hover:rotate-180" />
                           )}
-                        </div>
-                      ))}
-                    {menuItems.length === 0 && (
-                      <div className="flex items-center gap-5 px-5">
-                        <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
-                        /
-                        <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
-                        /
-                        <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
-                        /
-                        <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
-                        /
-                        <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />
+                        </Link>
+
+                        {/* Dropdown Menu */}
+                        {item.children && (
+                          <div className="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                            <div className="bg-white rounded-lg shadow-lg border border-gray-200 min-w-[230px] py-2">
+                              {item.children.map((child, childIndex) => (
+                                <Link
+                                  key={childIndex}
+                                  href={child.url}
+                                  className="block px-4 py-3 text-sm text-gray-700 hover:text-white! hover:bg-[#ce1a2a]! transition-all duration-200 border-b border-gray-100 last:border-b-0"
+                                >
+                                  {child.title}
+                                </Link>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </nav>
-                </div>
+                    ))}
+                  {menuItems.length === 0 && (
+                    <div className="flex items-center gap-5 px-5">
+                      <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
+                      /
+                      <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
+                      /
+                      <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
+                      /
+                      <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
+                      /
+                      <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />
+                    </div>
+                  )}
+                </nav>
               </div>
             </div>
 
             {/* Search and Login Section */}
-            <div className="w-full lg:w-1/3 xl:w-5/12 flex items-center">
-              <div className="flex items-center lg:justify-between justify-end w-full">
+            <div className="w-full! flex items-center">
+              <div className="flex items-center lg:justify-between justify-end w-full gap-1">
                 {/* Search Box */}
                 <SearchBoxHeader />
 
-                <div className="w-44 ">
+                <div className="w-auto ">
                   {isLoading && <LoadingSkeletonAuth />}
                   {!token && !isLoading && (
                     <div className="flex items-center space-x-3 space-x-reverse gap-2">
-                      <button
-                        aria-label="ورود"
-                        onClick={() => setOpen(true)}
-                        className="font-bold cursor-pointer whitespace-nowrap text-[#ce1a2a]! text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_5px_1px_rgba(206,26,42)]"
+                      <Tooltip
+                        styles={{ root: { zIndex: 99999999 } }}
+                        title="ورود"
+                        placement="bottom"
                       >
-                        <div className="flex items-center gap-0.5">
-                          <MdLogin className="text-lg" />
-                          <span>ورود</span>
-                        </div>
-                      </button>
+                        <button
+                          aria-label="ورود"
+                          onClick={() => setOpen(true)}
+                          className="font-bold cursor-pointer whitespace-nowrap text-[#ce1a2a]! text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_5px_1px_rgba(206,26,42)]"
+                        >
+                          <div className="flex items-center">
+                            <MdLogin className="text-lg" />
+                            <span className="lg:hidden">ورود</span>
+                          </div>
+                        </button>
+                      </Tooltip>
                       <ModalLogin open={open} setOpen={setOpen} />
 
                       <RegisterLink />

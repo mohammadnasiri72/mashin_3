@@ -14,32 +14,39 @@ export async function generateMetadata({
 }) {
   const param = await params;
   const id = param.slug[0];
-  const videoCat: ItemsCategoryId = await getCategoryId(Number(id));
-  const seoUrl = `${mainDomainOld}${videoCat?.seoUrl}`;
+  const dataPage: ItemsCategoryId = await getCategoryId(Number(id));
+  // const seoUrl = `${mainDomainOld}${videoCat?.seoUrl}`;
 
-  if (videoCat.title) {
+  if (dataPage.title) {
+    const title = `${
+      dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
+    }`;
+    const description = dataPage.seoDescription
+      ? dataPage.seoDescription
+      : dataPage.title;
+    const keywords = dataPage?.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.headTags;
+    
     return {
-      title: `${
-        videoCat.seoTitle ? videoCat.seoTitle : videoCat.title + " | ماشین3"
-      }`,
-      description: videoCat.seoDescription
-        ? videoCat.seoDescription
-        : "فیلم های تست و بررسی خودرو",
-      keywords: videoCat?.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${
-          videoCat.seoTitle ? videoCat.seoTitle : videoCat.title + " | ماشین3"
-        }`,
-        description: videoCat.seoDescription
-          ? videoCat.seoDescription
-          : "فیلم های تست و بررسی خودرو",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: videoCat?.headTags,
+        seoHeadTags,
       },
     };
   } else {

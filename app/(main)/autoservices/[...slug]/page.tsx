@@ -14,36 +14,43 @@ export async function generateMetadata({
   const param = await params;
   const id = param.slug[0];
 
-  const autoServiceCat = await getCategoryId(Number(id));
-  const seoUrl = `${mainDomainOld}${autoServiceCat?.seoUrl}`;
+  const dataPage = await getCategoryId(Number(id));
 
-  if (autoServiceCat.title) {
+  if (dataPage.title) {
+    const title = `${
+      dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
+    }`;
+
+    const description = dataPage.seoDescription
+      ? dataPage.seoDescription
+      : dataPage.title;
+
+    const keywords = dataPage?.seoKeywords;
+
+    const metadataBase = new URL(mainDomainOld);
+
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+
+    const seoHeadTags = dataPage?.headTags;
+
     return {
-      title: `${
-        autoServiceCat.seoTitle
-          ? autoServiceCat.seoTitle
-          : autoServiceCat.title + " | ماشین3"
-      }`,
-      description: autoServiceCat.seoDescription
-        ? autoServiceCat.seoDescription
-        : "مراکز و نمایندگی های خدمات خودرو",
-      keywords: autoServiceCat?.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${
-          autoServiceCat.seoTitle
-            ? autoServiceCat.seoTitle
-            : autoServiceCat.title + " | ماشین3"
-        }`,
-        description: autoServiceCat.seoDescription
-          ? autoServiceCat.seoDescription
-          : "مراکز و نمایندگی های خدمات خودرو",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: autoServiceCat?.headTags,
+        seoHeadTags,
       },
     };
   } else {

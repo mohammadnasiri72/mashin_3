@@ -139,7 +139,7 @@ function SearchBoxHeader() {
 
   return (
     <div
-      className="hidden lg:block flex-1 max-w-md relative"
+      className="hidden lg:block flex-1 relative w-full"
       ref={searchBoxRef}
     >
       <div className="bg-[#f1f2f4] rounded-lg px-4 py-2 flex items-center border border-transparent hover:border-gray-300 transition-all duration-300">
@@ -170,7 +170,7 @@ function SearchBoxHeader() {
 
       {/* Results Dropdown - فقط اگر حداقل 3 کاراکتر داشت نشان بده */}
       {showResults && term.trim().length >= 3 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-96 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 max-h-96 overflow-y-auto min-w-72">
           {error && (
             <div className="p-4 text-center text-red-500 text-sm">{error}</div>
           )}

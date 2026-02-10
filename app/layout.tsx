@@ -6,8 +6,8 @@ import localFont from "next/font/local";
 import CustomRouteLoader from "./components/CustomRouteLoader";
 
 export const metadata: Metadata = {
-  title: "ماشین 3 - بازار خودرو ایران",
-  description: "اطلاعات کامل خودرو، قیمت، اخبار و مقایسه",
+  title: "ماشین 3 - بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
+  description: "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
 };
 
 const raviFont = localFont({

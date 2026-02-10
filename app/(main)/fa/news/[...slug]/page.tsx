@@ -20,29 +20,38 @@ export async function generateMetadata({
     const headersList = await headers();
     const pathname = headersList.get("x-pathname");
     const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-    const newsDetails: ItemsId | null = await getItemByUrl(decodedPathname);
-    const seoUrl = `${mainDomainOld}${newsDetails?.seoUrl}`;
-    if (newsDetails && newsDetails.title) {
+    const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
+
+    if (dataPage && dataPage.title) {
+      const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+      const description = dataPage.seoInfo?.seoDescription
+        ? dataPage.seoInfo?.seoDescription
+        : dataPage.title;
+      const keywords = dataPage.seoInfo?.seoKeywords
+        ? dataPage.seoInfo?.seoKeywords
+        : dataPage.seoKeywords;
+      const metadataBase = new URL(mainDomainOld);
+      const seoUrl = dataPage?.seoUrl
+        ? `${mainDomainOld}${dataPage?.seoUrl}`
+        : dataPage?.url
+          ? `${mainDomainOld}${dataPage?.url}`
+          : `${mainDomainOld}`;
+      const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+
       return {
-        title: `${newsDetails.seoInfo?.seoTitle ? newsDetails?.seoInfo?.seoTitle : newsDetails.title + " | ماشین3"}`,
-        description: newsDetails.seoInfo?.seoDescription
-          ? newsDetails.seoInfo?.seoDescription
-          : "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
-        keywords: newsDetails.seoInfo?.seoKeywords
-          ? newsDetails.seoInfo?.seoKeywords
-          : newsDetails.seoKeywords,
-        metadataBase: new URL(mainDomainOld),
+        title,
+        description,
+        keywords,
+        metadataBase,
         alternates: {
           canonical: seoUrl,
         },
         openGraph: {
-          title: `${newsDetails.seoInfo?.seoTitle ? newsDetails?.seoInfo?.seoTitle : newsDetails.title + " | ماشین3"}`,
-          description: newsDetails.seoInfo?.seoDescription
-            ? newsDetails.seoInfo?.seoDescription
-            : "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
+          title,
+          description,
         },
         other: {
-          seoHeadTags: newsDetails?.seoInfo?.seoHeadTags,
+          seoHeadTags,
         },
       };
     } else {
@@ -52,36 +61,38 @@ export async function generateMetadata({
       };
     }
   } else {
-    const newsDetails: ItemsCategoryId = await getCategoryId(id);
-    const seoUrl = `${mainDomainOld}${newsDetails?.seoUrl}`;
+    const dataPage: ItemsCategoryId = await getCategoryId(id);
 
-    if (newsDetails.title) {
+    if (dataPage.title) {
+      const title = `${
+        dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
+      }`;
+      const description = dataPage.seoDescription
+        ? dataPage.seoDescription
+        : dataPage.title;
+      const keywords = dataPage?.seoKeywords;
+      const metadataBase = new URL(mainDomainOld);
+      const seoUrl = dataPage?.seoUrl
+        ? `${mainDomainOld}${dataPage?.seoUrl}`
+        : dataPage?.url
+          ? `${mainDomainOld}${dataPage?.url}`
+          : `${mainDomainOld}`;
+      const seoHeadTags = dataPage?.headTags;
+
       return {
-        title: `${
-          newsDetails.seoTitle
-            ? newsDetails.seoTitle
-            : newsDetails.title + " | ماشین3"
-        }`,
-        description: newsDetails.seoDescription
-          ? newsDetails.seoDescription
-          : "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
-        keywords: newsDetails?.seoKeywords,
-        metadataBase: new URL(mainDomainOld),
+        title,
+        description,
+        keywords,
+        metadataBase,
         alternates: {
           canonical: seoUrl,
         },
         openGraph: {
-          title: `${
-            newsDetails.seoTitle
-              ? newsDetails.seoTitle
-              : newsDetails.title + " | ماشین3"
-          }`,
-          description: newsDetails.seoDescription
-            ? newsDetails.seoDescription
-            : "آخرین اخبار و تحلیل‌های بازار خودرو ایران",
+          title,
+          description,
         },
         other: {
-          seoHeadTags: newsDetails?.headTags,
+          seoHeadTags,
         },
       };
     } else {
@@ -143,7 +154,6 @@ async function pageNewsDetails({
     PageIndex: 1,
     PageSize: 5,
   });
-
 
   const banner: Items[] = await getItem({
     TypeId: 1051,

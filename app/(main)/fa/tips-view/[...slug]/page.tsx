@@ -12,30 +12,38 @@ export async function generateMetadata({
 }) {
   const param = await params;
   const id = Number(param.slug[0]);
-  const education: ItemsId = await getItemId(id);
-  const seoUrl = `${mainDomainOld}${education?.seoUrl}`;
+  const dataPage: ItemsId = await getItemId(id);
 
-  if (education.title) {
+  if (dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+    
     return {
-      title: `${education.seoInfo?.seoTitle ? education?.seoInfo?.seoTitle : education.title + " | ماشین3"}`,
-      description: education.seoInfo?.seoDescription
-        ? education.seoInfo?.seoDescription
-        : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
-      keywords: education.seoInfo?.seoKeywords
-        ? education.seoInfo?.seoKeywords
-        : education.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${education.seoInfo?.seoTitle ? education?.seoInfo?.seoTitle : education.title + " | ماشین3"}`,
-        description: education.seoInfo?.seoDescription
-          ? education.seoInfo?.seoDescription
-          : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: education?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {

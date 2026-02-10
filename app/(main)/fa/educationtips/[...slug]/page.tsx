@@ -21,28 +21,37 @@ export async function generateMetadata({
 
   if (isNaN(id)) {
     const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
-    const seoUrl = `${mainDomainOld}${dataPage?.seoUrl}`;
+
     if (dataPage && dataPage.title) {
+      const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+      const description = dataPage.seoInfo?.seoDescription
+        ? dataPage.seoInfo?.seoDescription
+        : dataPage.title;
+      const keywords = dataPage.seoInfo?.seoKeywords
+        ? dataPage.seoInfo?.seoKeywords
+        : dataPage.seoKeywords;
+      const metadataBase = new URL(mainDomainOld);
+      const seoUrl = dataPage?.seoUrl
+        ? `${mainDomainOld}${dataPage?.seoUrl}`
+        : dataPage?.url
+          ? `${mainDomainOld}${dataPage?.url}`
+          : `${mainDomainOld}`;
+      const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+
       return {
-        title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-        description: dataPage.seoInfo?.seoDescription
-          ? dataPage.seoInfo?.seoDescription
-          : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
-        keywords: dataPage.seoInfo?.seoKeywords
-          ? dataPage.seoInfo?.seoKeywords
-          : dataPage.seoKeywords,
-        metadataBase: new URL(mainDomainOld),
+        title,
+        description,
+        keywords,
+        metadataBase,
         alternates: {
           canonical: seoUrl,
         },
         openGraph: {
-          title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
-          description: dataPage.seoInfo?.seoDescription
-            ? dataPage.seoInfo?.seoDescription
-            : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
+          title,
+          description,
         },
         other: {
-          seoHeadTags: dataPage?.seoInfo?.seoHeadTags,
+          seoHeadTags,
         },
       };
     } else {
@@ -53,35 +62,38 @@ export async function generateMetadata({
       };
     }
   } else {
-    const eduDetails: ItemsCategoryId = await getCategoryId(id);
-    const seoUrl = `${mainDomainOld}${eduDetails?.seoUrl}`;
-    if (eduDetails.title) {
+    const dataPage: ItemsCategoryId = await getCategoryId(id);
+
+    if (dataPage.title) {
+      const title = `${
+        dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
+      }`;
+      const description = dataPage.seoDescription
+        ? dataPage.seoDescription
+        : dataPage.title;
+      const keywords = dataPage?.seoKeywords;
+      const metadataBase = new URL(mainDomainOld);
+      const seoUrl = dataPage?.seoUrl
+        ? `${mainDomainOld}${dataPage?.seoUrl}`
+        : dataPage?.url
+          ? `${mainDomainOld}${dataPage?.url}`
+          : `${mainDomainOld}`;
+      const seoHeadTags = dataPage?.headTags;
+
       return {
-        title: `${
-          eduDetails.seoTitle
-            ? eduDetails.seoTitle
-            : eduDetails.title + " | ماشین3"
-        }`,
-        description: eduDetails.seoDescription
-          ? eduDetails.seoDescription
-          : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
-        keywords: eduDetails?.seoKeywords,
-        metadataBase: new URL(mainDomainOld),
+        title,
+        description,
+        keywords,
+        metadataBase,
         alternates: {
           canonical: seoUrl,
         },
         openGraph: {
-          title: `${
-            eduDetails.seoTitle
-              ? eduDetails.seoTitle
-              : eduDetails.title + " | ماشین3"
-          }`,
-          description: eduDetails.seoDescription
-            ? eduDetails.seoDescription
-            : "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
+          title,
+          description,
         },
         other: {
-          seoHeadTags: eduDetails?.headTags,
+          seoHeadTags,
         },
       };
     } else {

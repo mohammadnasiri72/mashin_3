@@ -14,26 +14,43 @@ export async function generateMetadata({
   const param = await params;
   const id = param.slug[0];
 
-  const detailsAuto: ItemsId = await getItemId(Number(id));
-  const seoUrl = `${mainDomainOld}${detailsAuto?.seoUrl}`;
+  const dataPage: ItemsId = await getItemId(Number(id));
 
-  if (detailsAuto.title) {
+  if (dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+
+    const metadataBase = new URL(mainDomainOld);
+
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+
     return {
-      title: `${detailsAuto.seoInfo?.seoTitle ? detailsAuto?.seoInfo?.seoTitle : detailsAuto.title + " | ماشین3"}`,
-      description: detailsAuto.seoInfo?.seoDescription ? detailsAuto.seoInfo?.seoDescription : "مراکز و نمایندگی های خدمات خودرو",
-      keywords: detailsAuto.seoInfo?.seoKeywords
-        ? detailsAuto.seoInfo?.seoKeywords
-        : detailsAuto.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${detailsAuto.seoInfo?.seoTitle ? detailsAuto?.seoInfo?.seoTitle : detailsAuto.title + " | ماشین3"}`,
-        description: detailsAuto.seoInfo?.seoDescription ? detailsAuto.seoInfo?.seoDescription : "مراکز و نمایندگی های خدمات خودرو",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: detailsAuto?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {

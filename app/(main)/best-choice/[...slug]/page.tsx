@@ -16,30 +16,38 @@ export async function generateMetadata({
   const param = await params;
   const id = param.slug[0];
 
-  const detailsBest: ItemsId = await getItemId(Number(id));
-  const seoUrl = `${mainDomainOld}${detailsBest?.seoUrl}`;
+  const dataPage: ItemsId = await getItemId(Number(id));
 
-  if (detailsBest.title) {
+  if (dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+
     return {
-      title: `${detailsBest.seoInfo?.seoTitle ? detailsBest?.seoInfo?.seoTitle : detailsBest.title + " | ماشین3"}`,
-      description: detailsBest.seoInfo?.seoDescription
-        ? detailsBest.seoInfo?.seoDescription
-        : "بهترین انتخاب",
-      keywords: detailsBest.seoInfo?.seoKeywords
-        ? detailsBest.seoInfo?.seoKeywords
-        : detailsBest.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${detailsBest.seoInfo?.seoTitle ? detailsBest?.seoInfo?.seoTitle : detailsBest.title + " | ماشین3"}`,
-        description: detailsBest.seoInfo?.seoDescription
-          ? detailsBest.seoInfo?.seoDescription
-          : "بهترین انتخاب",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: detailsBest?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {

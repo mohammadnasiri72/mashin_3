@@ -13,26 +13,38 @@ export async function generateMetadata() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const videoCat: ItemsId | null = await getItemByUrl(decodedPathname);
-  const seoUrl = `${mainDomainOld}${videoCat?.seoUrl}`;
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  if (videoCat && videoCat.title) {
+  if (dataPage && dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+
     return {
-      title: `${videoCat.seoInfo?.seoTitle ? videoCat?.seoInfo?.seoTitle : videoCat.title + " | ماشین3"}`,
-      description: videoCat.seoInfo?.seoDescription,
-      keywords: videoCat.seoInfo?.seoKeywords
-        ? videoCat.seoInfo?.seoKeywords
-        : videoCat.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${videoCat.seoInfo?.seoTitle ? videoCat?.seoInfo?.seoTitle : videoCat.title + " | ماشین3"}`,
-        description: videoCat.seoInfo?.seoDescription,
+        title,
+        description,
       },
       other: {
-        seoHeadTags: videoCat?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {

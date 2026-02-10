@@ -13,32 +13,38 @@ export async function generateMetadata({
   const param = await params;
   const id = Number(param.slug[0]);
 
-  const carDetails: ItemsCategoryId = await getCategoryId(id);
-  const seoUrl = `${mainDomainOld}${carDetails?.seoUrl}`;
+  const dataPage: ItemsCategoryId = await getCategoryId(id);
 
-  if (carDetails.title) {
+  if (dataPage.title) {
+    const title = `${
+      dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
+    }`;
+    const description = dataPage.seoDescription
+      ? dataPage.seoDescription
+      : dataPage.title;
+    const keywords = dataPage?.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.headTags;
+    
     return {
-      title: `${
-        carDetails.seoTitle
-          ? carDetails.seoTitle
-          : carDetails.title + " | ماشین3"
-      }`,
-      description: carDetails.seoDescription,
-      keywords: carDetails?.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${
-          carDetails.seoTitle
-            ? carDetails.seoTitle
-            : carDetails.title + " | ماشین3"
-        }`,
-        description: carDetails.seoDescription,
+        title,
+        description,
       },
       other: {
-        seoHeadTags: carDetails?.headTags,
+        seoHeadTags,
       },
     };
   } else {

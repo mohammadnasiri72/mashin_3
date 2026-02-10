@@ -19,32 +19,38 @@ export async function generateMetadata({
   const searchParam = await searchParams;
   const id = searchParam.id;
 
-  const detailsCar: ItemsId = await getItemId(Number(id));
-  const seoUrl = `${mainDomainOld}${detailsCar?.seoUrl}`;
+  const dataPage: ItemsId = await getItemId(Number(id));
 
-  if (detailsCar.title) {
-    let yearText = createpublishCode(detailsCar.publishCode);
+  if (dataPage.title) {
+    let yearText = createpublishCode(dataPage.publishCode);
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.sourceName + " " + dataPage.title + " " + yearText + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
 
     return {
-      title: `${detailsCar.seoInfo?.seoTitle ? detailsCar?.seoInfo?.seoTitle : detailsCar.sourceName + " " + detailsCar.title + " " + yearText + " | ماشین3"}`,
-      description: detailsCar.seoInfo?.seoDescription
-        ? detailsCar.seoInfo?.seoDescription
-        : "مشخصات خودرو",
-      keywords: detailsCar.seoInfo?.seoKeywords
-        ? detailsCar.seoInfo?.seoKeywords
-        : detailsCar.seoKeywords,
+      title,
+      description,
+      keywords,
       metadataBase: new URL(mainDomainOld),
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${detailsCar.seoInfo?.seoTitle ? detailsCar?.seoInfo?.seoTitle : detailsCar.sourceName + " " + detailsCar.title + " " + yearText + " | ماشین3"}`,
-        description: detailsCar.seoInfo?.seoDescription
-          ? detailsCar.seoInfo?.seoDescription
-          : "مشخصات خودرو",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: detailsCar?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {

@@ -12,30 +12,39 @@ export async function generateMetadata({
 }) {
   const param = await params;
   const id = Number(param.slug[0]);
-  const whichcars: ItemsId = await getItemId(id);
-  const seoUrl = `${mainDomainOld}${whichcars?.seoUrl}`;
+  const dataPage: ItemsId = await getItemId(id);
+  // const seoUrl = `${mainDomainOld}${whichcars?.seoUrl}`;
 
-  if (whichcars.title) {
+  if (dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+    
     return {
-      title: `${whichcars.seoInfo?.seoTitle ? whichcars?.seoInfo?.seoTitle : whichcars.title + " | ماشین3"}`,
-      description: whichcars.seoInfo?.seoDescription
-        ? whichcars.seoInfo?.seoDescription
-        : "مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
-      keywords: whichcars.seoInfo?.seoKeywords
-        ? whichcars.seoInfo?.seoKeywords
-        : whichcars.seoKeywords,
-      metadataBase: new URL(mainDomainOld),
+      title,
+      description,
+      keywords,
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${whichcars.seoInfo?.seoTitle ? whichcars?.seoInfo?.seoTitle : whichcars.title + " | ماشین3"}`,
-        description: whichcars.seoInfo?.seoDescription
-          ? whichcars.seoInfo?.seoDescription
-          : "مقایسه تخصصی خودروها برای کمک به انتخاب بهترین گزینه خرید",
+        title,
+        description,
       },
       other: {
-        seoHeadTags: whichcars?.seoInfo?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {
