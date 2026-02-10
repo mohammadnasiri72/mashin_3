@@ -11,6 +11,8 @@ import GallerySection from "./GallerySection";
 import ReviewSection from "./ReviewSection";
 import Sidebar from "./Sidebar";
 import TechnicalSection from "./TechnicalSection";
+import RelatedNewsSection from "./RelatedNewsSection";
+import RelatedVideosSection from "./RelatedVideosSection";
 
 interface SectionRefs {
   [key: string]: React.RefObject<HTMLDivElement | null>;
@@ -23,6 +25,9 @@ const ContentTabs = ({
   comments,
   id,
   carsModel,
+  relatedNews,
+  relatedVideos,
+  relatedComparisons,
 }: {
   detailsCar: ItemsId;
   Attachment: ItemsAttachment[];
@@ -30,6 +35,9 @@ const ContentTabs = ({
   comments: CommentResponse[];
   id: number;
   carsModel: Items[];
+  relatedNews: Items[];
+  relatedVideos: Items[];
+  relatedComparisons: Items[];
 }) => {
   const [activeKey, setActiveKey] = useState("review");
   const [isSticky, setIsSticky] = useState(false);
@@ -39,7 +47,9 @@ const ContentTabs = ({
   const reviewRef = useRef<HTMLDivElement>(null);
   const technicalRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLDivElement>(null);
-  // const faqRef = useRef<HTMLDivElement>(null);
+  const newsRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLDivElement>(null);
+  const ComparisonsRef = useRef<HTMLDivElement>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
 
   // هندل کردن اسکرول و sticky navbar
@@ -56,7 +66,9 @@ const ContentTabs = ({
         { key: "review", ref: reviewRef },
         { key: "technical", ref: technicalRef },
         { key: "images", ref: imagesRef },
-        // { key: "faq", ref: faqRef },
+        { key: "news", ref: newsRef },
+        { key: "video", ref: videoRef },
+        { key: "Comparisons", ref: ComparisonsRef },
         { key: "comments", ref: commentsRef },
       ];
 
@@ -90,20 +102,11 @@ const ContentTabs = ({
         }
       }
 
-      // اگر به انتهای صفحه رسیده‌ایم، آخرین تب را فعال کن
-      // if (
-      //   window.innerHeight + window.scrollY >=
-      //   document.body.offsetHeight - 200
-      // ) {
-      //   currentActiveKey = "comments";
-      // }
-
       if (currentActiveKey !== "") {
         setActiveKey(currentActiveKey);
       }
     };
 
-    // استفاده از throttle برای بهینه‌سازی performance
     let ticking = false;
     const throttledScroll = () => {
       if (!ticking) {
@@ -117,21 +120,19 @@ const ContentTabs = ({
 
     window.addEventListener("scroll", throttledScroll, { passive: true });
 
-    // فراخوانی اولیه برای تنظیم تب صحیح
     handleScroll();
 
     return () => window.removeEventListener("scroll", throttledScroll);
   }, []);
 
-  // هندل کلیک روی تب - اسکرول به بخش مربوطه
   const handleTabClick = (key: string) => {
-    // setActiveKey(key);
-
     const sectionRefs: SectionRefs = {
       review: reviewRef,
       technical: technicalRef,
       images: imagesRef,
-      // faq: faqRef,
+      news: newsRef,
+      video: videoRef,
+      Comparisons: ComparisonsRef,
       comments: commentsRef,
     };
 
@@ -157,7 +158,7 @@ const ContentTabs = ({
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition-50,
+        top: offsetPosition - 50,
         behavior: "smooth",
       });
     }
@@ -165,7 +166,7 @@ const ContentTabs = ({
 
   const Criticism = detailsCar.properties.filter((e) => e.propertyId === 22642);
   const specifications = detailsCar.properties.filter(
-    (e) => e.isTechnicalProperty
+    (e) => e.isTechnicalProperty,
   );
 
   // آیتم‌های تب
@@ -194,11 +195,31 @@ const ContentTabs = ({
           },
         ]
       : []),
+    ...(relatedNews.length > 0
+      ? [
+          {
+            key: "news",
+            label: "اخبار مرتبط",
+          },
+        ]
+      : []),
+    ...(relatedVideos.length > 0
+      ? [
+          {
+            key: "video",
+            label: "ویدئوهای مرتبط",
+          },
+        ]
+      : []),
+    ...(relatedComparisons.length > 0
+      ? [
+          {
+            key: "Comparisons",
+            label: "مقایسه‌های مرتبط",
+          },
+        ]
+      : []),
 
-    // {
-    //   key: "faq",
-    //   label: "سوالات متداول",
-    // },
     {
       key: "comments",
       label: "نظرات",
@@ -256,10 +277,31 @@ const ContentTabs = ({
                     />
                   </div>
                 )}
-
-                {/* <div id="faq" className="section-anchor" ref={faqRef}>
-                  <FAQSection />
-                </div> */}
+                {relatedNews.length > 0 && (
+                  <div id="news" className="section-anchor" ref={newsRef}>
+                    <RelatedNewsSection
+                      relatedNews={relatedNews}
+                      detailsCar={detailsCar}
+                    />
+                  </div>
+                )}
+                {relatedVideos.length > 0 && (
+                  <div id="video" className="section-anchor" ref={videoRef}>
+                    <RelatedVideosSection
+                      relatedVideos={relatedVideos}
+                      detailsCar={detailsCar}
+                    />
+                  </div>
+                )}
+                {relatedComparisons.length > 0 && (
+                  <div
+                    id="Comparisons"
+                    className="section-anchor"
+                    ref={ComparisonsRef}
+                  >
+                    ComparisonsRef
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -300,13 +342,12 @@ const ContentTabs = ({
 
         .custom-tabs .ant-tabs-nav {
           margin: 0;
-          
         }
 
         .custom-tabs .ant-tabs-tab {
           padding: 12px 20px;
           font-weight: 600;
-          color: #6b7280;
+          color: #6b7280 !important;
           transition: all 0.3s ease;
           cursor: pointer;
           height: 50px !important;
@@ -319,6 +360,9 @@ const ContentTabs = ({
         .custom-tabs .ant-tabs-tab-active {
           color: #fff !important;
           background: #ce1a2a;
+        }
+        .custom-tabs .ant-tabs-tab .ant-tabs-tab-btn {
+          color: #222 !important;
         }
         .custom-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
           color: #fff !important;

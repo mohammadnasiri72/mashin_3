@@ -94,6 +94,33 @@ async function page({
     PageIndex: 1,
     PageSize: 5,
   });
+  // اخبار مرتبط
+  const relatedNews: Items[] = await getItem({
+    TypeId: 5,
+    langCode: "fa",
+    Term: detailsCar.sourceName + " " + detailsCar.title,
+    PageIndex: 1,
+    PageSize: 12,
+  });
+
+  const relatedVideos: Items[] = await getItem({
+    TypeId: 1028,
+    langCode: "fa",
+    Term: detailsCar.sourceName,
+    PageIndex: 1,
+    PageSize: 12,
+  });
+
+  const relatedComparisons: Items[] = await getItem({
+    TypeId: 1045,
+    langCode: "fa",
+    Term: detailsCar.sourceName,
+    PageSize: 15,
+    PageIndex: 1,
+  });
+
+  console.log(relatedComparisons);
+  
 
   return (
     <>
@@ -111,6 +138,9 @@ async function page({
         comments={comments}
         id={Number(id)}
         carsModel={carsModel}
+        relatedNews={relatedNews}
+        relatedVideos={relatedVideos}
+        relatedComparisons={relatedComparisons}
       />
     </>
   );
