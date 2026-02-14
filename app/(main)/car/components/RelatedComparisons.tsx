@@ -2,13 +2,13 @@ import { formatPersianDate } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Card } from "antd";
 import Link from "next/link";
-import { FaPlay } from "react-icons/fa";
+import React from "react";
 
-function RelatedVideosSection({
-  relatedVideos,
+function RelatedComparisons({
+  relatedComparisons,
   detailsCar,
 }: {
-  relatedVideos: Items[];
+  relatedComparisons: Items[];
   detailsCar: ItemsId;
 }) {
   return (
@@ -16,13 +16,13 @@ function RelatedVideosSection({
       <Card className="rounded-xl shadow-lg">
         <div className="space-y-4">
           <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
-            <strong className="text-red-600">ویدئوهای مرتبط </strong>
+            <strong className="text-red-600">مقایسه‌های مرتبط </strong>
             ماشین {detailsCar.sourceName} {detailsCar.title}
           </h3>
 
-          {relatedVideos.length > 0 ? (
+          {relatedComparisons.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {relatedVideos.map((video) => (
+              {relatedComparisons.map((video) => (
                 <div
                   key={video.id}
                   className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
@@ -62,4 +62,4 @@ function RelatedVideosSection({
   );
 }
 
-export default RelatedVideosSection;
+export default RelatedComparisons;

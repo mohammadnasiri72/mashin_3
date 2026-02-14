@@ -70,14 +70,16 @@ async function page({
   const id = searchParam.id;
   const Attachment: ItemsAttachment[] = await getAttachment(Number(id));
   const detailsCar: ItemsId = await getItemId(Number(id));
+
   const detailsCarcompetitor: ItemsId[] = detailsCar.properties.filter(
     (e) => e.propertyKey === "p1042_relatedcars",
   )[0]?.value
     ? await getItemByIds(
-        detailsCar.properties.filter((e) => e.propertyId === 22643)[0]?.value,
+        detailsCar.properties.filter(
+          (e) => e.propertyKey === "p1042_relatedcars",
+        )[0]?.value,
       )
     : [];
-
   const comments: CommentResponse[] = await getComment({
     id: Number(id),
     langCode: "fa",
@@ -94,7 +96,7 @@ async function page({
     PageIndex: 1,
     PageSize: 5,
   });
-  // اخبار مرتبط
+  // // اخبار مرتبط
   const relatedNews: Items[] = await getItem({
     TypeId: 5,
     langCode: "fa",
@@ -103,24 +105,23 @@ async function page({
     PageSize: 12,
   });
 
+  // // ویدئو مرتبط
   const relatedVideos: Items[] = await getItem({
     TypeId: 1028,
     langCode: "fa",
-    Term: detailsCar.sourceName,
+    Term: detailsCar.sourceName + " " + detailsCar.title,
     PageIndex: 1,
     PageSize: 12,
   });
 
+  // // مقایسه مرتبط
   const relatedComparisons: Items[] = await getItem({
     TypeId: 1045,
     langCode: "fa",
-    Term: detailsCar.sourceName,
+    Term: detailsCar.sourceName + " " + detailsCar.title,
     PageSize: 15,
     PageIndex: 1,
   });
-
-  console.log(relatedComparisons);
-  
 
   return (
     <>

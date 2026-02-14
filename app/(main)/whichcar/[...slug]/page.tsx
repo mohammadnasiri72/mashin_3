@@ -13,7 +13,6 @@ export async function generateMetadata({
   const param = await params;
   const id = Number(param.slug[0]);
   const dataPage: ItemsId = await getItemId(id);
-  // const seoUrl = `${mainDomainOld}${whichcars?.seoUrl}`;
 
   if (dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;

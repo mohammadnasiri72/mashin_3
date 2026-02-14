@@ -350,11 +350,11 @@ const MotorDetails = ({
                   <button
                     aria-label="نظر دادن"
                     onClick={() => setIsRatingMode(true)}
-                    className="mt-4 md:mt-0 mr-2 bg-red-50 duration-300 rounded-lg text-[#ce1a2a] hover:bg-[#ce1a2a] hover:text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
+                     className="mt-4 md:mt-0 mr-2 duration-300 rounded-lg bg-[#ce1a2a] hover:bg-red-700 text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
                   >
                     <FaCommentDots className="ml-2" />
                     نظر دادن
-                  </button>
+                  </button> 
                 </div>
               )}
             </div>

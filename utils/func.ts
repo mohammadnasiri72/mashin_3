@@ -1,6 +1,5 @@
 const moment = require("moment-jalaali");
 import Swal from "sweetalert2";
-import { mainDomainOld } from "./mainDomain";
 
 export const createMarkup = (html: string) => {
   return { __html: html };

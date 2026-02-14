@@ -9,7 +9,7 @@ import {
 } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
 
@@ -31,26 +31,8 @@ const CarNews = ({
   tabConfig: { key: number; href: string; label: string }[];
 }) => {
   const [activeTab, setActiveTab] = useState<number>(0);
-  const router = useRouter();
-  const pathname = usePathname();
+
   const searchParams = useSearchParams();
-
-  // const page = searchParams.get("page");
-
-  // useEffect(() => {
-  //   window.scrollTo({
-  //     top: 500,
-  //     behavior: "smooth",
-  //   });
-  // }, [page]);
-
-  const handleChangPageIndex = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", page.toString());
-    router.push(`${pathname}?${params.toString()}`, {
-      scroll: false,
-    });
-  };
 
   useEffect(() => {
     if (id) {
@@ -176,7 +158,7 @@ const CarNews = ({
                 {/*اخبار فروش ویژه*/}
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                   <h3 className="text-lg font-bold text-gray-900 mb-4! border-b pb-2">
-                   اخبار فروش ویژه
+                    اخبار فروش ویژه
                   </h3>
                   <div className="space-y-4">
                     {offerNews.map((news) => (

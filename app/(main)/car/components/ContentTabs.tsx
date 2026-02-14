@@ -13,6 +13,7 @@ import Sidebar from "./Sidebar";
 import TechnicalSection from "./TechnicalSection";
 import RelatedNewsSection from "./RelatedNewsSection";
 import RelatedVideosSection from "./RelatedVideosSection";
+import RelatedComparisons from "./RelatedComparisons";
 
 interface SectionRefs {
   [key: string]: React.RefObject<HTMLDivElement | null>;
@@ -183,7 +184,7 @@ const ContentTabs = ({
       ? [
           {
             key: "technical",
-            label: "فنی",
+            label: "مشخصات فنی",
           },
         ]
       : []),
@@ -299,7 +300,10 @@ const ContentTabs = ({
                     className="section-anchor"
                     ref={ComparisonsRef}
                   >
-                    ComparisonsRef
+                    <RelatedComparisons
+                      relatedComparisons={relatedComparisons}
+                      detailsCar={detailsCar}
+                    />
                   </div>
                 )}
               </div>

@@ -1,6 +1,10 @@
 "use client";
 
-import { createpublishCode, toPersianNumbers } from "@/utils/func";
+import {
+  createpublishCode,
+  htmlToPlainText,
+  toPersianNumbers,
+} from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useState } from "react";
@@ -23,7 +27,6 @@ const CarsDetails = ({
 }) => {
   const [carBrandsFilter, setCarBrandsFilter] = useState(carBrands);
   const [carBrandsFilter2, setCarBrandsFilter2] = useState(carBrands2);
-
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
@@ -80,8 +83,9 @@ const CarsDetails = ({
                 {toPersianNumbers(carBrands.length || carBrands2.length)} مدل
               </span>
             </div>
-
-            <ShowSummary text={carDetails.summary} />
+            {htmlToPlainText(carDetails.summary) && (
+              <ShowSummary text={htmlToPlainText(carDetails.summary)} />
+            )}
 
             {/* گرید مدل‌های خودرو */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

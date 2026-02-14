@@ -710,6 +710,84 @@ export async function middleware(request: Request) {
         headers: requestHeaders,
       },
     });
+  } else if (pathname.startsWith("/fa/technical-words.html")) {
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } else if (pathname.startsWith("/technical-words/")) {
+    try {
+      const pathParts = pathname.split("/");
+      const id = Number(pathParts[2]);
+      if (!isNaN(id)) {
+        const data: ItemsCategoryId = await getCategoryId(id);
+        const decodedPathname = decodeURIComponent(pathname);
+
+        if (data?.url && data.url !== decodedPathname) {
+          return NextResponse.redirect(
+            new URL(data.url.toLowerCase(), request.url),
+            {
+              status: 301,
+            },
+          );
+        }
+      } else {
+        return NextResponse.redirect(
+          new URL("/fa/technical-words.html", request.url),
+          {
+            status: 301,
+          },
+        );
+      }
+    } catch (error: any) {
+      const status = error.response?.status || error.status || 500;
+      return NextResponse.redirect(
+        new URL(`/error?status=${status}`, request.url),
+        { status: 301 },
+      );
+    }
+  } else if (pathname.startsWith("/technical-word/")) {
+    try {
+      const pathParts = pathname.split("/");
+      const id = Number(pathParts[2]);
+      if (!isNaN(id)) {
+        const data: ItemsId = await getItemId(id);
+        const decodedPathname = decodeURIComponent(pathname);
+
+        if (data?.url && data.url !== decodedPathname) {
+          return NextResponse.redirect(
+            new URL(data.url.toLowerCase(), request.url),
+            {
+              status: 301,
+            },
+          );
+        }
+      } else {
+        return NextResponse.redirect(
+          new URL("/fa/technical-words.html", request.url),
+          {
+            status: 301,
+          },
+        );
+      }
+    } catch (error: any) {
+      const status = error.response?.status || error.status || 500;
+      return NextResponse.redirect(
+        new URL(`/error?status=${status}`, request.url),
+        { status: 301 },
+      );
+    }
+  } else if (pathname.startsWith("/technical-words.html")) {
+    return NextResponse.redirect(
+      new URL("/fa/technical-words.html", request.url),
+      {
+        status: 301,
+      },
+    );
   } else {
     const decodedPathname = decodeURIComponent(pathname);
     if (decodedPathname !== decodedPathname.toLowerCase()) {

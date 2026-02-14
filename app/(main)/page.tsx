@@ -17,6 +17,8 @@ import PopularCarsSection from "../components/PopularCarsSection";
 import VideoBannerSection from "../components/VideoBannerSection";
 import { mainDomainOld } from "@/utils/mainDomain";
 
+export const revalidate = 60;
+
 export async function generateMetadata() {
   const dataPage: ItemsId | null = await getItemByUrl("/");
   const seoUrl = `${mainDomainOld}${dataPage?.seoUrl}`;
@@ -147,7 +149,7 @@ export default async function Home() {
     <div className="page-wrapper min-h-screen bg-[#f4f4f4]">
       <div className="content-box pt-4">
         {/* Hero Slider */}
-        <HeroSlider slider={slider} />
+        {slider.length > 0 && <HeroSlider slider={slider} />}
 
         {/* News and Comparison */}
         <NewsSection
