@@ -165,7 +165,7 @@ const ContentTabs = ({
     }
   };
 
-  const Criticism = detailsCar.properties.filter((e) => e.propertyId === 22642);
+  const Criticism = detailsCar.properties.filter((e) => e.propertyKey === "p1042_naghd");
   const specifications = detailsCar.properties.filter(
     (e) => e.isTechnicalProperty,
   );

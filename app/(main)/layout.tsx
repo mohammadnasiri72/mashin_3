@@ -4,14 +4,17 @@ import { getSetting } from "@/services/Property/setting";
 import BannerTop from "../components/BannerTop";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-
-
+import { headers } from "next/headers";
 
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
   const menu: MenuGroup[] = await getMenu({ langCode: "fa", menuKey: "" });
   const setting: SettingType[] = await getSetting();
   const Social: Items[] = await getItem({ TypeId: 8, langCode: "fa" });
@@ -24,7 +27,7 @@ export default async function RootLayout({
   return (
     <>
       <Header menu={menu} setting={setting} />
-      <BannerTop banner={banner} />
+      {!decodedPathname.includes("/dashboard") && <BannerTop banner={banner} />}
       <main>{children}</main>
       <Footer menu={menu} setting={setting} Social={Social} />
     </>

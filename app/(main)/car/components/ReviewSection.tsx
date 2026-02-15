@@ -1,7 +1,9 @@
 import { createMarkup } from "@/utils/func";
 
 const ReviewSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
-  const Criticism = detailsCar.properties.filter((e) => e.propertyId === 22642);
+  const Criticism = detailsCar.properties.filter(
+    (e) => e.propertyKey === "p1042_naghd",
+  );
   return (
     <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
       <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">

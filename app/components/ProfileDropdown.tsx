@@ -1,21 +1,16 @@
 // components/ProfileDropdown.tsx
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Avatar, Divider, Skeleton } from "antd";
-import {
-  UserOutlined,
-  SettingOutlined,
-  LogoutOutlined,
-  DashboardOutlined,
-  DownOutlined,
-} from "@ant-design/icons";
-import Link from "next/link";
-import { createInitialUserData, Toast } from "@/utils/func";
-import { useDispatch, useSelector } from "react-redux";
 import { setToken } from "@/redux/slice/token";
-import { PostSignOut } from "@/services/Account/SignOut";
 import { RootState } from "@/redux/store";
+import { PostSignOut } from "@/services/Account/SignOut";
+import { createInitialUserData, Toast } from "@/utils/func";
+import { UserOutlined } from "@ant-design/icons";
+import { Avatar, Divider } from "antd";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+import { FaComments, FaHeart, FaHome, FaKey, FaPowerOff } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 const Cookies = require("js-cookie");
 
 // تعریف تایپ برای آیتم‌های منو
@@ -107,26 +102,53 @@ export default function ProfileDropdown() {
       {
         <div
           className={`absolute left-0  w-48 duration-300 bg-white rounded-lg shadow-lg border border-gray-200 z-50 ${
-            !open ? "max-h-0 mt-0 opacity-0 invisible" : "max-h-52 mt-2 visible"
+            !open ? "max-h-0 mt-0 opacity-0 invisible" : "max-h-52 mt-2 visible overflow-auto"
           }`}
         >
           <div>
-            {/* <Link
+            <Link
               href="/dashboard"
               onClick={() => {}}
               className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
             >
-              <DashboardOutlined />
+              <FaHome />
               <span className="flex items-center gap-2">داشبورد</span>
             </Link>
-            <Divider className="m-0! p-0!" /> */}
+            <Divider className="m-0! p-0!" />
+            <Link
+              href="/dashboard/favorites"
+              onClick={() => {}}
+              className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
+            >
+              <FaHeart />
+              <span className="flex items-center gap-2">علاقه‌مندی‌های من</span>
+            </Link>
+            <Divider className="m-0! p-0!" />
+            <Link
+              href="/dashboard/mycomments"
+              onClick={() => {}}
+              className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
+            >
+              <FaComments />
+              <span className="flex items-center gap-2">نظرات ارسالی</span>
+            </Link>
+            <Divider className="m-0! p-0!" />
+            <Link
+              href="/dashboard/mycomments"
+              onClick={() => {}}
+              className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
+            >
+              <FaKey />
+              <span className="flex items-center gap-2">تغییر رمز عبور</span>
+            </Link>
+            <Divider className="m-0! p-0!" />
             <div
               onClick={() => {
                 handleLogout();
               }}
               className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
             >
-              <LogoutOutlined />
+              <FaPowerOff />
               <span className="flex items-center gap-2 w-full text-right">
                 {loading ? "در حال خروج" : "خروج از حساب"}
               </span>

@@ -6,11 +6,19 @@ interface ChangePasswordParams {
   NewPassword2: string;
 }
 
-export const PostChangePassword = async (data: ChangePasswordParams) => {
+export const PostChangePassword = async (
+  data: ChangePasswordParams,
+  token: string,
+) => {
   try {
     const response = await axiosInstance.post(
       `/api/Account/ChangePassword`,
-      data
+      data,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
     return response.data;
   } catch (error) {

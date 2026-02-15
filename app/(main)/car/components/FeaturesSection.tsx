@@ -5,14 +5,31 @@ import { FaSquareMinus, FaSquarePlus } from "react-icons/fa6";
 
 const FeaturesSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
   const advantages = detailsCar.properties.filter(
-    (e) => e.propertyId === 22639
+    (e) => e.propertyKey === "p1042_design",
   );
 
   const disadvantages = detailsCar.properties.filter(
-    (e) => e.propertyId === 22640
+    (e) => e.propertyKey === "p1042_performance",
   );
+
+  const summary = detailsCar.properties.find(
+    (e) => e.propertyKey === "p1042_genral",
+  )?.propertyValue;
   return (
     <div className="advg_wrap detailsBox bg-white rounded-xl p-6 mb-6!">
+      {summary && (
+        <div className="mb-6!">
+          <h2 className="dt_title text-2xl font-bold text-gray-900 mb-6!">
+            <strong className="text-red-700">توضیحات کلی</strong>
+          </h2>
+
+          <div
+            className="text_area text-gray-700 leading-8 text-justify space-y-4 mt-3"
+            dangerouslySetInnerHTML={createMarkup(summary ? summary : "")}
+          />
+        </div>
+      )}
+
       <h2 className="dt_title text-2xl font-bold text-gray-900 mb-6!">
         <strong>
           <span className="text-green-700">مزایا</span> و{" "}
@@ -37,7 +54,9 @@ const FeaturesSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
                 <span className="text-green-500 ml-2 mt-1">•</span>
                 <div
                   className="text-gray-700 leading-8 text-justify"
-                  dangerouslySetInnerHTML={createMarkup(advantage.value)}
+                  dangerouslySetInnerHTML={createMarkup(
+                    advantage.propertyValue,
+                  )}
                 />
               </li>
             ))}
@@ -59,7 +78,9 @@ const FeaturesSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
                 <span className="text-red-500 ml-2 mt-1">•</span>
                 <div
                   className="text-gray-700 leading-8 text-justify"
-                  dangerouslySetInnerHTML={createMarkup(disadvantage.value)}
+                  dangerouslySetInnerHTML={createMarkup(
+                    disadvantage.propertyValue,
+                  )}
                 />
               </li>
             ))}

@@ -1,8 +1,17 @@
 const moment = require("moment-jalaali");
 import Swal from "sweetalert2";
 
+// export const createMarkup = (html: string) => {
+//   return { __html: html };
+// };
 export const createMarkup = (html: string) => {
-  return { __html: html };
+  // پاک کردن کوتیشن‌های ابتدا و انتها
+  const cleanHtml = html.replace(/^"|"$/g, '');
+  
+  // جایگزینی کوتیشن‌های دوتایی با تک
+  const finalHtml = cleanHtml.replace(/""/g, '"');
+  
+  return { __html: finalHtml };
 };
 
 export const toPersianNumbers = (input: number | string): string => {

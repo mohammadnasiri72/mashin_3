@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getCategoryByUrl } from "./services/Category/CategoryByUrl";
 import { getCategoryId } from "./services/Category/CategoryId";
 import { getItemId } from "./services/Item/ItemId";
@@ -7,11 +7,22 @@ import { getPriceCarBrands } from "./services/Price/PriceCarBrands";
 import { getItemByIds } from "./services/Item/ItemByIds";
 import { getPriceMotorBrands } from "./services/Price/PriceMotorBrands";
 
-export async function middleware(request: Request) {
+export async function middleware(request: NextRequest) {
   const url = new URL(request.url);
   const { pathname, searchParams } = url;
-
-  if (pathname.startsWith("/cars/") || pathname.startsWith("/motorcycles/")) {
+  if (pathname.startsWith("/")) {
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } else if (
+    pathname.startsWith("/cars/") ||
+    pathname.startsWith("/motorcycles/")
+  ) {
     const id = Number(searchParams.get("id"));
     const decodedPathname = decodeURIComponent(pathname);
     if (id) {
@@ -788,6 +799,52 @@ export async function middleware(request: Request) {
         status: 301,
       },
     );
+  } else if (pathname.startsWith("/dashboard")) {
+    const userCookie = request.cookies.get("user")?.value;
+    if (!userCookie) {
+      // اگر کوکی وجود نداشت، به صفحه لاگین هدایت کن
+      return NextResponse.redirect(new URL("/auth", request.url));
+    }
+
+    try {
+      // پارس کردن آبجکت user
+      const userData = JSON.parse(userCookie);
+
+      // بررسی وجود توکن
+      if (!userData.token) {
+        // اگر توکن وجود نداشت، کوکی رو پاک کن و به لاگین هدایت کن
+        const response = NextResponse.redirect(new URL("/auth", request.url));
+        response.cookies.delete("user");
+        return response;
+      }
+
+      // بررسی انقضای توکن (اختیاری)
+      if (userData.expiration && new Date(userData.expiration) < new Date()) {
+        // توکن منقضی شده
+        const response = NextResponse.redirect(
+          new URL("/login?expired=true", request.url),
+        );
+        response.cookies.delete("user");
+        return response;
+      }
+
+      // اگر همه چیز اوکی بود، اجازه دسترسی بده
+      // می‌تونی اطلاعات کاربر رو به هدر اضافه کنی برای استفاده در صفحه
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("x-user-data", JSON.stringify(userData));
+
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
+    } catch (error) {
+      // اگر خطا در پارس کردن پیش اومد، کوکی رو پاک کن و به لاگین هدایت کن
+      console.error("Error parsing user cookie:", error);
+      const response = NextResponse.redirect(new URL("/login", request.url));
+      response.cookies.delete("user");
+      return response;
+    }
   } else {
     const decodedPathname = decodeURIComponent(pathname);
     if (decodedPathname !== decodedPathname.toLowerCase()) {
