@@ -1,100 +1,39 @@
 "use client";
 
 import { createMarkup } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
-import { Card, Col, Divider, Row, Table, Tag } from "antd";
-import ComparisonTable from "./ComparisonTable";
-import Link from "next/link";
+import { Card } from "antd";
 import { FaCalendar, FaEye } from "react-icons/fa";
+import ComparisonTable from "./ComparisonTable";
+import DescCarCompare from "./DescCarCompare";
 
 // تعریف تایپ‌ها بر اساس interface شما
 
 function CompareContent({
   whichcars,
   dataCompare,
-  id1,
-  id2,
 }: {
   whichcars: ItemsId;
   dataCompare: ItemsId[];
-  id1: number;
-  id2: number;
 }) {
-  const car1 = dataCompare[0];
-  const car2 = dataCompare[1];
-
-  const extractPropertiesForComparison = (car: ItemsId) => {
-    const properties: Record<
-      string,
-      {
-        title: string;
-        value: string;
-        valueTitle: string | null;
-      }
-    > = {};
-
-    if (car?.properties && Array.isArray(car.properties)) {
-      car.properties.forEach((prop: properties) => {
-        if (prop.propertyKey && prop.value) {
-          properties[prop.propertyKey] = {
-            title: prop.title || prop.propertyKey,
-            value: prop.value,
-            valueTitle: prop.valueTitle,
-          };
-        }
-      });
-    }
-
-    return properties;
-  };
-
-  const car1Properties = extractPropertiesForComparison(car1);
-  const car2Properties = extractPropertiesForComparison(car2);
-
-  // ایجاد داده‌های جدول مقایسه properties
-  const comparisonTableData: {
-    key: string;
-    feature: string;
-    car1: string;
-    car2: string;
-  }[] = [];
-
-  const allPropertyKeys = new Set([
-    ...Object.keys(car1Properties),
-    ...Object.keys(car2Properties),
-  ]);
-
-  allPropertyKeys.forEach((propertyKey) => {
-    const car1Prop = car1Properties[propertyKey];
-    const car2Prop = car2Properties[propertyKey];
-
-    if (car1Prop || car2Prop) {
-      comparisonTableData.push({
-        key: propertyKey,
-        feature: car1Prop?.title || car2Prop?.title || propertyKey,
-        car1: car1Prop?.valueTitle || car1Prop?.value || "---",
-        car2: car2Prop?.valueTitle || car2Prop?.value || "---",
-      });
-    }
-  });
-
-  const sum1 = comparisonTableData
-    .filter((e) => Number(e.car1) >= 0 && Number(e.car1) <= 10)
-    .reduce((accumulator, currentItem) => {
-      return accumulator + Number(currentItem.car1);
-    }, 0);
-  const sum2 = comparisonTableData
-    .filter((e) => Number(e.car2) >= 0 && Number(e.car2) <= 10)
-    .reduce((accumulator, currentItem) => {
-      return accumulator + Number(currentItem.car2);
-    }, 0);
-
   return (
     <Card className="rounded-xl shadow-lg border-0">
       <div className="space-y-8">
         {/* خلاصه مقایسه از whichcars */}
         {whichcars.body && (
-          <Card className="shadow-lg">
+          <Card className="shadow-lg mb-5!">
+            <h3 className="dt_title text-xl font-semibold text-gray-900 mb-4!">
+              <span className="px-1">مقایسه</span>
+              {dataCompare.map((e, i) => (
+                <strong key={e.id} className="text-red-600">
+                  {e.title}{" "}
+                  <span
+                    className={`px-1 ${dataCompare.length - 1 > i ? "" : "hidden"}`}
+                  >
+                    با
+                  </span>
+                </strong>
+              ))}
+            </h3>
             <div
               className="prose prose-lg max-w-none text-justify text-gray-700 leading-8"
               dangerouslySetInnerHTML={createMarkup(
@@ -106,88 +45,18 @@ function CompareContent({
             />
           </Card>
         )}
-        {comparisonTableData.length > 0 && dataCompare.length === 2 && (
-          <ComparisonTable
-            car1={car1}
-            car2={car2}
-            comparisonTableData={comparisonTableData}
-            id1={id1}
-            id2={id2}
-          />
+        {dataCompare.length > 0 && (
+          <div className="flex items-center sm:flex-nowrap flex-wrap gap-3">
+            {dataCompare.map((car) => (
+              <ComparisonTable key={car.id} car={car} />
+            ))}
+          </div>
         )}
-        {dataCompare.length === 2 && (
-          <div
-            className={`flex ${sum1 >= sum2 ? "flex-col" : "flex-col-reverse"}`}
-          >
-            {/* نمایش محتوای کامل خودرو اول */}
-            <Card className="shadow-lg mb-6!">
-              <div className="text-center mb-6!">
-                <h3 className="text-2xl font-bold text-blue-700 mb-2!">
-                  {car1.title}
-                </h3>
-              </div>
-
-              {car1.image && (
-                <div className="flex justify-center mb-6!">
-                  <img
-                    src={mainDomainOld + car1.image}
-                    alt={car1.title}
-                    className="max-w-full h-auto max-h-80 object-contain rounded-lg"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "/images/placeholder-car.jpg";
-                    }}
-                  />
-                </div>
-              )}
-
-              {car1.body && (
-                <div
-                  className="prose prose-lg max-w-none text-justify text-gray-700 leading-8"
-                  dangerouslySetInnerHTML={createMarkup(
-                    car1.body.replace(
-                      /<span style="font-size: 12pt;">|<\/span>/g,
-                      "",
-                    ),
-                  )}
-                />
-              )}
-            </Card>
-
-            {/* نمایش محتوای کامل خودرو دوم */}
-            <Card className="shadow-lg mb-6!">
-              <div className="text-center mb-6!">
-                <h3 className="text-2xl font-bold text-red-700 mb-2!">
-                  {car2.title}
-                </h3>
-              </div>
-
-              {car2.image && (
-                <div className="flex justify-center mb-6!">
-                  <img
-                    src={mainDomainOld + car2.image}
-                    alt={car2.title}
-                    className="max-w-full h-auto max-h-80 object-contain rounded-lg"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = "/images/placeholder-car.jpg";
-                    }}
-                  />
-                </div>
-              )}
-
-              {car2.body && (
-                <div
-                  className="prose prose-lg max-w-none text-justify text-gray-700 leading-8"
-                  dangerouslySetInnerHTML={createMarkup(
-                    car2.body.replace(
-                      /<span style="font-size: 12pt;">|<\/span>/g,
-                      "",
-                    ),
-                  )}
-                />
-              )}
-            </Card>
+        {dataCompare.length > 0 && (
+          <div className="flex flex-col">
+            {dataCompare.map((car) => (
+              <DescCarCompare key={car.id} car={car} />
+            ))}
           </div>
         )}
 

@@ -1,54 +1,63 @@
+"use client";
+
+import { formatPersianDate } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
-import { Card } from "antd";
 import Link from "next/link";
 
-function RelatedCompare({
+const RelatedCompare = ({
   ralatedComparisons,
 }: {
   ralatedComparisons: Items[];
-}) {
+}) => {
   return (
-    <Card className="rounded-xl shadow-lg">
-      <div className="space-y-4">
-        <h2 className="text-xl font-bold text-gray-800 mb-3!">
-          مقایسه‌های مرتبط
-        </h2>
+    <section className="py-5 bg-white rounded-xl shadow-sm">
+      <div className="mx-auto px-4">
+        <h3 className="dt_title text-2xl font-bold text-gray-900 mb-4!">
+          <strong className="text-red-600"> مقایسه‌های مرتبط</strong>
+        </h3>
 
-        {ralatedComparisons.length > 0 ? (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {ralatedComparisons.map((compare) => (
-              <Link key={compare.id} href={compare.url} className="block group">
-                <div className="bg-gray-100 rounded-lg overflow-hidden hover:shadow-sm transition-shadow duration-300">
-                  <div className="aspect-video relative">
-                    <img
-                      src={mainDomainOld + compare.image}
-                      alt={compare.title}
-                      className="w-full h-full object-cover group-hover:scale-105 duration-300"
-                    />
-                  </div>
-                  <div className="p-3">
-                    <h3 className="font-medium text-gray-800 line-clamp-2 group-hover:text-[#ce1a2a]! transition-colors h-10">
-                      {compare.title}
-                    </h3>
-                    <div className="flex items-center justify-between mt-2 text-xs text-gray-700">
-                      <span>{compare.visit} بازدید</span>
-                      <span>
-                        {new Date(compare.created).toLocaleDateString("fa-IR")}
-                      </span>
-                    </div>
-                  </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {ralatedComparisons.map((compare) => (
+            <div
+              key={compare.id}
+              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+            >
+              <div className="h-48 overflow-hidden">
+                <Link href={compare.url} className="w-full h-full">
+                  <img
+                    src={mainDomainOld + compare.image}
+                    alt={compare.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform"
+                  />
+                </Link>
+              </div>
+
+              <div className="p-4">
+                <Link href={compare.url} className="font-medium group">
+                  <h3 className="font-bold text-gray-800 mt-3! mb-2! line-clamp-2 duration-300 group-hover:text-[#ce1a2a]!">
+                    {compare.title}
+                  </h3>
+                </Link>
+
+                <div className="flex justify-between items-center text-sm text-gray-500">
+                  <span>{formatPersianDate(compare.created)}</span>
                 </div>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-8 text-gray-500">
-            <p>ویدئوی مرتبطی یافت نشد</p>
-          </div>
-        )}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-    </Card>
+
+      <style jsx global>{`
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      `}</style>
+    </section>
   );
-}
+};
 
 export default RelatedCompare;

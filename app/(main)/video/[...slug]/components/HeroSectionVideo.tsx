@@ -10,7 +10,6 @@ function HeroSectionVideo({ video }: { video: ItemsId }) {
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-linear-to-r from-transparent to-black"></div>
-
         <div className="relative mx-auto px-4 py-12 sm:w-auto w-full">
           <div className="text-white! sm:w-auto w-full">
             <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center">
@@ -35,7 +34,7 @@ function HeroSectionVideo({ video }: { video: ItemsId }) {
                     <li key={b.href}>
                       <span className="mx-2">/</span>
                       <Link
-                        href={b.href}
+                        href={b.href ? b.href : "#"}
                         className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
                       >
                         {b.title}

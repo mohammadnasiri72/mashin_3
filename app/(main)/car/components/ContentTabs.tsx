@@ -28,7 +28,7 @@ const ContentTabs = ({
   carsModel,
   relatedNews,
   relatedVideos,
-  relatedComparisons,
+  relatedCompares,
 }: {
   detailsCar: ItemsId;
   Attachment: ItemsAttachment[];
@@ -38,7 +38,7 @@ const ContentTabs = ({
   carsModel: Items[];
   relatedNews: Items[];
   relatedVideos: Items[];
-  relatedComparisons: Items[];
+  relatedCompares: ItemsId[];
 }) => {
   const [activeKey, setActiveKey] = useState("review");
   const [isSticky, setIsSticky] = useState(false);
@@ -212,7 +212,7 @@ const ContentTabs = ({
           },
         ]
       : []),
-    ...(relatedComparisons.length > 0
+    ...(relatedCompares.length > 0
       ? [
           {
             key: "Comparisons",
@@ -294,14 +294,14 @@ const ContentTabs = ({
                     />
                   </div>
                 )}
-                {relatedComparisons.length > 0 && (
+                {relatedCompares.length > 0 && (
                   <div
                     id="Comparisons"
                     className="section-anchor"
                     ref={ComparisonsRef}
                   >
                     <RelatedComparisons
-                      relatedComparisons={relatedComparisons}
+                      relatedCompares={relatedCompares}
                       detailsCar={detailsCar}
                     />
                   </div>

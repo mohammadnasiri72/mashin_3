@@ -71,6 +71,10 @@ async function page({
   const Attachment: ItemsAttachment[] = await getAttachment(Number(id));
   const detailsCar: ItemsId = await getItemId(Number(id));
 
+  const idsCompares = detailsCar.properties.find(
+    (e) => e.propertyKey === "p1042_vidrelatedcompare",
+  )?.propertyValue;
+
   const detailsCarcompetitor: ItemsId[] = detailsCar.properties.filter(
     (e) => e.propertyKey === "p1042_relatedcars",
   )[0]?.value
@@ -96,7 +100,7 @@ async function page({
     PageIndex: 1,
     PageSize: 5,
   });
-  // // اخبار مرتبط
+  // اخبار مرتبط
   const relatedNews: Items[] = await getItem({
     TypeId: 5,
     langCode: "fa",
@@ -114,14 +118,10 @@ async function page({
     PageSize: 12,
   });
 
-  // // مقایسه مرتبط
-  const relatedComparisons: Items[] = await getItem({
-    TypeId: 1045,
-    langCode: "fa",
-    Term: detailsCar.sourceName + " " + detailsCar.title,
-    PageSize: 15,
-    PageIndex: 1,
-  });
+  // مقایسه مرتبط
+  const relatedCompares: ItemsId[] = idsCompares
+    ? await getItemByIds(idsCompares)
+    : [];
 
   return (
     <>
@@ -141,7 +141,7 @@ async function page({
         carsModel={carsModel}
         relatedNews={relatedNews}
         relatedVideos={relatedVideos}
-        relatedComparisons={relatedComparisons}
+        relatedCompares={relatedCompares}
       />
     </>
   );

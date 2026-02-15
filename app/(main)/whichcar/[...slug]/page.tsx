@@ -29,7 +29,7 @@ export async function generateMetadata({
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
-    
+
     return {
       title,
       description,
@@ -71,27 +71,20 @@ async function pageWhichcarsDainamic({
   }
 
   const whichcars: ItemsId = await getItemId(id);
-  const ids = whichcars.properties.find((w) => w.propertyId === 22664)?.value;
 
-  let dataCompare: ItemsId[] = [];
-  if (ids) {
-    dataCompare = await getItemByIds(String(ids));
-  }
+  const ids = whichcars.properties.find(
+    (w) => w.propertyKey === "p1045_whichcar",
+  )?.propertyValue;
 
-  const popularComparisons: Items[] = await getItem({
-    TypeId: 1045,
-    langCode: "fa",
-    PageSize: 5,
-    PageIndex: 1,
-    OrderBy: 8,
-  });
-  const ralatedComparisons: Items[] = await getItem({
-    TypeId: 1045,
-    langCode: "fa",
-    PageSize: 17,
-    PageIndex: 1,
-    CategoryIdArray: String(whichcars.categoryId),
-  });
+  const dataCompare: ItemsId[] = ids ? await getItemByIds(String(ids)) : [];
+
+  const idsVideos = whichcars.properties.find(
+    (e) => e.propertyKey === "p1045_comrelatedvideos",
+  )?.propertyValue;
+
+  const idsVoices = whichcars.properties.find(
+    (e) => e.propertyKey === "p1045_whichcarpodcastfile",
+  )?.propertyValue;
 
   const banner: Items[] = await getItem({
     TypeId: 1051,
@@ -106,15 +99,43 @@ async function pageWhichcarsDainamic({
     pageSize: 20,
     pageIndex: 1,
   });
+  // ویدئوهای مرتبط
+  const relatedVideos: ItemsId[] = idsVideos
+    ? await getItemByIds(idsVideos)
+    : [];
 
-  const id1 = Number(
-    dataCompare[0].properties.find((e) => e.propertyKey === "p1044_relatedcar")
-      ?.propertyValue,
-  );
-  const id2 = Number(
-    dataCompare[1].properties.find((e) => e.propertyKey === "p1044_relatedcar")
-      ?.propertyValue,
-  );
+  // پادکست‌های مرتبط
+  const relatedVoices: ItemsId[] = idsVoices
+    ? await getItemByIds(idsVoices)
+    : [];
+
+  // اخبار مرتبط
+  // const relatedNews: Items[] = await getItem({
+  //   TypeId: 5,
+  //   langCode: "fa",
+  //   Term: dataCompare[1].title,
+  //   PageIndex: 1,
+  //   PageSize: 12,
+  // });
+
+  // محبوب ترین مقایسه ها
+  const popularComparisons: Items[] = await getItem({
+    TypeId: 1045,
+    langCode: "fa",
+    PageSize: 5,
+    PageIndex: 1,
+    OrderBy: 8,
+  });
+
+  // مقایسه های مرتبط
+  const ralatedComparisons: Items[] = await getItem({
+    TypeId: 1045,
+    langCode: "fa",
+    PageSize: 13,
+    PageIndex: 1,
+    CategoryIdArray: String(whichcars.categoryId),
+  });
+
 
   return (
     <>
@@ -124,12 +145,12 @@ async function pageWhichcarsDainamic({
         popularComparisons={popularComparisons}
         ralatedComparisons={ralatedComparisons
           .filter((e) => e.id !== id)
-          .slice(0, 16)}
+          .slice(0, 12)}
         comments={comments}
         id={Number(id)}
-        id1={id1}
-        id2={id2}
         banner={banner}
+        relatedVideos={relatedVideos}
+        relatedVoices={relatedVoices}
       />
     </>
   );

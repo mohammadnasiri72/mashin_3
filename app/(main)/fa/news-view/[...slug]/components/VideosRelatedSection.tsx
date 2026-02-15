@@ -4,10 +4,10 @@ import { formatPersianDate } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 
-const RelatedVideos = ({
+const VideosRelatedSection = ({
   relatedVideos,
 }: {
-  relatedVideos: Items[];
+  relatedVideos: ItemsId[];
 }) => {
   return (
     <section className="py-5 bg-white rounded-xl shadow-sm">
@@ -60,4 +60,4 @@ const RelatedVideos = ({
   );
 };
 
-export default RelatedVideos;
+export default VideosRelatedSection;

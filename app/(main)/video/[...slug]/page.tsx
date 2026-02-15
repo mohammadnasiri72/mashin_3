@@ -1,8 +1,9 @@
-import { getItem } from "@/services/Item/Item";
-import { getItemId } from "@/services/Item/ItemId";
-import VideoDetails from "./components/VideoDetails";
 import { getComment } from "@/services/Comment/Comment";
+import { getItem } from "@/services/Item/Item";
+import { getItemByIds } from "@/services/Item/ItemByIds";
+import { getItemId } from "@/services/Item/ItemId";
 import { mainDomainOld } from "@/utils/mainDomain";
+import VideoDetails from "./components/VideoDetails";
 
 export async function generateMetadata({
   params,
@@ -68,6 +69,33 @@ async function pageVideo({
   const id = Number(searchParam.id);
   const id2 = Number(param.slug[0]);
   const video: ItemsId = await getItemId(id || id2);
+
+  const idsCars = video.properties.find(
+    (e) => e.propertyKey === "p1027_relatedcar",
+  )?.propertyValue;
+  const idsPodcasts = video.properties.find(
+    (e) => e.propertyKey === "p1027_videopodcastfile",
+  )?.propertyValue;
+  const idsCompares = video.properties.find(
+    (e) => e.propertyKey === "p1027_vidrelatedcompare",
+  )?.propertyValue;
+
+  const banner: Items[] = await getItem({
+    TypeId: 1051,
+    langCode: "fa",
+    CategoryIdArray: "6415",
+  });
+
+  // کامنت ها
+  const comments: CommentResponse[] = await getComment({
+    id: Number(id),
+    langCode: "fa",
+    type: 0,
+    pageSize: 20,
+    pageIndex: 1,
+  });
+
+  // محبوبترین ویدئوها
   const popularVideos: Items[] = await getItem({
     TypeId: 1028,
     langCode: "fa",
@@ -75,6 +103,8 @@ async function pageVideo({
     PageSize: 5,
     OrderBy: 8,
   });
+
+  // ویدئوهای مرتبط
   const relatedVideos: Items[] = await getItem({
     TypeId: 1028,
     langCode: "fa",
@@ -83,19 +113,18 @@ async function pageVideo({
     CategoryIdArray: String(video.categoryId),
   });
 
-  const banner: Items[] = await getItem({
-    TypeId: 1051,
-    langCode: "fa",
-    CategoryIdArray: "6415",
-  });
+  // خودروهای مرتبط
+  const relatedCars: ItemsId[] = idsCars ? await getItemByIds(idsCars) : [];
 
-  const comments: CommentResponse[] = await getComment({
-    id: Number(id),
-    langCode: "fa",
-    type: 0,
-    pageSize: 20,
-    pageIndex: 1,
-  });
+  // پادکست های مرتبط
+  const relatedPodcasts: ItemsId[] = idsPodcasts
+    ? await getItemByIds(idsPodcasts)
+    : [];
+
+  // مقایسه های مرتبط
+  const relatedCompares: ItemsId[] = idsCompares
+    ? await getItemByIds(idsCompares)
+    : [];
 
   return (
     <>
@@ -108,6 +137,9 @@ async function pageVideo({
         banner={banner}
         comments={comments}
         id={id2}
+        relatedCars={relatedCars}
+        relatedPodcasts={relatedPodcasts}
+        relatedCompares={relatedCompares}
       />
     </>
   );

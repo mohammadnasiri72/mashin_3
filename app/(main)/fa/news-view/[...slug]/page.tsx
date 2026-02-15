@@ -4,6 +4,7 @@ import NewsViewDetails from "./components/NewsViewDetails";
 import { getItem } from "@/services/Item/Item";
 import { getComment } from "@/services/Comment/Comment";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { getItemByIds } from "@/services/Item/ItemByIds";
 
 export async function generateMetadata({
   params,
@@ -99,6 +100,28 @@ async function pageNewsViewDetails({
     CategoryIdArray: "6415",
   });
 
+  const idsCars = detailsNews.properties.find(
+    (e) => e.propertyKey === "p5_relatednewscar",
+  )?.propertyValue;
+
+  const relatedCars: ItemsId[] = idsCars ? await getItemByIds(idsCars) : [];
+
+  const idsVideos = detailsNews.properties.find(
+    (e) => e.propertyKey === "p5_relatedvideos",
+  )?.propertyValue;
+
+  const relatedVideos: ItemsId[] = idsVideos
+    ? await getItemByIds(idsVideos)
+    : [];
+
+  const idsVoices = detailsNews.properties.find(
+    (e) => e.propertyKey === "p5_relatedvoice",
+  )?.propertyValue;
+
+  const relatedVoices: ItemsId[] = idsVoices
+    ? await getItemByIds(idsVoices)
+    : [];
+
   return (
     <NewsViewDetails
       detailsNews={detailsNews}
@@ -108,6 +131,9 @@ async function pageNewsViewDetails({
       id={Number(id)}
       banner={banner}
       relatedNews={relatedNews}
+      relatedCars={relatedCars}
+      relatedVideos={relatedVideos}
+      relatedVoices={relatedVoices}
     />
   );
 }

@@ -5,13 +5,12 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 
 const NewsRelatedSection = ({ relatedNews }: { relatedNews: Items[] }) => {
-
   return (
     <section className="py-8 bg-white rounded-xl shadow-sm">
       <div className="mx-auto px-4">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6! text-center">
-          اخبار مرتبط
-        </h2>
+        <h3 className="dt_title text-2xl font-bold text-gray-900 mb-4!">
+          <strong className="text-red-600"> اخبار مرتبط</strong>
+        </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {relatedNews.map((news) => (

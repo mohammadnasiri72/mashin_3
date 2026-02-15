@@ -4,10 +4,12 @@ import { Card, Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
 // import RelatedVideos from "./RelatedVideos";
 import CompareContent from "./CompareContent";
-import RelatedCompare from "./RelatedCompare";
+import HeroSectionWhichcars from "./HeroSectionWhichcars";
 import SideBarCompareCars from "./SideBarCompareCars";
 import WhichcarsComments from "./WhichcarsComments";
-import HeroSectionWhichcars from "./HeroSectionWhichcars";
+import RelatedVideosCompare from "./RelatedVideosCompare";
+import RelatedVoicesCompare from "./RelatedVoicesCompare";
+import RelatedCompare from "./RelatedCompare";
 
 function CompareCars({
   whichcars,
@@ -17,8 +19,8 @@ function CompareCars({
   comments,
   id,
   banner,
-  id1,
-  id2,
+  relatedVideos,
+  relatedVoices,
 }: {
   whichcars: ItemsId;
   dataCompare: ItemsId[];
@@ -27,8 +29,8 @@ function CompareCars({
   comments: CommentResponse[];
   id: number;
   banner: Items[];
-  id1: number;
-  id2: number;
+  relatedVideos: ItemsId[];
+  relatedVoices: ItemsId[];
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
@@ -37,6 +39,8 @@ function CompareCars({
   // رفرنس‌های مربوط به هر بخش
   const contentRef = useRef<HTMLDivElement>(null);
   const relatedRef = useRef<HTMLDivElement>(null);
+  const relatedVideosRef = useRef<HTMLDivElement>(null);
+  const relatedVoicesRef = useRef<HTMLDivElement>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,7 +53,9 @@ function CompareCars({
       const sections = [
         { key: "1", ref: contentRef },
         { key: "2", ref: relatedRef },
-        { key: "3", ref: commentsRef },
+        { key: "3", ref: relatedVideosRef },
+        { key: "4", ref: relatedVoicesRef },
+        { key: "5", ref: commentsRef },
       ];
 
       let currentActiveKey = activeKey;
@@ -108,7 +114,9 @@ function CompareCars({
     } = {
       "1": contentRef,
       "2": relatedRef,
-      "3": commentsRef,
+      "3": relatedVideosRef,
+      "4": relatedVoicesRef,
+      "5": commentsRef,
     };
 
     const targetRef = sectionRefs[key];
@@ -145,16 +153,32 @@ function CompareCars({
           },
         ]
       : []),
-    // ...(ralatedComparisons.length > 0
-    //   ? [
-    //       {
-    //         key: "2",
-    //         label: "مقایسه‌های مرتبط",
-    //       },
-    //     ]
-    //   : []),
+    ...(ralatedComparisons.length > 0
+      ? [
+          {
+            key: "2",
+            label: "مقایسه‌های مرتبط",
+          },
+        ]
+      : []),
+    ...(relatedVideos.length > 0
+      ? [
+          {
+            key: "3",
+            label: "ویدئوهای مرتبط",
+          },
+        ]
+      : []),
+    ...(relatedVoices.length > 0
+      ? [
+          {
+            key: "4",
+            label: "پادکست‌های مرتبط",
+          },
+        ]
+      : []),
     {
-      key: "3",
+      key: "5",
       label: "نظرات کاربران",
     },
   ];
@@ -184,20 +208,35 @@ function CompareCars({
             {/* بخش محتوای اصلی مقایسه */}
 
             <div id="content" className="section-anchor" ref={contentRef}>
-              <CompareContent
-                whichcars={whichcars}
-                dataCompare={dataCompare}
-                id1={id1}
-                id2={id2}
-              />
+              <CompareContent whichcars={whichcars} dataCompare={dataCompare} />
             </div>
 
             {/* بخش مقایسه های مرتبط */}
-            {/* {ralatedComparisons.length > 0 && (
+            {ralatedComparisons.length > 0 && (
               <div id="related" className="section-anchor" ref={relatedRef}>
                 <RelatedCompare ralatedComparisons={ralatedComparisons} />
               </div>
-            )} */}
+            )}
+            {/* بخش ویدئو های مرتبط */}
+            {relatedVideos.length > 0 && (
+              <div
+                id="relatedVideos"
+                className="section-anchor"
+                ref={relatedVideosRef}
+              >
+                <RelatedVideosCompare relatedVideos={relatedVideos} />
+              </div>
+            )}
+            {/* بخش پادکست های مرتبط */}
+            {relatedVoices.length > 0 && (
+              <div
+                id="relatedVoices"
+                className="section-anchor"
+                ref={relatedVoicesRef}
+              >
+                <RelatedVoicesCompare relatedVoices={relatedVoices} />
+              </div>
+            )}
           </div>
         </div>
         {/* سایدبار */}

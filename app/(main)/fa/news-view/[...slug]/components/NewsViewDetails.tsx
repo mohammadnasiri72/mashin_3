@@ -8,6 +8,9 @@ import NewsGallerySection from "./NewsGallerySection";
 import NewsRelatedSection from "./NewsRelatedSection";
 import SidebarNewsView from "./SidebarNewsView";
 import HeroSectionNews from "./HeroSectionNews";
+import CarsRelatedSection from "./CarsRelatedSection";
+import VideosRelatedSection from "./VideosRelatedSection";
+import VoicesRelatedSection from "./VoicesRelatedSection";
 
 function NewsViewDetails({
   detailsNews,
@@ -17,6 +20,9 @@ function NewsViewDetails({
   id,
   banner,
   relatedNews,
+  relatedCars,
+  relatedVideos,
+  relatedVoices,
 }: {
   detailsNews: ItemsId;
   popularNews: Items[];
@@ -25,6 +31,9 @@ function NewsViewDetails({
   id: number;
   banner: Items[];
   relatedNews: Items[];
+  relatedCars: ItemsId[];
+  relatedVideos: ItemsId[];
+  relatedVoices: ItemsId[];
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
@@ -34,6 +43,9 @@ function NewsViewDetails({
   const contentRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
   const relatedRef = useRef<HTMLDivElement>(null);
+  const relatedCarRef = useRef<HTMLDivElement>(null);
+  const relatedVideosRef = useRef<HTMLDivElement>(null);
+  const relatedVoicesRef = useRef<HTMLDivElement>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
 
   // هندل کردن اسکرول و sticky navbar
@@ -48,7 +60,10 @@ function NewsViewDetails({
         { key: "1", ref: contentRef },
         { key: "2", ref: galleryRef },
         { key: "3", ref: relatedRef },
-        { key: "4", ref: commentsRef },
+        { key: "4", ref: relatedCarRef },
+        { key: "5", ref: relatedVideosRef },
+        { key: "6", ref: relatedVoicesRef },
+        { key: "7", ref: commentsRef },
       ];
 
       let currentActiveKey = activeKey;
@@ -77,13 +92,6 @@ function NewsViewDetails({
           }
         }
       }
-
-      // if (
-      //   window.innerHeight + window.scrollY >=
-      //   document.body.offsetHeight - 200
-      // ) {
-      //   currentActiveKey = "4";
-      // }
 
       if (currentActiveKey !== activeKey) {
         setActiveKey(currentActiveKey);
@@ -115,7 +123,10 @@ function NewsViewDetails({
       "1": contentRef,
       "2": galleryRef,
       "3": relatedRef,
-      "4": commentsRef,
+      "4": relatedCarRef,
+      "5": relatedVideosRef,
+      "6": relatedVoicesRef,
+      "7": commentsRef,
     };
 
     const targetRef = sectionRefs[key];
@@ -137,7 +148,7 @@ function NewsViewDetails({
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition-50,
+        top: offsetPosition - 50,
         behavior: "smooth",
       });
     }
@@ -168,8 +179,32 @@ function NewsViewDetails({
           },
         ]
       : []),
+    ...(relatedCars.length > 0
+      ? [
+          {
+            key: "4",
+            label: "خودروهای مرتبط",
+          },
+        ]
+      : []),
+    ...(relatedVideos.length > 0
+      ? [
+          {
+            key: "5",
+            label: "ویدئوهای مرتبط",
+          },
+        ]
+      : []),
+    ...(relatedVoices.length > 0
+      ? [
+          {
+            key: "6",
+            label: "پادکست‌های مرتبط",
+          },
+        ]
+      : []),
     {
-      key: "4",
+      key: "7",
       label: "نظرات کاربران",
     },
   ];
@@ -225,6 +260,36 @@ function NewsViewDetails({
                   ref={relatedRef}
                 >
                   <NewsRelatedSection relatedNews={relatedNews} />
+                </div>
+              )}
+              {/* بخش خودروهای مرتبط */}
+              {relatedCars.length > 0 && (
+                <div
+                  id="relatedCars"
+                  className="section-anchor px-4"
+                  ref={relatedCarRef}
+                >
+                  <CarsRelatedSection relatedCars={relatedCars} />
+                </div>
+              )}
+              {/* بخش ویدئوهای مرتبط */}
+              {relatedVideos.length > 0 && (
+                <div
+                  id="relatedVideos"
+                  className="section-anchor px-4"
+                  ref={relatedVideosRef}
+                >
+                  <VideosRelatedSection relatedVideos={relatedVideos} />
+                </div>
+              )}
+              {/* بخش پادکست‌های مرتبط */}
+              {relatedVoices.length > 0 && (
+                <div
+                  id="relatedVoices"
+                  className="section-anchor px-4"
+                  ref={relatedVoicesRef}
+                >
+                  <VoicesRelatedSection relatedVoices={relatedVoices} />
                 </div>
               )}
             </div>

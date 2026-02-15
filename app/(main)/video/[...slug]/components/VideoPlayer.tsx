@@ -16,6 +16,8 @@ function VideoPlayer({ video }: { video: ItemsId }) {
   const [videoId, setVideoId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  
+
   useEffect(() => {
     const aparatProperty = video.properties?.find(
       (prop: any) => prop.propertyKey === "p1028_aparatcode"
@@ -104,7 +106,7 @@ function VideoPlayer({ video }: { video: ItemsId }) {
     return (
       <Card className="rounded-xl shadow-lg">
         <div className="space-y-4">
-          <h2 className="text-xl font-bold text-gray-800">پخش ویدئو</h2>
+          <h2 className="text-xl font-bold text-gray-800 mb-2!">پخش ویدئو</h2>
           <div className="bg-black rounded-lg overflow-hidden">
             <div className="w-full aspect-video flex items-center justify-center">
               <div className="text-white! text-center">

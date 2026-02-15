@@ -7,6 +7,9 @@ import SidebarVideo from "./SideBarVideo";
 import VideoComments from "./VideoComments";
 import VideoPlayer from "./VideoPlayer";
 import HeroSectionVideo from "./HeroSectionVideo";
+import RelatedCarsVideos from "./RelatedCarsVideos";
+import RelatedPodcastsVideos from "./relatedPodcastsVideos";
+import RelatedComparesVideos from "./RelatedComparesVideos";
 
 function VideoDetails({
   video,
@@ -15,6 +18,9 @@ function VideoDetails({
   banner,
   comments,
   id,
+  relatedCars,
+  relatedPodcasts,
+  relatedCompares,
 }: {
   video: ItemsId;
   popularVideos: Items[];
@@ -22,6 +28,9 @@ function VideoDetails({
   banner: Items[];
   comments: CommentResponse[];
   id: number;
+  relatedCars: ItemsId[];
+  relatedPodcasts: ItemsId[];
+  relatedCompares: ItemsId[];
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isSticky, setIsSticky] = useState(false);
@@ -29,8 +38,10 @@ function VideoDetails({
 
   // رفرنس‌های مربوط به هر بخش
   const playerRef = useRef<HTMLDivElement>(null);
-  const infoRef = useRef<HTMLDivElement>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
+  const relatedCarsRef = useRef<HTMLDivElement>(null);
+  const relatedPodcastsRef = useRef<HTMLDivElement>(null);
+  const relatedComparesRef = useRef<HTMLDivElement>(null);
   const relatedRef = useRef<HTMLDivElement>(null);
 
   // هندل کردن اسکرول و sticky navbar
@@ -44,7 +55,10 @@ function VideoDetails({
       const sections = [
         { key: "1", ref: playerRef },
         { key: "2", ref: relatedRef },
-        { key: "3", ref: commentsRef },
+        { key: "3", ref: relatedCarsRef },
+        { key: "4", ref: relatedPodcastsRef },
+        { key: "5", ref: relatedComparesRef },
+        { key: "6", ref: commentsRef },
       ];
 
       let currentActiveKey = activeKey;
@@ -103,7 +117,10 @@ function VideoDetails({
     } = {
       "1": playerRef,
       "2": relatedRef,
-      "3": commentsRef,
+      "3": relatedCarsRef,
+      "4": relatedPodcastsRef,
+      "5": relatedComparesRef,
+      "6": commentsRef,
     };
 
     const targetRef = sectionRefs[key];
@@ -125,7 +142,7 @@ function VideoDetails({
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition-50,
+        top: offsetPosition - 50,
         behavior: "smooth",
       });
     }
@@ -148,9 +165,33 @@ function VideoDetails({
           },
         ]
       : []),
+    ...(relatedCars.length > 0
+      ? [
+          {
+            key: "3",
+            label: "خودروهای مرتبط",
+          },
+        ]
+      : []),
+    ...(relatedPodcasts.length > 0
+      ? [
+          {
+            key: "4",
+            label: "پادکست‌های مرتبط",
+          },
+        ]
+      : []),
+    ...(relatedCompares.length > 0
+      ? [
+          {
+            key: "5",
+            label: "مقایسه‌های مرتبط",
+          },
+        ]
+      : []),
 
     {
-      key: "3",
+      key: "6",
       label: "نظرات کاربران",
     },
   ];
@@ -190,6 +231,24 @@ function VideoDetails({
               {relatedVideos.length > 0 && (
                 <div id="related" className="section-anchor" ref={relatedRef}>
                   <RelatedVideos relatedVideos={relatedVideos} />
+                </div>
+              )}
+              {/* بخش خودروهای مرتبط */}
+              {relatedCars.length > 0 && (
+                <div id="relatedCars" className="section-anchor" ref={relatedCarsRef}>
+                  <RelatedCarsVideos relatedCars={relatedCars} />
+                </div>
+              )}
+              {/* بخش پادکست های مرتبط */}
+              {relatedPodcasts.length > 0 && (
+                <div id="relatedPodcasts" className="section-anchor" ref={relatedPodcastsRef}>
+                  <RelatedPodcastsVideos relatedPodcasts={relatedPodcasts} />
+                </div>
+              )}
+              {/* بخش مقایسه های مرتبط */}
+              {relatedCompares.length > 0 && (
+                <div id="relatedCompares" className="section-anchor" ref={relatedComparesRef}>
+                  <RelatedComparesVideos relatedCompares={relatedCompares} />
                 </div>
               )}
             </div>
