@@ -100,8 +100,31 @@ async function pageMotorcycleDainamic({
     PageIndex: 1,
     PageSize: 5,
   });
+  const motorcyclesModel2: Items[] = await getItem({
+    TypeId: 1052,
+    langCode: "fa",
+    CategoryIdArray: String(detailsMotorcycle.categoryId),
+    PageIndex: 1,
+    PageSize: 5,
+  });
 
   const pollData: PollData = await getPollId(Number(id));
+
+  // آخرین اخبار
+  const lastNews: Items[] = await getItem({
+    TypeId: 5,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 7,
+  });
+
+  // آخرین ویدئوها
+  const lastVideos: Items[] = await getItem({
+    TypeId: 1028,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 5,
+  });
 
   return (
     <>
@@ -121,6 +144,9 @@ async function pageMotorcycleDainamic({
         comments={comments}
         id={Number(id)}
         motorcyclesModel={motorcyclesModel}
+        motorcyclesModel2={motorcyclesModel2}
+        lastNews={lastNews}
+        lastVideos={lastVideos}
       />
     </>
   );

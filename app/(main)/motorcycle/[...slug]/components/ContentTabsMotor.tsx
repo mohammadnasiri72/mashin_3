@@ -20,18 +20,28 @@ const ContentTabsMotor = ({
   detailsMotorcompetitor,
   comments,
   id,
-  motorcyclesModel
+  motorcyclesModel,
+  motorcyclesModel2,
+  lastNews,
+  lastVideos,
 }: {
   detailsMotorcycle: ItemsId;
   Attachment: ItemsAttachment[];
   detailsMotorcompetitor: ItemsId[];
   comments: CommentResponse[];
   id: number;
-  motorcyclesModel:Items[]
+  motorcyclesModel: Items[];
+  motorcyclesModel2: Items[];
+  lastNews: Items[];
+  lastVideos: Items[];
 }) => {
   const [activeKey, setActiveKey] = useState("review");
-  const [isSticky, setIsSticky] = useState(false);
+  const [isNavbarSticky, setIsNavbarSticky] = useState(false);
+  const [isMainLonger, setIsMainLonger] = useState(true);
+
   const navbarRef = useRef<HTMLDivElement>(null);
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   // رفرنس‌های مربوط به هر بخش
   const reviewRef = useRef<HTMLDivElement>(null);
@@ -41,8 +51,29 @@ const ContentTabsMotor = ({
   const commentsRef = useRef<HTMLDivElement>(null);
 
   const Criticism = detailsMotorcycle.properties.filter(
-    (e) => e.propertyId === 22642
+    (e) => e.propertyId === 22642,
   );
+
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [detailsMotorcycle, Attachment, detailsMotorcompetitor, motorcyclesModel]);
 
   // هندل کردن اسکرول و sticky navbar
   useEffect(() => {
@@ -50,7 +81,7 @@ const ContentTabsMotor = ({
       // بررسی sticky بودن navbar
       if (navbarRef.current) {
         const navbarTop = navbarRef.current.offsetTop;
-        setIsSticky(window.scrollY > navbarTop);
+        setIsNavbarSticky(window.scrollY > navbarTop);
       }
 
       // بررسی موقعیت اسکرول برای تغییر تب فعال
@@ -92,15 +123,7 @@ const ContentTabsMotor = ({
         }
       }
 
-      // اگر به انتهای صفحه رسیده‌ایم، آخرین تب را فعال کن
-      //   if (
-      //     window.innerHeight + window.scrollY >=
-      //     document.body.offsetHeight - 200
-      //   ) {
-      //     currentActiveKey = "comments";
-      //   }
-
-      if (currentActiveKey !== "") {
+      if (currentActiveKey !== "" && currentActiveKey !== activeKey) {
         setActiveKey(currentActiveKey);
       }
     };
@@ -123,7 +146,7 @@ const ContentTabsMotor = ({
     handleScroll();
 
     return () => window.removeEventListener("scroll", throttledScroll);
-  }, []);
+  }, [activeKey]);
 
   // هندل کلیک روی تب - اسکرول به بخش مربوطه
   const handleTabClick = (key: string) => {
@@ -150,21 +173,21 @@ const ContentTabsMotor = ({
         return offsetTop - 50;
       };
 
-      const navbarHeight = isSticky
+      const navbarHeight = isNavbarSticky
         ? (navbarRef.current?.offsetHeight || 0) + 20
         : 100;
       const absoluteOffsetTop = getAbsoluteOffsetTop(targetRef.current);
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition-50,
+        top: offsetPosition - 50,
         behavior: "smooth",
       });
     }
   };
 
   const specifications = detailsMotorcycle.properties.filter(
-    (e) => e.isTechnicalProperty
+    (e) => e.isTechnicalProperty,
   );
 
   // آیتم‌های تب
@@ -193,11 +216,6 @@ const ContentTabsMotor = ({
           },
         ]
       : []),
-
-    // {
-    //   key: "faq",
-    //   label: "سوالات متداول",
-    // },
     {
       key: "comments",
       label: "نظرات",
@@ -206,27 +224,60 @@ const ContentTabsMotor = ({
 
   return (
     <div className="content-tabs-container">
+      {/* نوار تب‌ها - با position: sticky */}
       <div
         ref={navbarRef}
-        className={`navbar-tabs  p-0! m-0! ${isSticky ? "sticky" : ""}`}
+        className="navbar-tabs p-0! m-0!"
+        style={{
+          position: "sticky",
+          top: isNavbarSticky ? "112px" : "auto",
+          left: 0,
+          right: 0,
+          background: isNavbarSticky ? "white" : "white",
+          boxShadow: isNavbarSticky
+            ? "0 4px 12px rgba(0,0,0,0.15)"
+            : "0 2px 8px rgba(0,0,0,0.1)",
+          borderRadius: isNavbarSticky ? "0 0 12px 12px" : "12px",
+          padding: isNavbarSticky ? "0.75rem 1rem" : "1rem",
+          transition: "all 0.3s ease",
+          zIndex: 1000,
+        }}
       >
         <Tabs
           activeKey={activeKey}
           onChange={handleTabClick}
           items={tabItems}
-          className="custom-tabs "
+          className="custom-tabs"
         />
       </div>
-      <div className=" flex lg:flex-row-reverse gap-3 lg:flex-nowrap flex-wrap">
-        <aside className="lg:w-1/4 w-full mt-6">
+
+      <div className="flex lg:flex-row-reverse gap-3 lg:flex-nowrap flex-wrap mx-auto px-2">
+        {/* سایدبار */}
+        <aside
+          ref={sidebarRef}
+          className={`
+            lg:w-1/4 w-full mt-6 transition-all duration-300
+            ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+          `}
+        >
           <Sidebar
             detailsMotorcompetitor={detailsMotorcompetitor}
             detailsMotorcycle={detailsMotorcycle}
             motorcyclesModel={motorcyclesModel}
+            motorcyclesModel2={motorcyclesModel2}
+            lastNews={lastNews}
+            lastVideos={lastVideos}
           />
         </aside>
-        <div className="lg:w-3/4 w-full ">
-          {/* Content Area */}
+
+        {/* محتوای اصلی */}
+        <div
+          ref={mainBoxRef}
+          className={`
+            lg:w-3/4 w-full transition-all duration-300
+            ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+          `}
+        >
           <div className="flex items-start gap-6 lg:flex-nowrap flex-wrap-reverse mt-6">
             {/* Main Content */}
             <div className="w-full">
@@ -253,50 +304,28 @@ const ContentTabsMotor = ({
                     />
                   </div>
                 )}
-
-                {/* <div id="faq" className="section-anchor" ref={faqRef}>
-                  <FAQSection />
-                </div> */}
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div id="comments" className="section-anchor py-5" ref={commentsRef}>
+
+      {/* بخش نظرات */}
+      <div
+        id="comments"
+        className="section-anchor py-5 container mx-auto px-2"
+        ref={commentsRef}
+      >
         <CommentsSection
           detailsMotorcycle={detailsMotorcycle}
           comments={comments}
           id={id}
         />
       </div>
+
       <style jsx global>{`
         .content-tabs-container {
           position: relative;
-        }
-
-        .navbar-tabs {
-          background: white;
-          padding: 1rem;
-          border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-          margin-bottom: 1rem;
-          transition: all 0.3s ease;
-        }
-
-        .navbar-tabs.sticky {
-          position: sticky;
-          top: 112px;
-          left: 0;
-          right: 0;
-          z-index: 1000;
-          border-radius: 0 0 12px 12px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          animation: slideDown 0.3s ease;
-        }
-        @media (min-width: 1024px) {
-          .navbar-tabs.sticky {
-            top: 60px;
-          }
         }
 
         .custom-tabs .ant-tabs-nav {
@@ -304,9 +333,10 @@ const ContentTabsMotor = ({
         }
 
         .custom-tabs .ant-tabs-tab {
-          padding: 12px 24px;
+          padding: 8px 16px;
           font-weight: 600;
           height: 50px !important;
+          transition: all 0.2s;
         }
 
         .custom-tabs .ant-tabs-tab:hover {
@@ -317,6 +347,7 @@ const ContentTabsMotor = ({
           color: #fff !important;
           background: #ce1a2a;
         }
+
         .custom-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
           color: #fff !important;
         }
@@ -326,7 +357,36 @@ const ContentTabsMotor = ({
         }
 
         .section-anchor {
-          scroll-margin-top: 110px;
+          scroll-margin-top: 180px;
+        }
+
+        /* دسکتاپ */
+        @media (min-width: 1024px) {
+          .navbar-tabs[style*="position: sticky"] {
+            top: 60px !important;
+          }
+          .section-anchor {
+            scroll-margin-top: 120px;
+          }
+        }
+
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
+
+          .navbar-tabs[style*="position: sticky"] {
+            position: relative !important;
+            top: auto !important;
+          }
+        }
+
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
         }
 
         @keyframes slideDown {
@@ -342,17 +402,9 @@ const ContentTabsMotor = ({
 
         /* Responsive */
         @media (max-width: 768px) {
-          .navbar-tabs {
-            padding: 0.75rem;
-          }
-
           .custom-tabs .ant-tabs-tab {
             padding: 8px 12px;
             font-size: 0.9rem;
-          }
-
-          .section-anchor {
-            scroll-margin-top: 100px;
           }
         }
       `}</style>

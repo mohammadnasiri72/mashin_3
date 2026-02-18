@@ -18,10 +18,7 @@ function DescCarCompare({ car }: { car: ItemsId }) {
               src={mainDomainOld + car.image}
               alt={car.title}
               className="max-w-full h-auto max-h-80 object-contain rounded-lg"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "/images/placeholder-car.jpg";
-              }}
+            
             />
           </div>
         )}

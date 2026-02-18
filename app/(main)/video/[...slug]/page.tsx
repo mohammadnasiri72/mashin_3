@@ -14,8 +14,8 @@ export async function generateMetadata({
 }) {
   const param = await params;
   const searchParam = await searchParams;
-  const id = Number(searchParam.id);
-  const id2 = Number(param.slug[0]);
+  const id = Number(param.slug[0]);
+  const id2 = Number(searchParam.id);
   const dataPage: ItemsId = await getItemId(id || id2);
 
   if (dataPage.title) {
@@ -66,8 +66,8 @@ async function pageVideo({
 }) {
   const param = await params;
   const searchParam = await searchParams;
-  const id = Number(searchParam.id);
-  const id2 = Number(param.slug[0]);
+  const id = Number(param.slug[0]);
+  const id2 = Number(searchParam.id);
   const video: ItemsId = await getItemId(id || id2);
 
   const idsCars = video.properties.find(

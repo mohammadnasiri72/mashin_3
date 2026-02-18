@@ -26,9 +26,12 @@ const ContentTabs = ({
   comments,
   id,
   carsModel,
+  carsModel2,
   relatedNews,
   relatedVideos,
   relatedCompares,
+  lastNews,
+  lastVideos,
 }: {
   detailsCar: ItemsId;
   Attachment: ItemsAttachment[];
@@ -36,13 +39,20 @@ const ContentTabs = ({
   comments: CommentResponse[];
   id: number;
   carsModel: Items[];
+  carsModel2: Items[];
   relatedNews: Items[];
   relatedVideos: Items[];
   relatedCompares: ItemsId[];
+  lastNews: Items[];
+  lastVideos: Items[];
 }) => {
   const [activeKey, setActiveKey] = useState("review");
-  const [isSticky, setIsSticky] = useState(false);
+  const [isNavbarSticky, setIsNavbarSticky] = useState(false);
+  const [isMainLonger, setIsMainLonger] = useState(true);
+
   const navbarRef = useRef<HTMLDivElement>(null);
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   // رفرنس‌های مربوط به هر بخش
   const reviewRef = useRef<HTMLDivElement>(null);
@@ -53,13 +63,34 @@ const ContentTabs = ({
   const ComparisonsRef = useRef<HTMLDivElement>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
 
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [detailsCar, Attachment, relatedNews, relatedVideos, relatedCompares]);
+
   // هندل کردن اسکرول و sticky navbar
   useEffect(() => {
     const handleScroll = () => {
       // بررسی sticky بودن navbar
       if (navbarRef.current) {
         const navbarTop = navbarRef.current.offsetTop;
-        setIsSticky(window.scrollY > navbarTop);
+        setIsNavbarSticky(window.scrollY > navbarTop);
       }
 
       // بررسی موقعیت اسکرول برای تغییر تب فعال
@@ -103,7 +134,7 @@ const ContentTabs = ({
         }
       }
 
-      if (currentActiveKey !== "") {
+      if (currentActiveKey !== "" && currentActiveKey !== activeKey) {
         setActiveKey(currentActiveKey);
       }
     };
@@ -120,11 +151,10 @@ const ContentTabs = ({
     };
 
     window.addEventListener("scroll", throttledScroll, { passive: true });
-
     handleScroll();
 
     return () => window.removeEventListener("scroll", throttledScroll);
-  }, []);
+  }, [activeKey]);
 
   const handleTabClick = (key: string) => {
     const sectionRefs: SectionRefs = {
@@ -152,7 +182,7 @@ const ContentTabs = ({
         return offsetTop - 50;
       };
 
-      const navbarHeight = isSticky
+      const navbarHeight = isNavbarSticky
         ? (navbarRef.current?.offsetHeight || 0) + 20
         : 100;
       const absoluteOffsetTop = getAbsoluteOffsetTop(targetRef.current);
@@ -220,7 +250,6 @@ const ContentTabs = ({
           },
         ]
       : []),
-
     {
       key: "comments",
       label: "نظرات",
@@ -229,9 +258,22 @@ const ContentTabs = ({
 
   return (
     <div className="content-tabs-container">
+      {/* نوار تب‌ها - با position: sticky */}
       <div
         ref={navbarRef}
-        className={`navbar-tabs p-0! m-0! ${isSticky ? "sticky" : ""}`}
+        className="navbar-tabs p-0! m-0!"
+        style={{
+          position: 'sticky',
+          top: isNavbarSticky ? '112px' : 'auto',
+          left: 0,
+          right: 0,
+          background: isNavbarSticky ? 'white' : 'white',
+          boxShadow: isNavbarSticky ? '0 4px 12px rgba(0,0,0,0.15)' : '0 2px 8px rgba(0,0,0,0.1)',
+          borderRadius: isNavbarSticky ? '0 0 12px 12px' : '12px',
+          padding: isNavbarSticky ? '0.75rem 1rem' : '1rem',
+          transition: 'all 0.3s ease',
+          zIndex: 1000
+        }}
       >
         <Tabs
           activeKey={activeKey}
@@ -240,18 +282,34 @@ const ContentTabs = ({
           className="custom-tabs"
         />
       </div>
-      <div className=" flex lg:flex-row-reverse gap-3 lg:flex-nowrap flex-wrap">
-        <aside className="lg:w-1/4 w-full mt-6">
+
+      <div className="flex lg:flex-row-reverse gap-3 lg:flex-nowrap flex-wrap container mx-auto px-2">
+        {/* سایدبار */}
+        <aside
+          ref={sidebarRef}
+          className={`
+            lg:w-1/4 w-full mt-6 transition-all duration-300
+            ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+          `}
+        >
           <Sidebar
             detailsCarcompetitor={detailsCarcompetitor}
             detailsCar={detailsCar}
             carsModel={carsModel}
+            carsModel2={carsModel2}
+            lastNews={lastNews}
+            lastVideos={lastVideos}
           />
         </aside>
-        <div className="lg:w-3/4 w-full ">
-          {/* Navigation Tabs */}
 
-          {/* Content Area */}
+        {/* محتوای اصلی */}
+        <div
+          ref={mainBoxRef}
+          className={`
+            lg:w-3/4 w-full transition-all duration-300
+            ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+          `}
+        >
           <div className="flex items-start gap-6 lg:flex-nowrap flex-wrap-reverse mt-6">
             {/* Main Content */}
             <div className="w-full">
@@ -311,37 +369,15 @@ const ContentTabs = ({
           </div>
         </div>
       </div>
-      <div id="comments" className="section-anchor py-5" ref={commentsRef}>
+
+      {/* بخش نظرات */}
+      <div id="comments" className="section-anchor py-5 container mx-auto px-2" ref={commentsRef}>
         <CommentsSection detailsCar={detailsCar} comments={comments} id={id} />
       </div>
+
       <style jsx global>{`
         .content-tabs-container {
           position: relative;
-        }
-
-        .navbar-tabs {
-          background: white;
-          padding: 1rem;
-          border-radius: 12px;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-          margin-bottom: 1rem;
-          transition: all 0.3s ease;
-        }
-
-        .navbar-tabs.sticky {
-          position: sticky;
-          top: 112px;
-          left: 0;
-          right: 0;
-          z-index: 1000;
-          border-radius: 0 0 12px 12px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          animation: slideDown 0.3s ease;
-        }
-        @media (min-width: 1024px) {
-          .navbar-tabs.sticky {
-            top: 60px;
-          }
         }
 
         .custom-tabs .ant-tabs-nav {
@@ -349,7 +385,7 @@ const ContentTabs = ({
         }
 
         .custom-tabs .ant-tabs-tab {
-          padding: 12px 20px;
+          padding: 8px 16px;
           font-weight: 600;
           color: #6b7280 !important;
           transition: all 0.3s ease;
@@ -365,9 +401,11 @@ const ContentTabs = ({
           color: #fff !important;
           background: #ce1a2a;
         }
+        
         .custom-tabs .ant-tabs-tab .ant-tabs-tab-btn {
           color: #222 !important;
         }
+        
         .custom-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
           color: #fff !important;
         }
@@ -377,33 +415,31 @@ const ContentTabs = ({
         }
 
         .section-anchor {
-          scroll-margin-top: 110px;
+          scroll-margin-top: 180px;
         }
 
-        @keyframes slideDown {
-          from {
-            transform: translateY(-100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-          .navbar-tabs {
-            padding: 0.75rem;
-          }
-
-          .custom-tabs .ant-tabs-tab {
-            padding: 8px 12px;
-            font-size: 0.9rem;
+        /* دسکتاپ */
+        @media (min-width: 1024px) {
+          .navbar-tabs[style*="position: sticky"] {
+            top: 60px !important;
           }
 
           .section-anchor {
-            scroll-margin-top: 100px;
+            scroll-margin-top: 120px;
+          }
+        }
+
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
+          
+          .navbar-tabs[style*="position: sticky"] {
+            position: relative !important;
+            top: auto !important;
           }
         }
       `}</style>

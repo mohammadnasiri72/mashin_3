@@ -99,6 +99,7 @@ async function pageSearchCars({
   const modelId = Number(searchParam.modelId);
   const typeId = Number(searchParam.typeId);
   const page = Number(searchParam.page) || 1;
+  const orderby = Number(searchParam.orderby);
 
   const carBrands: ItemsCategory[] = await getCategory({
     TypeId: 1042,
@@ -125,6 +126,7 @@ async function pageSearchCars({
     PageIndex: page,
     PageSize: 20,
     ...(typeId && { FilterProps: `22690=${typeId}` }),
+    OrderBy: orderby ? orderby : 1,
   });
   const banner: Items[] = await getItem({
     TypeId: 1051,
@@ -158,6 +160,7 @@ async function pageSearchCars({
         initialtype={typeId}
         initialBrandId={brandId}
         initialModelId={modelId}
+        initialOrderby={orderby}
       />
     </>
   );

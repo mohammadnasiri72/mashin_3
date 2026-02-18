@@ -10,6 +10,7 @@ import {
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
 import SideBarEducation from "./SideBarEducation";
 
@@ -27,6 +28,32 @@ const EducationCar = ({
   banner: Items[];
 }) => {
   const searchParams = useSearchParams();
+  const [isMainLonger, setIsMainLonger] = useState(true);
+
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [education, educationPopular, banner]);
+
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4">
@@ -41,9 +68,15 @@ const EducationCar = ({
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6 relative">
           {/* محتوای اصلی - 3/4 صفحه */}
-          <div className="lg:w-3/4 w-full">
+          <div
+            ref={mainBoxRef}
+            className={`
+              lg:w-3/4 w-full transition-all duration-300
+              ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               {/* تب‌های آموزشی */}
               <div className="flex flex-wrap gap-2">
@@ -77,7 +110,7 @@ const EducationCar = ({
               </div>
 
               {/* لیست مطالب آموزشی */}
-              <div className="space-y-6">
+              <div className="space-y-6 mt-6">
                 {education.length > 0 ? (
                   education.map((item) => (
                     <div key={item.id}>
@@ -104,10 +137,6 @@ const EducationCar = ({
                               </h2>
                             </Link>
 
-                            {/* <div
-                              className="text-gray-600 leading-relaxed text-justify mb-3! line-clamp-2"
-                              dangerouslySetInnerHTML={createMarkup(item.body)}
-                            /> */}
                             <div className="text-gray-600 leading-relaxed text-justify mb-3! line-clamp-2">
                               {htmlToPlainText(item.body)}
                             </div>
@@ -158,16 +187,24 @@ const EducationCar = ({
               </div>
 
               {/* صفحه بندی */}
-              <CustomPagination
-                total={education[0].total}
-                currentPage={Number(searchParams.get("page")) || 1}
-                pageSize={15}
-              />
+              {education.length > 0 && (
+                <CustomPagination
+                  total={education[0].total}
+                  currentPage={Number(searchParams.get("page")) || 1}
+                  pageSize={15}
+                />
+              )}
             </div>
           </div>
 
           {/* سایدبار - 1/4 صفحه */}
-          <aside className="lg:w-1/4 w-full">
+          <aside
+            ref={sidebarRef}
+            className={`
+              lg:w-1/4 w-full transition-all duration-300
+              ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
             <SideBarEducation
               educationPopular={educationPopular}
               banner={banner}
@@ -216,6 +253,22 @@ const EducationCar = ({
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
+        }
+
+        /* استایل‌های sticky */
+        .lg\\:sticky {
+          position: sticky;
+          bottom: 0;
+          align-self: flex-end;
+        }
+
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
         }
 
         @media (max-width: 1024px) {

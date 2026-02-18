@@ -29,7 +29,7 @@ export async function generateMetadata() {
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
-    
+
     return {
       title,
       description,
@@ -68,7 +68,9 @@ async function pageAutoService({
     langCode: "fa",
     PageIndex: page || 1,
     PageSize: 15,
+    OrderBy: 8,
   });
+  //
   const ids = AutoServiceData.map((item) => item.id).join(",");
 
   let propertyItems: ItemsId[] = [];
@@ -95,6 +97,20 @@ async function pageAutoService({
 
   const autoServiceCat: ItemsId | null = await getItemByUrl(decodedPathname);
 
+  const lastNews: Items[] = await getItem({
+    TypeId: 5,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 7,
+  });
+
+  const lastCars: Items[] = await getItem({
+    TypeId: 1042,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 7,
+  });
+
   return (
     <>
       {autoServiceCat && (
@@ -112,6 +128,8 @@ async function pageAutoService({
           banner={banner}
           title={autoServiceCat.title}
           summary={autoServiceCat.summary || ""}
+          lastNews={lastNews}
+          lastCars={lastCars}
         />
       )}
     </>

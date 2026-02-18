@@ -1,6 +1,6 @@
 "use client";
 
-import MarketStats from "@/app/components/MarketStats";
+import MarketStats from "@/app/components/SideBar/MarketStats";
 import { mainDomainOld } from "@/utils/mainDomain";
 
 function SideBarContact({ banner }: { banner: Items[] }) {

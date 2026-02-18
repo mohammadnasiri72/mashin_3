@@ -334,10 +334,7 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
         onEnded={handleEnded}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
-        onError={(e) => {
-          console.error("❌ خطای audio:", e);
-          setError("خطا در پخش فایل صوتی");
-        }}
+      
       />
 
       <style jsx>{`

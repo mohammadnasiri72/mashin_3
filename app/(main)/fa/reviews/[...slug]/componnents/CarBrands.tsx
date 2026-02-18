@@ -1,23 +1,49 @@
 "use client";
 
-import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
-import MarketStats from "@/app/components/MarketStats";
 import { htmlToPlainText } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import SideBarReviews from "./SideBarReviews";
 
 const CarBrands = ({
   carBrands,
   banner,
   carDetails,
+  lastNews,
 }: {
   carBrands: ItemsCategory[];
   banner: Items[];
   carDetails: ItemsCategoryId;
+  lastNews: Items[];
 }) => {
   const [term, setTerm] = useState("");
+  const [isMainLonger, setIsMainLonger] = useState(true);
+
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [carBrands, banner, term]); // وابستگی به term برای وقتی که جستجو باعث تغییر ارتفاع میشه
 
   return (
     <>
@@ -33,9 +59,15 @@ const CarBrands = ({
             </p>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row gap-6 relative">
             {/* محتوای اصلی - 3/4 صفحه */}
-            <div className="lg:w-3/4 w-full">
+            <div
+              ref={mainBoxRef}
+              className={`
+                lg:w-3/4 w-full transition-all duration-300
+                ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+              `}
+            >
               {/* جستجو */}
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
                 <div className="relative">
@@ -56,6 +88,9 @@ const CarBrands = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {carBrands
                   .filter((e) => e.title.includes(term))
+                  .sort((a, b) => {
+                    return a.title.localeCompare(b.title);
+                  })
                   .map((brand) => (
                     <Link
                       key={brand.id}
@@ -65,7 +100,7 @@ const CarBrands = ({
                       <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200">
                         {/* لوگو و نام برند */}
                         <div className="flex flex-col items-center text-center">
-                          <div className=" overflow-hidden flex items-center justify-center w-28 h-28">
+                          <div className="overflow-hidden flex items-center justify-center w-28 h-28">
                             <img
                               src={mainDomainOld + brand.image}
                               alt={brand.title}
@@ -84,22 +119,14 @@ const CarBrands = ({
             </div>
 
             {/* سایدبار - 1/4 صفحه */}
-            <aside className="lg:w-1/4 w-full">
-              <div className="space-y-6">
-                {banner.length > 0 &&
-                  banner.map((ban) => (
-                    <div className="w-full" key={ban.id}>
-                      <img
-                        className="w-full"
-                        src={mainDomainOld + ban.image}
-                        alt={ban.title}
-                      />
-                    </div>
-                  ))}
-
-                {/* آمار بازار */}
-                <MarketStats />
-              </div>
+            <aside
+              ref={sidebarRef}
+              className={`
+                lg:w-1/4 w-full transition-all duration-300
+                ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+              `}
+            >
+              <SideBarReviews banner={banner} lastNews={lastNews} />
             </aside>
           </div>
         </div>
@@ -108,6 +135,22 @@ const CarBrands = ({
         <style jsx global>{`
           .container {
             max-width: 1200px;
+          }
+
+          /* استایل‌های sticky */
+          .lg\\:sticky {
+            position: sticky;
+            bottom: 0;
+            align-self: flex-end;
+          }
+
+          /* غیرفعال کردن sticky در موبایل */
+          @media (max-width: 1023px) {
+            .lg\\:sticky {
+              position: relative !important;
+              bottom: auto !important;
+              align-self: auto !important;
+            }
           }
 
           @media (max-width: 1024px) {

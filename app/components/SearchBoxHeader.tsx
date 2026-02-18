@@ -229,12 +229,7 @@ function SearchBoxHeader() {
                                   src={mainDomainOld + item.image}
                                   alt={item.title}
                                   className="object-contain w-full h-full"
-                                  onError={(e) => {
-                                    const target = e.target as HTMLImageElement;
-                                    target.style.display = "none";
-                                    target.parentElement!.innerHTML =
-                                      '<div class="w-full h-full flex items-center justify-center bg-gray-100"><IoSearch class="text-gray-400" /></div>';
-                                  }}
+                                 
                                 />
                               </div>
                             ) : (

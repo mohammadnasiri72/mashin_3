@@ -45,6 +45,24 @@ const CarDetails = ({
     caseId: detailsCar.id,
     pollScoreDto: [],
   });
+  const [selectedTab, setSelectedTab] = useState<number | null>(null); // null برای نمایش همه عکس‌ها
+  const [filteredAttachments, setFilteredAttachments] =
+    useState<ItemsAttachment[]>(Attachment);
+
+  // اثر برای فیلتر کردن عکس‌ها بر اساس tabId انتخاب شده
+  useEffect(() => {
+    if (selectedTab) {
+      setFilteredAttachments(
+        Attachment.filter((img) => img.tabId === selectedTab),
+      );
+    } else {
+      setFilteredAttachments(Attachment);
+    }
+  }, [selectedTab, Attachment]);
+
+  const isShowFilter =
+    Attachment.filter((e) => e.tabId === 1).length > 0 &&
+    Attachment.filter((e) => e.tabId === 3).length > 0;
 
   const token = useSelector((state: RootState) => state.token.token);
   const user = Cookies.get("user");
@@ -362,24 +380,23 @@ const CarDetails = ({
             </div>
           </div>
 
-          {/* Right Column - Image Gallery */}
-          <div className="lg:col-span-5 lg:-mt-[40%]">
-            <div className="relative">
+          <div className="lg:col-span-5 lg:-mt-[40%] mt-10 ">
+            <div className="relative group">
               {/* Quick Actions */}
-              <div className="absolute left-full lg:translate-x-0 -translate-x-full top-0 mr-3 space-y-3 z-10 lg:z-0">
+              <div className="lg:absolute lg:left-full lg:translate-x-0 -translate-y-1 lg:translate-y-0 lg:top-0 lg:mr-3 lg:space-y-3 z-10 lg:z-0 flex lg:block flex-wrap gap-3">
                 <Link
                   href={`/compare/${detailsCar.id}`}
-                  className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap block"
+                  className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap block h-8 w-full sm:w-auto"
                 >
                   <FaCodeCompare className="inline ml-1" />
                   مقایسه کنید
                 </Link>
-                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap">
+                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap h-8 w-full sm:w-auto">
                   <FaStar className="inline ml-1" />
                   امتیاز کاربران
                   {pollData.pollScore > 0 ? `${pollData.pollScore} از ۱۰` : ""}
                 </div>
-                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap">
+                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap h-8 w-full sm:w-auto">
                   <FaCalendarDays className="inline ml-1" />
                   {createpublishCode(detailsCar.publishCode)}
                 </div>
@@ -387,7 +404,78 @@ const CarDetails = ({
 
               {/* Main Image Slider */}
               {Attachment.length > 0 && (
-                <div className="slider-productDetails h-full ">
+                <div className="slider-productDetails h-full">
+                  {/* تب‌های انتخاب در دسکتاپ (سمت چپ) */}
+                  {isShowFilter && (
+                    <div className="group-hover:opacity-100 opacity-0 duration-300 hidden lg:flex absolute left-1 top-1 z-20 flex-col gap-2 bg-white/90 backdrop-blur-sm p-2 rounded-r-xl shadow-lg">
+                      <button
+                        aria-label="نمای خارج خودرو"
+                        onClick={() => {
+                          if (selectedTab !== 1) {
+                            setSelectedTab(1);
+                          } else {
+                            setSelectedTab(null);
+                          }
+                        }}
+                        className={`cursor-pointer group relative w-24 h-20 overflow-hidden rounded-lg border-2  hover:border-[#ce1a2a] transition-all duration-300 ${selectedTab === 1 ? "border-[#ce1a2a]" : "border-transparent"}`}
+                      >
+                        {Attachment.filter((img) => img.tabId === 1)[0] && (
+                          <>
+                            <img
+                              src={
+                                mainDomainOld +
+                                Attachment.filter((img) => img.tabId === 1)[0]
+                                  .fileUrl
+                              }
+                              alt="نمای خارج"
+                              className="w-full h-full object-cover"
+                            />
+                            <div
+                              className={`absolute inset-0 bg-black/40 flex items-end justify-center pb-1  group-hover:opacity-100 transition-opacity ${selectedTab === 1 ? "opacity-100" : "opacity-0"}`}
+                            >
+                              <span className="text-white text-xs font-bold">
+                                خارج
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </button>
+                      <button
+                        aria-label="نمای داخل خودرو"
+                        onClick={() => {
+                          if (selectedTab !== 3) {
+                            setSelectedTab(3);
+                          } else {
+                            setSelectedTab(null);
+                          }
+                        }}
+                        className={`cursor-pointer group relative w-24 h-20 overflow-hidden rounded-lg border-2 hover:border-[#ce1a2a] transition-all duration-300 ${selectedTab === 3 ? "border-[#ce1a2a]" : "border-transparent"}`}
+                      >
+                        {Attachment.filter((img) => img.tabId === 3)[0] && (
+                          <>
+                            <img
+                              src={
+                                mainDomainOld +
+                                Attachment.filter((img) => img.tabId === 3)[0]
+                                  .fileUrl
+                              }
+                              alt="نمای داخل"
+                              className="w-full h-full object-cover"
+                            />
+                            <div
+                              className={`absolute inset-0 bg-black/40 flex items-end justify-center pb-1  group-hover:opacity-100 transition-opacity ${selectedTab === 3 ? "opacity-100" : "opacity-0"}`}
+                            >
+                              <span className="text-white text-xs font-bold">
+                                داخل
+                              </span>
+                            </div>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Main Swiper */}
                   <Swiper
                     loop={true}
                     spaceBetween={10}
@@ -397,17 +485,26 @@ const CarDetails = ({
                     modules={[FreeMode, Thumbs]}
                     className="mySwiper2 product-gallery-main"
                   >
-                    {Attachment.map((image) => (
+                    {filteredAttachments.map((image) => (
                       <SwiperSlide key={image.id}>
                         <a
-                          className="sm:h-96 h-56 block cursor-pointer bg-[#ce1a2a]"
+                          className="sm:h-96 h-56 block cursor-pointer bg-white!"
                           href={mainDomainOld + image.fileUrl}
                           data-fancybox="main-gallery"
                           data-caption={image.title}
                           aria-label="لینک گالری تصاویر"
                         >
+                          <div
+                            className="absolute inset-0 bg-cover bg-center"
+                            style={{
+                              backgroundImage: `url('${mainDomainOld + image.fileUrl}')`,
+                              filter: "blur(8px)",
+                              transform: "scale(1.1)",
+                            }}
+                          />
+
                           <img
-                            className="w-full h-full border-4 border-[#ce1a2a]  object-cover"
+                            className="w-full h-full border-4! border-[#ce1a2a]! object-contain overflow-hidden relative z-50"
                             src={mainDomainOld + image.fileUrl}
                             alt={image.title || "تصویر محصول"}
                           />
@@ -439,7 +536,7 @@ const CarDetails = ({
                     modules={[FreeMode, Navigation, Thumbs]}
                     className="mySwiper product-gallery-thumbs mt-3 pb-10!"
                   >
-                    {Attachment.map((image) => (
+                    {filteredAttachments.map((image) => (
                       <SwiperSlide key={image.id}>
                         <div className="cursor-pointer border-2 border-transparent overflow-hidden transition-all hover:bg-[#ce1a2a]! swiper-slide-thumb-active:border-red-600 z-50 h-20!">
                           <img
@@ -451,8 +548,51 @@ const CarDetails = ({
                       </SwiperSlide>
                     ))}
                   </Swiper>
+
+                  {/* تب‌های انتخاب در موبایل (زیر اسلایدر) */}
+                  {isShowFilter && (
+                    <div className="lg:hidden flex justify-center gap-3 mt-3">
+                      <button
+                        aria-label="نمای خارج خودرو"
+                        onClick={() => {
+                          if (selectedTab !== 1) {
+                            setSelectedTab(1);
+                          } else {
+                            setSelectedTab(null);
+                          }
+                        }}
+                        className={`cursor-pointer flex items-center gap-2 px-6 py-2  rounded-lg shadow-md transition-all duration-300 border border-gray-200 ${selectedTab === 1 ? "bg-[#ce1a2a] text-white" : "bg-white text-gray-800"}`}
+                      >
+                        <span className="text-sm font-bold">خارج</span>
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded-full duration-300 ${selectedTab === 1 ? "bg-white text-[#ce1a2a]" : "bg-[#ce1a2a] text-white"}`}
+                        >
+                          {Attachment.filter((img) => img.tabId === 1).length}
+                        </span>
+                      </button>
+                      <button
+                        aria-label="نمای داخل خودرو"
+                        onClick={() => {
+                          if (selectedTab !== 3) {
+                            setSelectedTab(3);
+                          } else {
+                            setSelectedTab(null);
+                          }
+                        }}
+                        className={`cursor-pointer flex items-center gap-2 px-6 py-2  rounded-lg shadow-md transition-all duration-300 border border-gray-200 ${selectedTab === 3 ? "bg-[#ce1a2a] text-white!" : "bg-white text-gray-800"}`}
+                      >
+                        <span className="text-sm font-bold">داخل</span>
+                        <span
+                          className={`text-xs px-2 py-0.5 rounded-full duration-300 ${selectedTab === 3 ? "bg-white text-[#ce1a2a]" : "bg-[#ce1a2a] text-white"}`}
+                        >
+                          {Attachment.filter((img) => img.tabId === 3).length}
+                        </span>
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
+
               {Attachment.length === 0 && (
                 <div className="slider-productDetails h-full">
                   {/* اسکلتون برای تصویر اصلی */}

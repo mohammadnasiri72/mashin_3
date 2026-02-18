@@ -100,6 +100,20 @@ async function pageBestChoice({
       OrderBy: 8,
     });
 
+    const lastNews: Items[] = await getItem({
+      TypeId: 5,
+      langCode: "fa",
+      PageIndex: 1,
+      PageSize: 7,
+    });
+
+    const lastCars: Items[] = await getItem({
+      TypeId: 1042,
+      langCode: "fa",
+      PageIndex: 1,
+      PageSize: 7,
+    });
+
     return (
       <>
         <div className="flex flex-wrap bg-gray-50">
@@ -111,6 +125,8 @@ async function pageBestChoice({
             Attachment={Attachment}
             competitorsCar={competitorsCar}
             popularBestChoices={popularBestChoices}
+            lastNews={lastNews}
+            lastCars={lastCars}
           />
         </div>
       </>

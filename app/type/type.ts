@@ -132,6 +132,7 @@ interface ItemsAttachment {
   fileUrl: string;
   title: string | null;
   priority: number;
+  tabId: number;
 }
 
 interface breadcrumb {

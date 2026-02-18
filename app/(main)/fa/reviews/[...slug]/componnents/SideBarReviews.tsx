@@ -2,30 +2,27 @@ import MarketStats from "@/app/components/SideBar/MarketStats";
 import SideBarBanner from "@/app/components/SideBar/SideBarBanner";
 import SideBarListItems from "@/app/components/SideBar/SideBarListItems";
 
-function SideBarWhichCars({
-  popularComparisons,
+function SideBarReviews({
   banner,
+  lastNews,
 }: {
-  popularComparisons: Items[];
   banner: Items[];
+  lastNews: Items[];
 }) {
   return (
     <>
       <div className="space-y-6">
-        {/*پرطرفدارترین مقایسه‌ها*/}
-        <SideBarListItems
-          itemsList={popularComparisons}
-          title={"پرطرفدارترین مقایسه‌ها"}
-        />
-
         {/* بنرهای سایدبار */}
         <SideBarBanner banner={banner} />
 
         {/* آمار بازار */}
         <MarketStats />
+
+        {/* جدیدترین اخبار */}
+        <SideBarListItems itemsList={lastNews} title={"جدیدترین اخبار خودرو"} />
       </div>
     </>
   );
 }
 
-export default SideBarWhichCars;
+export default SideBarReviews;

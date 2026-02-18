@@ -9,7 +9,7 @@ function PaginationVideo({ videos }: { videos: Items[] }) {
       {videos.length > 0 && (
         <CustomPagination
           total={videos[0].total}
-          pageSize={20}
+          pageSize={12}
           currentPage={Number(searchParams.get("page")) || 1}
         />
       )}

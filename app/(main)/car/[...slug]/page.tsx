@@ -100,6 +100,14 @@ async function page({
     PageIndex: 1,
     PageSize: 5,
   });
+
+  const carsModel2: Items[] = await getItem({
+    TypeId: 1042,
+    langCode: "fa",
+    CategoryIdArray: String(detailsCar.categoryId),
+    PageIndex: 1,
+    PageSize: 5,
+  });
   // اخبار مرتبط
   const relatedNews: Items[] = await getItem({
     TypeId: 5,
@@ -109,7 +117,7 @@ async function page({
     PageSize: 12,
   });
 
-  // // ویدئو مرتبط
+  // ویدئو مرتبط
   const relatedVideos: Items[] = await getItem({
     TypeId: 1028,
     langCode: "fa",
@@ -123,15 +131,34 @@ async function page({
     ? await getItemByIds(idsCompares)
     : [];
 
+  // آخرین اخبار
+  const lastNews: Items[] = await getItem({
+    TypeId: 5,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 7,
+  });
+
+  // آخرین ویدئوها
+  const lastVideos: Items[] = await getItem({
+    TypeId: 1028,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 5,
+  });
+
   return (
     <>
       <HeroSection detailsCar={detailsCar} />
       <CarDetails
-        Attachment={Attachment}
+        Attachment={Attachment.filter((e) => e.tabId === 1 || e.tabId === 3)}
         detailsCar={detailsCar}
         initialPollData={pollData}
       />
-      <FeaturesSection detailsCar={detailsCar} />
+      <FeaturesSection
+        detailsCar={detailsCar}
+        Attachment={Attachment.filter((e) => e.tabId === 4)}
+      />
       <ContentTabs
         Attachment={Attachment}
         detailsCar={detailsCar}
@@ -139,9 +166,12 @@ async function page({
         comments={comments}
         id={Number(id)}
         carsModel={carsModel}
+        carsModel2={carsModel2}
         relatedNews={relatedNews}
         relatedVideos={relatedVideos}
         relatedCompares={relatedCompares}
+        lastNews={lastNews}
+        lastVideos={lastVideos}
       />
     </>
   );

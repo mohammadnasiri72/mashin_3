@@ -102,7 +102,7 @@ export default function ProfileDropdown() {
       {
         <div
           className={`absolute left-0  w-48 duration-300 bg-white rounded-lg shadow-lg border border-gray-200 z-50 ${
-            !open ? "max-h-0 mt-0 opacity-0 invisible" : "max-h-52 mt-2 visible overflow-auto"
+            !open ? "max-h-0 mt-0 opacity-0 invisible" : "max-h-64 mt-2 visible overflow-auto"
           }`}
         >
           <div>

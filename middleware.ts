@@ -10,19 +10,7 @@ import { getPriceMotorBrands } from "./services/Price/PriceMotorBrands";
 export async function middleware(request: NextRequest) {
   const url = new URL(request.url);
   const { pathname, searchParams } = url;
-  if (pathname.startsWith("/")) {
-    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-pathname", pathname); // فقط مسیر
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-  } else if (
-    pathname.startsWith("/cars/") ||
-    pathname.startsWith("/motorcycles/")
-  ) {
+  if (pathname.startsWith("/cars/") || pathname.startsWith("/motorcycles/")) {
     const id = Number(searchParams.get("id"));
     const decodedPathname = decodeURIComponent(pathname);
     if (id) {
@@ -497,7 +485,7 @@ export async function middleware(request: NextRequest) {
     try {
       if (!isNaN(id)) {
         const data: ItemsId = await getItemId(id);
-        if (data?.url && data.url !== decodedPathname + `?id=${data?.id}`) {
+        if (data?.url && data.url !== decodedPathname + `?id=${id2}`) {
           return NextResponse.redirect(
             new URL(data.url.toLowerCase(), request.url),
             {
@@ -703,6 +691,10 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
+  } else if (pathname === "/best-choices") {
+    return NextResponse.redirect(new URL("/best-choices.html", request.url), {
+      status: 301,
+    });
   } else if (pathname.startsWith("/best-choices.html")) {
     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
     const requestHeaders = new Headers(request.headers);
@@ -853,6 +845,14 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   }
 
   return NextResponse.next();

@@ -69,13 +69,13 @@ async function pageVideo({
     langCode: "fa",
     PageIndex: page || 1,
     ...(term && term !== "undefined" && { Term: term }),
-    PageSize: 10,
+    PageSize: 12,
   });
   const popularVideos: Items[] = await getItem({
     TypeId: 1028,
     langCode: "fa",
     PageIndex: 1,
-    PageSize: 10,
+    PageSize: 5,
     OrderBy: 8,
   });
   const videosCat: ItemsCategory[] = await getCategory({

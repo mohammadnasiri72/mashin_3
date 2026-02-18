@@ -7,10 +7,11 @@ import {
 } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCar, FaSearch } from "react-icons/fa";
-import MarketStats from "../../../../components/MarketStats";
+import MarketStats from "../../../../components/SideBar/MarketStats";
 import ShowSummary from "./ShowSummary";
+import SideBarCars from "./SideBarCars";
 
 const CarsDetails = ({
   carBrands,
@@ -27,13 +28,44 @@ const CarsDetails = ({
 }) => {
   const [carBrandsFilter, setCarBrandsFilter] = useState(carBrands);
   const [carBrandsFilter2, setCarBrandsFilter2] = useState(carBrands2);
+  const [isMainLonger, setIsMainLonger] = useState(true);
+
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [carBrandsFilter, carBrandsFilter2, banner]); // وابستگی به فیلترها برای وقتی جستجو تغییر میکنه
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4">
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6 relative">
           {/* محتوای اصلی - 3/4 صفحه */}
-          <div className="lg:w-3/4 w-full">
+          <div
+            ref={mainBoxRef}
+            className={`
+              lg:w-3/4 w-full transition-all duration-300
+              ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
             {/* جستجو در مدل‌های این برند */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
               <div className="relative">
@@ -66,7 +98,7 @@ const CarsDetails = ({
             </div>
 
             {/* عنوان بخش مدل‌ها */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <img
                   src={mainDomainOld + carDetails.image}
@@ -88,13 +120,9 @@ const CarsDetails = ({
             )}
 
             {/* گرید مدل‌های خودرو */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
               {carBrandsFilter.map((car) => (
-                <div
-                  key={car.id}
-                  //   href={car.url + `?id=${car.id}`}
-                  className="group block"
-                >
+                <div key={car.id} className="group block">
                   <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
                     {/* تصویر خودرو */}
                     <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
@@ -140,7 +168,7 @@ const CarsDetails = ({
                       </div>
                     </div>
 
-                    <div className="sm:hidden flex  flex-col gap-1 py-4 duration-300">
+                    <div className="sm:hidden flex flex-col gap-1 py-4 duration-300">
                       {carView
                         .filter((c) => c.categoryId === car.id)
                         .map((ca) => (
@@ -192,11 +220,7 @@ const CarsDetails = ({
                 </div>
               ))}
               {carBrandsFilter2.map((car) => (
-                <div
-                  key={car.id}
-                  //   href={car.url + `?id=${car.id}`}
-                  className="group block"
-                >
+                <div key={car.id} className="group block">
                   <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
                     {/* تصویر خودرو */}
                     <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
@@ -257,22 +281,15 @@ const CarsDetails = ({
           </div>
 
           {/* سایدبار - 1/4 صفحه */}
-          <aside className="lg:w-1/4 w-full">
-            <div className="space-y-6">
-              {banner.length > 0 &&
-                banner.map((ban) => (
-                  <div className="w-full" key={ban.id}>
-                    <img
-                      className="w-full"
-                      src={mainDomainOld + ban.image}
-                      alt={ban.title}
-                    />
-                  </div>
-                ))}
-
-              {/* آمار بازار */}
-              <MarketStats />
-            </div>
+          <aside
+            ref={sidebarRef}
+            className={`
+              lg:w-1/4 w-full transition-all duration-300
+              ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
+            <SideBarCars banner={banner}/>
+            
           </aside>
         </div>
       </div>
@@ -281,6 +298,23 @@ const CarsDetails = ({
       <style jsx global>{`
         .container {
           max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        /* استایل‌های sticky */
+        .lg\\:sticky {
+          position: sticky;
+          bottom: 0;
+          align-self: flex-end;
+        }
+
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
         }
 
         @media (max-width: 1024px) {

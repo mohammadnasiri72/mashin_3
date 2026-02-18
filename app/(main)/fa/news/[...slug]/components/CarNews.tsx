@@ -1,7 +1,7 @@
 "use client";
 
 import CustomPagination from "@/app/components/CustomPagination";
-import MarketStats from "@/app/components/MarketStats";
+import MarketStats from "@/app/components/SideBar/MarketStats";
 import {
   formatPersianDate,
   htmlToPlainText,
@@ -10,8 +10,9 @@ import {
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
+import SideBarNews from "./SideBarNews";
 
 const CarNews = ({
   id,
@@ -31,8 +32,12 @@ const CarNews = ({
   tabConfig: { key: number; href: string; label: string }[];
 }) => {
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [isMainLonger, setIsMainLonger] = useState(true);
 
   const searchParams = useSearchParams();
+
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (id) {
@@ -41,6 +46,27 @@ const CarNews = ({
       setActiveTab(0);
     }
   }, [id]);
+
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [newsData, popularNews, offerNews, banner]);
 
   return (
     <>
@@ -62,16 +88,22 @@ const CarNews = ({
             </p>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row gap-6 relative">
             {/* محتوای اصلی - 3/4 صفحه */}
-            <div className="lg:w-3/4 w-full">
+            <div
+              ref={mainBoxRef}
+              className={`
+                lg:w-3/4 w-full transition-all duration-300
+                ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+              `}
+            >
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 {/* تب‌های اخبار */}
                 <div className="mb-6 flex items-center flex-wrap gap-2">
                   {tabConfig.map((tab) => (
                     <Link
                       key={tab.key}
-                      className={`hover:text-white!  duration-300 px-3 py-1 rounded-lg ${
+                      className={`hover:text-white! duration-300 px-3 py-1 rounded-lg ${
                         activeTab === tab.key
                           ? "text-white! bg-[#ce1a2a]"
                           : "text-black! hover:bg-[#ce1a2a]"
@@ -81,12 +113,6 @@ const CarNews = ({
                       {tab.label}
                     </Link>
                   ))}
-                  {/* <Tabs
-                  activeKey={activeTab}
-                  items={tabItems}
-                  className="custom-news-tabs"
-                  tabBarStyle={{ marginBottom: 0 }}
-                /> */}
                 </div>
 
                 {/* لیست اخبار */}
@@ -153,107 +179,18 @@ const CarNews = ({
             </div>
 
             {/* سایدبار - 1/4 صفحه */}
-            <aside className="lg:w-1/4 w-full">
-              <div className="space-y-6">
-                {/*اخبار فروش ویژه*/}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4! border-b pb-2">
-                    اخبار فروش ویژه
-                  </h3>
-                  <div className="space-y-4">
-                    {offerNews.map((news) => (
-                      <Link
-                        key={news.id}
-                        href={`/news/${news.id}`}
-                        className="block group"
-                      >
-                        <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors">
-                          <div className="w-16 h-12 bg-gray-200 rounded shrink-0 overflow-hidden">
-                            <img
-                              src={mainDomainOld + news.image}
-                              alt={news.title}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-gray-900 text-sm leading-tight group-hover:text-white! transition-colors line-clamp-2">
-                              {news.title}
-                            </h4>
-                            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 mt-2 group-hover:text-white!">
-                              <div className="flex items-center gap-1">
-                                <FaCalendar />
-                                <span>{formatPersianDate(news.created)}</span>
-                              </div>
-
-                              <div className="flex items-center gap-1">
-                                <FaEye className="w-3 h-3" />
-                                <span>
-                                  {toPersianNumbers(news.visit)} بازدید
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-                {/* محبوب‌ترین اخبار */}
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4! border-b pb-2">
-                    محبوب‌ترین اخبار
-                  </h3>
-                  <div className="space-y-4">
-                    {popularNews.map((news) => (
-                      <Link
-                        key={news.id}
-                        href={`/news/${news.id}`}
-                        className="block group"
-                      >
-                        <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors">
-                          <div className="w-16 h-12 bg-gray-200 rounded shrink-0 overflow-hidden">
-                            <img
-                              src={mainDomainOld + news.image}
-                              alt={news.title}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-gray-900 text-sm leading-tight group-hover:text-white! transition-colors line-clamp-2">
-                              {news.title}
-                            </h4>
-                            <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 mt-2 group-hover:text-white!">
-                              <div className="flex items-center gap-1">
-                                <FaCalendar />
-                                <span>{formatPersianDate(news.created)}</span>
-                              </div>
-
-                              <div className="flex items-center gap-1">
-                                <FaEye className="w-3 h-3" />
-                                <span>
-                                  {toPersianNumbers(news.visit)} بازدید
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-                {banner.length > 0 &&
-                  banner.map((ban) => (
-                    <div className="w-full" key={ban.id}>
-                      <img
-                        className="w-full"
-                        src={mainDomainOld + ban.image}
-                        alt={ban.title}
-                      />
-                    </div>
-                  ))}
-                {/* آمار بازار */}
-                <MarketStats />
-              </div>
+            <aside
+              ref={sidebarRef}
+              className={`
+                lg:w-1/4 w-full transition-all duration-300
+                ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+              `}
+            >
+              <SideBarNews
+                banner={banner}
+                offerNews={offerNews}
+                popularNews={popularNews}
+              />
             </aside>
           </div>
         </div>
@@ -298,6 +235,22 @@ const CarNews = ({
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+          }
+
+          /* استایل‌های sticky */
+          .lg\\:sticky {
+            position: sticky;
+            bottom: 0;
+            align-self: flex-end;
+          }
+
+          /* غیرفعال کردن sticky در موبایل */
+          @media (max-width: 1023px) {
+            .lg\\:sticky {
+              position: relative !important;
+              bottom: auto !important;
+              align-self: auto !important;
+            }
           }
 
           @media (max-width: 1024px) {

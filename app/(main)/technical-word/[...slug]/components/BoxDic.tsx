@@ -1,19 +1,15 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import SidebarVideo from "./SidebarVideo";
-import BoxVideo from "./BoxVideo";
+import DetailsDic from "./DetailsDic";
+import SideBarDic from "./SideBarDic";
 
-function Video({
-  popularVideos,
-  videos,
+function BoxDic({
+  detailsDic,
   banner,
-  titleCat,
 }: {
-  popularVideos: Items[];
-  videos: Items[];
+  detailsDic: ItemsId;
   banner: Items[];
-  titleCat: string;
 }) {
   const [isMainLonger, setIsMainLonger] = useState(true);
 
@@ -39,11 +35,11 @@ function Video({
       window.removeEventListener("resize", checkHeights);
       clearTimeout(timer);
     };
-  }, [videos, popularVideos, banner]);
+  }, [detailsDic, banner]);
 
   return (
     <>
-      <div className="flex flex-wrap lg:flex-nowrap gap-6 relative mx-auto px-4">
+      <div className="flex flex-col lg:flex-row gap-4 p-3 relative mx-auto">
         {/* محتوای اصلی */}
         <div
           ref={mainBoxRef}
@@ -52,7 +48,7 @@ function Video({
             ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
           `}
         >
-          <BoxVideo videos={videos} titleCat={titleCat} />
+          <DetailsDic detailsDic={detailsDic} />
         </div>
 
         {/* سایدبار */}
@@ -63,7 +59,7 @@ function Video({
             ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
           `}
         >
-          <SidebarVideo popularVideos={popularVideos} banner={banner} />
+          <SideBarDic banner={banner} />
         </aside>
       </div>
 
@@ -100,4 +96,4 @@ function Video({
   );
 }
 
-export default Video;
+export default BoxDic;

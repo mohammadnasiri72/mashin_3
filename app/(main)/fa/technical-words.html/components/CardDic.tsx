@@ -1,15 +1,13 @@
 "use client";
 
 import CustomPagination from "@/app/components/CustomPagination";
-import MarketStats from "@/app/components/MarketStats";
 import { htmlToPlainText } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { FaBookOpen, FaTag, FaArrowLeft, FaSearch } from "react-icons/fa";
-import { Button, Input, Space } from "antd";
+import { useEffect, useRef, useState } from "react";
+import { FaArrowLeft, FaTag } from "react-icons/fa";
 import SearchBoxDic from "./SearchBoxDic";
+import SideBarTechnicalWords from "./SideBarTechnicalWords";
 
 function CardDic({
   title,
@@ -25,10 +23,15 @@ function CardDic({
   banner: Items[];
 }) {
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [isMainLonger, setIsMainLonger] = useState(true);
+
   const searchParams = useSearchParams();
   const searchTerm = searchParams.get("term");
   const router = useRouter();
   const pathname = usePathname();
+
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const key = Number(pathname.split("/")[2]);
@@ -39,11 +42,31 @@ function CardDic({
     }
   }, [pathname]);
 
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [dic, banner, searchTerm]); // وابستگی به searchTerm برای وقتی جستجو تغییر میکنه
 
   return (
     <>
       <div className="min-h-screen">
-        <div className="px-4">
+        <div className="p-4 mx-auto">
           {/* هدر صفحه */}
           <div className="mb-4 text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
@@ -54,16 +77,22 @@ function CardDic({
             </p>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-4">
+          <div className="flex flex-col lg:flex-row gap-4 relative">
             {/* محتوای اصلی - 3/4 صفحه */}
-            <div className="lg:w-3/4 w-full">
+            <div
+              ref={mainBoxRef}
+              className={`
+                lg:w-3/4 w-full transition-all duration-300
+                ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+              `}
+            >
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 {/* تب‌های واژگان فنی */}
                 <div className="mb-6 flex items-center flex-wrap gap-2">
                   {tabConfig.map((tab) => (
                     <Link
                       key={tab.key}
-                      className={`hover:text-white!  duration-300 px-3 py-1 rounded-lg ${
+                      className={`hover:text-white! duration-300 px-3 py-1 rounded-lg ${
                         activeTab === tab.key
                           ? "text-white! bg-[#ce1a2a]"
                           : "text-black! hover:bg-[#ce1a2a]"
@@ -144,35 +173,48 @@ function CardDic({
             </div>
 
             {/* سایدبار - 1/4 صفحه */}
-            <aside className="lg:w-1/4 w-full">
-              <div className="space-y-6">
-                {/* بنرهای تبلیغاتی */}
-                {banner.length > 0 && (
-                  <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-100">
-                    <div className="space-y-4">
-                      {banner.map((ban) => (
-                        <div
-                          key={ban.id}
-                          className="group overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300"
-                        >
-                          <img
-                            className="w-full h-auto transform group-hover:scale-105 transition-transform duration-500"
-                            src={mainDomainOld + ban.image}
-                            alt={ban.title}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* آمار بازار */}
-                <MarketStats />
-              </div>
+            <aside
+              ref={sidebarRef}
+              className={`
+                lg:w-1/4 w-full transition-all duration-300
+                ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+              `}
+            >
+              <SideBarTechnicalWords banner={banner} />
             </aside>
           </div>
         </div>
       </div>
+
+      <style jsx global>{`
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        /* استایل‌های sticky */
+        .lg\\:sticky {
+          position: sticky;
+          bottom: 0;
+          align-self: flex-end;
+        }
+
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
+        }
+
+        @media (max-width: 1024px) {
+          .container {
+            padding-left: 1rem;
+            padding-right: 1rem;
+          }
+        }
+      `}</style>
     </>
   );
 }

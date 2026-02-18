@@ -209,7 +209,7 @@ function RatingAutoService({
                 isSubmitting ||
                 Object.values(userRatings).some((rating) => rating === 0)
               }
-              className={`w-full cursor-pointer py-3 px-6 rounded-lg font-bold transition-all duration-300 flex items-center justify-center 
+              className={`mx-auto cursor-pointer py-3 px-6 rounded-lg font-bold transition-all duration-300 flex items-center justify-center 
                                   ${
                                     Object.values(userRatings).some(
                                       (rating) => rating === 0,

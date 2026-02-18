@@ -27,20 +27,45 @@ function MainBoxAutoService({
   Longitude: string;
 }) {
   const [activeKey, setActiveKey] = useState("1");
-  const [isSticky, setIsSticky] = useState(false);
+  const [isNavbarSticky, setIsNavbarSticky] = useState(false);
+  const [isMainLonger, setIsMainLonger] = useState(true);
+
   const navbarRef = useRef<HTMLDivElement>(null);
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   // رفرنس‌های مربوط به هر بخش
   const commentsRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
 
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, []);
+
   // هندل کردن اسکرول و sticky navbar
   useEffect(() => {
     const handleScroll = () => {
       if (navbarRef.current) {
         const navbarTop = navbarRef.current.offsetTop;
-        setIsSticky(window.scrollY > navbarTop);
+        setIsNavbarSticky(window.scrollY > navbarTop);
       }
 
       const sections = [
@@ -75,13 +100,6 @@ function MainBoxAutoService({
           }
         }
       }
-
-      // if (
-      //   window.innerHeight + window.scrollY >=
-      //   document.body.offsetHeight - 200
-      // ) {
-      //   currentActiveKey = "5";
-      // }
 
       if (currentActiveKey !== activeKey) {
         setActiveKey(currentActiveKey);
@@ -127,7 +145,7 @@ function MainBoxAutoService({
         return offsetTop;
       };
 
-      const navbarHeight = isSticky
+      const navbarHeight = isNavbarSticky
         ? (navbarRef.current?.offsetHeight || 0) + 20
         : 100;
       const absoluteOffsetTop = getAbsoluteOffsetTop(targetRef.current);
@@ -159,27 +177,48 @@ function MainBoxAutoService({
     <div className="min-h-screen bg-gray-50 w-full">
       {/* هدر صفحه */}
       <HeroSectionAutoService detailsAuto={detailsAuto} />
-      {/* باکس تب ها */}
-      <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 z-10000!">
+
+      {/* باکس تب ها - با position: sticky */}
+      <div
+        ref={navbarRef}
+        className="navbar-tabs w-full px-2 z-10000"
+        style={{
+          position: 'sticky',
+          top: isNavbarSticky ? '112px' : 'auto',
+          left: 0,
+          right: 0,
+          background: isNavbarSticky ? 'white' : 'transparent',
+          boxShadow: isNavbarSticky ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
+          paddingTop: isNavbarSticky ? '8px' : '0',
+          paddingBottom: isNavbarSticky ? '8px' : '0',
+          transition: 'all 0.3s ease'
+        }}
+      >
         <Card
           style={{ padding: 0, margin: 0 }}
-          className="rounded-xl shadow-lg z-1000000!"
+          className="rounded-xl shadow-lg"
         >
           <Tabs
             activeKey={activeKey}
             onChange={handleTabClick}
             type="card"
             items={items}
-            className="autoService-tabs p-0! m-0!"
+            className="autoService-tabs"
           />
         </Card>
       </div>
-      <div>
-        <div className="flex flex-wrap items-start py-8">
-          {/* محتوای اصلی */}
 
-          <div className="lg:w-3/4 w-full px-2">
-            <div className="space-y-8 mt-6">
+      <div className=" mx-auto">
+        <div className="flex flex-wrap lg:flex-nowrap items-start py-3 relative">
+          {/* محتوای اصلی */}
+          <div
+            ref={mainBoxRef}
+            className={`
+              lg:w-3/4 w-full px-2 transition-all duration-300
+              ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
+            <div className="space-y-8">
               {/* بخش مشخصات نمایندگی */}
               <div id="contact" className="section-anchor" ref={contactRef}>
                 <ContactUsAutoService
@@ -200,12 +239,19 @@ function MainBoxAutoService({
           </div>
 
           {/* سایدبار */}
-          <aside className="lg:w-1/4 w-full mt-6 lg:mt-0">
+          <aside
+            ref={sidebarRef}
+            className={`
+              lg:w-1/4 w-full mt-6 lg:mt-0 px-2 transition-all duration-300
+              ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
             <SidebarAutoService banner={banner} />
           </aside>
         </div>
+
         {/* بخش نظرات */}
-        <div id="comments" className="section-anchor" ref={commentsRef}>
+        <div id="comments" className="section-anchor px-2" ref={commentsRef}>
           <CommentsAutoService
             detailsAuto={detailsAuto}
             comments={comments}
@@ -216,31 +262,23 @@ function MainBoxAutoService({
 
       <style jsx global>{`
         .navbar-tabs {
-          background: transparent;
           transition: all 0.3s ease;
-          z-index: 100;
+          z-index: 10000;
         }
+
         .navbar-tabs .ant-card-body {
           padding: 0 !important;
           margin: 0 !important;
         }
+
         .autoService-tabs .ant-tabs-nav {
-          padding: 0 !important;
           margin: 0 !important;
         }
 
-        .navbar-tabs.sticky {
-          position: sticky;
-          top: 112px;
-          left: 0;
-          right: 0;
-          z-index: 1000;
-          animation: slideDown 0.3s ease;
-        }
-
         .autoService-tabs .ant-tabs-tab {
-          padding: 12px 24px;
+          padding: 8px 16px;
           font-weight: 600;
+          transition: all 0.2s;
           height: 50px !important;
         }
 
@@ -258,23 +296,31 @@ function MainBoxAutoService({
         }
 
         .section-anchor {
-          scroll-margin-top: 110px;
+          scroll-margin-top: 180px;
         }
 
-        @keyframes slideDown {
-          from {
-            transform: translateY(-100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
-
+        /* دسکتاپ */
         @media (min-width: 1024px) {
-          .navbar-tabs.sticky {
-            top: 60px;
+          .navbar-tabs[style*="position: sticky"] {
+            top: 60px !important;
+          }
+
+          .section-anchor {
+            scroll-margin-top: 120px;
+          }
+        }
+
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
+          
+          .navbar-tabs[style*="position: sticky"] {
+            position: relative !important;
+            top: auto !important;
           }
         }
       `}</style>

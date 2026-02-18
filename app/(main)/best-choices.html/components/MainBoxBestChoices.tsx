@@ -5,7 +5,7 @@ import {
   htmlToPlainText,
   toPersianNumbers,
 } from "@/utils/func";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import SearchBoxBestChoice from "./SearchBoxBestChoice";
 import Link from "next/link";
 import { mainDomainOld } from "@/utils/mainDomain";
@@ -20,15 +20,45 @@ function MainBoxBestChoices({
   bestChoices,
   banner,
   popularBestChoices,
+  lastNews,
+lastCars,
 }: {
   title: string;
   summary: string | null;
   bestChoices: Items[];
   banner: Items[];
   popularBestChoices: Items[];
+  lastNews:Items[]
+lastCars:Items[]
 }) {
+  const [isMainLonger, setIsMainLonger] = useState(true);
+
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [bestChoices, banner, popularBestChoices]);
 
   const clearFilters = () => {
     router.push("/best-choices.html", {
@@ -47,9 +77,16 @@ function MainBoxBestChoices({
           </p>
         )}
       </div>
-      <div className="flex flex-col lg:flex-row gap-6 px-3">
+      
+      <div className="flex flex-col lg:flex-row gap-6 px-3 relative mx-auto">
         {/* محتوای اصلی - 3/4 صفحه */}
-        <div className="lg:w-3/4 w-full">
+        <div
+          ref={mainBoxRef}
+          className={`
+            lg:w-3/4 w-full transition-all duration-300
+            ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+          `}
+        >
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
             <div className="flex sm:flex-nowrap flex-wrap items-center gap-2">
               <SearchBoxBestChoice />
@@ -57,7 +94,7 @@ function MainBoxBestChoices({
 
             {/* لیست بهترین انتخاب */}
             {bestChoices.length > 0 && (
-              <div className="space-y-6">
+              <div className="space-y-6 mt-6">
                 {bestChoices.map((bestChoice) => {
                   return (
                     <article
@@ -73,11 +110,6 @@ function MainBoxBestChoices({
                                 src={mainDomainOld + bestChoice.image}
                                 alt={bestChoice.title}
                                 className="object-contain w-full h-full hover:scale-105 rounded-lg! transition-transform duration-300"
-                                onError={(e) => {
-                                  const target = e.target as HTMLImageElement;
-                                  target.src =
-                                    "/images/placeholder-comparison.jpg";
-                                }}
                               />
                             </Link>
                           </div>
@@ -127,6 +159,7 @@ function MainBoxBestChoices({
                 })}
               </div>
             )}
+            
             {bestChoices.length === 0 && (
               <div className="text-center py-12 bg-white rounded-xl shadow-sm">
                 <FaCar className="text-4xl text-gray-400 mx-auto mb-4" />
@@ -157,13 +190,44 @@ function MainBoxBestChoices({
         </div>
 
         {/* سایدبار - 1/4 صفحه */}
-        <aside className="lg:w-1/4 w-full">
+        <aside
+          ref={sidebarRef}
+          className={`
+            lg:w-1/4 w-full transition-all duration-300
+            ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+          `}
+        >
           <SideBarBestChoices
             popularBestChoices={popularBestChoices}
             banner={banner}
+            lastNews={lastNews}
+lastCars={lastCars}
           />
         </aside>
       </div>
+
+      <style jsx global>{`
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        /* استایل‌های sticky */
+        .lg\\:sticky {
+          position: sticky;
+          bottom: 0;
+          align-self: flex-end;
+        }
+
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
+        }
+      `}</style>
     </>
   );
 }

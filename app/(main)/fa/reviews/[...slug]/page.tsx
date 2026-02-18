@@ -2,8 +2,8 @@ import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
-import CarBrands from "./componnents/CarBrands";
 import { mainDomainOld } from "@/utils/mainDomain";
+import CarBrands from "./componnents/CarBrands";
 
 export async function generateMetadata({
   params,
@@ -30,7 +30,7 @@ export async function generateMetadata({
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.headTags;
-    
+
     return {
       title,
       description,
@@ -88,13 +88,25 @@ async function pageReviews({ params }: { params: Promise<{ slug: string }> }) {
     });
   }
 
+  const lastNews: Items[] = await getItem({
+    TypeId: 5,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 7,
+  });
+
   return (
     <>
       <BreadcrumbCategory
         breadcrumb={carDetails.breadcrumb}
         title={carDetails.title}
       />
-      <CarBrands carBrands={brand} banner={banner} carDetails={carDetails} />
+      <CarBrands
+        carBrands={brand}
+        banner={banner}
+        carDetails={carDetails}
+        lastNews={lastNews}
+      />
     </>
   );
 }

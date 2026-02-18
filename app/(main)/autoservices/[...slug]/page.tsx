@@ -99,6 +99,19 @@ async function pageAutoServiceDetails({
 
   const autoServiceCat = await getCategoryId(Number(id));
 
+   const lastNews: Items[] = await getItem({
+    TypeId: 5,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 7,
+  });
+   const lastCars: Items[] = await getItem({
+    TypeId: 1042,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 7,
+  });
+
   return (
     <>
       <BreadcrumbCategory
@@ -113,6 +126,8 @@ async function pageAutoServiceDetails({
         banner={banner}
         title={autoServiceCat.title}
         summary={autoServiceCat.summary || ""}
+        lastNews={lastNews}
+        lastCars={lastCars}
       />
     </>
   );

@@ -87,6 +87,21 @@ async function pageBestChoices({
 
   const bestCat: ItemsId | null = await getItemByUrl(decodedPathname);
 
+   const lastNews: Items[] = await getItem({
+        TypeId: 5,
+        langCode: "fa",
+        PageIndex: 1,
+        PageSize: 7,
+      });
+  
+      const lastCars: Items[] = await getItem({
+        TypeId: 1042,
+        langCode: "fa",
+        PageIndex: 1,
+        PageSize: 7,
+      });
+  
+
   return (
     <>
       {bestCat && (
@@ -103,6 +118,8 @@ async function pageBestChoices({
           bestChoices={bestChoices}
           banner={banner}
           popularBestChoices={popularBestChoices}
+          lastNews={lastNews}
+lastCars={lastCars}
         />
       )}
     </>

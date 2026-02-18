@@ -102,7 +102,7 @@ const CustomPagination = ({
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between gap-4 my-8 p-4 bg-white rounded-lg shadow-sm">
+    <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-3 p-4 bg-white rounded-lg shadow-sm">
       {/* اطلاعات صفحه */}
       <div className="text-sm text-gray-600">
         نمایش{" "}

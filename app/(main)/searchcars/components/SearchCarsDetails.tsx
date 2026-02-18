@@ -1,7 +1,6 @@
 "use client";
 
 import CustomPagination from "@/app/components/CustomPagination";
-import MarketStats from "@/app/components/MarketStats";
 import { getCategory } from "@/services/Category/Category";
 import { createpublishCode, toPersianNumbers } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
@@ -9,9 +8,10 @@ import { Button } from "@mui/material";
 import { Select } from "antd";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCar } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
+import SideBarSearchCars from "./SideBarSearchCars";
 
 const { Option } = Select;
 
@@ -24,6 +24,7 @@ function SearchCarsDetails({
   initialtype,
   initialBrandId,
   initialModelId,
+  initialOrderby,
 }: {
   carBrands: ItemsCategory[];
   carDetails: ItemsCategoryId[];
@@ -33,8 +34,10 @@ function SearchCarsDetails({
   initialtype: number;
   initialBrandId: number;
   initialModelId: number;
+  initialOrderby: number;
 }) {
   const [models, setModels] = useState<ItemsCategory[]>([]);
+  const [isMainLonger, setIsMainLonger] = useState(true);
 
   const [brandId, setBrandId] = useState<number>(
     initialBrandId ? initialBrandId : 0,
@@ -44,6 +47,12 @@ function SearchCarsDetails({
     initialModelId ? initialModelId : 0,
   );
   const [typeId, setTypeId] = useState<number>(initialtype ? initialtype : 0);
+  const [orderBy, setOrderBy] = useState<number>(
+    initialOrderby ? initialOrderby : 0,
+  );
+
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   const typeCarTitle = segmentCars.find((e) => e.id === initialtype)?.title;
   const router = useRouter();
@@ -70,11 +79,33 @@ function SearchCarsDetails({
     }
   }, []);
 
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [carView, banner, models, brandId, modelId, typeId, orderBy]);
+
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (brandId) params.append("brandId", String(brandId));
     if (modelId) params.append("modelId", String(modelId));
     if (typeId) params.append("typeId", String(typeId));
+    if (orderBy) params.append("orderby", String(orderBy));
 
     const queryString = params.toString();
 
@@ -89,12 +120,37 @@ function SearchCarsDetails({
     <>
       <div className="min-h-screen bg-[#f4f4f4] py-8">
         <div className="mx-auto px-4">
-          <div className="flex flex-col lg:flex-row gap-6">
+          <div className="flex flex-col lg:flex-row gap-6 relative">
             {/* محتوای اصلی - 3/4 صفحه */}
-            <div className="lg:w-3/4 w-full">
+            <div
+              ref={mainBoxRef}
+              className={`
+                lg:w-3/4 w-full transition-all duration-300
+                ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+              `}
+            >
               {/* جستجو در مدل‌های این برند */}
-              <div className="bg-white rounded-2xl py-6  shadow-sm border border-gray-100 mb-6 flex justify-center">
+              <div className="bg-white rounded-2xl py-6 shadow-sm border border-gray-100 mb-6 flex justify-center">
                 <div className="flex items-center flex-wrap sm:px-4 px-1 w-full">
+                  <div className="lg:w-1/5 sm:w-1/3 w-full px-1 mt-3 sm:mt-0">
+                    <Select
+                      aria-label="نوع خودرو..."
+                      placeholder="نوع خودرو..."
+                      value={typeId}
+                      onChange={(value) => setTypeId(value)}
+                      className="dropdown_main"
+                      style={{ width: "100%" }}
+                      size="large"
+                    >
+                      <Option value={0}>همه نوع ها</Option>
+                      {segmentCars.length > 0 &&
+                        segmentCars.map((e) => (
+                          <Option key={e.id} value={e.id}>
+                            {e.title}
+                          </Option>
+                        ))}
+                    </Select>
+                  </div>
                   <div className="lg:w-1/5 sm:w-1/3 w-full px-1">
                     <Select
                       aria-label="جستجوی برند..."
@@ -140,21 +196,18 @@ function SearchCarsDetails({
                   </div>
                   <div className="lg:w-1/5 sm:w-1/3 w-full px-1 mt-3 sm:mt-0">
                     <Select
-                      aria-label="نوع خودرو..."
-                      placeholder="نوع خودرو..."
-                      value={typeId}
-                      onChange={(value) => setTypeId(value)}
+                      aria-label="مرتب سازی..."
+                      placeholder="مرتب سازی..."
+                      value={orderBy}
+                      onChange={(value) => setOrderBy(value)}
                       className="dropdown_main"
                       style={{ width: "100%" }}
                       size="large"
                     >
-                      <Option value={0}>همه نوع ها</Option>
-                      {segmentCars.length > 0 &&
-                        segmentCars.map((e) => (
-                          <Option key={e.id} value={e.id}>
-                            {e.title}
-                          </Option>
-                        ))}
+                      <Option value={0}>جدیدترین‌ها</Option>
+                      <Option value={1}>محبوب ترین‌ها</Option>
+                      <Option value={2}>قدیمی‌ترین‌ها</Option>
+                      <Option value={8}>پربازدیدترین‌ها</Option>
                     </Select>
                   </div>
 
@@ -248,11 +301,7 @@ function SearchCarsDetails({
               {/* گرید مدل‌های خودرو */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
                 {carView.map((car) => (
-                  <div
-                    key={car.id}
-                    //   href={car.url + `?id=${car.id}`}
-                    className="group block"
-                  >
+                  <div key={car.id} className="group block">
                     <div className="bg-white rounded-2xl overflow-hidden pb-2 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
                       {/* تصویر خودرو */}
                       <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
@@ -330,22 +379,14 @@ function SearchCarsDetails({
             </div>
 
             {/* سایدبار - 1/4 صفحه */}
-            <aside className="lg:w-1/4 w-full">
-              <div className="space-y-6">
-                {banner.length > 0 &&
-                  banner.map((ban) => (
-                    <div className="w-full" key={ban.id}>
-                      <img
-                        className="w-full"
-                        src={mainDomainOld + ban.image}
-                        alt={ban.title}
-                      />
-                    </div>
-                  ))}
-
-                {/* آمار بازار */}
-                <MarketStats />
-              </div>
+            <aside
+              ref={sidebarRef}
+              className={`
+                lg:w-1/4 w-full transition-all duration-300
+                ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+              `}
+            >
+              <SideBarSearchCars banner={banner} />
             </aside>
           </div>
         </div>
@@ -354,6 +395,23 @@ function SearchCarsDetails({
         <style jsx global>{`
           .container {
             max-width: 1200px;
+            margin: 0 auto;
+          }
+
+          /* استایل‌های sticky */
+          .lg\\:sticky {
+            position: sticky;
+            bottom: 0;
+            align-self: flex-end;
+          }
+
+          /* غیرفعال کردن sticky در موبایل */
+          @media (max-width: 1023px) {
+            .lg\\:sticky {
+              position: relative !important;
+              bottom: auto !important;
+              align-self: auto !important;
+            }
           }
 
           @media (max-width: 1024px) {

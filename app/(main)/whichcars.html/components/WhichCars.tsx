@@ -9,6 +9,7 @@ import {
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
 import SearchBoxWhichCars from "./SearchBoxWhichCars";
 import SideBarWhichCars from "./SideBarWhichCars";
@@ -24,6 +25,11 @@ const WhichCars = ({
   banner: Items[];
   whichCarsCat: ItemsId | null;
 }) => {
+  const [isMainLonger, setIsMainLonger] = useState(true);
+
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
   // استخراج نام خودروها از عنوان برای نمایش بهتر
   const extractCarNames = (title: string) => {
     const matches = title.match(/(?:مقایسه|مقايسه)\s+(.+?)\s+(?:با|و)\s+(.+)/);
@@ -35,9 +41,29 @@ const WhichCars = ({
     }
     return { car1: "", car2: "" };
   };
-  
 
   const searchParams = useSearchParams();
+
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [whichCars, popularComparisons, banner]);
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
@@ -52,16 +78,22 @@ const WhichCars = ({
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6 relative">
           {/* محتوای اصلی - 3/4 صفحه */}
-          <div className="lg:w-3/4 w-full">
+          <div
+            ref={mainBoxRef}
+            className={`
+              lg:w-3/4 w-full transition-all duration-300
+              ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <div className="flex sm:flex-nowrap flex-wrap items-center gap-2">
                 <SearchBoxWhichCars />
               </div>
 
               {/* لیست مقایسه‌ها */}
-              <div className="space-y-6">
+              <div className="space-y-6 mt-6">
                 {whichCars.map((comparison) => {
                   const carNames = extractCarNames(comparison.title);
 
@@ -79,11 +111,6 @@ const WhichCars = ({
                                 src={mainDomainOld + comparison.image}
                                 alt={comparison.title}
                                 className="object-contain w-full h-full hover:scale-105 rounded-lg! transition-transform duration-300"
-                                onError={(e) => {
-                                  const target = e.target as HTMLImageElement;
-                                  target.src =
-                                    "/images/placeholder-comparison.jpg";
-                                }}
                               />
                             </Link>
                           </div>
@@ -155,7 +182,13 @@ const WhichCars = ({
           </div>
 
           {/* سایدبار - 1/4 صفحه */}
-          <aside className="lg:w-1/4 w-full">
+          <aside
+            ref={sidebarRef}
+            className={`
+              lg:w-1/4 w-full transition-all duration-300
+              ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
             <SideBarWhichCars
               popularComparisons={popularComparisons}
               banner={banner}
@@ -168,6 +201,23 @@ const WhichCars = ({
       <style jsx global>{`
         .container {
           max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        /* استایل‌های sticky */
+        .lg\\:sticky {
+          position: sticky;
+          bottom: 0;
+          align-self: flex-end;
+        }
+
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
         }
 
         .line-clamp-2 {

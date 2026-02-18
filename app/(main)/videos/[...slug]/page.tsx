@@ -32,7 +32,7 @@ export async function generateMetadata({
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.headTags;
-    
+
     return {
       title,
       description,
@@ -78,7 +78,7 @@ async function pageVideosDainamic({
       CategoryIdArray: id,
       PageIndex: page || 1,
       ...(term && term !== "undefined" && { Term: term }),
-      PageSize: 10,
+      PageSize: 12,
     });
   } catch (err) {
     return <VideoNotFound />;
@@ -93,7 +93,7 @@ async function pageVideosDainamic({
     TypeId: 1028,
     langCode: "fa",
     PageIndex: 1,
-    PageSize: 10,
+    PageSize: 5,
     OrderBy: 8,
   });
 

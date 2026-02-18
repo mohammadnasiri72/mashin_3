@@ -1,14 +1,14 @@
 "use client";
 
+import CustomPagination from "@/app/components/CustomPagination";
 import { htmlToPlainText } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
-import { Card, Pagination, Select } from "antd";
+import { Card, Select } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { FaCar, FaClock, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
-import SidebarAutoService from "../../autoservice/[...slug]/components/SidebarAutoService";
-import CustomPagination from "@/app/components/CustomPagination";
+import SidebarAutoServices from "./SidebarAutoServices";
 
 const { Option } = Select;
 
@@ -20,6 +20,8 @@ function MainBoxAutoServices({
   banner,
   title,
   summary,
+  lastNews,
+  lastCars,
 }: {
   AutoServiceData: Items[];
   brands: ItemsCategory[];
@@ -28,6 +30,8 @@ function MainBoxAutoServices({
   banner: Items[];
   title: string;
   summary: string;
+  lastNews: Items[];
+  lastCars: Items[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -36,10 +40,40 @@ function MainBoxAutoServices({
     Number(brands.find((e) => e.id === Number(id))?.id) || null,
   );
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [isMainLonger, setIsMainLonger] = useState(true);
 
-  const titleBrandSelected = brands.find((e) => e.id === selectedBrand)?.title;
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   const page = searchParams.get("page");
+
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [
+    AutoServiceData,
+    banner,
+    lastNews,
+    lastCars,
+    selectedBrand,
+    selectedProvince,
+  ]);
 
   useEffect(() => {
     window.scrollTo({
@@ -133,10 +167,17 @@ function MainBoxAutoServices({
           {htmlToPlainText(summary)}
         </p>
       </div>
-      <div className="flex flex-wrap bg-gray-50">
-        <div className="lg:w-3/4 w-full">
-          <div className="min-h-screen bg-gray-50 py-8">
-            <div className="mx-auto px-4 max-w-6xl">
+      <div className="flex flex-wrap lg:flex-nowrap gap-6 relative mx-auto px-4">
+        {/* محتوای اصلی */}
+        <div
+          ref={mainBoxRef}
+          className={`
+            lg:w-3/4 w-full transition-all duration-300
+            ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+          `}
+        >
+          <div className="min-h-screen bg-[#f4f4f4] py-8">
+            <div className="mx-auto max-w-6xl">
               {/* فیلترها */}
               <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
                 <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
@@ -221,8 +262,8 @@ function MainBoxAutoServices({
                 </div>
               </div>
 
-              {/* لیست خطی نمایندگی‌ها */}
-              <div className="space-y-4 mb-8">
+              {/* لیست گریدی نمایندگی‌ها */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {AutoServiceData.map((service) => {
                   const propertyItem = propertyItems.find(
                     (e) => e.id === service.id,
@@ -246,8 +287,8 @@ function MainBoxAutoServices({
 
                   const numbers = tel
                     ? tel
-                        .split(/[\r\n,;]+/) // جدا کردن با هر کدام از این جداکننده‌ها
-                        .map((num) => num.trim()) // حذف فاصله‌های اضافه
+                        .split(/[\r\n,;]+/)
+                        .map((num) => num.trim())
                         .filter(
                           (num) => num.length > 0 && /^0\d{10}$/.test(num),
                         )
@@ -256,96 +297,83 @@ function MainBoxAutoServices({
                   return (
                     <Card
                       key={service.id}
-                      className="rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-300 hover:border-[#ce1a2a] mt-3!"
+                      className="rounded-xl! border! border-gray-200! hover:shadow-lg! transition-all! duration-300! hover:border-[#ce1a2a]! overflow-hidden!"
                       styles={{
                         body: {
                           padding: 0,
                         },
                       }}
                     >
-                      <div className="flex flex-col md:flex-row">
+                      <div className="flex flex-col h-full">
                         {/* تصویر */}
-                        <div className="md:w-1/4 lg:w-1/5">
-                          <div className="h-full overflow-hidden rounded-r-xl md:rounded-r-none md:rounded-l-xl p-3">
-                            <Link href={service.url}>
-                              <img
-                                src={mainDomainOld + service.image}
-                                alt={service.title}
-                                className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src =
-                                    "/images/default-service.jpg";
-                                }}
-                              />
-                            </Link>
-                          </div>
+                        <div className="h-48 overflow-hidden bg-gray-100">
+                          <Link href={service.url}>
+                            <img
+                              src={mainDomainOld + service.image}
+                              alt={service.title}
+                              className="w-full h-full object-contain p-4 hover:scale-105 transition-transform duration-500"
+                            />
+                          </Link>
                         </div>
 
                         {/* اطلاعات */}
-                        <div className="flex-1 p-6">
-                          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4">
-                            <div className="flex-1">
-                              <Link href={service.url}>
-                                <h2 className="font-bold text-gray-800 text-xl mb-2! hover:text-[#ce1a2a]! transition-colors">
-                                  {service.title}
-                                </h2>
-                              </Link>
+                        <div className="flex-1 p-5">
+                          <div className="mb-3">
+                            <Link href={service.url}>
+                              <h2 className="font-bold text-gray-800 text-lg mb-2 hover:text-[#ce1a2a]! transition-colors line-clamp-2">
+                                {service.title}
+                              </h2>
+                            </Link>
 
-                              <div className="flex flex-wrap gap-2 mb-3 items-start">
-                                <span className="bg-[#ce1a2a] text-white! px-2 py-1 rounded-full text-xs! font-medium">
-                                  {service.categoryTitle}
-                                </span>
-                                {/* <div className="flex items-center bg-yellow-50 px-3 py-1 rounded-full">
-                              <FaStar className="text-yellow-500 ml-1" />
-                              <span className="text-xs font-medium text-gray-800">
-                                ۴.۲
+                            <div className="flex flex-wrap gap-2 mb-3">
+                              <span className="bg-[#ce1a2a] text-white! px-2 py-1 rounded-full text-xs! font-medium">
+                                {service.categoryTitle}
                               </span>
-                            </div> */}
-                              </div>
                             </div>
                           </div>
 
                           {/* اطلاعات تماس و آدرس */}
-                          <div className="flex items-start justify-between mb-3!">
-                            <div className="space-y-2">
-                              <div className="flex items-center text-gray-600">
-                                <FaMapMarkerAlt className="text-[#ce1a2a] ml-2" />
-                                <span className="text-xs">
-                                  {loc ? loc : "ثبت نشده"}
-                                </span>
-                              </div>
-                              <div className="flex items-center text-gray-600">
-                                <FaClock className="text-[#ce1a2a] ml-2" />
-                                <span className="text-xs">
-                                  {time ? time : "ثبت نشده"}
-                                </span>
-                              </div>
-                              <div className="flex items-center text-gray-600">
-                                <FaPhone className="text-[#ce1a2a] ml-2" />
-                                <span
-                                  className={`text-xs  ${tel ? "font-bold" : ""}`}
-                                >
-                                  {tel
-                                    ? tel?.replace("\r\n", " - ")
-                                    : "ثبت نشده"}
-                                </span>
-                              </div>
+                          <div className="space-y-3 mb-4">
+                            <div className="flex items-start text-gray-600">
+                              <FaMapMarkerAlt className="text-[#ce1a2a] ml-2 mt-1 shrink-0" />
+                              <span className="text-xs line-clamp-2">
+                                {loc ? loc : "ثبت نشده"}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center text-gray-600">
+                              <FaClock className="text-[#ce1a2a] ml-2 shrink-0" />
+                              <span className="text-xs line-clamp-1">
+                                {time ? time : "ثبت نشده"}
+                              </span>
+                            </div>
+
+                            <div className="flex items-center text-gray-600">
+                              <FaPhone className="text-[#ce1a2a] ml-2 shrink-0" />
+                              <span
+                                className={`text-xs line-clamp-1 ${tel ? "font-bold" : ""}`}
+                              >
+                                {tel
+                                  ? tel?.replace(/\r\n/g, " - ")
+                                  : "ثبت نشده"}
+                              </span>
                             </div>
                           </div>
 
                           {/* دکمه‌های اقدام */}
-                          <div className="flex gap-3 items-start text-xs!">
+                          <div className="flex gap-2 mt-auto pt-2">
                             {numbers.length > 0 && (
-                              <a href={`tel:${numbers[0]}`} className="">
+                              <a href={`tel:${numbers[0]}`} className="flex-1">
                                 <button
                                   aria-label="تماس"
-                                  className="bg-[#ce1a2a] font-bold! cursor-pointer text-white! py-2 px-3 rounded-lg hover:bg-red-700 transition-colors flex items-center"
+                                  className="w-full bg-[#ce1a2a] font-bold! cursor-pointer text-white! py-2 px-3 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center text-sm"
                                 >
-                                  <FaPhone className="ml-2" />
-                                  <span className="font-medium">تماس</span>
+                                  <FaPhone className="ml-2 text-xs" />
+                                  <span>تماس</span>
                                 </button>
                               </a>
                             )}
+
                             {Latitude && Longitude && (
                               <Link
                                 href={`https://www.google.com/maps/dir/?api=1&destination=${Latitude},${Longitude}`}
@@ -353,9 +381,9 @@ function MainBoxAutoServices({
                                   e.preventDefault();
                                   handleNavigation(Latitude, Longitude);
                                 }}
-                                className="bg-gray-100! font-bold! cursor-pointer text-[#ce1a2a]! py-2 px-3 rounded-lg hover:bg-[#ce1a2a]! hover:text-white! duration-300 flex items-center"
+                                className="flex-1 bg-gray-100! font-bold! cursor-pointer text-[#ce1a2a]! py-2 px-3 rounded-lg hover:bg-[#ce1a2a]! hover:text-white! duration-300 flex items-center justify-center text-sm"
                               >
-                                <FaMapMarkerAlt className="ml-2" />
+                                <FaMapMarkerAlt className="ml-2 text-xs" />
                                 مسیریابی
                               </Link>
                             )}
@@ -396,21 +424,53 @@ function MainBoxAutoServices({
                 </div>
               )}
             </div>
-
-            <style jsx global>{`
-              .ant-select-focused .ant-select-selector,
-              .ant-select-selector:hover {
-                border-color: #ce1a2a !important;
-                box-shadow: 0 0 0 2px rgba(206, 26, 42, 0.2) !important;
-              }
-            `}</style>
           </div>
         </div>
 
-        <aside className="lg:w-1/4 w-full">
-          <SidebarAutoService banner={banner} />
+        {/* سایدبار */}
+        <aside
+          ref={sidebarRef}
+          className={`
+            lg:w-1/4 w-full transition-all duration-300
+            ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+          `}
+        >
+          <SidebarAutoServices
+            banner={banner}
+            lastNews={lastNews}
+            lastCars={lastCars}
+          />
         </aside>
       </div>
+
+      <style jsx global>{`
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+
+        /* استایل‌های sticky */
+        .lg\\:sticky {
+          position: sticky;
+          bottom: 0;
+          align-self: flex-end;
+        }
+
+        .ant-select-focused .ant-select-selector,
+        .ant-select-selector:hover {
+          border-color: #ce1a2a !important;
+          box-shadow: 0 0 0 2px rgba(206, 26, 42, 0.2) !important;
+        }
+
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
+        }
+      `}</style>
     </>
   );
 }

@@ -4,18 +4,20 @@ import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { getPriceCar } from "@/services/Price/PriceCar";
 import { getPriceCarBrands } from "@/services/Price/PriceCarBrands";
 import { getPropertyIds } from "@/services/Property/propertyIds";
+import { mainDomainOld } from "@/utils/mainDomain";
 import CarBrandPricesSection from "../components/CarBrandPricesSection";
 import CarComparisonSection from "../components/CarComparisonSection";
 import CarFinderSection from "../components/CarFinderSection";
 import CarSpecsSection from "../components/CarSpecsSection";
 import CarTypes from "../components/CarTypes";
+import ComparisonSection from "../components/ComparisonSection";
+import CreativeCategoriesSection from "../components/CreativeCategoriesSection";
 import HeroSlider from "../components/HeroSlider";
 import MotorcycleBrandsSection from "../components/MotorcycleBrandsSection";
 import NewsListSection from "../components/NewsListSection";
 import NewsSection from "../components/NewsSection";
 import PopularCarsSection from "../components/PopularCarsSection";
 import VideoBannerSection from "../components/VideoBannerSection";
-import { mainDomainOld } from "@/utils/mainDomain";
 
 export const revalidate = 60;
 
@@ -69,21 +71,28 @@ export default async function Home() {
     langCode: "fa",
     CategoryIdArray: "6323",
     PageIndex: 1,
-    PageSize: 2,
+    PageSize: 10,
   });
   const saleNews: Items[] = await getItem({
     TypeId: 5,
     langCode: "fa",
     CategoryIdArray: "6593",
     PageIndex: 1,
-    PageSize: 4,
+    PageSize: 10,
   });
-  const lastCompare: Items[] = await getItem({
+  const compare: Items[] = await getItem({
     TypeId: 1045,
     langCode: "fa",
     PageIndex: 1,
-    PageSize: 1,
+    PageSize: 2,
   });
+  const bestChoices: Items[] = await getItem({
+    TypeId: 1043,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 10,
+  });
+
   const segmentCars: Items[] = await getItem({
     TypeId: 1048,
     langCode: "fa",
@@ -92,7 +101,7 @@ export default async function Home() {
     TypeId: 1028,
     langCode: "fa",
     PageIndex: 1,
-    PageSize: 4,
+    PageSize: 10,
   });
   const carSpecs: Items[] = await getItem({
     TypeId: 1042,
@@ -145,17 +154,33 @@ export default async function Home() {
     BrandId: brands.brands[0].id,
   });
 
+  const brandsAuto: ItemsCategory[] = await getCategory({
+    TypeId: 1050,
+    LangCode: "fa",
+    PageIndex: 1,
+    PageSize: 13,
+  });
+
+  const education: Items[] = await getItem({
+    TypeId: 3,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 13,
+  });
+
   return (
     <div className="page-wrapper min-h-screen bg-[#f4f4f4]">
       <div className="content-box pt-4">
         {/* Hero Slider */}
         {slider.length > 0 && <HeroSlider slider={slider} />}
 
-        {/* News and Comparison */}
-        <NewsSection
+        {/* News */}
+        <NewsSection news={newsCar} saleNews={saleNews} />
+        {/* compare & bestChoices & instaLink */}
+        <ComparisonSection
           news={newsCar}
-          saleNews={saleNews}
-          lastCompare={lastCompare}
+          compare={compare}
+          bestChoices={bestChoices}
         />
 
         {/* Car Types */}
@@ -171,7 +196,7 @@ export default async function Home() {
         <CarSpecsSection carSpecs={carSpecs} Properties={Properties} />
 
         {/* Popular Cars Section */}
-        <PopularCarsSection carView={carView} />
+        {/* <PopularCarsSection carView={carView} /> */}
 
         {/* Car Comparison Section */}
         <CarComparisonSection brandsCar={brandsCar} whichCars={whichCars} />
@@ -180,6 +205,12 @@ export default async function Home() {
         <CarBrandPricesSection
           initialBrands={brands.brands}
           initialPrices={prices.prices}
+        />
+        {/* Brands AutoServices & education */}
+        <CreativeCategoriesSection
+          brandsAuto={brandsAuto}
+          carView={carView}
+          education={education}
         />
 
         {/* Motorcycle Brands Section */}

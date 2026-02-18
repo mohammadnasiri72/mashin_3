@@ -1,8 +1,9 @@
-"use client";
-
+import MarketStats from "@/app/components/SideBar/MarketStats";
 import SideBarBanner from "@/app/components/SideBar/SideBarBanner";
+import { mainDomainOld } from "@/utils/mainDomain";
+import React from "react";
 
-function SideBarDic({ banner }: { banner: Items[] }) {
+function SideBarCars({ banner }: { banner: Items[] }) {
   return (
     <>
       <div className="space-y-6">
@@ -10,10 +11,10 @@ function SideBarDic({ banner }: { banner: Items[] }) {
         <SideBarBanner banner={banner} />
 
         {/* آمار بازار */}
-        {/* <MarketStats /> */}
+        <MarketStats />
       </div>
     </>
   );
 }
 
-export default SideBarDic;
+export default SideBarCars;

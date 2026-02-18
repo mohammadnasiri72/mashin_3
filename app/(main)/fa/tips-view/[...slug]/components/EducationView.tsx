@@ -24,20 +24,45 @@ function EducationView({
   banner: Items[];
 }) {
   const [activeKey, setActiveKey] = useState("1");
-  const [isSticky, setIsSticky] = useState(false);
+  const [isNavbarSticky, setIsNavbarSticky] = useState(false);
+  const [isMainLonger, setIsMainLonger] = useState(true);
+
   const navbarRef = useRef<HTMLDivElement>(null);
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
 
   // رفرنس‌های مربوط به هر بخش
   const contentRef = useRef<HTMLDivElement>(null);
   const relatedRef = useRef<HTMLDivElement>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
 
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [education, relatedEducations, popularEducations, banner]);
+
   // هندل کردن اسکرول و sticky navbar
   useEffect(() => {
     const handleScroll = () => {
       if (navbarRef.current) {
         const navbarTop = navbarRef.current.offsetTop;
-        setIsSticky(window.scrollY > navbarTop);
+        setIsNavbarSticky(window.scrollY > navbarTop);
       }
 
       const sections = [
@@ -117,14 +142,14 @@ function EducationView({
         return offsetTop;
       };
 
-      const navbarHeight = isSticky
+      const navbarHeight = isNavbarSticky
         ? (navbarRef.current?.offsetHeight || 0) + 20
         : 100;
       const absoluteOffsetTop = getAbsoluteOffsetTop(targetRef.current);
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition-50,
+        top: offsetPosition - 50,
         behavior: "smooth",
       });
     }
@@ -156,8 +181,24 @@ function EducationView({
   return (
     <div className="min-h-screen bg-gray-50 w-full">
       <HeroSectionEdu education={education} />
-      {/* باکس تب ها */}
-      <div ref={navbarRef} className="navbar-tabs sticky w-full px-2 mt-4">
+
+      {/* باکس تب ها - با position: sticky */}
+      <div
+        ref={navbarRef}
+        className="navbar-tabs w-full px-2 mt-4"
+        style={{
+          position: 'sticky',
+          top: isNavbarSticky ? '112px' : 'auto',
+          left: 0,
+          right: 0,
+          background: isNavbarSticky ? 'white' : 'transparent',
+          boxShadow: isNavbarSticky ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
+          paddingTop: isNavbarSticky ? '8px' : '0',
+          paddingBottom: isNavbarSticky ? '8px' : '0',
+          transition: 'all 0.3s ease',
+          zIndex: 1000
+        }}
+      >
         <Card
           style={{ padding: 0, margin: 0 }}
           className="rounded-xl shadow-lg"
@@ -172,10 +213,16 @@ function EducationView({
         </Card>
       </div>
 
-      <div className="px-4 py-8">
-        <div className="flex flex-wrap items-start">
+      <div className="mx-auto px-4 py-8">
+        <div className="flex flex-wrap lg:flex-nowrap items-start gap-6 relative">
           {/* محتوای اصلی */}
-          <div className="lg:w-3/4 w-full">
+          <div
+            ref={mainBoxRef}
+            className={`
+              lg:w-3/4 w-full transition-all duration-300
+              ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
             <div className="space-y-8">
               {/* بخش محتوا و توضیحات */}
               {education && (
@@ -194,7 +241,13 @@ function EducationView({
           </div>
 
           {/* سایدبار */}
-          <aside className="lg:w-1/4 w-full">
+          <aside
+            ref={sidebarRef}
+            className={`
+              lg:w-1/4 w-full transition-all duration-300
+              ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
             <SidebarEducation
               popularEducations={popularEducations}
               banner={banner}
@@ -214,32 +267,24 @@ function EducationView({
 
       <style jsx global>{`
         .navbar-tabs {
-          background: transparent;
           transition: all 0.3s ease;
-          z-index: 100;
+          z-index: 1000;
         }
+        
         .navbar-tabs .ant-card-body {
           padding: 0 !important;
           margin: 0 !important;
         }
+        
         .education-details-tabs .ant-tabs-nav {
-          padding: 0 !important;
           margin: 0 !important;
         }
 
-        .navbar-tabs.sticky {
-          position: sticky;
-          top: 112px;
-          left: 0;
-          right: 0;
-          z-index: 1000;
-          animation: slideDown 0.3s ease;
-        }
-
         .education-details-tabs .ant-tabs-tab {
-          padding: 12px 24px;
+          padding: 8px 16px;
           font-weight: 600;
           height: 50px !important;
+          transition: all 0.2s;
         }
 
         .education-details-tabs .ant-tabs-tab-active {
@@ -256,7 +301,7 @@ function EducationView({
         }
 
         .section-anchor {
-          scroll-margin-top: 110px;
+          scroll-margin-top: 180px;
         }
 
         @keyframes slideDown {
@@ -270,10 +315,33 @@ function EducationView({
           }
         }
 
+        /* دسکتاپ */
         @media (min-width: 1024px) {
-          .navbar-tabs.sticky {
-            top: 60px;
+          .navbar-tabs[style*="position: sticky"] {
+            top: 60px !important;
           }
+          .section-anchor {
+            scroll-margin-top: 120px;
+          }
+        }
+
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
+          
+          .navbar-tabs[style*="position: sticky"] {
+            position: relative !important;
+            top: auto !important;
+          }
+        }
+
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
         }
       `}</style>
     </div>
