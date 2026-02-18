@@ -24,9 +24,9 @@ function ComparisonSection({
 }) {
   return (
     <div className="mb-12 px-4">
-      <div className="flex flex-wrap -mx-3">
+      <div className="flex flex-wrap ">
         {/* اسلایدر سمت راست - News با عرض 1/2 */}
-        <div className="lg:w-1/2 w-full px-3">
+        <div className="lg:w-5/12 w-full px-2">
           <div className="mb-2! p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
             <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
               لینک‌های اینستاگرام
@@ -71,10 +71,7 @@ function ComparisonSection({
                                 {item.title}
                               </span>
                               <div className="flex items-center gap-4 text-white/80 text-sm">
-                                <div className="flex items-center gap-1">
-                                  <FaCalendar />
-                                  {formatPersianDate(item.created)}
-                                </div>
+                               
                               </div>
                             </div>
                           </div>
@@ -93,10 +90,10 @@ function ComparisonSection({
         </div>
 
         {/* اسلایدرهای سمت چپ - Compare و BestChoices با عرض 1/4 هر کدام */}
-        <div className="lg:w-1/2 w-full px-3 lg:mt-0 mt-8">
-          <div className="flex flex-wrap -mx-3">
+        <div className="lg:w-7/12 w-full lg:mt-0 mt-8 ">
+          <div className="flex flex-wrap">
             {/* اسلایدر Compare */}
-            <div className="md:w-1/2 w-full px-3">
+            <div className="md:w-1/2 w-full px-2">
               <div className="mb-2! p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
                 <Link href={"/whichcars.html"}>
                   <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
@@ -132,20 +129,25 @@ function ComparisonSection({
                             className="rounded-3xl! h-[300px] overflow-hidden border-none shadow-sm group"
                             cover={
                               <div className="relative h-[300px] overflow-hidden">
+                                <div
+                                  className="absolute inset-0 bg-cover bg-center"
+                                  style={{
+                                    backgroundImage: `url('${mainDomainOld + item.image}')`,
+                                    filter: "blur(8px)",
+                                    transform: "scale(1.1)",
+                                  }}
+                                />
                                 <img
                                   src={mainDomainOld + item.image}
                                   alt={item.title}
-                                  className="object-cover w-full h-full group-hover:scale-110 duration-700"
+                                  className="object-contain w-full h-full group-hover:scale-110 duration-700 relative z-10"
                                 />
-                                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent"></div>
-                                <div className="absolute font-bold! bottom-0 right-0 left-0 p-4">
+                                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent z-20"></div>
+                                <div className="absolute font-bold! bottom-0 right-0 left-0 p-4 z-30">
                                   <span className="text-white! inline-block relative text-base lg:text-lg mb-1 line-clamp-2! z-10">
                                     {item.title}
                                   </span>
-                                  <div className="flex items-center gap-2 text-white/80 text-xs">
-                                    <FaCalendar />
-                                    {formatPersianDate(item.created)}
-                                  </div>
+                                  
                                 </div>
                               </div>
                             }
@@ -163,7 +165,7 @@ function ComparisonSection({
             </div>
 
             {/* اسلایدر Best Choices */}
-            <div className="md:w-1/2 w-full px-3 md:mt-0 mt-8">
+            <div className="md:w-1/2 w-full md:mt-0 mt-8 px-2">
               <div className="mb-2! p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
                 <Link href={"/best-choices.html"}>
                   <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
@@ -199,20 +201,25 @@ function ComparisonSection({
                             className="rounded-3xl! h-[300px] overflow-hidden border-none shadow-sm group"
                             cover={
                               <div className="relative h-[300px] overflow-hidden">
+                                <div
+                                  className="absolute inset-0 bg-cover bg-center"
+                                  style={{
+                                    backgroundImage: `url('${mainDomainOld + item.image}')`,
+                                    filter: "blur(8px)",
+                                    transform: "scale(1.1)",
+                                  }}
+                                />
                                 <img
                                   src={mainDomainOld + item.image}
                                   alt={item.title}
-                                  className="object-cover w-full h-full group-hover:scale-110 duration-700"
+                                  className="object-contain w-full h-full group-hover:scale-110 duration-700 relative z-10"
                                 />
-                                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent"></div>
+                                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent z-20"></div>
                                 <div className="absolute font-bold! bottom-0 right-0 left-0 p-4">
-                                  <span className="text-white! inline-block relative text-base lg:text-lg mb-1 line-clamp-2! z-10">
+                                  <span className="text-white! inline-block relative text-base lg:text-lg mb-1 line-clamp-2! z-30">
                                     {item.title}
                                   </span>
-                                  <div className="flex items-center gap-2 text-white/80 text-xs">
-                                    <FaCalendar />
-                                    {formatPersianDate(item.created)}
-                                  </div>
+                                 
                                 </div>
                               </div>
                             }

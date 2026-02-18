@@ -100,7 +100,7 @@ const WhichCars = ({
                   return (
                     <article
                       key={comparison.id}
-                      className="py-6! border-b! border-gray-200 last:border-b-0 last:pb-0 group hover:bg-gray-50 rounded-lg transition-colors"
+                      className="py-6! border-b! border-gray-200 last:border-b-0 last:pb-0 group rounded-lg transition-colors"
                     >
                       <div className="flex flex-col md:flex-row gap-4 sm:items-start items-center">
                         {/* تصویر مقایسه */}

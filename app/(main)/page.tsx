@@ -16,7 +16,6 @@ import HeroSlider from "../components/HeroSlider";
 import MotorcycleBrandsSection from "../components/MotorcycleBrandsSection";
 import NewsListSection from "../components/NewsListSection";
 import NewsSection from "../components/NewsSection";
-import PopularCarsSection from "../components/PopularCarsSection";
 import VideoBannerSection from "../components/VideoBannerSection";
 
 export const revalidate = 60;
@@ -195,9 +194,7 @@ export default async function Home() {
         {/* Car Specs Section */}
         <CarSpecsSection carSpecs={carSpecs} Properties={Properties} />
 
-        {/* Popular Cars Section */}
-        {/* <PopularCarsSection carView={carView} /> */}
-
+       
         {/* Car Comparison Section */}
         <CarComparisonSection brandsCar={brandsCar} whichCars={whichCars} />
 

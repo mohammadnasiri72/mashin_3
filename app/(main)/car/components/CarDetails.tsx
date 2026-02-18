@@ -25,7 +25,6 @@ import Link from "next/link";
 import { FaCalendarDays, FaCodeCompare, FaCommentDots } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 
-const Cookies = require("js-cookie");
 
 const CarDetails = ({
   Attachment,
@@ -65,7 +64,6 @@ const CarDetails = ({
     Attachment.filter((e) => e.tabId === 3).length > 0;
 
   const token = useSelector((state: RootState) => state.token.token);
-  const user = Cookies.get("user");
 
   const specifications = detailsCar.properties.filter(
     (e) => e.isTechnicalProperty,
@@ -501,7 +499,7 @@ const CarDetails = ({
                               filter: "blur(8px)",
                               transform: "scale(1.1)",
                             }}
-                          />
+                          /> 
 
                           <img
                             className="w-full h-full border-4! border-[#ce1a2a]! object-contain overflow-hidden relative z-50"
