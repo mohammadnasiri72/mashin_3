@@ -12,7 +12,7 @@ import Link from "next/link";
 
 export default function HeroSlider({ slider }: { slider: Items[] }) {
   return (
-    <div className="mb-8">
+    <section className="mb-8" aria-label="اسلایدر اصلی">
       <div className="mx-auto px-4">
         <div className="main-slider rounded-2xl overflow-hidden relative h-96">
           <Swiper
@@ -60,6 +60,6 @@ export default function HeroSlider({ slider }: { slider: Items[] }) {
           </Swiper>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

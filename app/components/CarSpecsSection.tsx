@@ -32,7 +32,7 @@ const CarSpecsSection = ({
   };
 
   return (
-    <div className="bg-white mb-5 pt-8 mt-24 shadow-sm relative">
+    <section className="bg-white mb-5 pt-8 mt-24 shadow-sm relative" aria-labelledby="car-specs-title">
       <div className="mx-auto">
         {/* هدر بخش */}
         <div className="flex flex-col-reverse lg:flex-row items-start ">
@@ -51,13 +51,13 @@ const CarSpecsSection = ({
             </div>
 
             <div className="sm:mt-0 lg:mt-32 mt-32 text-center lg:text-center w-full">
-              <h3 className="text-gray-900 text-lg">
+              <h2 id="car-specs-title" className="text-gray-900 text-lg">
                 ماشین
                 <br />
                 <strong className="text-2xl font-bold">
                   و <span className="text-red-600">مشخصات فنی</span> خودرو
                 </strong>
-              </h3>
+              </h2>
 
               {/* دکمه‌های ناوبری زیر متن */}
               <div className="flex gap-2 justify-center lg:justify-center mt-6">
@@ -196,7 +196,7 @@ const CarSpecsSection = ({
           align-items: stretch;
         }
       `}</style>
-    </div>
+    </section>
   );
 };
 

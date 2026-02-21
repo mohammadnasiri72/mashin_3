@@ -235,9 +235,11 @@ function NewsViewDetails({
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 w-full">
+    <article className="min-h-screen bg-gray-50 w-full">
       {/* هدر صفحه */}
-      <HeroSectionNews detailsNews={detailsNews} />
+      <header>
+        <HeroSectionNews detailsNews={detailsNews} />
+      </header>
 
       {/* باکس تب ها - با position: sticky */}
       <div
@@ -347,6 +349,7 @@ function NewsViewDetails({
           {/* سایدبار */}
           <aside
             ref={sidebarRef}
+            aria-label="اخبار پربازدید و بنرهای جانبی"
             className={`
               lg:w-1/4 w-full transition-all duration-300
               ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
@@ -451,7 +454,7 @@ function NewsViewDetails({
           }
         }
       `}</style>
-    </div>
+    </article>
   );
 }
 

@@ -177,7 +177,7 @@ export default function Header({
   const menuItemMobileDrawer = (
     <div className="w-80 h-full bg-white flex flex-col pr-3">
       {/* Header با لوگو */}
-      <div className="p-4 border-b border-gray-200 flex items-center justify-between">
+      <header className="p-4 border-b border-gray-200 flex items-center justify-between">
         <Link
           href={"/"}
           onClick={() => {
@@ -193,16 +193,16 @@ export default function Header({
           />
         </Link>
         <button
-          aria-label="FiX"
+          aria-label="بستن منو"
           onClick={() => setIsMenuOpen(false)}
           className="text-gray-500 cursor-pointer p-2 hover:bg-gray-100 rounded-lg transition-colors"
         >
           <FiX size={24} />
         </button>
-      </div>
+      </header>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <nav className="flex-1 overflow-y-auto p-4" aria-label="منوی موبایل">
         {menuItems.map((item, index) => (
           <MobileMenuItem
             key={index}
@@ -210,7 +210,7 @@ export default function Header({
             onClose={() => setIsMenuOpen(false)}
           />
         ))}
-      </div>
+      </nav>
     </div>
   );
 
@@ -243,7 +243,7 @@ export default function Header({
 
               {/* Desktop Menu */}
               <div className="hidden lg:block  ">
-                <nav className="flex items-center space-x-1 space-x-reverse">
+                <nav className="flex items-center space-x-1 space-x-reverse" aria-label="منوی اصلی">
                   {menuItems.length > 0 &&
                     menuItems.map((item, index) => (
                       <div key={index} className="relative group">

@@ -89,7 +89,7 @@ const CarBrandPricesSection = ({
   }, []);
 
   return (
-    <div className="mb-5 mt-20">
+    <section className="mb-5 mt-20" aria-label="قیمت خودرو">
       <div className="mx-auto px-4">
         {/* هدر بخش */}
         <div className="flex flex-col sm:flex-row sm:justify-between justify-center items-center sm:mb-0! mb-10! gap-4 h-14">
@@ -297,7 +297,7 @@ const CarBrandPricesSection = ({
           transform: translateY(0);
         }
       `}</style>
-    </div>
+    </section>
   );
 };
 

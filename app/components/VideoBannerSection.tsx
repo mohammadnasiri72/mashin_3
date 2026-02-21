@@ -11,7 +11,7 @@ import "swiper/css";
 
 const VideoBannerSection = ({ video }: { video: Items[] }) => {
   return (
-    <>
+    <section className="mx-auto" aria-label="فیلم‌های تست و بررسی خودرو">
       <div className="mx-auto px-4">
         <div className="flex sm:flex-row flex-col justify-between items-center mb-4">
           <div className=" sm:w-auto w-full px-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
@@ -123,7 +123,7 @@ const VideoBannerSection = ({ video }: { video: Items[] }) => {
           }
         }
       `}</style>
-    </>
+    </section>
   );
 };
 

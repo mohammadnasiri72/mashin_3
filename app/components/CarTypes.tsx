@@ -9,12 +9,12 @@ import "swiper/css";
 
 export default function CarTypes({ segmentCars }: { segmentCars: Items[] }) {
   return (
-    <div className="mb-16 bg-cover bg-center">
+    <section className="mb-16 bg-cover bg-center" aria-labelledby="car-types-title">
       <div className=" mx-auto px-4 bg-position-[center_10px] typeCar_wrap ">
         <div className="mb-2! p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center ">
-          <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db] sm:mt-0 mt-5!">
+          <h2 id="car-types-title" className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db] sm:mt-0 mt-5!">
             انتخاب نوع خودرو
-          </h3>
+          </h2>
         </div>
         <div className="h-28">
           <Swiper
@@ -56,6 +56,6 @@ export default function CarTypes({ segmentCars }: { segmentCars: Items[] }) {
           </Swiper>
         </div>
       </div>
-    </div>
+    </section>
   );
 }

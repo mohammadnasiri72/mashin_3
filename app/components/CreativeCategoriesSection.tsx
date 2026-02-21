@@ -24,9 +24,7 @@ function CreativeCategoriesSection({
   education: Items[];
 }) {
   return (
-    <div className="mb-16 px-4 mx-auto max-w-7xl">
-     
-
+    <section className="mb-16 px-4 mx-auto max-w-7xl" aria-label="دسته‌بندی‌های خلاقانه">
       {/* گرید اصلی سه‌ستونه */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* ستون اول - مراکز خدمات خودرو (برندها) */}
@@ -335,7 +333,7 @@ function CreativeCategoriesSection({
           }
         }
       `}</style>
-    </div>
+    </section>
   );
 }
 

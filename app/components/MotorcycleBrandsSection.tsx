@@ -73,7 +73,7 @@ const MotorcycleBrandsSection = ({ brands }: { brands: ItemsCategory[] }) => {
   }, [brands.length]);
 
   return (
-    <div>
+    <section aria-label="برندهای موتورسیکلت">
       <div className="mx-auto px-4 pb-5">
         {/* هدر بخش */}
         <div className="flex justify-between items-center">
@@ -273,7 +273,7 @@ const MotorcycleBrandsSection = ({ brands }: { brands: ItemsCategory[] }) => {
           }
         }
       `}</style>
-    </div>
+    </section>
   );
 };
 

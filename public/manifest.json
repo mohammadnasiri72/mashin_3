@@ -1,0 +1,28 @@
+{
+  "name": "ماشین 3 - بانک اطلاعات خودرو",
+  "short_name": "ماشین 3",
+  "description": "بانک اطلاعات خودرو ، بررسی خودرو ، مقایسه خودرو ، قیمت خودرو و موتورسیکلت ، اخبار خودرو",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1890ff",
+  "orientation": "portrait-primary",
+  "lang": "fa",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/images/icons/mashin3-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["automotive", "news"]
+}
+

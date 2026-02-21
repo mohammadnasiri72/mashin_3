@@ -19,16 +19,16 @@ export default function NewsSection({
   saleNews: Items[];
 }) {
   return (
-    <div className="mb-12">
+    <section className="mb-12" aria-labelledby="news-section-title">
       <div className="mx-auto px-4">
         <div className="flex flex-wrap">
-          <div className="lg:w-3/4 w-full">
+          <article className="lg:w-3/4 w-full">
             <div className=" p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
               <div className="pr-3">
                 <Link href={"/fa/news/اخبار-خودرو.html"}>
-                  <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
+                  <h2 id="news-section-title" className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
                     آخرین اخبار
-                  </h3>
+                  </h2>
                 </Link>
               </div>
             </div>
@@ -58,7 +58,7 @@ export default function NewsSection({
               >
                 {news.map((item) => (
                   <SwiperSlide key={item.id}>
-                    <Link href={item.url}>
+                    <Link href={item.url} className="block">
                       <Card
                         hoverable
                         className="rounded-3xl! h-72 overflow-hidden border-none shadow-sm group"
@@ -88,10 +88,10 @@ export default function NewsSection({
                 ))}
               </Swiper>
             </div>
-          </div>
+          </article>
 
           {/* بخش شرایط فروش و پیش فروش - اسلایدر عمودی */}
-          <div className="lg:w-1/4 w-full lg:mt-0 mt-8">
+          <aside className="lg:w-1/4 w-full lg:mt-0 mt-8" aria-label="شرایط فروش و پیش فروش">
             <div className="mb-2! p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
               <Link href={`/fa/news/${saleNews[0].categoryId}`}>
                 <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
@@ -147,10 +147,9 @@ export default function NewsSection({
                 </div>
               )}
             </div>
-          </div>
+          </aside>
         </div>
       </div>
-
       {/* استایل‌های سفارشی */}
       <style jsx global>{`
         /* استایل‌های اسلایدر اخبار */
@@ -251,6 +250,6 @@ export default function NewsSection({
           }
         }
       `}</style>
-    </div>
+    </section>
   );
 }

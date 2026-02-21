@@ -10,7 +10,7 @@ function BreadcrumbCategory({
 }) {
 
   return (
-    <div className="flex gap-2 px-5 text-xs! items-center overflow-auto pb-3!">
+    <nav className="flex gap-2 px-5 text-xs! items-center overflow-auto pb-3!" aria-label="مسیر ناوبری">
       <Link href={"/"} className="hover:text-red-600! duration-300 whitespace-nowrap!">
         صفحه اصلی
       </Link>
@@ -26,7 +26,7 @@ function BreadcrumbCategory({
         ))}
       <MdChevronLeft className="text-lg" />
       <span className="whitespace-nowrap!">{title}</span>
-    </div>
+    </nav>
   );
 }
 

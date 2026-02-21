@@ -36,6 +36,12 @@ export async function generateMetadata({
 
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
 
+    const ogImage = dataPage?.image
+      ? dataPage.image.startsWith("http")
+        ? dataPage.image
+        : `${mainDomainOld}${dataPage.image.replace(/^\//, "")}`
+      : `${mainDomainOld}images/logo.png`;
+
     return {
       title,
       description,
@@ -47,6 +53,24 @@ export async function generateMetadata({
       openGraph: {
         title,
         description,
+        url: seoUrl,
+        siteName: "ماشین 3",
+        type: "article",
+        locale: "fa_IR",
+        images: [
+          {
+            url: ogImage,
+            width: 1200,
+            height: 630,
+            alt: title,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [ogImage],
       },
       other: {
         seoHeadTags,
@@ -80,15 +104,15 @@ async function pageDynamic({
     }
 
     return (
-      <>
+      <article>
         <BreadcrumbCategory
           breadcrumb={dataPage.breadcrumb}
           title={dataPage.title}
         />
-        <div className="min-h-96 p-5">
+        <section className="min-h-96 p-5" aria-label="محتوای صفحه">
           {htmlToPlainText(dataPage.body ? dataPage.body : "")}
-        </div>
-      </>
+        </section>
+      </article>
     );
   } catch (err: any) {
     console.error("Error in pageDynamic:", err);

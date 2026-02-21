@@ -381,6 +381,7 @@ function SearchCarsDetails({
             {/* سایدبار - 1/4 صفحه */}
             <aside
               ref={sidebarRef}
+              aria-label="فیلترها و بنرهای جانبی"
               className={`
                 lg:w-1/4 w-full transition-all duration-300
                 ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}

@@ -62,9 +62,9 @@ const Footer = ({
   const column3Links = convertToFooterLinks(footerColumns[2]);
 
   return (
-    <div className="footer-wrap">
+    <footer className="footer-wrap">
       {/* Main Footer */}
-      <footer className="main-footer bg-white">
+      <div className="main-footer bg-white">
         {/* Widgets Section */}
         <div className="widgets-section py-8">
           <div className="mx-auto px-4 footer-wrapper">
@@ -145,10 +145,10 @@ const Footer = ({
               </div>
 
               {/* Footer Column - Quick Links */}
-              <div className="footer-column col-span-12 lg:col-span-6 ft-lists-wrap">
-                <h4 className="text-black text-[16px] font-bold! mb-4! sm:text-start text-center">
+              <nav className="footer-column col-span-12 lg:col-span-6 ft-lists-wrap" aria-label="دسترسی سریع">
+                <h2 className="text-black text-[16px] font-bold! mb-4! sm:text-start text-center">
                   {footerMenu?.title || "دسترسی سریع"}
-                </h4>
+                </h2>
 
                 <div className="grid grid-cols-3 sm:grid-cols-3 gap-4">
                   {/* Column 1 */}
@@ -199,7 +199,7 @@ const Footer = ({
                     </ul>
                   </div>
                 </div>
-              </div>
+              </nav>
 
               {/* Footer Column - Social Media (Desktop) */}
               <div className="footer-column col-span-12 md:col-span-2 lg:col-span-2 lg:block hidden">
@@ -240,8 +240,8 @@ const Footer = ({
             </div>
           </div>
         )}
-      </footer>
-    </div>
+      </div>
+    </footer>
   );
 };
 

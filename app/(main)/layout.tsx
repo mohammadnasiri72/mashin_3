@@ -27,8 +27,12 @@ export default async function RootLayout({
   return (
     <>
       <Header menu={menu} setting={setting} />
-      {!decodedPathname.includes("/dashboard") && <BannerTop banner={banner} />}
-      <main>{children}</main>
+      {!decodedPathname.includes("/dashboard") && (
+        <section aria-label="بنرهای تبلیغاتی">
+          <BannerTop banner={banner} />
+        </section>
+      )}
+      <main role="main">{children}</main>
       <Footer menu={menu} setting={setting} Social={Social} />
     </>
   );

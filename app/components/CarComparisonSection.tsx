@@ -71,7 +71,7 @@ const CarComparisonSection = ({
   }, [secCarBrand]);
 
   return (
-    <div className="py-3">
+    <section className="py-3" aria-label="مقایسه خودرو">
       <div className="mx-auto">
         {/* عنوان اصلی */}
         <h3 className="text-center text-xl text-[#292929]! font-bold! mb-4!">
@@ -357,7 +357,7 @@ const CarComparisonSection = ({
           background-color: #e5e7eb !important;
         }
       `}</style>
-    </div>
+    </section>
   );
 };
 
