@@ -1,16 +1,22 @@
-"use client";
-
-import { createMarkup } from "@/utils/func";
+import {
+  createMarkup,
+  formatPersianDate,
+  toPersianNumbers,
+} from "@/utils/func";
 import { FaSquareMinus, FaSquarePlus } from "react-icons/fa6";
 import VideoPlayerCar from "./VideoPlayerCar";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { FaCalendar, FaEye } from "react-icons/fa";
+import AudioPlayer from "../../podcast.html/components/AudioPlayer";
+import { getItemByIds } from "@/services/Item/ItemByIds";
 
-const FeaturesSection = ({
+async function FeaturesSection({
   detailsCar,
   Attachment,
 }: {
   detailsCar: ItemsId;
   Attachment: ItemsAttachment[];
-}) => {
+}) {
   const advantages = detailsCar.properties.filter(
     (e) => e.propertyKey === "p1042_design",
   );
@@ -22,11 +28,19 @@ const FeaturesSection = ({
   const summary = detailsCar.properties.find(
     (e) => e.propertyKey === "p1042_genral",
   )?.propertyValue;
-  
+
+  const podcastIds = detailsCar.properties.find(
+    (e) => e.propertyKey === "p1042_podcastfile",
+  )?.propertyValue;
+
+  const podcastFiles: ItemsId[] = podcastIds
+    ? await getItemByIds(podcastIds)
+    : [];
+
   return (
     <div className="advg_wrap detailsBox bg-white rounded-xl p-6 mb-6!">
       {summary && (
-        <div className="mb-6!">
+        <summary className="mb-6!">
           <h2 className="dt_title text-2xl font-bold text-gray-900 mb-6!">
             <strong className="text-red-700">توضیحات کلی</strong>
           </h2>
@@ -35,7 +49,7 @@ const FeaturesSection = ({
             className="text_area text-gray-700 leading-8 text-justify space-y-4 mt-3"
             dangerouslySetInnerHTML={createMarkup(summary ? summary : "")}
           />
-        </div>
+        </summary>
       )}
       <h2
         className={`dt_title text-2xl font-bold text-gray-900 mb-6! ${Attachment.length > 0 ? "hidden" : ""}`}
@@ -112,48 +126,19 @@ const FeaturesSection = ({
         {Attachment.length > 0 && <VideoPlayerCar Attachment={Attachment} />}
       </div>
 
-      <style jsx global>{`
-        .advg_wrap {
-          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-        }
-
-        .advg_box {
-          transition: all 0.3s ease;
-        }
-
-        .advg_box:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .advg_list li {
-          position: relative;
-          padding-right: 8px;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-          .advg_wrap {
-            padding: 1rem;
-          }
-
-          .advg_box {
-            padding: 1rem;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .advg_title {
-            font-size: 1.1rem;
-          }
-
-          .advg_list li {
-            font-size: 0.9rem;
-          }
-        }
-      `}</style>
+      <div>
+        {podcastFiles.length > 0 &&
+          podcastFiles.map((podcastFile) => (
+            <div
+              key={podcastFile.id}
+              className="flex-1 min-w-0 flex flex-col justify-between py-1 w-full mt-3"
+            >
+              <AudioPlayer podcast={podcastFile} />
+            </div>
+          ))}
+      </div>
     </div>
   );
-};
+}
 
 export default FeaturesSection;

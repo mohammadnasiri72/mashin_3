@@ -1,15 +1,14 @@
 import { getAttachment } from "@/services/Attachment/Attachment";
-import { getItemByIds } from "@/services/Item/ItemByIds";
+import { getComment } from "@/services/Comment/Comment";
 import { getItemId } from "@/services/Item/ItemId";
+import { getPollId } from "@/services/Poll/pollId";
+import { createpublishCode } from "@/utils/func";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { Suspense } from "react";
 import CarDetails from "../components/CarDetails";
-import ContentTabs from "../components/ContentTabs";
+import ContentTabsSSR from "../components/ContentTabsSSR";
 import FeaturesSection from "../components/FeaturesSection";
 import HeroSection from "../components/HeroSection";
-import { getComment } from "@/services/Comment/Comment";
-import { getPollId } from "@/services/Poll/pollId";
-import { getItem } from "@/services/Item/Item";
-import { mainDomainOld } from "@/utils/mainDomain";
-import { createpublishCode } from "@/utils/func";
 
 export async function generateMetadata({
   searchParams,
@@ -67,85 +66,20 @@ async function page({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const searchParam = await searchParams;
-  const id = searchParam.id;
-  const Attachment: ItemsAttachment[] = await getAttachment(Number(id));
-  const detailsCar: ItemsId = await getItemId(Number(id));
+  const id = Number(searchParam.id);
 
-  const idsCompares = detailsCar.properties.find(
-    (e) => e.propertyKey === "p1042_vidrelatedcompare",
-  )?.propertyValue;
-
-  const detailsCarcompetitor: ItemsId[] = detailsCar.properties.filter(
-    (e) => e.propertyKey === "p1042_relatedcars",
-  )[0]?.value
-    ? await getItemByIds(
-        detailsCar.properties.filter(
-          (e) => e.propertyKey === "p1042_relatedcars",
-        )[0]?.value,
-      )
-    : [];
-  const comments: CommentResponse[] = await getComment({
-    id: Number(id),
-    langCode: "fa",
-    type: 0,
-    pageSize: 10,
-    pageIndex: 1,
-  });
-  const pollData: PollData = await getPollId(Number(id));
-
-  const carsModel: Items[] = await getItem({
-    TypeId: 1042,
-    langCode: "fa",
-    CategoryIdArray: detailsCar.sourceLink,
-    PageIndex: 1,
-    PageSize: 5,
-  });
-
-  const carsModel2: Items[] = await getItem({
-    TypeId: 1042,
-    langCode: "fa",
-    CategoryIdArray: String(detailsCar.categoryId),
-    PageIndex: 1,
-    PageSize: 5,
-  });
-  // اخبار مرتبط
-  const relatedNews: Items[] = await getItem({
-    TypeId: 5,
-    langCode: "fa",
-    Term: detailsCar.sourceName + " " + detailsCar.title,
-    PageIndex: 1,
-    PageSize: 12,
-  });
-
-  // ویدئو مرتبط
-  const relatedVideos: Items[] = await getItem({
-    TypeId: 1028,
-    langCode: "fa",
-    Term: detailsCar.sourceName + " " + detailsCar.title,
-    PageIndex: 1,
-    PageSize: 12,
-  });
-
-  // مقایسه مرتبط
-  const relatedCompares: ItemsId[] = idsCompares
-    ? await getItemByIds(idsCompares)
-    : [];
-
-  // آخرین اخبار
-  const lastNews: Items[] = await getItem({
-    TypeId: 5,
-    langCode: "fa",
-    PageIndex: 1,
-    PageSize: 7,
-  });
-
-  // آخرین ویدئوها
-  const lastVideos: Items[] = await getItem({
-    TypeId: 1028,
-    langCode: "fa",
-    PageIndex: 1,
-    PageSize: 5,
-  });
+  const [Attachment, detailsCar, comments, pollData] = await Promise.all([
+    getAttachment(id),
+    getItemId(id),
+    getComment({
+      id,
+      langCode: "fa",
+      type: 0,
+      pageSize: 10,
+      pageIndex: 1,
+    }),
+    getPollId(id),
+  ]);
 
   return (
     <>
@@ -155,24 +89,20 @@ async function page({
         detailsCar={detailsCar}
         initialPollData={pollData}
       />
-      <FeaturesSection
-        detailsCar={detailsCar}
-        Attachment={Attachment.filter((e) => e.tabId === 4)}
-      />
-      <ContentTabs
-        Attachment={Attachment}
-        detailsCar={detailsCar}
-        detailsCarcompetitor={detailsCarcompetitor}
-        comments={comments}
-        id={Number(id)}
-        carsModel={carsModel}
-        carsModel2={carsModel2}
-        relatedNews={relatedNews}
-        relatedVideos={relatedVideos}
-        relatedCompares={relatedCompares}
-        lastNews={lastNews}
-        lastVideos={lastVideos}
-      />
+      <Suspense fallback={<div className="h-40 animate-pulse bg-gray-200" />}>
+        <FeaturesSection
+          detailsCar={detailsCar}
+          Attachment={Attachment.filter((e) => e.tabId === 4)}
+        />
+      </Suspense>
+      <Suspense fallback={<div className="h-96 animate-pulse bg-gray-200" />}>
+        <ContentTabsSSR
+          Attachment={Attachment}
+          detailsCar={detailsCar}
+          comments={comments}
+          id={id}
+        />
+      </Suspense>
     </>
   );
 }

@@ -385,11 +385,11 @@ const ContentTabs = ({
         }
 
         .custom-tabs .ant-tabs-tab {
-          padding: 8px 16px;
-          font-weight: 600;
+          padding: 8px 16px !important;
+          font-weight: 600 !important;
           color: #6b7280 !important;
-          transition: all 0.3s ease;
-          cursor: pointer;
+          transition: all 0.3s ease !important;
+          cursor: pointer !important;
           height: 50px !important;
         }
 
@@ -399,7 +399,7 @@ const ContentTabs = ({
 
         .custom-tabs .ant-tabs-tab-active {
           color: #fff !important;
-          background: #ce1a2a;
+          background: #ce1a2a !important;
         }
         
         .custom-tabs .ant-tabs-tab .ant-tabs-tab-btn {
