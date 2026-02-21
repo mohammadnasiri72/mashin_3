@@ -32,12 +32,12 @@ const NewsListSection = ({ news }: { news: Items[] }) => {
               <Link href={item.url} className="block">
               <div className="bg-white relative duration-300 cursor-pointer group hover:bg-linear-to-b hover:from-[#ff5363] hover:to-[#ce1a2a] rounded-2xl shadow-sm p-4 flex sm:flex-row flex-col sm:items-stretch items-center gap-4 hover:shadow-md transition-shadow overflow-hidden">
                 {/* تصویر */}
-                <div className="w-36 h-36 shrink-0 holographic-effect">
+                <div className="sm:w-36 sm:h-36 w-full h-auto shrink-0 holographic-effect">
                   <div className="rounded-xl overflow-hidden">
                     <img
                       src={mainDomainOld + item.image}
                       alt={item.title}
-                      className="w-full h-36 object-cover"
+                      className="w-full sm:h-36 object-cover"
                     />
                   </div>
                 </div>

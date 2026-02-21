@@ -9,6 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/effect-fade";
+import { useEffect, useRef, useState } from "react";
 
 function ComparisonSection({
   news,
@@ -19,11 +20,37 @@ function ComparisonSection({
   compare: Items[];
   bestChoices: Items[];
 }) {
+  const compareCardRef = useRef<HTMLDivElement>(null);
+  const bestChoicesCardRef = useRef<HTMLDivElement>(null);
+  const [cardsHeight, setCardsHeight] = useState<number>(300);
+
+  useEffect(() => {
+    const calculateHeight = () => {
+      if (window.innerWidth >= 1024) {
+        // فقط در دسکتاپ
+        const compareHeight = compareCardRef.current?.offsetHeight || 0;
+        
+        // ارتفاع مجموع دو کارت به همراه فاصله بین آنها (16px = mt-8)
+        const totalHeight =  compareHeight ;
+        setCardsHeight(totalHeight);
+      } else {
+        // در موبایل ارتفاع ثابت
+        setCardsHeight(300);
+      }
+    };
+
+    // کمی صبر می‌کنیم تا کارت‌ها کاملاً رندر بشن
+    setTimeout(calculateHeight, 100);
+    
+    window.addEventListener("resize", calculateHeight);
+    return () => window.removeEventListener("resize", calculateHeight);
+  }, [compare.length, bestChoices.length]);
+
   return (
     <section>
       <section className="mb-12 px-4" aria-label="مقایسه و بهترین انتخاب‌ها">
         <div className="flex flex-wrap ">
-          {/* اسلایدر سمت راست - News با عرض 1/2 */}
+          {/* اسلایدر سمت راست - News */}
           <div className="lg:w-5/12 w-full px-2">
             <div className="mb-2! p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
               <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
@@ -31,7 +58,10 @@ function ComparisonSection({
               </h3>
             </div>
 
-            <div className="mt-3 h-full">
+            <div 
+              className="mt-3"
+              style={{ height: `${cardsHeight}px` }}
+            >
               {news.length > 0 ? (
                 <Swiper
                   modules={[Autoplay, EffectFade]}
@@ -55,20 +85,31 @@ function ComparisonSection({
                       <Link href={item.url}>
                         <Card
                           hoverable
-                          className="rounded-3xl! h-[300px] overflow-hidden border-none shadow-sm group"
+                          className="rounded-3xl! overflow-hidden border-none shadow-sm group h-full"
                           cover={
-                            <div className="relative h-[300px] overflow-hidden">
+                            <div className="relative w-full h-full overflow-hidden">
+                              {/* پس زمینه بلور شده */}
+                              <div
+                                className="absolute inset-0 bg-cover bg-center"
+                                style={{
+                                  backgroundImage: `url('${mainDomainOld + item.image}')`,
+                                  filter: "blur(8px)",
+                                  transform: "scale(1.1)",
+                                }}
+                              />
+                              {/* تصویر اصلی با object-cover برای پر کردن کامل فضا */}
                               <img
                                 src={mainDomainOld + item.image}
                                 alt={item.title}
-                                className="object-cover w-full h-full group-hover:scale-110 duration-700"
+                                className="absolute inset-0 w-full h-full object-contain group-hover:scale-110 duration-700"
                               />
+                              {/* گرادینت روی تصویر */}
                               <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent"></div>
-                              <div className="absolute font-bold! bottom-0 right-0 left-0 p-6">
-                                <span className="text-white! inline-block relative text-xl lg:text-2xl mb-2 line-clamp-2! z-10">
+                              {/* عنوان */}
+                              <div className="absolute font-bold! bottom-0 right-0 left-0 p-4 lg:p-6 z-10">
+                                <span className="text-white! inline-block relative text-lg lg:text-xl mb-2 line-clamp-2!">
                                   {item.title}
                                 </span>
-                                <div className="flex items-center gap-4 text-white/80 text-sm"></div>
                               </div>
                             </div>
                           }
@@ -78,15 +119,15 @@ function ComparisonSection({
                   ))}
                 </Swiper>
               ) : (
-                <div className="flex items-center justify-center h-[300px] bg-gray-50 rounded-3xl">
+                <div className="flex items-center justify-center h-full bg-gray-50 rounded-3xl">
                   <p className="text-gray-500">موردی برای نمایش وجود ندارد</p>
                 </div>
               )}
             </div>
           </div>
 
-          {/* اسلایدرهای سمت چپ - Compare و BestChoices با عرض 1/4 هر کدام */}
-          <div className="lg:w-7/12 w-full lg:mt-0 mt-8 ">
+          {/* اسلایدرهای سمت چپ - Compare و BestChoices */}
+          <div className="lg:w-7/12 w-full lg:mt-0 mt-8">
             <div className="flex flex-wrap">
               {/* اسلایدر Compare */}
               <div className="md:w-1/2 w-full px-2">
@@ -98,7 +139,7 @@ function ComparisonSection({
                   </Link>
                 </div>
 
-                <div className="mt-3">
+                <div className="mt-3" ref={compareCardRef}>
                   {compare.length > 0 ? (
                     <Swiper
                       modules={[Autoplay, EffectFade]}
@@ -122,9 +163,10 @@ function ComparisonSection({
                           <Link href={item.url}>
                             <Card
                               hoverable
-                              className="rounded-3xl! aspect-8/6 overflow-hidden border-none shadow-sm group"
+                              className="rounded-3xl! overflow-hidden border-none shadow-sm group aspect-8/6"
                               cover={
-                                <div className="relative h-full overflow-hidden">
+                                <div className="relative w-full h-full overflow-hidden">
+                                  {/* پس زمینه بلور شده */}
                                   <div
                                     className="absolute inset-0 bg-cover bg-center"
                                     style={{
@@ -133,14 +175,17 @@ function ComparisonSection({
                                       transform: "scale(1.1)",
                                     }}
                                   />
+                                  {/* تصویر اصلی با object-contain */}
                                   <img
                                     src={mainDomainOld + item.image}
                                     alt={item.title}
-                                    className="object-contain w-full h-full group-hover:scale-110 duration-700 relative z-10"
+                                    className="absolute inset-0 w-full h-full object-contain group-hover:scale-110 duration-700 z-10"
                                   />
+                                  {/* گرادینت روی تصویر */}
                                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent z-20"></div>
+                                  {/* عنوان */}
                                   <div className="absolute font-bold! bottom-0 right-0 left-0 p-4 z-30">
-                                    <span className="text-white! inline-block relative text-base lg:text-lg mb-1 line-clamp-2! z-10">
+                                    <span className="text-white! inline-block relative text-base lg:text-lg mb-1 line-clamp-2!">
                                       {item.title}
                                     </span>
                                   </div>
@@ -152,7 +197,7 @@ function ComparisonSection({
                       ))}
                     </Swiper>
                   ) : (
-                    <div className="flex items-center justify-center h-[300px] bg-gray-50 rounded-3xl">
+                    <div className="flex items-center justify-center aspect-8/6 bg-gray-50 rounded-3xl">
                       <p className="text-gray-500">
                         موردی برای نمایش وجود ندارد
                       </p>
@@ -171,7 +216,7 @@ function ComparisonSection({
                   </Link>
                 </div>
 
-                <div className="mt-3">
+                <div className="mt-3" ref={bestChoicesCardRef}>
                   {bestChoices.length > 0 ? (
                     <Swiper
                       modules={[Autoplay, EffectFade]}
@@ -195,9 +240,10 @@ function ComparisonSection({
                           <Link href={item.url}>
                             <Card
                               hoverable
-                              className="rounded-3xl! aspect-8/6 overflow-hidden border-none shadow-sm group"
+                              className="rounded-3xl! overflow-hidden border-none shadow-sm group aspect-8/6"
                               cover={
-                                <div className="relative h-full overflow-hidden">
+                                <div className="relative w-full h-full overflow-hidden">
+                                  {/* پس زمینه بلور شده */}
                                   <div
                                     className="absolute inset-0 bg-cover bg-center"
                                     style={{
@@ -206,14 +252,17 @@ function ComparisonSection({
                                       transform: "scale(1.1)",
                                     }}
                                   />
+                                  {/* تصویر اصلی با object-contain */}
                                   <img
                                     src={mainDomainOld + item.image}
                                     alt={item.title}
-                                    className="object-contain w-full h-full group-hover:scale-110 duration-700 relative z-10"
+                                    className="absolute inset-0 w-full h-full object-contain group-hover:scale-110 duration-700 z-10"
                                   />
+                                  {/* گرادینت روی تصویر */}
                                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent z-20"></div>
-                                  <div className="absolute font-bold! bottom-0 right-0 left-0 p-4">
-                                    <span className="text-white! inline-block relative text-base lg:text-lg mb-1 line-clamp-2! z-30">
+                                  {/* عنوان */}
+                                  <div className="absolute font-bold! bottom-0 right-0 left-0 p-4 z-30">
+                                    <span className="text-white! inline-block relative text-base lg:text-lg mb-1 line-clamp-2!">
                                       {item.title}
                                     </span>
                                   </div>
@@ -225,7 +274,7 @@ function ComparisonSection({
                       ))}
                     </Swiper>
                   ) : (
-                    <div className="flex items-center justify-center h-[300px] bg-gray-50 rounded-3xl">
+                    <div className="flex items-center justify-center aspect-8/6 bg-gray-50 rounded-3xl">
                       <p className="text-gray-500">
                         موردی برای نمایش وجود ندارد
                       </p>
@@ -271,37 +320,18 @@ function ComparisonSection({
           display: none !important;
         }
 
-        /* تنظیمات ارتفاع یکسان برای همه اسلایدرها */
-        .news-fade-swiper .swiper-slide > a > div,
-        .news-fade-swiper .swiper-slide > a > div > div,
-        .compare-fade-swiper .swiper-slide > a > div,
-        .compare-fade-swiper .swiper-slide > a > div > div,
-        .best-fade-swiper .swiper-slide > a > div,
-        .best-fade-swiper .swiper-slide > a > div > div {
-          height: 300px !important;
+        /* تنظیمات برای Card و cover */
+        .ant-card-cover {
+          height: 100% !important;
+        }
+        
+        .ant-card-body {
+          display: none !important;
         }
 
-        /* تنظیمات ریسپانسیو برای موبایل */
-        @media (max-width: 768px) {
-          .news-fade-swiper .swiper-slide > a > div,
-          .news-fade-swiper .swiper-slide > a > div > div,
-          .compare-fade-swiper .swiper-slide > a > div,
-          .compare-fade-swiper .swiper-slide > a > div > div,
-          .best-fade-swiper .swiper-slide > a > div,
-          .best-fade-swiper .swiper-slide > a > div > div {
-            height: 250px !important;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .news-fade-swiper .swiper-slide > a > div,
-          .news-fade-swiper .swiper-slide > a > div > div,
-          .compare-fade-swiper .swiper-slide > a > div,
-          .compare-fade-swiper .swiper-slide > a > div > div,
-          .best-fade-swiper .swiper-slide > a > div,
-          .best-fade-swiper .swiper-slide > a > div > div {
-            height: 220px !important;
-          }
+        /* اطمینان از aspect ratio */
+        .aspect-8\/6 {
+          aspect-ratio: 8/6 !important;
         }
       `}</style>
     </section>
