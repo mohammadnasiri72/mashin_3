@@ -1,6 +1,28 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // غیرفعال کردن source maps در پروداکشن - کاهش قابل توجه حجم
+  productionBrowserSourceMaps: false,
+  // بهینه‌سازی تصاویر از دامنه‌های خارجی
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "mashin3.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "admin3.aitest2.ir",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "api3.aitest2.ir",
+        pathname: "/**",
+      },
+    ],
+  },
   async rewrites() {
     return [
       {

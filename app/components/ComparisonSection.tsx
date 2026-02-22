@@ -5,6 +5,7 @@ import { Card } from "antd";
 import Link from "next/link";
 import { Autoplay, EffectFade } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import OptimizedImage from "./OptimizedImage";
 
 // Import Swiper styles
 import "swiper/css";
@@ -112,10 +113,11 @@ function ComparisonSection({
                                     }}
                                   />
                                   {/* تصویر اصلی */}
-                                  <img
+                                  <OptimizedImage
                                     src={mainDomainOld + item.image}
                                     alt={item.title}
-                                    className="absolute inset-0 w-full h-full object-contain group-hover:scale-110 duration-700"
+                                    className="object-contain group-hover:scale-110 duration-700"
+                                    sizes="(max-width: 1024px) 100vw, 50vw"
                                   />
                                   {/* گرادینت روی تصویر */}
                                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent"></div>
@@ -196,10 +198,11 @@ function ComparisonSection({
                                     }}
                                   />
                                   {/* تصویر اصلی */}
-                                  <img
+                                  <OptimizedImage
                                     src={mainDomainOld + item.image}
                                     alt={item.title}
-                                    className="absolute inset-0 w-full h-full object-contain group-hover:scale-110 duration-700 z-10"
+                                    className="object-contain group-hover:scale-110 duration-700 z-10"
+                                    sizes="(max-width: 768px) 100vw, 50vw"
                                   />
                                   {/* گرادینت روی تصویر */}
                                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent z-20"></div>
@@ -275,10 +278,11 @@ function ComparisonSection({
                                     }}
                                   />
                                   {/* تصویر اصلی */}
-                                  <img
+                                  <OptimizedImage
                                     src={mainDomainOld + item.image}
                                     alt={item.title}
-                                    className="absolute inset-0 w-full h-full object-contain group-hover:scale-110 duration-700 z-10"
+                                    className="object-contain group-hover:scale-110 duration-700 z-10"
+                                    sizes="(max-width: 768px) 100vw, 50vw"
                                   />
                                   {/* گرادینت روی تصویر */}
                                   <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent z-20"></div>

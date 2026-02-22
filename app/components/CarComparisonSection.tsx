@@ -4,6 +4,7 @@ import { getItem } from "@/services/Item/Item";
 import { createpublishCode } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Select } from "antd";
+import OptimizedImage from "./OptimizedImage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
@@ -346,18 +347,11 @@ const CarComparisonSection = ({
                   <div className="bg-white overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 h-full">
                     <Link href={item.url}>
                       <div className="relative w-full pt-[75%] bg-gray-100 ">
-                        <div
-                          className="absolute inset-0 bg-cover bg-center"
-                          style={{
-                            backgroundImage: `url('${mainDomainOld + item.image}')`,
-                            filter: "blur(8px)",
-                            transform: "scale(1.1)",
-                          }}
-                        />
-                        <img
+                        <OptimizedImage
                           src={mainDomainOld + item.image}
                           alt={item.title}
-                          className="absolute inset-0 w-full h-full object-contain"
+                          className="object-contain"
+                          sizes="(max-width: 768px) 100vw, 25vw"
                           loading="lazy"
                           onLoad={handleImageLoad}
                           onError={handleImageError}

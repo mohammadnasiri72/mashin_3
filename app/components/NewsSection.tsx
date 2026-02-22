@@ -5,6 +5,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { Card } from "antd";
 import Link from "next/link";
 import { FaCalendar } from "react-icons/fa";
+import OptimizedImage from "./OptimizedImage";
 import { Autoplay, Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState, useRef } from "react";
@@ -142,10 +143,11 @@ export default function NewsSection({
                           className="rounded-3xl! h-72 overflow-hidden border-none shadow-sm group"
                           cover={
                             <div className="relative h-72 overflow-hidden bg-gray-100">
-                              <img
+                              <OptimizedImage
                                 src={mainDomainOld + item.image}
                                 alt={item.title}
-                                className="object-cover w-full h-full group-hover:brightness-75 duration-300"
+                                className="object-cover group-hover:brightness-75 duration-300"
+                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                 loading="lazy"
                                 onLoad={handleImageLoad}
                               />

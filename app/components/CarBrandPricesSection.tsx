@@ -177,12 +177,14 @@ const CarBrandPricesSection = ({
                       }}
                     >
                       <div className="w-full h-24 flex items-center justify-center mb-4">
-                        <img
-                          src={brand.image || ""}
-                          alt={brand.title}
-                          className="max-w-full h-auto object-contain"
-                          loading="lazy"
-                        />
+                        {brand.image && (
+                          <img
+                            src={brand.image}
+                            alt={brand.title}
+                            className="max-w-full h-auto object-contain"
+                            loading="lazy"
+                          />
+                        )}
                       </div>
                       <h4
                         className={`text-sm font-bold absolute bottom-1 h-10 left-0 right-0 text-center line-clamp-2 ${

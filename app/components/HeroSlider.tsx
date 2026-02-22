@@ -9,6 +9,7 @@ import "swiper/css/effect-fade";
 import "swiper/css/navigation";
 import { htmlToPlainText } from "@/utils/func";
 import Link from "next/link";
+import OptimizedImage from "./OptimizedImage";
 
 export default function HeroSlider({ slider }: { slider: Items[] }) {
   return (
@@ -29,12 +30,12 @@ export default function HeroSlider({ slider }: { slider: Items[] }) {
             {slider.map((slide) => (
               <SwiperSlide key={slide.id}>
                 <div className="relative w-full h-96">
-                  <img
+                  <OptimizedImage
                     src={mainDomain + slide.image}
                     alt={slide.summary || slide.title}
-                    className="object-cover w-full h-96"
-                    loading="eager"
-                    fetchPriority="high"
+                    className="object-cover"
+                    sizes="100vw"
+                    priority
                   />
 
                   {/* Content Overlay */}

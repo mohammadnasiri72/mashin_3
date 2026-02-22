@@ -3,6 +3,7 @@
 import { mainDomainOld } from "@/utils/mainDomain";
 import Image from "next/image";
 import Link from "next/link";
+import OptimizedImage from "./OptimizedImage";
 import { useEffect, useRef, useState } from "react";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import "swiper/css";
@@ -179,15 +180,14 @@ const CarSpecsSection = ({
                       <div className="bg-gray-100 rounded-2xl p-4 h-[480px]">
                         {/* تصویر خودرو */}
                         <div className="relative rounded-xl overflow-hidden mb-3 h-52 bg-gray-100">
-                          <Link href={car.url}>
-                            <div className="relative w-full h-full">
-                              <img
-                                src={mainDomainOld + car.image}
-                                alt={car.title}
-                                className="object-contain w-full h-full"
-                                loading="lazy"
-                              />
-                            </div>
+                          <Link href={car.url} className="block relative w-full h-full">
+                            <OptimizedImage
+                              src={mainDomainOld + car.image}
+                              alt={car.title}
+                              className="object-contain"
+                              sizes="(max-width: 768px) 50vw, 25vw"
+                              loading="lazy"
+                            />
                           </Link>
                           <div className="absolute bottom-2 right-2">
                             <div className="pr-3">
