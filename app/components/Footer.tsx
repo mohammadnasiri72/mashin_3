@@ -136,6 +136,7 @@ const Footer = ({
                             src={mainDomainOld + social.image}
                             alt={social.title}
                             className="object-contain w-10 h-10"
+                            loading="lazy"
                           />
                         </Link>
                       </li>
@@ -145,7 +146,10 @@ const Footer = ({
               </div>
 
               {/* Footer Column - Quick Links */}
-              <nav className="footer-column col-span-12 lg:col-span-6 ft-lists-wrap" aria-label="دسترسی سریع">
+              <nav
+                className="footer-column col-span-12 lg:col-span-6 ft-lists-wrap"
+                aria-label="دسترسی سریع"
+              >
                 <h2 className="text-black text-[16px] font-bold! mb-4! sm:text-start text-center">
                   {footerMenu?.title || "دسترسی سریع"}
                 </h2>
@@ -202,7 +206,7 @@ const Footer = ({
               </nav>
 
               {/* Footer Column - Social Media (Desktop) */}
-              <div className="footer-column col-span-12 md:col-span-2 lg:col-span-2 lg:block hidden">
+              <div className="footer-column col-span-12 md:col-span-2 lg:col-span-2 lg:block! hidden">
                 <h4 className="text-gray-900 text-lg font-bold mb-4">
                   شبکه های اجتماعی
                 </h4>
@@ -219,6 +223,7 @@ const Footer = ({
                             src={mainDomain + social.image}
                             alt={social.title}
                             className="object-contain"
+                            loading="lazy"
                           />
                         </Link>
                       </li>

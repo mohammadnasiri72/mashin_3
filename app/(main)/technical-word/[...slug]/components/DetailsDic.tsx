@@ -26,7 +26,7 @@ function DetailsDic({ detailsDic }: { detailsDic: ItemsId }) {
       <div className="bg-linear-to-l from-red-600 to-red-500 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <FaBook className="text-white text-xl" />
+            <FaBook className="text-white! text-xl" />
             <h1 className="text-xl font-bold text-white!">جزئیات واژه فنی</h1>
           </div>
         </div>

@@ -18,7 +18,7 @@ function HeroSectionAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
               </h3>
             </div>
             {/* Breadcrumb */}
-            <nav className="mt-6 sm:block hidden">
+            <nav className="mt-6 sm:block! hidden">
               <ol className="flex items-center space-x-2 space-x-reverse flex-wrap">
                 <li>
                   <Link

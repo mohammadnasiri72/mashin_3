@@ -26,10 +26,10 @@ export async function generateMetadata() {
 
   if (dataPage && dataPage.title) {
     return {
-      title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
+      title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title}`,
       description: dataPage.seoInfo?.seoDescription
         ? dataPage.seoInfo?.seoDescription
-        : "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
+        : dataPage.title,
       keywords: dataPage.seoInfo?.seoKeywords
         ? dataPage.seoInfo?.seoKeywords
         : dataPage.seoKeywords,
@@ -38,10 +38,10 @@ export async function generateMetadata() {
         canonical: seoUrl,
       },
       openGraph: {
-        title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`,
+        title: `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title}`,
         description: dataPage.seoInfo?.seoDescription
           ? dataPage.seoInfo?.seoDescription
-          : "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
+          : dataPage.title,
       },
       other: {
         seoHeadTags: dataPage?.seoInfo?.seoHeadTags,
@@ -57,58 +57,95 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const slider: Items[] = await getItem({ TypeId: 6, langCode: "fa" });
+  const [
+    slider,
+    news,
+    newsCar,
+    saleNews,
+    compare,
+    bestChoices,
+    segmentCars,
+    video,
+    carSpecs,
+    carView,
+    whichCars,
+    education,
+    brandMotor,
+    brandsCar,
+    brandsAuto,
+  ]: [
+    Items[],
+    Items[],
+    Items[],
+    Items[],
+    Items[],
+    Items[],
+    Items[],
+    Items[],
+    Items[],
+    Items[],
+    Items[],
+    Items[],
+    ItemsCategory[],
+    ItemsCategory[],
+    ItemsCategory[],
+  ] = await Promise.all([
+    // درخواست‌های getItem
+    getItem({ TypeId: 6, langCode: "fa" }),
+    getItem({ TypeId: 5, langCode: "fa", PageIndex: 1, PageSize: 6 }),
+    getItem({
+      TypeId: 5,
+      langCode: "fa",
+      CategoryIdArray: "6323",
+      PageIndex: 1,
+      PageSize: 5,
+    }),
+    getItem({
+      TypeId: 5,
+      langCode: "fa",
+      CategoryIdArray: "6593",
+      PageIndex: 1,
+      PageSize: 10,
+    }),
+    getItem({ TypeId: 1045, langCode: "fa", PageIndex: 1, PageSize: 2 }),
+    getItem({ TypeId: 1043, langCode: "fa", PageIndex: 1, PageSize: 10 }),
+    getItem({ TypeId: 1048, langCode: "fa" }),
+    getItem({ TypeId: 1028, langCode: "fa", PageIndex: 1, PageSize: 10 }),
+    getItem({
+      TypeId: 1042,
+      langCode: "fa",
+      IsHome: 1,
+      PageIndex: 1,
+      PageSize: 12,
+    }),
+    getItem({
+      TypeId: 1042,
+      langCode: "fa",
+      OrderBy: 8,
+      PageIndex: 1,
+      PageSize: 12,
+    }),
+    getItem({ TypeId: 1045, langCode: "fa", PageIndex: 1, PageSize: 10 }),
+    getItem({ TypeId: 3, langCode: "fa", PageIndex: 1, PageSize: 13 }),
 
-  const news: Items[] = await getItem({
-    TypeId: 5,
-    langCode: "fa",
-    PageIndex: 1,
-    PageSize: 6,
-  });
-  const newsCar: Items[] = await getItem({
-    TypeId: 5,
-    langCode: "fa",
-    CategoryIdArray: "6323",
-    PageIndex: 1,
-    PageSize: 10,
-  });
-  const saleNews: Items[] = await getItem({
-    TypeId: 5,
-    langCode: "fa",
-    CategoryIdArray: "6593",
-    PageIndex: 1,
-    PageSize: 10,
-  });
-  const compare: Items[] = await getItem({
-    TypeId: 1045,
-    langCode: "fa",
-    PageIndex: 1,
-    PageSize: 2,
-  });
-  const bestChoices: Items[] = await getItem({
-    TypeId: 1043,
-    langCode: "fa",
-    PageIndex: 1,
-    PageSize: 10,
-  });
+    // درخواست‌های getCategory
+    getCategory({
+      TypeId: 1052,
+      LangCode: "fa",
+      ParentIdArray: 6059,
+      PageIndex: 1,
+      PageSize: 200,
+    }),
+    getCategory({
+      TypeId: 1042,
+      LangCode: "fa",
+      ParentIdArray: 6058,
+      PageIndex: 1,
+      PageSize: 200,
+    }),
+    getCategory({ TypeId: 1050, LangCode: "fa", PageIndex: 1, PageSize: 13 }),
+  ]);
 
-  const segmentCars: Items[] = await getItem({
-    TypeId: 1048,
-    langCode: "fa",
-  });
-  const video: Items[] = await getItem({
-    TypeId: 1028,
-    langCode: "fa",
-    PageIndex: 1,
-    PageSize: 10,
-  });
-  const carSpecs: Items[] = await getItem({
-    TypeId: 1042,
-    langCode: "fa",
-    IsHome: 1,
-    PageIndex: 1,
-    PageSize: 12,
-  });
   let Properties: properties[] = [];
   if (carSpecs.length > 0) {
     Properties = await getPropertyIds(
@@ -116,55 +153,10 @@ export default async function Home() {
     );
   }
 
-  const carView: Items[] = await getItem({
-    TypeId: 1042,
-    langCode: "fa",
-    OrderBy: 8,
-    PageIndex: 1,
-    PageSize: 12,
-  });
-
-  const brandMotor: ItemsCategory[] = await getCategory({
-    TypeId: 1052,
-    LangCode: "fa",
-    ParentIdArray: 6059,
-    PageIndex: 1,
-    PageSize: 200,
-  });
-
-  const brandsCar: ItemsCategory[] = await getCategory({
-    TypeId: 1042,
-    LangCode: "fa",
-    ParentIdArray: 6058,
-    PageIndex: 1,
-    PageSize: 200,
-  });
-
-  const whichCars: Items[] = await getItem({
-    TypeId: 1045,
-    langCode: "fa",
-    PageIndex: 1,
-    PageSize: 10,
-  });
-
   const brands: BrandsPrice = await getPriceCarBrands("internal");
   const prices: Price = await getPriceCar({
     Type: "internal",
     BrandId: brands.brands[0].id,
-  });
-
-  const brandsAuto: ItemsCategory[] = await getCategory({
-    TypeId: 1050,
-    LangCode: "fa",
-    PageIndex: 1,
-    PageSize: 13,
-  });
-
-  const education: Items[] = await getItem({
-    TypeId: 3,
-    langCode: "fa",
-    PageIndex: 1,
-    PageSize: 13,
   });
 
   return (
@@ -194,7 +186,6 @@ export default async function Home() {
         {/* Car Specs Section */}
         <CarSpecsSection carSpecs={carSpecs} Properties={Properties} />
 
-       
         {/* Car Comparison Section */}
         <CarComparisonSection brandsCar={brandsCar} whichCars={whichCars} />
 

@@ -178,9 +178,10 @@ const CarBrandPricesSection = ({
                     >
                       <div className="w-full h-24 flex items-center justify-center mb-4">
                         <img
-                          src={brand.image || "/images/gallery/hybrid-car.png"}
+                          src={brand.image || ""}
                           alt={brand.title}
                           className="max-w-full h-auto object-contain"
+                          loading="lazy"
                         />
                       </div>
                       <h4

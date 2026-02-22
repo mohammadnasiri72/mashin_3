@@ -6,10 +6,11 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { Select } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperType } from "swiper";
 
 const { Option } = Select;
 
@@ -26,8 +27,67 @@ const CarComparisonSection = ({
   const [secCarBrand, setSecCarBrand] = useState<number>(0);
   const [secModelsCarList, setSecModelsCarList] = useState<Items[]>([]);
   const [secCarModel, setSecCarModel] = useState<number>(0);
+  const [showSkeleton, setShowSkeleton] = useState(true);
+  const [loadedCount, setLoadedCount] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(0);
 
+  const swiperRef = useRef<any>(null);
   const router = useRouter();
+
+  // تعداد کل تصاویر
+  const totalImages = whichCars.length;
+
+  // تعیین تعداد ستون براساس عرض صفحه
+  const getColumnsCount = () => {
+    if (windowWidth >= 1280) return 4;
+    if (windowWidth >= 1024) return 3;
+    if (windowWidth >= 768) return 2;
+    return 1;
+  };
+
+  // گرفتن عرض صفحه
+  useEffect(() => {
+    setWindowWidth(window.innerWidth);
+
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // بعد از لود همه تصاویر
+  useEffect(() => {
+    if (loadedCount === totalImages && totalImages > 0) {
+      setTimeout(() => {
+        setShowSkeleton(false);
+        if (swiperRef.current?.swiper) {
+          swiperRef.current.swiper.update();
+        }
+      }, 100);
+    }
+  }, [loadedCount, totalImages]);
+
+  // تایمر fallback
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowSkeleton(false);
+      if (swiperRef.current?.swiper) {
+        swiperRef.current.swiper.update();
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleImageLoad = () => {
+    setLoadedCount((prev) => prev + 1);
+  };
+
+  const handleImageError = () => {
+    setLoadedCount((prev) => prev + 1);
+  };
 
   const handleCompare = () => {
     router.push(`/compare/${firstCarModel},${secCarModel}?type=car`);
@@ -45,6 +105,7 @@ const CarComparisonSection = ({
       setFirstModelsCarList(modelsCarResponse);
     } catch (err) {}
   };
+
   const fetchModelCars2 = async () => {
     try {
       const modelsCarResponse: Items[] = await getItem({
@@ -70,6 +131,8 @@ const CarComparisonSection = ({
     }
   }, [secCarBrand]);
 
+  const columnsCount = getColumnsCount();
+
   return (
     <section className="py-3" aria-label="مقایسه خودرو">
       <div className="mx-auto">
@@ -82,7 +145,7 @@ const CarComparisonSection = ({
         <div className="sm:px-0 px-5">
           <div className="w-full md:w-10/12 bg-[#ce1a2a] px-6 pt-6 pb-[350px] mx-auto rounded-2xl mb-8">
             <div className="flex flex-col lg:flex-row gap-6">
-              {/* خودرو اول */}
+              {/* خودرو اول - کد قبلی همونطور هست */}
               <div className="w-full lg:w-2/5">
                 <h4 className="text-white! text-sm font-medium pb-4 w-full">
                   خودرو اول
@@ -144,7 +207,7 @@ const CarComparisonSection = ({
               </div>
 
               {/* خودرو دوم */}
-              <div className="w-full lg:w-2/5 ">
+              <div className="w-full lg:w-2/5">
                 <h4 className="text-white! text-sm font-medium pb-4 w-full">
                   خودرو دوم
                 </h4>
@@ -212,7 +275,7 @@ const CarComparisonSection = ({
                 <button
                   aria-label="مقایسه"
                   onClick={handleCompare}
-                  className="w-full bg-white cursor-pointer button-wave-1 text-[#ce1a2a]!  font-semibold py-3 rounded-xl transition-colors duration-300 relative overflow-hidden"
+                  className="w-full bg-white cursor-pointer button-wave-1 text-[#ce1a2a]! font-semibold py-3 rounded-xl transition-colors duration-300 relative overflow-hidden"
                 >
                   مقایسه
                 </button>
@@ -220,67 +283,107 @@ const CarComparisonSection = ({
             </div>
           </div>
         </div>
-        <div className="h-72">
-          {/* اسلایدر مقایسه‌ها */}
-          <Swiper
-            modules={[Autoplay]}
-            spaceBetween={16}
-            slidesPerView={1}
-            breakpoints={{
-              640: {
-                slidesPerView: 1,
-              },
-              768: {
-                slidesPerView: 2,
-              },
-              1024: {
-                slidesPerView: 3,
-              },
-              1280: {
-                slidesPerView: 4,
-              },
-            }}
-            autoplay={{
-              delay: 4000,
-              disableOnInteraction: false,
-            }}
-            loop={true}
-            className="comparison-swiper -mt-[350px]"
-            dir="rtl"
-          >
-            {whichCars.map((item) => (
-              <SwiperSlide key={item.id}>
-                <div className="bg-white overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
-                  <div className="overflow-hidden">
+
+        {/* بخش اسلایدر */}
+        <div className="max-h-[800px]">
+          {showSkeleton ? (
+            /* اسکلتون ساده با تعداد ستون متغیر */
+            <div
+              className="grid gap-4 -mt-[350px]"
+              style={{
+                gridTemplateColumns: `repeat(${columnsCount}, minmax(0, 1fr))`,
+              }}
+            >
+              {Array.from({ length: columnsCount }).map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl shadow-sm overflow-hidden animate-pulse"
+                >
+                  <div className="relative w-full pt-[75%] bg-gray-200"></div>
+                  <div className="p-4 text-center">
+                    <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            /* اسلایدر اصلی */
+            <Swiper
+              ref={swiperRef}
+              modules={[Autoplay]}
+              spaceBetween={16}
+              slidesPerView={1}
+              breakpoints={{
+                640: {
+                  slidesPerView: 1,
+                },
+                768: {
+                  slidesPerView: 2,
+                },
+                1024: {
+                  slidesPerView: 3,
+                },
+                1280: {
+                  slidesPerView: 4,
+                },
+              }}
+              autoplay={{
+                delay: 4000,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              }}
+              loop={true}
+              className="comparison-swiper -mt-[350px]"
+              dir="rtl"
+              onInit={(swiper) => {
+                setTimeout(() => swiper.update(), 100);
+              }}
+              observer={true}
+              observeParents={true}
+            >
+              {whichCars.map((item) => (
+                <SwiperSlide key={item.id}>
+                  <div className="bg-white overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 h-full">
                     <Link href={item.url}>
-                      <div className="h-48 relative">
+                      <div className="relative w-full pt-[75%] bg-gray-100 ">
+                        <div
+                          className="absolute inset-0 bg-cover bg-center"
+                          style={{
+                            backgroundImage: `url('${mainDomainOld + item.image}')`,
+                            filter: "blur(8px)",
+                            transform: "scale(1.1)",
+                          }}
+                        />
                         <img
                           src={mainDomainOld + item.image}
                           alt={item.title}
-                          className="object-contain w-full"
+                          className="absolute inset-0 w-full h-full object-contain"
+                          loading="lazy"
+                          onLoad={handleImageLoad}
+                          onError={handleImageError}
                         />
                       </div>
                     </Link>
-                  </div>
 
-                  <div className="p-4 text-center w-full">
-                    <h3 className="text-sm text-[#202020]! font-medium">
-                      <Link
-                        href={item.url}
-                        className="hover:text-[#ce1a2a]! text-black! font-semibold! transition-colors duration-200"
-                      >
-                        {item.title}
-                      </Link>
-                    </h3>
+                    <div className="p-4 text-center">
+                      <h3 className="text-sm text-[#202020]! font-medium">
+                        <Link
+                          href={item.url}
+                          className="hover:text-[#ce1a2a]! text-black! font-bold! transition-colors duration-200 line-clamp-2"
+                        >
+                          {item.title}
+                        </Link>
+                      </h3>
+                    </div>
                   </div>
-                </div>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </div>
       </div>
 
-      <style jsx global>{`
+      <style>{`
         .comparison-swiper {
           padding: 10px 5px 30px 5px;
         }
@@ -289,15 +392,12 @@ const CarComparisonSection = ({
           align-items: stretch;
         }
 
-        /* استایل برای select ها در حالت hover */
-        select:hover {
-          background-color: rgba(255, 255, 255, 0.1) !important;
+        .comparison-swiper .swiper-slide {
+          height: auto !important;
         }
 
-        /* استایل برای options */
-        select option {
-          background-color: white;
-          color: #374151;
+        .comparison-swiper .swiper-slide > div {
+          height: 100%;
         }
 
         .custom-ant-select .ant-select-selector {
@@ -310,6 +410,7 @@ const CarComparisonSection = ({
           font-weight: 500 !important;
           padding: 12px !important;
         }
+        
         .custom-ant-select .ant-select-selection-placeholder {
           color: white !important;
         }
@@ -328,14 +429,12 @@ const CarComparisonSection = ({
           padding-bottom: 12px !important;
         }
 
-        /* برای حالت focus */
         .custom-ant-select.ant-select-focused .ant-select-selector {
           border-color: white !important;
           box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2) !important;
           outline: none !important;
         }
 
-        /* برای dropdown */
         .ant-select-dropdown {
           background-color: white !important;
           border-radius: 8px !important;
@@ -355,6 +454,30 @@ const CarComparisonSection = ({
 
         .ant-select-item-option-active {
           background-color: #e5e7eb !important;
+        }
+
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+        
+        .animate-pulse {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .pt-\[75\%\] {
+          padding-top: 75%;
+        }
+
+        .object-contain {
+          object-fit: contain;
+        }
+
+        .line-clamp-2 {
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
       `}</style>
     </section>

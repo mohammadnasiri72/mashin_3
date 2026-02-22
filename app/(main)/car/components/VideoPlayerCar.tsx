@@ -249,7 +249,7 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
     return (
       <div className="relative bg-black rounded-xl overflow-hidden shadow-2xl max-w-5xl">
         <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-20">
-          <FaSpinner className="text-white text-4xl animate-spin" />
+          <FaSpinner className="text-white! text-4xl animate-spin" />
         </div>
       </div>
     );
@@ -291,13 +291,13 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
         {/* لودینگ */}
         {loading && (
           <div className="absolute inset-0 bg-black/70 flex items-center justify-center z-20">
-            <FaSpinner className="text-white text-4xl animate-spin" />
+            <FaSpinner className="text-white! text-4xl animate-spin" />
           </div>
         )}
 
         {/* شماره ویدئو */}
         {videos.length > 1 && !loading && (
-          <div className="absolute top-4 left-4 bg-black/70 text-white px-3 py-1.5 rounded-full text-xs backdrop-blur-sm z-10">
+          <div className="absolute top-4 left-4 bg-black/70 text-white! px-3 py-1.5 rounded-full text-xs backdrop-blur-sm z-10">
             {currentVideoIndex + 1} / {videos.length}
           </div>
         )}
@@ -309,7 +309,7 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
           >
             {/* نوار پیشرفت با قابلیت کلیک و درگ */}
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-white text-xs min-w-10">
+              <span className="text-white! text-xs min-w-10">
                 {formatTime(currentTime)}
               </span>
 
@@ -339,7 +339,7 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
                 ></div>
               </div>
 
-              <span className="text-white text-xs min-w-10">
+              <span className="text-white! text-xs min-w-10">
                 {formatTime(duration)}
               </span>
             </div>
@@ -349,7 +349,7 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
               <div className="flex items-center gap-3">
                 <button
                   onClick={togglePlay}
-                  className="text-white hover:text-[#ce1a2a] transition-colors"
+                  className="text-white! hover:text-[#ce1a2a] transition-colors"
                   title={isPlaying ? "Pause" : "Play"}
                 >
                   {isPlaying ? <FaPause size={20} /> : <FaPlay size={20} />}
@@ -359,14 +359,14 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
                   <>
                     <button
                       onClick={handlePrev}
-                      className="text-white hover:text-[#ce1a2a] transition-colors text-xl"
+                      className="text-white! hover:text-[#ce1a2a] transition-colors text-xl"
                       title="Previous"
                     >
                       ⏮
                     </button>
                     <button
                       onClick={handleNext}
-                      className="text-white hover:text-[#ce1a2a] transition-colors text-xl"
+                      className="text-white! hover:text-[#ce1a2a] transition-colors text-xl"
                       title="Next"
                     >
                       ⏭
@@ -378,7 +378,7 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
                 <div className="flex items-center gap-2 group/volume">
                   <button
                     onClick={toggleMute}
-                    className="text-white hover:text-[#ce1a2a] transition-colors"
+                    className="text-white! hover:text-[#ce1a2a] transition-colors"
                     title={isMuted ? "Unmute" : "Mute"}
                   >
                     {isMuted || volume === 0 ? (
@@ -408,7 +408,7 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
 
               <button
                 onClick={toggleFullscreen}
-                className="text-white hover:text-[#ce1a2a] transition-colors"
+                className="text-white! hover:text-[#ce1a2a] transition-colors"
                 title={isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
               >
                 {isFullscreen ? (
@@ -428,7 +428,7 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-[#ce1a2a] rounded-full flex items-center justify-center hover:bg-[#a51522] transition-colors z-10"
             title="Play"
           >
-            <FaPlay className="text-white text-2xl ml-1" />
+            <FaPlay className="text-white! text-2xl ml-1" />
           </button>
         )}
       </div>
@@ -454,10 +454,10 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
                   <div className="absolute inset-0 bg-linear-to-t from-black/70 to-transparent"></div>
                   <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="w-10 h-10 bg-[#ce1a2a] rounded-full flex items-center justify-center">
-                      <FaPlay className="text-white text-sm ml-1" />
+                      <FaPlay className="text-white! text-sm ml-1" />
                     </div>
                   </div>
-                  <span className="text-white text-xs font-bold z-10 px-2 text-center line-clamp-2">
+                  <span className="text-white! text-xs font-bold z-10 px-2 text-center line-clamp-2">
                     {video.title || `Video ${index + 1}`}
                   </span>
                   {index === currentVideoIndex && (

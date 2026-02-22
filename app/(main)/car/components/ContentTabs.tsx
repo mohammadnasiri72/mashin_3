@@ -381,7 +381,8 @@ const ContentTabs = ({
         }
 
         .custom-tabs .ant-tabs-nav {
-          margin: 0;
+          margin: 0 !important;
+          padding:0 !important;
         }
 
         .custom-tabs .ant-tabs-tab {
@@ -391,6 +392,7 @@ const ContentTabs = ({
           transition: all 0.3s ease !important;
           cursor: pointer !important;
           height: 50px !important;
+           margin: 0 !important;
         }
 
         .custom-tabs .ant-tabs-tab:hover {
@@ -438,8 +440,8 @@ const ContentTabs = ({
           }
           
           .navbar-tabs[style*="position: sticky"] {
-            position: relative !important;
-            top: auto !important;
+            position: sticky !important;
+            top: 115px !important;
           }
         }
       `}</style>

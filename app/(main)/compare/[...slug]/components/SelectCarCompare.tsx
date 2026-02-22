@@ -55,7 +55,7 @@ function SelectCarCompare({
       <div
         className={`lg:w-1/3 w-1/2 flex-col gap-2 px-3 ${
           dataCompare.length === 2
-            ? "lg:flex hidden"
+            ? "lg:flex! hidden"
             : dataCompare.length === 1 || dataCompare.length === 0
               ? "flex"
               : "hidden"

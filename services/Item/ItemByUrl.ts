@@ -1,23 +1,43 @@
-import axiosInstance from "../axiosInstance";
 
+import { baseUrl } from "@/utils/mainDomain";
 
 export const getItemByUrl = async (url: string): Promise<ItemsId | null> => {
-    
   try {
-    const response = await axiosInstance.get<ItemsId>(`/api/Item/findByUrl`, {
-        params:{
-            url,
-            langCode:'fa'
-        },
-      // withCredentials: true,
+    const langCode = 'fa';
+    
+    // ساخت query string
+    const queryParams = new URLSearchParams({
+      url,
+      langCode
+    }).toString();
+    
+    const response = await fetch(`${baseUrl}api/Item/findByUrl?${queryParams}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        // اگر نیاز به احراز هویت دارید
+        // 'Authorization': `Bearer ${token}`
+      },
+      next: {
+        revalidate: 60 
+      }
     });
-    return response.data;
-  } catch (error:any) {
-    console.error("خطا در دریافت ItemsByUrl:", error);
-     // اگر خطای 404 بود، null برگردانید
-    if (error.response?.status === 404) {
+
+    // اگر خطای 404 بود، null برگردانید
+    if (response.status === 404) {
       return null;
     }
+
+    // بررسی سایر خطاها
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return data;
+    
+  } catch (error: any) {
+    console.error("خطا در دریافت ItemsByUrl:", error);
     throw error;
   }
 };

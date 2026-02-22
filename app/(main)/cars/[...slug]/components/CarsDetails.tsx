@@ -147,7 +147,7 @@ const CarsDetails = ({
                           className="object-contain w-full h-full p-2 hover:scale-105 transition-transform duration-300"
                         />
                       </Link>
-                      <div className="sm:flex hidden flex-col gap-1 absolute top-0 -right-1 translate-x-full group-hover:translate-x-0 group-hover:right-0 duration-300">
+                      <div className="sm:flex! hidden flex-col gap-1 absolute top-0 -right-1 translate-x-full group-hover:translate-x-0 group-hover:right-0 duration-300">
                         {carView
                           .filter((c) => c.categoryId === car.id)
                           .sort((a, b) => {

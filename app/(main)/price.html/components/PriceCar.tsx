@@ -418,7 +418,7 @@ function PriceCar({
                     onClick={() => handleBrandSelect(brand.id)}
                     className={`flex flex-col items-center justify-center rounded-lg p-1.5 cursor-pointer transition-all duration-200 min-w-[70px] ${
                       selectedBrand === brand.id
-                        ? "text-white shadow scale-105"
+                        ? "text-white! shadow scale-105"
                         : "bg-white hover:bg-gray-50 text-gray-700 hover:text-[#ce1a2a] border border-gray-200 hover:border-[#ce1a2a] hover:shadow-sm"
                     }`}
                     style={{
@@ -475,7 +475,7 @@ function PriceCar({
                           </div>
                         </div>
                         <div
-                          className="px-2 py-0.5 rounded-full text-white text-xs font-medium"
+                          className="px-2 py-0.5 rounded-full text-white! text-xs font-medium"
                           style={{ backgroundColor: PRIMARY_COLOR }}
                         >
                           {items.length.toLocaleString("fa-IR")} مدل

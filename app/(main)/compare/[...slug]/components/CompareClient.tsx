@@ -115,7 +115,7 @@ function CompareClient({
               <div
                 key={car.id}
                 className={`lg:w-1/3 w-1/2 ${
-                  index > 1 ? "md:block hidden" : ""
+                  index > 1 ? "md:block! hidden" : ""
                 }`}
               >
                 <div className="w-full">
@@ -185,7 +185,7 @@ function CompareClient({
                     <div
                       key={index}
                       className={`lg:w-1/3 w-1/2 ${
-                        index > 1 ? "md:block hidden" : ""
+                        index > 1 ? "md:block! hidden" : ""
                       }
                       `}
                     >
@@ -210,7 +210,7 @@ function CompareClient({
                   <div
                     key={car.id}
                     className={`lg:w-1/3 w-1/2 ${
-                      index > 1 ? "md:block hidden" : ""
+                      index > 1 ? "md:block! hidden" : ""
                     }`}
                   >
                     {advantages && advantages.length > 0 && (
@@ -254,7 +254,7 @@ function CompareClient({
                   <div
                     key={car.id}
                     className={`lg:w-1/3 w-1/2 ${
-                      index > 1 ? "md:block hidden" : ""
+                      index > 1 ? "md:block! hidden" : ""
                     }`}
                   >
                     {disadvantages && disadvantages.length > 0 && (

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://mashin3.com"),
   title: {
     default: "ماشین 3 - بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
-    template: "%s | ماشین 3",
+    template: "%s",
   },
   description:
     "بانک اطلاعات خودرو ، بررسی خودرو ، مقایسه خودرو ، قیمت خودرو و موتورسیکلت ، اخبار خودرو ، سایت تخصصی خودرو ماشین 3",

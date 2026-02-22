@@ -23,33 +23,46 @@ function ComparisonSection({
   const compareCardRef = useRef<HTMLDivElement>(null);
   const bestChoicesCardRef = useRef<HTMLDivElement>(null);
   const [cardsHeight, setCardsHeight] = useState<number>(300);
+  const [isCalculated, setIsCalculated] = useState(false);
+
 
   useEffect(() => {
     const calculateHeight = () => {
       if (window.innerWidth >= 1024) {
-        // فقط در دسکتاپ
         const compareHeight = compareCardRef.current?.offsetHeight || 0;
-        
-        // ارتفاع مجموع دو کارت به همراه فاصله بین آنها (16px = mt-8)
-        const totalHeight =  compareHeight ;
+        const totalHeight = compareHeight;
         setCardsHeight(totalHeight);
+        setIsCalculated(true);
       } else {
-        // در موبایل ارتفاع ثابت
         setCardsHeight(300);
+        setIsCalculated(true);
       }
     };
 
-    // کمی صبر می‌کنیم تا کارت‌ها کاملاً رندر بشن
     setTimeout(calculateHeight, 100);
-    
+
     window.addEventListener("resize", calculateHeight);
     return () => window.removeEventListener("resize", calculateHeight);
-  }, [compare.length, bestChoices.length]);
+  }, [compare.length, bestChoices.length, isCalculated]);
+
+  // کامپوننت اسکلتون برای باکس سمت راست
+  const SkeletonRightBox = () => (
+    <div className="w-full h-[300px] bg-gray-200 rounded-3xl animate-pulse">
+      <div className="w-full h-full bg-gray-300 rounded-3xl"></div>
+    </div>
+  );
+
+  // کامپوننت اسکلتون برای باکس‌های مقایسه
+  const SkeletonCompareBox = () => (
+    <div className="h-[300px] w-full bg-gray-200 rounded-3xl animate-pulse">
+      <div className="w-full h-full bg-gray-300 rounded-3xl"></div>
+    </div>
+  );
 
   return (
-    <section>
+    <section className="">
       <section className="mb-12 px-4" aria-label="مقایسه و بهترین انتخاب‌ها">
-        <div className="flex flex-wrap ">
+        <div className="flex flex-wrap">
           {/* اسلایدر سمت راست - News */}
           <div className="lg:w-5/12 w-full px-2">
             <div className="mb-2! p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
@@ -58,69 +71,74 @@ function ComparisonSection({
               </h3>
             </div>
 
-            <div 
-              className="mt-3"
-              style={{ height: `${cardsHeight}px` }}
-            >
-              {news.length > 0 ? (
-                <Swiper
-                  modules={[Autoplay, EffectFade]}
-                  effect="fade"
-                  spaceBetween={0}
-                  slidesPerView={1}
-                  loop={true}
-                  autoplay={{
-                    delay: 3000,
-                    disableOnInteraction: false,
-                    pauseOnMouseEnter: true,
-                  }}
-                  speed={1000}
-                  fadeEffect={{
-                    crossFade: true,
-                  }}
-                  className="news-fade-swiper h-full"
-                >
-                  {news.map((item) => (
-                    <SwiperSlide key={item.id}>
-                      <Link href={item.url}>
-                        <Card
-                          hoverable
-                          className="rounded-3xl! overflow-hidden border-none shadow-sm group h-full"
-                          cover={
-                            <div className="relative w-full h-full overflow-hidden">
-                              {/* پس زمینه بلور شده */}
-                              <div
-                                className="absolute inset-0 bg-cover bg-center"
-                                style={{
-                                  backgroundImage: `url('${mainDomainOld + item.image}')`,
-                                  filter: "blur(8px)",
-                                  transform: "scale(1.1)",
-                                }}
-                              />
-                              {/* تصویر اصلی با object-cover برای پر کردن کامل فضا */}
-                              <img
-                                src={mainDomainOld + item.image}
-                                alt={item.title}
-                                className="absolute inset-0 w-full h-full object-contain group-hover:scale-110 duration-700"
-                              />
-                              {/* گرادینت روی تصویر */}
-                              <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent"></div>
-                              {/* عنوان */}
-                              <div className="absolute font-bold! bottom-0 right-0 left-0 p-4 lg:p-6 z-10">
-                                <span className="text-white! inline-block relative text-lg lg:text-xl mb-2 line-clamp-2!">
-                                  {item.title}
-                                </span>
-                              </div>
-                            </div>
-                          }
-                        />
-                      </Link>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+            <div className="mt-3">
+              {!isCalculated ? (
+                <SkeletonRightBox />
               ) : (
-                <div className="flex items-center justify-center h-full bg-gray-50 rounded-3xl">
-                  <p className="text-gray-500">موردی برای نمایش وجود ندارد</p>
+                <div style={{ height: `${cardsHeight}px` }}>
+                  {news.length > 0 ? (
+                    <Swiper
+                      modules={[Autoplay, EffectFade]}
+                      effect="fade"
+                      spaceBetween={0}
+                      slidesPerView={1}
+                      loop={true}
+                      autoplay={{
+                        delay: 3000,
+                        disableOnInteraction: false,
+                        pauseOnMouseEnter: true,
+                      }}
+                      speed={1000}
+                      fadeEffect={{
+                        crossFade: true,
+                      }}
+                      className="news-fade-swiper h-full"
+                    >
+                      {news.map((item) => (
+                        <SwiperSlide key={item.id}>
+                          <Link href={item.url}>
+                            <Card
+                              hoverable
+                              className="rounded-3xl! overflow-hidden border-none shadow-sm group h-full"
+                              cover={
+                                <div className="relative w-full h-full overflow-hidden">
+                                  {/* پس زمینه بلور شده */}
+                                  <div
+                                    className="absolute inset-0 bg-cover bg-center"
+                                    style={{
+                                      backgroundImage: `url('${mainDomainOld + item.image}')`,
+                                      filter: "blur(8px)",
+                                      transform: "scale(1.1)",
+                                    }}
+                                  />
+                                  {/* تصویر اصلی */}
+                                  <img
+                                    src={mainDomainOld + item.image}
+                                    alt={item.title}
+                                    className="absolute inset-0 w-full h-full object-contain group-hover:scale-110 duration-700"
+                                  />
+                                  {/* گرادینت روی تصویر */}
+                                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent"></div>
+                                  {/* عنوان */}
+                                  <div className="absolute font-bold! bottom-0 right-0 left-0 p-4 lg:p-6 z-10">
+                                    <span className="text-white! inline-block relative text-lg lg:text-xl mb-2 line-clamp-2!">
+                                      {item.title}
+                                    </span>
+                                  </div>
+                                </div>
+                              }
+                            />
+                          </Link>
+                        </SwiperSlide>
+                      ))}
+                    </Swiper>
+                  ) : (
+                    <div className="flex items-center justify-center h-full bg-gray-50 rounded-3xl">
+                      <p className="text-gray-500">
+                        موردی برای نمایش وجود ندارد
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -140,7 +158,9 @@ function ComparisonSection({
                 </div>
 
                 <div className="mt-3" ref={compareCardRef}>
-                  {compare.length > 0 ? (
+                  {!isCalculated ? (
+                    <SkeletonCompareBox />
+                  ) : compare.length > 0 ? (
                     <Swiper
                       modules={[Autoplay, EffectFade]}
                       effect="fade"
@@ -175,7 +195,7 @@ function ComparisonSection({
                                       transform: "scale(1.1)",
                                     }}
                                   />
-                                  {/* تصویر اصلی با object-contain */}
+                                  {/* تصویر اصلی */}
                                   <img
                                     src={mainDomainOld + item.image}
                                     alt={item.title}
@@ -217,7 +237,9 @@ function ComparisonSection({
                 </div>
 
                 <div className="mt-3" ref={bestChoicesCardRef}>
-                  {bestChoices.length > 0 ? (
+                  {!isCalculated ? (
+                    <SkeletonCompareBox />
+                  ) : bestChoices.length > 0 ? (
                     <Swiper
                       modules={[Autoplay, EffectFade]}
                       effect="fade"
@@ -252,7 +274,7 @@ function ComparisonSection({
                                       transform: "scale(1.1)",
                                     }}
                                   />
-                                  {/* تصویر اصلی با object-contain */}
+                                  {/* تصویر اصلی */}
                                   <img
                                     src={mainDomainOld + item.image}
                                     alt={item.title}
@@ -289,7 +311,6 @@ function ComparisonSection({
 
       {/* استایل‌های سفارشی */}
       <style jsx global>{`
-        /* استایل‌های مشترک برای همه اسلایدرها */
         .news-fade-swiper,
         .compare-fade-swiper,
         .best-fade-swiper {
@@ -298,7 +319,6 @@ function ComparisonSection({
           border-radius: 1.5rem;
         }
 
-        /* تنظیمات افکت fade */
         .swiper-fade .swiper-slide {
           transition-property: opacity;
         }
@@ -307,7 +327,6 @@ function ComparisonSection({
           opacity: 1;
         }
 
-        /* حذف navigation و pagination */
         .news-fade-swiper .swiper-button-next,
         .news-fade-swiper .swiper-button-prev,
         .news-fade-swiper .swiper-pagination,
@@ -320,18 +339,34 @@ function ComparisonSection({
           display: none !important;
         }
 
-        /* تنظیمات برای Card و cover */
         .ant-card-cover {
           height: 100% !important;
         }
-        
+
         .ant-card-body {
           display: none !important;
         }
 
-        /* اطمینان از aspect ratio */
         .aspect-8\/6 {
           aspect-ratio: 8/6 !important;
+        }
+
+        @keyframes pulse {
+          0%,
+          100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
+          }
+        }
+
+        .animate-pulse {
+          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        .h-\[300px\] {
+          height: 300px !important;
         }
       `}</style>
     </section>

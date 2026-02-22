@@ -139,7 +139,7 @@ function SearchBoxHeader() {
 
   return (
     <div
-      className="hidden lg:block flex-1 relative w-full"
+      className="hidden lg:block! flex-1 relative w-full"
       ref={searchBoxRef}
     >
       <div className="bg-[#f1f2f4] rounded-lg px-4 py-2 flex items-center border border-transparent hover:border-gray-300 transition-all duration-300">

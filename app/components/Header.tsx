@@ -214,6 +214,7 @@ export default function Header({
     </div>
   );
 
+
   return (
     <div
       className={`sticky-header z-10001!  ${isSticky ? "sticky-active" : ""}`}
@@ -242,8 +243,11 @@ export default function Header({
               </div>
 
               {/* Desktop Menu */}
-              <div className="hidden lg:block  ">
-                <nav className="flex items-center space-x-1 space-x-reverse" aria-label="منوی اصلی">
+              <div className="hidden lg:block!  ">
+                <nav
+                  className="flex items-center space-x-1 space-x-reverse"
+                  aria-label="منوی اصلی"
+                >
                   {menuItems.length > 0 &&
                     menuItems.map((item, index) => (
                       <div key={index} className="relative group">
@@ -296,6 +300,7 @@ export default function Header({
             <div className="w-full! flex items-center">
               <div className="flex items-center lg:justify-between justify-end w-full gap-1">
                 {/* Search Box */}
+                
                 <SearchBoxHeader />
 
                 <div className="w-auto ">

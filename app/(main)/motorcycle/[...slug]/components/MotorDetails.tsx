@@ -461,7 +461,7 @@ const MotorDetails = ({
 
                   {/* اسکلتون برای تصاویر کوچک */}
                   <div className="product-gallery-thumbs mt-3 pb-10">
-                    <div className="gap-2 justify-center sm:flex hidden">
+                    <div className="gap-2 justify-center sm:flex! hidden">
                       {[...Array(5)].map((_, index) => (
                         <div key={index} className="w-1/5 h-20!">
                           <Skeleton.Image className="w-full! h-full! bg-slate-400" />

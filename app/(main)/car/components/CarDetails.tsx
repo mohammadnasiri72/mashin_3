@@ -266,7 +266,7 @@ const CarDetails = ({
                                 }
                                 className={`w-8 h-8 cursor-pointer flex items-center justify-center rounded-full transition-all duration-200 ${
                                   score <= userRatings[question.questionId]
-                                    ? "bg-[#ce1a2a] text-white"
+                                    ? "bg-[#ce1a2a] text-white!"
                                     : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                                 }`}
                               >
@@ -405,7 +405,7 @@ const CarDetails = ({
                 <div className="slider-productDetails h-full">
                   {/* تب‌های انتخاب در دسکتاپ (سمت چپ) */}
                   {isShowFilter && (
-                    <div className="group-hover:opacity-100 opacity-0 duration-300 hidden lg:flex absolute left-1 top-1 z-20 flex-col gap-2 bg-white/90 backdrop-blur-sm p-2 rounded-r-xl shadow-lg">
+                    <div className="group-hover:opacity-100 opacity-0 duration-300 hidden lg:flex! absolute left-1 top-1 z-20 flex-col gap-2 bg-white/90 backdrop-blur-sm p-2 rounded-r-xl shadow-lg">
                       <button
                         aria-label="نمای خارج خودرو"
                         onClick={() => {
@@ -431,7 +431,7 @@ const CarDetails = ({
                             <div
                               className={`absolute inset-0 bg-black/40 flex items-end justify-center pb-1  group-hover:opacity-100 transition-opacity ${selectedTab === 1 ? "opacity-100" : "opacity-0"}`}
                             >
-                              <span className="text-white text-xs font-bold">
+                              <span className="text-white! text-xs font-bold">
                                 خارج
                               </span>
                             </div>
@@ -463,7 +463,7 @@ const CarDetails = ({
                             <div
                               className={`absolute inset-0 bg-black/40 flex items-end justify-center pb-1  group-hover:opacity-100 transition-opacity ${selectedTab === 3 ? "opacity-100" : "opacity-0"}`}
                             >
-                              <span className="text-white text-xs font-bold">
+                              <span className="text-white! text-xs font-bold">
                                 داخل
                               </span>
                             </div>
@@ -559,11 +559,11 @@ const CarDetails = ({
                             setSelectedTab(null);
                           }
                         }}
-                        className={`cursor-pointer flex items-center gap-2 px-6 py-2  rounded-lg shadow-md transition-all duration-300 border border-gray-200 ${selectedTab === 1 ? "bg-[#ce1a2a] text-white" : "bg-white text-gray-800"}`}
+                        className={`cursor-pointer flex items-center gap-2 px-6 py-2  rounded-lg shadow-md transition-all duration-300 border border-gray-200 ${selectedTab === 1 ? "bg-[#ce1a2a] text-white!" : "bg-white text-gray-800"}`}
                       >
                         <span className="text-sm font-bold">خارج</span>
                         <span
-                          className={`text-xs px-2 py-0.5 rounded-full duration-300 ${selectedTab === 1 ? "bg-white text-[#ce1a2a]" : "bg-[#ce1a2a] text-white"}`}
+                          className={`text-xs px-2 py-0.5 rounded-full duration-300 ${selectedTab === 1 ? "bg-white text-[#ce1a2a]" : "bg-[#ce1a2a] text-white!"}`}
                         >
                           {Attachment.filter((img) => img.tabId === 1).length}
                         </span>
@@ -581,7 +581,7 @@ const CarDetails = ({
                       >
                         <span className="text-sm font-bold">داخل</span>
                         <span
-                          className={`text-xs px-2 py-0.5 rounded-full duration-300 ${selectedTab === 3 ? "bg-white text-[#ce1a2a]" : "bg-[#ce1a2a] text-white"}`}
+                          className={`text-xs px-2 py-0.5 rounded-full duration-300 ${selectedTab === 3 ? "bg-white text-[#ce1a2a]" : "bg-[#ce1a2a] text-white!"}`}
                         >
                           {Attachment.filter((img) => img.tabId === 3).length}
                         </span>
@@ -602,7 +602,7 @@ const CarDetails = ({
 
                   {/* اسکلتون برای تصاویر کوچک */}
                   <div className="product-gallery-thumbs mt-3 pb-10">
-                    <div className="gap-2 justify-center sm:flex hidden">
+                    <div className="gap-2 justify-center sm:flex! hidden">
                       {[...Array(5)].map((_, index) => (
                         <div key={index} className="w-1/5 h-20!">
                           <Skeleton.Image className="w-full! h-full! bg-slate-400" />

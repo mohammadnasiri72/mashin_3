@@ -299,7 +299,7 @@ export default function MyCommentsPage() {
             {selectedComments.length > 0 && (
               <button
                 onClick={handleDeleteSelected}
-                className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-xl hover:bg-red-600 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white! rounded-xl hover:bg-red-600 transition-colors"
               >
                 <HiOutlineTrash className="w-5 h-5" />
                 حذف ({selectedComments.length})
@@ -453,7 +453,7 @@ export default function MyCommentsPage() {
             <button className="px-3 py-1 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
               قبلی
             </button>
-            <button className="px-3 py-1 bg-blue-500 text-white rounded-lg">۱</button>
+            <button className="px-3 py-1 bg-blue-500 text-white! rounded-lg">۱</button>
             <button className="px-3 py-1 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
               ۲
             </button>

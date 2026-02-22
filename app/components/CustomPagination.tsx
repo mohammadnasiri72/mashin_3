@@ -132,7 +132,7 @@ const CustomPagination = ({
       </div>
 
       {/* اطلاعات صفحه‌ها */}
-      <div className="text-sm text-gray-500 hidden md:block">
+      <div className="text-sm text-gray-500 hidden md:block!">
         صفحه <span className="font-semibold">{currentPage}</span> از{" "}
         <span className="font-semibold">{totalPages}</span>
       </div>

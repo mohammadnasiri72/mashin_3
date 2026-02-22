@@ -75,7 +75,7 @@ export default function DashboardLayout({
         <aside
           className={`
                 sticky top-14 h-screen w-64 bg-white shadow-lg z-40 shrink-0
-                transform transition-transform duration-300 ease-in-out lg:block hidden
+                transform transition-transform duration-300 ease-in-out lg:block! hidden
             `}
         >
           <div className="h-full flex flex-col">

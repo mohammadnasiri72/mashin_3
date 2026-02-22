@@ -105,7 +105,7 @@ function BoxPodcasts({
               <div className="flex flex-wrap gap-3 justify-center">
                 <button
                   onClick={() => window.location.reload()}
-                  className="flex cursor-pointer items-center gap-2 bg-[#ce1a2a] text-white px-5 py-2.5 rounded-lg hover:bg-red-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  className="flex cursor-pointer items-center gap-2 bg-[#ce1a2a] text-white! px-5 py-2.5 rounded-lg hover:bg-red-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                 >
                   <FaPodcast />
                   <span>بارگذاری مجدد</span>

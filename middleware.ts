@@ -118,8 +118,8 @@ export async function middleware(request: NextRequest) {
     }
   } else if (pathname.startsWith("/motorcycle/")) {
     const decodedPathname = decodeURIComponent(pathname);
-    const id = Number(searchParams.get("id"));
-    if (id) {
+    const id = searchParams.get("id");
+    if (id && Number(id) > 0) {
       const data: ItemsId = await getItemId(Number(id));
 
       if (data?.url && data.url !== decodedPathname + `?id=${id}`) {
@@ -133,7 +133,12 @@ export async function middleware(request: NextRequest) {
     } else {
       try {
         const data: ItemsId | null = await getItemByUrl(decodedPathname);
-        if (data && data.id > 0 && id !== data?.id) {
+        if (!data) {
+          return NextResponse.redirect(
+            new URL(`/error?status=${404}`, request.url),
+            { status: 301 },
+          );
+        } else if (data && data.id > 0 && Number(id) !== data?.id) {
           return NextResponse.redirect(
             new URL((pathname + `?id=${data?.id}`).toLowerCase(), request.url),
             { status: 301 },

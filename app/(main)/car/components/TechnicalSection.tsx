@@ -86,7 +86,7 @@ const TechnicalSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
                   flex cursor-pointer items-center gap-2 px-4 py-2 rounded-t-lg font-medium transition-all duration-300 whitespace-nowrap
                   ${
                     activeCategory === category.title
-                      ? "bg-[#ce1a2a] text-white shadow-md"
+                      ? "bg-[#ce1a2a] text-white! shadow-md"
                       : "bg-gray-100 text-gray-700 hover:bg-gray-200"
                   }
                 `}

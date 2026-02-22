@@ -24,13 +24,16 @@ function CreativeCategoriesSection({
   education: Items[];
 }) {
   return (
-    <section className="mb-16 px-4 mx-auto max-w-7xl" aria-label="دسته‌بندی‌های خلاقانه">
+    <section
+      className="mb-16 px-4 mx-auto max-w-7xl"
+      aria-label="دسته‌بندی‌های خلاقانه"
+    >
       {/* گرید اصلی سه‌ستونه */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* ستون اول - مراکز خدمات خودرو (برندها) */}
         <div className="relative lg:col-span-4 bg-linear-to-br from-[#fff5f7] to-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-500">
           {/* هدر ستون */}
-          <div className="bg-[#ce1a2a] p-4 text-white relative overflow-hidden">
+          <div className="bg-[#ce1a2a] p-4 text-white! relative overflow-hidden">
             <div className="absolute -left-6 -top-6 w-24 h-24 bg-white/10 rounded-full"></div>
             <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full"></div>
             <h3 className="text-xl font-bold! relative z-10 flex items-center gap-2 text-white!">
@@ -52,6 +55,7 @@ function CreativeCategoriesSection({
                     src={mainDomainOld + brandsAuto[0].image}
                     alt={brandsAuto[0].title}
                     className="object-contain w-full h-full group-hover/item:scale-110 transition-transform duration-700"
+                    loading="lazy"
                   />
                 </div>
                 <div className="absolute inset-0 bg-linear-to-t from-[#333] via-transparent to-transparent opacity-0 group-hover/item:opacity-90 transition-opacity duration-500" />
@@ -96,6 +100,7 @@ function CreativeCategoriesSection({
                                   src={mainDomainOld + brand.image}
                                   alt={brand.title}
                                   className="object-contain w-full h-full group-hover/item:scale-110 transition-transform duration-700"
+                                  loading="lazy"
                                 />
                               </div>
                               <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent opacity-0 group-hover/item:opacity-90 transition-opacity duration-500" />
@@ -125,7 +130,7 @@ function CreativeCategoriesSection({
         {/* ستون دوم - پربازدیدترین خودروها */}
         <div className="relative lg:col-span-4 bg-linear-to-br from-[#f0f9ff] to-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-500">
           {/* هدر ستون */}
-          <div className="bg-[#0a5c8c] p-4 text-white relative overflow-hidden">
+          <div className="bg-[#0a5c8c] p-4 text-white! relative overflow-hidden">
             <div className="absolute -left-6 -top-6 w-24 h-24 bg-white/10 rounded-full"></div>
             <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full"></div>
             <h3 className="text-xl font-bold! text-white! relative z-10 flex items-center gap-2">
@@ -164,6 +169,7 @@ function CreativeCategoriesSection({
                             src={mainDomainOld + car.image}
                             alt={car.title}
                             className="object-contain w-full h-full group-hover/item:scale-110 transition-transform duration-700"
+                            loading="lazy"
                           />
                         </div>
                         <div className="flex-1">
@@ -201,7 +207,7 @@ function CreativeCategoriesSection({
         {/* ستون سوم - آموزش‌ها */}
         <div className="relative lg:col-span-4 bg-linear-to-br from-[#f5f3ff] to-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-500">
           {/* هدر ستون */}
-          <div className="bg-[#ce1a2a] p-4 text-white relative overflow-hidden">
+          <div className="bg-[#ce1a2a] p-4 text-white! relative overflow-hidden">
             <div className="absolute -left-6 -top-6 w-24 h-24 bg-white/10 rounded-full"></div>
             <div className="absolute -right-6 -bottom-6 w-32 h-32 bg-white/10 rounded-full"></div>
             <h3 className="text-xl font-bold! text-white! relative z-10 flex items-center gap-2">
@@ -224,6 +230,7 @@ function CreativeCategoriesSection({
                     src={mainDomainOld + education[0].image}
                     alt={education[0].title}
                     className="object-cover w-full h-full group-hover/item:scale-110 transition-transform duration-700"
+                    loading="lazy"
                   />
                 </div>
                 <div className="absolute inset-0 bg-linear-to-t from-[#333] via-transparent to-transparent opacity-90 transition-opacity duration-500" />
@@ -268,6 +275,7 @@ function CreativeCategoriesSection({
                                   src={mainDomainOld + brand.image}
                                   alt={brand.title}
                                   className="object-cover w-full h-full group-hover/item:scale-110 transition-transform duration-700"
+                                  loading="lazy"
                                 />
                               </div>
                               <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent opacity-90 transition-opacity duration-500" />

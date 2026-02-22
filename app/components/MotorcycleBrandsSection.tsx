@@ -85,7 +85,7 @@ const MotorcycleBrandsSection = ({ brands }: { brands: ItemsCategory[] }) => {
 
           {/* Pagination گروهی پویا - فقط زمانی نمایش داده شود که بیش از یک گروه وجود دارد */}
           {totalGroups > 1 && (
-            <div className="lg:flex hidden justify-end gap-2">
+            <div className="lg:flex! hidden justify-end gap-2">
               {Array.from({ length: totalGroups }, (_, index) => (
                 <button
                   key={index}
@@ -106,6 +106,7 @@ const MotorcycleBrandsSection = ({ brands }: { brands: ItemsCategory[] }) => {
               src="/images/gallery/motorcycle.png"
               alt="موتورسیکلت"
               className="w-80"
+              loading="lazy"
             />
           </div>
           <div className="w-full lg:w-2/3">
@@ -180,6 +181,7 @@ const MotorcycleBrandsSection = ({ brands }: { brands: ItemsCategory[] }) => {
                               src={mainDomainOld + brand.image}
                               alt={brand.title}
                               className="max-w-full max-h-full object-contain"
+                              loading="lazy"
                             />
                           </div>
                         </div>

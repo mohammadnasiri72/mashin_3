@@ -386,8 +386,8 @@ function CompareCars({
           }
           
           .navbar-tabs[style*="position: sticky"] {
-            position: relative !important;
-            top: auto !important;
+            position: sticky !important;
+            top: 115px !important;
           }
         }
 
