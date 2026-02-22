@@ -29,6 +29,7 @@ export default function RegisterLink() {
       placement="bottom"
     >
       <Link
+        aria-label="ثبت نام"
         href="/auth"
         onClick={(e) => {
           e.preventDefault();

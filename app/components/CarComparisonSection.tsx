@@ -346,11 +346,11 @@ const CarComparisonSection = ({
                 <SwiperSlide key={item.id}>
                   <div className="bg-white overflow-hidden rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 h-full">
                     <Link href={item.url}>
-                      <div className="relative w-full pt-[75%] bg-gray-100 ">
+                      <div className="relative w-full pt-[75%] bg-gray-100">
                         <OptimizedImage
                           src={mainDomainOld + item.image}
                           alt={item.title}
-                          className="object-contain"
+                          className="object-cover"
                           sizes="(max-width: 768px) 100vw, 25vw"
                           loading="lazy"
                           onLoad={handleImageLoad}

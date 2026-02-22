@@ -50,9 +50,9 @@ const NewsListSection = ({ news }: { news: Items[] }) => {
                   <div className="flex-1">
                     <div className="flex flex-col justify-between items-start w-full h-full">
                       <div>
-                        <h4 className="font-bold! text-[#222]! mb-2 line-clamp-2 text-lg group-hover:text-white! duration-300">
+                        <h3 className="font-bold! text-[#222]! mb-2 line-clamp-2 text-lg group-hover:text-white! duration-300">
                           {item.title}
-                        </h4>
+                        </h3>
                         {item.body && (
                           <div className="text-gray-600 text-xs mb-3 line-clamp-3 mt-1 text-justify group-hover:text-white! duration-300">
                             {htmlToPlainText(item.body)}

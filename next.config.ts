@@ -21,6 +21,11 @@ const nextConfig: NextConfig = {
         hostname: "api3.aitest2.ir",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "m3.aitest2.ir/",
+        pathname: "/**",
+      },
     ],
   },
   async rewrites() {

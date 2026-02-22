@@ -31,9 +31,11 @@ export default function OptimizedImage({
 }: OptimizedImageProps) {
   if (!src) return null;
 
+  const cleanSrc = src.replace(/([^:]\/)\/+/g, "$1");
+
   return (
     <Image
-      src={src}
+      src={cleanSrc}
       alt={alt}
       fill={fill}
       className={className}
@@ -43,7 +45,7 @@ export default function OptimizedImage({
       onLoad={onLoad}
       onError={onError}
       quality={80}
+      unoptimized={true}
     />
   );
 }
-

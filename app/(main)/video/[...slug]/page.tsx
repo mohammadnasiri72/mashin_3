@@ -4,6 +4,7 @@ import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getItemId } from "@/services/Item/ItemId";
 import { mainDomainOld } from "@/utils/mainDomain";
 import VideoDetails from "./components/VideoDetails";
+import { getAttachment } from "@/services/Attachment/Attachment";
 
 export async function generateMetadata({
   params,
@@ -69,6 +70,9 @@ async function pageVideo({
   const id = Number(param.slug[0]);
   const id2 = Number(searchParam.id);
   const video: ItemsId = await getItemId(id || id2);
+  const attachment: ItemsAttachment[] = await getAttachment(id || id2);
+
+  
 
   const idsCars = video.properties.find(
     (e) => e.propertyKey === "p1027_relatedcar",
@@ -140,6 +144,7 @@ async function pageVideo({
         relatedCars={relatedCars}
         relatedPodcasts={relatedPodcasts}
         relatedCompares={relatedCompares}
+        attachment={attachment}
       />
     </>
   );

@@ -21,6 +21,7 @@ function VideoDetails({
   relatedCars,
   relatedPodcasts,
   relatedCompares,
+  attachment,
 }: {
   video: ItemsId;
   popularVideos: Items[];
@@ -31,6 +32,7 @@ function VideoDetails({
   relatedCars: ItemsId[];
   relatedPodcasts: ItemsId[];
   relatedCompares: ItemsId[];
+  attachment:ItemsAttachment[]
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isNavbarSticky, setIsNavbarSticky] = useState(false);
@@ -278,7 +280,7 @@ function VideoDetails({
             <div className="space-y-8">
               {/* بخش پخش ویدئو */}
               <div id="player" className="section-anchor" ref={playerRef}>
-                <VideoPlayer video={video} />
+                <VideoPlayer video={video} attachment={attachment}/>
               </div>
 
               {/* بخش ویدئوهای مرتبط */}
