@@ -19,6 +19,7 @@ const Footer = ({
   setting: SettingType[];
   Social: Items[];
 }) => {
+
   const logoSrc: string | undefined = setting.find(
     (e) => e.propertyKey === "site_logo",
   )?.propertyValue;
@@ -118,33 +119,6 @@ const Footer = ({
                 </div>
               </div>
 
-              {/* Footer Column - Social Media (Mobile) */}
-              <div className="footer-column col-span-12 sm:col-span-6 lg:hidden block">
-                <h4 className="text-black! text-lg font-bold! mb-4 sm:text-start text-center">
-                  شبکه های اجتماعی
-                </h4>
-
-                <div>
-                  <ul className="social-medias grid grid-cols-2 gap-2">
-                    {Social.map((social) => (
-                      <li key={social.id}>
-                        <Link
-                          href={social.sourceLink}
-                          className="bg-gray-100 rounded-lg p-2 flex items-center justify-center hover:bg-gray-200 transition-colors"
-                        >
-                          <img
-                            src={mainDomainOld + social.image}
-                            alt={social.title}
-                            className="object-contain w-10 h-10"
-                            loading="lazy"
-                          />
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
               {/* Footer Column - Quick Links */}
               <nav
                 className="footer-column col-span-12 lg:col-span-6 ft-lists-wrap"
@@ -207,7 +181,7 @@ const Footer = ({
 
               {/* Footer Column - Social Media (Desktop) */}
               <div className="footer-column col-span-12 md:col-span-2 lg:col-span-2 lg:block! hidden">
-                <h4 className="text-gray-900 text-lg font-bold mb-4">
+                <h4 className="text-black text-[16px] font-bold! mb-4! sm:text-start text-center">
                   شبکه های اجتماعی
                 </h4>
 
