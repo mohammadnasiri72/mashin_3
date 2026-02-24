@@ -24,8 +24,8 @@ const HeroSection = ({
             </h3>
           </div>
           {/* Breadcrumb */}
-          <nav className="mt-6 sm:block! hidden">
-            <ol className="flex items-center space-x-2 space-x-reverse flex-wrap">
+          <nav className="mt-6">
+            <ol className="flex items-center flex-wrap">
               <li>
                 <Link
                   href={"/"}
@@ -38,7 +38,7 @@ const HeroSection = ({
                 detailsCar.breadcrumb.length > 0 &&
                 detailsCar.breadcrumb.map((b, i) => (
                   <li key={b.href}>
-                    <span className="mx-2">/</span>
+                    <span className="sm:mx-2 mx-1">/</span>
                     <Link
                       href={b.href}
                       className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
@@ -51,6 +51,8 @@ const HeroSection = ({
           </nav>
         </div>
       </div>
+
+     
 
       <style jsx global>{`
         .breadcrumb-separator {

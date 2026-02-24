@@ -3,13 +3,16 @@
 import ModalLogin from "@/app/components/ModalLogin";
 import { setRedirectRegister } from "@/redux/slice/redirectRegister";
 import { RootState } from "@/redux/store";
+import { getComment } from "@/services/Comment/Comment";
+import { DisLikeComment } from "@/services/Comment/DisLikeComment";
+import { LikeComment } from "@/services/Comment/LikeComment";
 import { postComment } from "@/services/Comment/postComment";
 import { formatPersianDate, Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message, Spin } from "antd";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { FaFlag, FaReply, FaThumbsDown, FaThumbsUp } from "react-icons/fa6";
+import { FaReply, FaThumbsDown, FaThumbsUp } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -53,7 +56,7 @@ interface CommentTreeNode extends Comment {
 }
 
 interface CommentsSectionProps {
-  whichcars: ItemsId;
+  details: ItemsId;
   comments: CommentResponse[];
   id: number;
 }
@@ -76,6 +79,68 @@ const CommentItem: React.FC<CommentItemProps> = ({
   Toast,
   depth = 0,
 }) => {
+  const [likes, setLikes] = useState(comment.pos || 0);
+  const [dislikes, setDislikes] = useState(Number(comment.neg) || 0);
+  const [isLiking, setIsLiking] = useState(false);
+  const [isDisliking, setIsDisliking] = useState(false);
+
+  const handleLikeClick = async () => {
+    if (!token) {
+      setOpenLogin(true);
+      Toast.fire({
+        icon: "error",
+        title: "لطفا ابتدا وارد حساب کاربری خود شوید",
+      });
+      return;
+    }
+    setIsLiking(true);
+    try {
+      await LikeComment(comment.id, token);
+      Toast.fire({
+        icon: "success",
+        title: "با موفقیت ثبت شد",
+      });
+      // فقط اگه درخواست موفق بود، عدد لایک افزایش پیدا کنه
+      setLikes((prev) => prev + 1);
+    } catch (error: any) {
+      Toast.fire({
+        icon: "warning",
+        title: `${error?.response?.data ? error.response.data : "خطا در لایک کامنت"}`,
+      });
+    } finally {
+      setIsLiking(false);
+    }
+  };
+
+  const handleDislikeClick = async () => {
+    if (!token) {
+      setOpenLogin(true);
+      Toast.fire({
+        icon: "error",
+        title: "لطفا ابتدا وارد حساب کاربری خود شوید",
+      });
+      return;
+    }
+
+    setIsDisliking(true);
+    try {
+      await DisLikeComment(comment.id, token);
+      Toast.fire({
+        icon: "success",
+        title: "با موفقیت ثبت شد",
+      });
+      // فقط اگه درخواست موفق بود، عدد دیسلایک افزایش پیدا کنه
+      setDislikes((prev) => prev + 1);
+    } catch (error: any) {
+      Toast.fire({
+        icon: "warning",
+        title: `${error?.response?.data ? error.response.data : "خطا در لایک کامنت"}`,
+      });
+    } finally {
+      setIsDisliking(false);
+    }
+  };
+
   return (
     <div className="comment-item">
       <div
@@ -103,14 +168,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
         </div>
 
         <div className="cm_btm flex justify-between items-center">
-          <a
-            href="#"
-            className="cm_report flex items-center text-xs text-gray-500 bg-white px-3 py-1 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors"
-          >
-            <FaFlag className="ml-1 text-red-500 text-lg" />
-            گزارش مشکل
-          </a>
-
           <div className="cm_buttons flex items-center gap-2">
             {comment.parentId === -1 && (
               <button
@@ -128,26 +185,36 @@ const CommentItem: React.FC<CommentItemProps> = ({
                 }}
                 className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg"
               >
-                <FaReply className="mr-1 text-purple-500 text-lg group-hover:-rotate-360 duration-500" />
+                <span className="font-bold!">پاسخ</span>
+                <FaReply className="mr-1 text-purple-500 text-xs group-hover:-rotate-360 duration-500" />
               </button>
             )}
             <button
+              onClick={handleDislikeClick}
+              disabled={isDisliking}
               aria-label="نپسندیدن"
-              className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors"
+              className={`cursor-pointer group flex items-center text-xs p-3 rounded-lg transition-colors text-red-600 bg-red-50  ${isDisliking ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              <FaThumbsDown className="mr-1 group-hover:animate-pulse text-red-500 text-lg" />
+              <span className="font-bold!">{dislikes}</span>
+              <FaThumbsDown
+                className={`mr-1 text-xs text-red-600" : "text-red-500 ${isDisliking ? "animate-pulse" : "group-hover:animate-pulse"}`}
+              />
             </button>
 
             <button
+              onClick={handleLikeClick}
+              disabled={isLiking}
               aria-label="پسندیدن"
-              className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg hover:bg-green-50 hover:text-green-600 transition-colors"
+              className={`cursor-pointer group flex items-center text-xs p-3 rounded-lg transition-colors text-green-600 bg-green-50 ${isLiking ? "opacity-50 cursor-not-allowed" : ""}`}
             >
-              <FaThumbsUp className="mr-1 group-hover:animate-pulse text-green-500 text-lg" />
+              <span className="font-bold!">{likes}</span>
+              <FaThumbsUp
+                className={`mr-1 text-xs text-green-600  ${isLiking ? "animate-pulse" : "group-hover:animate-pulse"}`}
+              />
             </button>
           </div>
         </div>
       </div>
-
       {/* نمایش زیرمجموعه‌ها */}
       {comment.children && comment.children.length > 0 && (
         <div className="replies-container">
@@ -168,8 +235,8 @@ const CommentItem: React.FC<CommentItemProps> = ({
   );
 };
 
-const WhichcarsComments: React.FC<CommentsSectionProps> = ({
-  whichcars,
+const CommentsSection: React.FC<CommentsSectionProps> = ({
+  details,
   comments,
   id,
 }) => {
@@ -178,6 +245,12 @@ const WhichcarsComments: React.FC<CommentsSectionProps> = ({
     useState<boolean>(false);
   const [openLogin, setOpenLogin] = useState<boolean>(false);
   const [parentId, setParentId] = useState<number>(0);
+  const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  const [pageIndex, setPageIndex] = useState<number>(1);
+  const [pageSize] = useState<number>(20);
+  const [allComments, setAllComments] = useState<Comment[]>(comments);
+  const [totalComments, setTotalComments] = useState<number>(0);
+
   const token = useSelector((state: RootState) => state.token.token);
   const user = Cookies.get("user");
 
@@ -192,6 +265,12 @@ const WhichcarsComments: React.FC<CommentsSectionProps> = ({
       }
     }
   }, [user]);
+
+  useEffect(() => {
+    if (comments.length > 0) {
+      setTotalComments(comments[0].total || 0);
+    }
+  }, [comments]);
 
   const [form] = Form.useForm();
 
@@ -215,6 +294,32 @@ const WhichcarsComments: React.FC<CommentsSectionProps> = ({
         const response = await postComment(data);
         form.resetFields();
         setOpenModalCommentReplay(false);
+
+        // بعد از ثبت کامنت جدید، کامنت‌ها را از صفحه اول مجدد بارگیری کنید
+        setPageIndex(1);
+        setLoadingMore(true);
+        try {
+          const newComments = await getComment({
+            id: Number(id),
+            langCode: "fa",
+            type: 0,
+            pageSize: 20,
+            pageIndex: 1,
+          });
+          setAllComments(newComments);
+          if (newComments.length > 0) {
+            setTotalComments(newComments[0].total || 0);
+          }
+        } catch (error) {
+          console.error("Error refreshing comments:", error);
+          Toast.fire({
+            icon: "error",
+            title: "خطا در دریافت نظرات جدید",
+          });
+        } finally {
+          setLoadingMore(false);
+        }
+
         Toast.fire({
           icon: "success",
           title: "کامنت شما ثبت شد لطفا منتظر تایید ادمین بمانید",
@@ -234,13 +339,45 @@ const WhichcarsComments: React.FC<CommentsSectionProps> = ({
     }
   };
 
+  // تابع ساده برای بارگیری کامنت‌های بیشتر
+  const handleLoadMore = async () => {
+    if (loadingMore) return;
+
+    setLoadingMore(true);
+    try {
+      const nextPageIndex = pageIndex + 1;
+
+      const response = await getComment({
+        id: Number(id),
+        langCode: "fa",
+        type: 0,
+        pageSize: pageSize,
+        pageIndex: nextPageIndex,
+      });
+
+      if (response.length > 0) {
+        // اضافه کردن کامنت‌های جدید به کامنت‌های موجود
+        setAllComments((prev) => [...prev, ...response]);
+        setPageIndex(nextPageIndex);
+      }
+    } catch (error) {
+      console.error("Error loading more comments:", error);
+      Toast.fire({
+        icon: "error",
+        title: "خطا در دریافت نظرات بیشتر",
+      });
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
   // تبدیل کامنت‌ها به ساختار درختی
   const commentTree = useMemo<CommentTreeNode[]>(() => {
     const commentMap = new Map<number, CommentTreeNode>();
     const roots: CommentTreeNode[] = [];
 
     // اول همه کامنت‌ها رو توی مپ قرار می‌دیم
-    comments.forEach((comment: any) => {
+    allComments.forEach((comment: any) => {
       commentMap.set(comment.id, {
         ...comment,
         children: [],
@@ -248,7 +385,7 @@ const WhichcarsComments: React.FC<CommentsSectionProps> = ({
     });
 
     // حالا هر کامنت رو به پدرش وصل می‌کنیم
-    comments.forEach((comment: any) => {
+    allComments.forEach((comment: any) => {
       const node = commentMap.get(comment.id);
 
       if (!node) return;
@@ -282,12 +419,17 @@ const WhichcarsComments: React.FC<CommentsSectionProps> = ({
     return roots.sort(
       (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
     );
-  }, [comments]);
+  }, [allComments]);
 
   const handleReplyClick = (commentId: number) => {
     setParentId(commentId);
     setOpenModalCommentReplay(true);
   };
+
+ 
+
+  // بررسی آیا کامنت بیشتری برای نمایش وجود دارد یا خیر
+  const hasMoreComments = totalComments > allComments.length;
 
   // ذخیره url در ریداکس برای بازگشت
   const pathname = usePathname();
@@ -306,9 +448,12 @@ const WhichcarsComments: React.FC<CommentsSectionProps> = ({
   return (
     <>
       <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
+        <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
           <strong className="text-red-600">نظرات </strong>
-          درمورد {whichcars.sourceName} {whichcars.title}
+          درمورد {details.sourceName} {details.title}
+          <span className="text-sm font-normal text-gray-500 mr-2">
+            ({totalComments} نظر)
+          </span>
         </h3>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
@@ -388,17 +533,45 @@ const WhichcarsComments: React.FC<CommentsSectionProps> = ({
           <div className="lg:col-span-8">
             <div className="comments-area space-y-4">
               {commentTree.length > 0 ? (
-                commentTree.map((comment) => (
-                  <CommentItem
-                    key={comment.id}
-                    comment={comment}
-                    onReply={handleReplyClick}
-                    token={token}
-                    setOpenLogin={setOpenLogin}
-                    Toast={Toast}
-                    depth={0}
-                  />
-                ))
+                <>
+                  {commentTree.map((comment) => (
+                    <CommentItem
+                      key={comment.id}
+                      comment={comment}
+                      onReply={handleReplyClick}
+                      token={token}
+                      setOpenLogin={setOpenLogin}
+                      Toast={Toast}
+                      depth={0}
+                    />
+                  ))}
+
+                  {/* دکمه نمایش بیشتر */}
+                  {hasMoreComments && (
+                    <div className="text-center mt-6 pt-4 border-t border-gray-200">
+                      <button
+                        aria-label="نمایش نظرات بیشتر"
+                        onClick={handleLoadMore}
+                        disabled={loadingMore}
+                        className="min-w-48 cursor-pointer bg-white hover:bg-gray-50 border border-red-200 text-red-600 hover:text-red-700 hover:border-red-300 transition-all py-2 px-6 rounded-lg font-medium"
+                      >
+                        {loadingMore ? (
+                          <>
+                            <Spin size="small" className="ml-2" />
+                            در حال بارگذاری...
+                          </>
+                        ) : (
+                          <>
+                            نمایش نظرات بیشتر
+                            <span className="mr-2 text-sm text-gray-500">
+                              ({pageSize * pageIndex} از {totalComments})
+                            </span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   هنوز دیدگاهی ثبت نشده است. اولین نفری باشید که دیدگاه می‌دهد!
@@ -544,4 +717,4 @@ const WhichcarsComments: React.FC<CommentsSectionProps> = ({
   );
 };
 
-export default WhichcarsComments;
+export default CommentsSection;

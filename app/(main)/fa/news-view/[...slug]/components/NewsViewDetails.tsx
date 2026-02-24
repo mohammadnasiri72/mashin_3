@@ -2,7 +2,6 @@
 
 import { Card, Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
-import CommentsSectionNews from "./CommentsSectionNews";
 import NewsContentSection from "./NewsContentSection";
 import NewsGallerySection from "./NewsGallerySection";
 import NewsRelatedSection from "./NewsRelatedSection";
@@ -11,6 +10,7 @@ import HeroSectionNews from "./HeroSectionNews";
 import CarsRelatedSection from "./CarsRelatedSection";
 import VideosRelatedSection from "./VideosRelatedSection";
 import VoicesRelatedSection from "./VoicesRelatedSection";
+import CommentsSection from "@/app/components/CommentsSection";
 
 function NewsViewDetails({
   detailsNews,
@@ -71,7 +71,16 @@ function NewsViewDetails({
       window.removeEventListener("resize", checkHeights);
       clearTimeout(timer);
     };
-  }, [detailsNews, Attachment, relatedNews, relatedCars, relatedVideos, relatedVoices, popularNews, banner]);
+  }, [
+    detailsNews,
+    Attachment,
+    relatedNews,
+    relatedCars,
+    relatedVideos,
+    relatedVoices,
+    popularNews,
+    banner,
+  ]);
 
   // هندل کردن اسکرول و sticky navbar
   useEffect(() => {
@@ -246,16 +255,16 @@ function NewsViewDetails({
         ref={navbarRef}
         className="navbar-tabs w-full px-2 mt-4"
         style={{
-          position: 'sticky',
-          top: isNavbarSticky ? '112px' : 'auto',
+          position: "sticky",
+          top: isNavbarSticky ? "112px" : "auto",
           left: 0,
           right: 0,
-          background: isNavbarSticky ? 'white' : 'transparent',
-          boxShadow: isNavbarSticky ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
-          paddingTop: isNavbarSticky ? '8px' : '0',
-          paddingBottom: isNavbarSticky ? '8px' : '0',
-          transition: 'all 0.3s ease',
-          zIndex: 1000
+          background: isNavbarSticky ? "white" : "transparent",
+          boxShadow: isNavbarSticky ? "0 4px 12px rgba(0,0,0,0.1)" : "none",
+          paddingTop: isNavbarSticky ? "8px" : "0",
+          paddingBottom: isNavbarSticky ? "8px" : "0",
+          transition: "all 0.3s ease",
+          zIndex: 1000,
         }}
       >
         <Card
@@ -302,15 +311,11 @@ function NewsViewDetails({
 
               {/* بخش اخبار مرتبط */}
               {relatedNews.length > 0 && (
-                <div
-                  id="related"
-                  className="section-anchor"
-                  ref={relatedRef}
-                >
+                <div id="related" className="section-anchor" ref={relatedRef}>
                   <NewsRelatedSection relatedNews={relatedNews} />
                 </div>
               )}
-              
+
               {/* بخش خودروهای مرتبط */}
               {relatedCars.length > 0 && (
                 <div
@@ -321,7 +326,7 @@ function NewsViewDetails({
                   <CarsRelatedSection relatedCars={relatedCars} />
                 </div>
               )}
-              
+
               {/* بخش ویدئوهای مرتبط */}
               {relatedVideos.length > 0 && (
                 <div
@@ -332,7 +337,7 @@ function NewsViewDetails({
                   <VideosRelatedSection relatedVideos={relatedVideos} />
                 </div>
               )}
-              
+
               {/* بخش پادکست‌های مرتبط */}
               {relatedVoices.length > 0 && (
                 <div
@@ -361,11 +366,7 @@ function NewsViewDetails({
 
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor mt-8" ref={commentsRef}>
-          <CommentsSectionNews
-            detailsNews={detailsNews}
-            comments={comments}
-            id={id}
-          />
+          <CommentsSection details={detailsNews} comments={comments} id={id} />
         </div>
       </div>
 
@@ -374,12 +375,12 @@ function NewsViewDetails({
           transition: all 0.3s ease;
           z-index: 1000;
         }
-        
+
         .navbar-tabs .ant-card-body {
           padding: 0 !important;
           margin: 0 !important;
         }
-        
+
         .news-details-tabs .ant-tabs-nav {
           margin: 0 !important;
         }
@@ -437,7 +438,7 @@ function NewsViewDetails({
             bottom: auto !important;
             align-self: auto !important;
           }
-          
+
           .navbar-tabs[style*="position: sticky"] {
             position: sticky !important;
             top: 115px !important;

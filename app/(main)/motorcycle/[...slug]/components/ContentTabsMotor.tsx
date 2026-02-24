@@ -8,7 +8,7 @@ import GallerySection from "./GallerySection";
 import ReviewSection from "./ReviewSection";
 import Sidebar from "./Sidebar";
 import TechnicalSection from "./TechnicalSection";
-import CommentsSection from "./CommentsSection";
+import CommentsSection from "@/app/components/CommentsSection";
 
 interface SectionRefs {
   [key: string]: React.RefObject<HTMLDivElement | null>;
@@ -317,7 +317,7 @@ const ContentTabsMotor = ({
         ref={commentsRef}
       >
         <CommentsSection
-          detailsMotorcycle={detailsMotorcycle}
+          details={detailsMotorcycle}
           comments={comments}
           id={id}
         />

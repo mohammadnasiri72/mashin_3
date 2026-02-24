@@ -25,7 +25,6 @@ import Link from "next/link";
 import { FaCalendarDays, FaCodeCompare, FaCommentDots } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 
-
 const CarDetails = ({
   Attachment,
   detailsCar,
@@ -327,8 +326,8 @@ const CarDetails = ({
                         </>
                       ) : (
                         <>
-                          <FaCommentDots className="ml-2" />
-                          ثبت نظر و امتیاز
+                          <FaStar className="ml-2" />
+                          ثبت امتیاز
                         </>
                       )}
                     </button>
@@ -345,11 +344,11 @@ const CarDetails = ({
                             {rating.questionTitle}
                           </span>
                           <span className="text-[#ce1a2a] font-bold">
-                            {toPersianNumbers(rating.avgScore)}/۱۰
+                            {toPersianNumbers(rating.avgScore)}
                           </span>
                         </div>
                         <div className="flex gap-1">
-                          {[...Array(10)].map((_, i) => (
+                          {/* {[...Array(10)].map((_, i) => (
                             <div
                               key={i}
                               className={`h-2 flex-1 rounded-full ${
@@ -358,19 +357,41 @@ const CarDetails = ({
                                   : "bg-[#e7abb1]"
                               }`}
                             ></div>
-                          ))}
+                          ))} */}
+                          {[...Array(10)].map((_, i) => {
+                            // محاسبه مقدار پر شدن برای این خانه
+                            const fillPercentage = Math.min(
+                              1,
+                              Math.max(0, rating.avgScore - i),
+                            );
+
+                            return (
+                              <div
+                                key={i}
+                                className="h-2 flex-1 rounded-full relative overflow-hidden bg-[#e7abb1]"
+                              >
+                                <div
+                                  className="absolute inset-0 bg-[#ce1a2a] rounded-full"
+                                  style={{
+                                    width: `${Math.min(100, Math.max(0, fillPercentage * 100))}%`,
+                                    transition: "width 0.3s ease",
+                                  }}
+                                />
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
                     ))}
                   </div>
                   <div className="pr-2">
                     <button
-                      aria-label="نظر دادن"
+                      aria-label="ثبت امتیاز"
                       onClick={() => setIsRatingMode(true)}
                       className="mt-4 md:mt-0 mr-2 duration-300 rounded-lg bg-[#ce1a2a] hover:bg-red-700 text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
                     >
-                      <FaCommentDots className="ml-2" />
-                      نظر دادن
+                      <FaStar className="ml-2" />
+                      ثبت امتیاز
                     </button>
                   </div>
                 </div>
@@ -378,23 +399,23 @@ const CarDetails = ({
             </div>
           </div>
 
-          <div className="lg:col-span-5 lg:-mt-[40%] mt-10 ">
+          <div className="lg:col-span-5 lg:-mt-[38%] ">
             <div className="relative group">
               {/* Quick Actions */}
-              <div className="lg:absolute lg:left-full lg:translate-x-0 -translate-y-1 lg:translate-y-0 lg:top-0 lg:mr-3 lg:space-y-3 z-10 lg:z-0 flex lg:block flex-wrap gap-3">
+              <div className="absolute lg:left-full lg:translate-x-0 -translate-y-1 lg:translate-y-0 lg:top-0 lg:mr-3 lg:space-y-3 z-10 lg:z-0 flex lg:block lg:flex-wrap justify-between lg:w-auto w-full gap-3">
                 <Link
                   href={`/compare/${detailsCar.id}`}
-                  className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap block h-8 w-full sm:w-auto"
+                  className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap block h-8 w-auto!"
                 >
                   <FaCodeCompare className="inline ml-1" />
                   مقایسه کنید
                 </Link>
-                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap h-8 w-full sm:w-auto">
+                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap h-8 w-auto!">
                   <FaStar className="inline ml-1" />
                   امتیاز کاربران
                   {pollData.pollScore > 0 ? `${pollData.pollScore} از ۱۰` : ""}
                 </div>
-                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap h-8 w-full sm:w-auto">
+                <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap h-8 w-auto lg:block hidden">
                   <FaCalendarDays className="inline ml-1" />
                   {createpublishCode(detailsCar.publishCode)}
                 </div>
@@ -499,7 +520,7 @@ const CarDetails = ({
                               filter: "blur(8px)",
                               transform: "scale(1.1)",
                             }}
-                          /> 
+                          />
 
                           <img
                             className="w-full h-full border-4! border-[#ce1a2a]! object-contain overflow-hidden relative z-50"

@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "m3.aitest2.ir",
+        hostname: "m3.aitest2.ir/",
         pathname: "/**",
       },
     ],
@@ -60,3 +60,6 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+
+

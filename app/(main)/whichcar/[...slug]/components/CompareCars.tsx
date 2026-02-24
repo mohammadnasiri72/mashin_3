@@ -3,13 +3,13 @@
 import { Card, Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
 // import RelatedVideos from "./RelatedVideos";
+import CommentsSection from "@/app/components/CommentsSection";
 import CompareContent from "./CompareContent";
 import HeroSectionWhichcars from "./HeroSectionWhichcars";
-import SideBarCompareCars from "./SideBarCompareCars";
-import WhichcarsComments from "./WhichcarsComments";
+import RelatedCompare from "./RelatedCompare";
 import RelatedVideosCompare from "./RelatedVideosCompare";
 import RelatedVoicesCompare from "./RelatedVoicesCompare";
-import RelatedCompare from "./RelatedCompare";
+import SideBarCompareCars from "./SideBarCompareCars";
 
 function CompareCars({
   whichcars,
@@ -66,7 +66,15 @@ function CompareCars({
       window.removeEventListener("resize", checkHeights);
       clearTimeout(timer);
     };
-  }, [whichcars, dataCompare, ralatedComparisons, relatedVideos, relatedVoices, popularComparisons, banner]);
+  }, [
+    whichcars,
+    dataCompare,
+    ralatedComparisons,
+    relatedVideos,
+    relatedVoices,
+    popularComparisons,
+    banner,
+  ]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -217,16 +225,16 @@ function CompareCars({
         ref={navbarRef}
         className="navbar-tabs w-full px-2 mt-4 mb-8"
         style={{
-          position: 'sticky',
-          top: isNavbarSticky ? '112px' : 'auto',
+          position: "sticky",
+          top: isNavbarSticky ? "112px" : "auto",
           left: 0,
           right: 0,
-          background: isNavbarSticky ? 'white' : 'transparent',
-          boxShadow: isNavbarSticky ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
-          paddingTop: isNavbarSticky ? '8px' : '0',
-          paddingBottom: isNavbarSticky ? '8px' : '0',
-          transition: 'all 0.3s ease',
-          zIndex: 1000
+          background: isNavbarSticky ? "white" : "transparent",
+          boxShadow: isNavbarSticky ? "0 4px 12px rgba(0,0,0,0.1)" : "none",
+          paddingTop: isNavbarSticky ? "8px" : "0",
+          paddingBottom: isNavbarSticky ? "8px" : "0",
+          transition: "all 0.3s ease",
+          zIndex: 1000,
         }}
       >
         <Card
@@ -256,7 +264,10 @@ function CompareCars({
             <div className="space-y-8">
               {/* بخش محتوای اصلی مقایسه */}
               <div id="content" className="section-anchor" ref={contentRef}>
-                <CompareContent whichcars={whichcars} dataCompare={dataCompare} />
+                <CompareContent
+                  whichcars={whichcars}
+                  dataCompare={dataCompare}
+                />
               </div>
 
               {/* بخش مقایسه های مرتبط */}
@@ -265,7 +276,7 @@ function CompareCars({
                   <RelatedCompare ralatedComparisons={ralatedComparisons} />
                 </div>
               )}
-              
+
               {/* بخش ویدئو های مرتبط */}
               {relatedVideos.length > 0 && (
                 <div
@@ -276,7 +287,7 @@ function CompareCars({
                   <RelatedVideosCompare relatedVideos={relatedVideos} />
                 </div>
               )}
-              
+
               {/* بخش پادکست های مرتبط */}
               {relatedVoices.length > 0 && (
                 <div
@@ -308,11 +319,7 @@ function CompareCars({
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor" ref={commentsRef}>
           {whichcars && (
-            <WhichcarsComments
-              whichcars={whichcars}
-              comments={comments}
-              id={id}
-            />
+            <CommentsSection details={whichcars} comments={comments} id={id} />
           )}
         </div>
       </div>
@@ -322,12 +329,12 @@ function CompareCars({
           transition: all 0.3s ease;
           z-index: 1000;
         }
-        
+
         .navbar-tabs .ant-card-body {
           padding: 0 !important;
           margin: 0 !important;
         }
-        
+
         .compare-cars-tabs .ant-tabs-nav {
           margin: 0 !important;
         }
@@ -384,7 +391,7 @@ function CompareCars({
             bottom: auto !important;
             align-self: auto !important;
           }
-          
+
           .navbar-tabs[style*="position: sticky"] {
             position: sticky !important;
             top: 115px !important;

@@ -1,15 +1,15 @@
 "use client";
 
+import CommentsSection from "@/app/components/CommentsSection";
 import { Card, Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
-import RelatedVideos from "./RelatedVideos";
-import SidebarVideo from "./SideBarVideo";
-import VideoComments from "./VideoComments";
-import VideoPlayer from "./VideoPlayer";
 import HeroSectionVideo from "./HeroSectionVideo";
 import RelatedCarsVideos from "./RelatedCarsVideos";
-import RelatedPodcastsVideos from "./relatedPodcastsVideos";
 import RelatedComparesVideos from "./RelatedComparesVideos";
+import RelatedPodcastsVideos from "./relatedPodcastsVideos";
+import RelatedVideos from "./RelatedVideos";
+import SidebarVideo from "./SideBarVideo";
+import VideoPlayer from "./VideoPlayer";
 
 function VideoDetails({
   video,
@@ -32,7 +32,7 @@ function VideoDetails({
   relatedCars: ItemsId[];
   relatedPodcasts: ItemsId[];
   relatedCompares: ItemsId[];
-  attachment:ItemsAttachment[]
+  attachment: ItemsAttachment[];
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isNavbarSticky, setIsNavbarSticky] = useState(false);
@@ -280,7 +280,7 @@ function VideoDetails({
             <div className="space-y-8">
               {/* بخش پخش ویدئو */}
               <div id="player" className="section-anchor" ref={playerRef}>
-                <VideoPlayer video={video} attachment={attachment}/>
+                <VideoPlayer video={video} attachment={attachment} />
               </div>
 
               {/* بخش ویدئوهای مرتبط */}
@@ -339,7 +339,7 @@ function VideoDetails({
 
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor mt-8" ref={commentsRef}>
-          <VideoComments video={video} comments={comments} id={id} />
+          <CommentsSection details={video} comments={comments} id={id} />
         </div>
       </div>
 

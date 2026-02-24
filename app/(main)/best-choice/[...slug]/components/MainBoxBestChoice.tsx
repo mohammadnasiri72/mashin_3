@@ -1,14 +1,14 @@
 "use client";
 
+import CommentsSection from "@/app/components/CommentsSection";
 import type { TabsProps } from "antd";
 import { Card, Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
-import HeroSectionBestChoice from "./HeroSectionBestChoice";
+import CompetitorsBestChoice from "./CompetitorsBestChoice";
 import DescBestChoice from "./DescBestChoice";
 import GalleryBestChoice from "./GalleryBestChoice";
-import CompetitorsBestChoice from "./CompetitorsBestChoice";
+import HeroSectionBestChoice from "./HeroSectionBestChoice";
 import SidebarBestChoice from "./SidebarBestChoice";
-import CommentsBestChoice from "./CommentsBestChoice";
 
 function MainBoxBestChoice({
   detailsBest,
@@ -217,15 +217,15 @@ function MainBoxBestChoice({
         ref={navbarRef}
         className="navbar-tabs w-full px-2 z-10000"
         style={{
-          position: 'sticky',
-          top: isNavbarSticky ? '112px' : 'auto',
+          position: "sticky",
+          top: isNavbarSticky ? "112px" : "auto",
           left: 0,
           right: 0,
-          background: isNavbarSticky ? 'white' : 'transparent',
-          boxShadow: isNavbarSticky ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
-          paddingTop: isNavbarSticky ? '8px' : '0',
-          paddingBottom: isNavbarSticky ? '8px' : '0',
-          transition: 'all 0.3s ease'
+          background: isNavbarSticky ? "white" : "transparent",
+          boxShadow: isNavbarSticky ? "0 4px 12px rgba(0,0,0,0.1)" : "none",
+          paddingTop: isNavbarSticky ? "8px" : "0",
+          paddingBottom: isNavbarSticky ? "8px" : "0",
+          transition: "all 0.3s ease",
         }}
       >
         <Card
@@ -304,11 +304,7 @@ function MainBoxBestChoice({
 
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor px-2" ref={commentsRef}>
-          <CommentsBestChoice
-            detailsBest={detailsBest}
-            comments={comments}
-            id={id}
-          />
+          <CommentsSection details={detailsBest} comments={comments} id={id} />
         </div>
       </div>
 
@@ -369,13 +365,12 @@ function MainBoxBestChoice({
             bottom: auto !important;
             align-self: auto !important;
           }
-          
+
           .navbar-tabs[style*="position: sticky"] {
-             position: sticky !important;
+            position: sticky !important;
             top: 115px !important;
           }
         }
-          
       `}</style>
     </div>
   );

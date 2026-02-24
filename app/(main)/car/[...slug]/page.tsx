@@ -9,6 +9,7 @@ import CarDetails from "../components/CarDetails";
 import ContentTabsSSR from "../components/ContentTabsSSR";
 import FeaturesSection from "../components/FeaturesSection";
 import HeroSection from "../components/HeroSection";
+import NvbarCar from "../components/NvbarCar";
 
 export async function generateMetadata({
   searchParams,
@@ -75,15 +76,21 @@ async function page({
       id,
       langCode: "fa",
       type: 0,
-      pageSize: 10,
+      pageSize: 20,
       pageIndex: 1,
     }),
     getPollId(id),
   ]);
 
+
+  
+  
+
+
   return (
     <>
       <HeroSection detailsCar={detailsCar} />
+      <NvbarCar pollData={pollData} totalComment={comments[0].total} />
       <CarDetails
         Attachment={Attachment.filter((e) => e.tabId === 1 || e.tabId === 3)}
         detailsCar={detailsCar}

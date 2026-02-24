@@ -1,9 +1,9 @@
 "use client";
 
+import CommentsSection from "@/app/components/CommentsSection";
 import type { TabsProps } from "antd";
 import { Card, Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
-import CommentsAutoService from "./CommentsAutoService";
 import ContactUsAutoService from "./ContactUsAutoService";
 import HeroSectionAutoService from "./HeroSectionAutoService";
 import RatingAutoService from "./RatingAutoService";
@@ -183,15 +183,15 @@ function MainBoxAutoService({
         ref={navbarRef}
         className="navbar-tabs w-full px-2 z-10000"
         style={{
-          position: 'sticky',
-          top: isNavbarSticky ? '112px' : 'auto',
+          position: "sticky",
+          top: isNavbarSticky ? "112px" : "auto",
           left: 0,
           right: 0,
-          background: isNavbarSticky ? 'white' : 'transparent',
-          boxShadow: isNavbarSticky ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
-          paddingTop: isNavbarSticky ? '8px' : '0',
-          paddingBottom: isNavbarSticky ? '8px' : '0',
-          transition: 'all 0.3s ease'
+          background: isNavbarSticky ? "white" : "transparent",
+          boxShadow: isNavbarSticky ? "0 4px 12px rgba(0,0,0,0.1)" : "none",
+          paddingTop: isNavbarSticky ? "8px" : "0",
+          paddingBottom: isNavbarSticky ? "8px" : "0",
+          transition: "all 0.3s ease",
         }}
       >
         <Card
@@ -252,11 +252,7 @@ function MainBoxAutoService({
 
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor px-2" ref={commentsRef}>
-          <CommentsAutoService
-            detailsAuto={detailsAuto}
-            comments={comments}
-            id={id}
-          />
+          <CommentsSection details={detailsAuto} comments={comments} id={id} />
         </div>
       </div>
 
@@ -317,7 +313,7 @@ function MainBoxAutoService({
             bottom: auto !important;
             align-self: auto !important;
           }
-          
+
           .navbar-tabs[style*="position: sticky"] {
             position: sticky !important;
             top: 115px !important;

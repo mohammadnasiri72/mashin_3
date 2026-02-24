@@ -1,12 +1,12 @@
 "use client";
 
+import CommentsSection from "@/app/components/CommentsSection";
 import { Card, Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
-import EducationComments from "./EducationComments";
 import EducationContent from "./EducationContent";
+import HeroSectionEdu from "./HeroSectionEdu";
 import RelatedEducation from "./RelatedEducation";
 import SidebarEducation from "./SidebarEducation";
-import HeroSectionEdu from "./HeroSectionEdu";
 
 function EducationView({
   education,
@@ -187,16 +187,16 @@ function EducationView({
         ref={navbarRef}
         className="navbar-tabs w-full px-2 mt-4"
         style={{
-          position: 'sticky',
-          top: isNavbarSticky ? '112px' : 'auto',
+          position: "sticky",
+          top: isNavbarSticky ? "112px" : "auto",
           left: 0,
           right: 0,
-          background: isNavbarSticky ? 'white' : 'transparent',
-          boxShadow: isNavbarSticky ? '0 4px 12px rgba(0,0,0,0.1)' : 'none',
-          paddingTop: isNavbarSticky ? '8px' : '0',
-          paddingBottom: isNavbarSticky ? '8px' : '0',
-          transition: 'all 0.3s ease',
-          zIndex: 1000
+          background: isNavbarSticky ? "white" : "transparent",
+          boxShadow: isNavbarSticky ? "0 4px 12px rgba(0,0,0,0.1)" : "none",
+          paddingTop: isNavbarSticky ? "8px" : "0",
+          paddingBottom: isNavbarSticky ? "8px" : "0",
+          transition: "all 0.3s ease",
+          zIndex: 1000,
         }}
       >
         <Card
@@ -257,11 +257,7 @@ function EducationView({
 
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor mt-8" ref={commentsRef}>
-          <EducationComments
-            education={education}
-            id={id}
-            comments={comments}
-          />
+          <CommentsSection details={education} id={id} comments={comments} />
         </div>
       </div>
 
@@ -270,12 +266,12 @@ function EducationView({
           transition: all 0.3s ease;
           z-index: 1000;
         }
-        
+
         .navbar-tabs .ant-card-body {
           padding: 0 !important;
           margin: 0 !important;
         }
-        
+
         .education-details-tabs .ant-tabs-nav {
           margin: 0 !important;
         }
@@ -332,7 +328,7 @@ function EducationView({
             bottom: auto !important;
             align-self: auto !important;
           }
-          
+
           .navbar-tabs[style*="position: sticky"] {
             position: sticky !important;
             top: 115px !important;

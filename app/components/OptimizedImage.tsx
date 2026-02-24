@@ -44,8 +44,9 @@ export default function OptimizedImage({
       loading={loading}
       onLoad={onLoad}
       onError={onError}
-      quality={80}
+      quality={60}
       unoptimized={true}
     />
   );
 }
+

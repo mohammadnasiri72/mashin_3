@@ -2,9 +2,9 @@ import { getItem } from "@/services/Item/Item";
 import { getMenu } from "@/services/Menu/Menu";
 import { getSetting } from "@/services/Property/setting";
 import BannerTop from "../components/BannerTop";
-import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { headers } from "next/headers";
+import Footer from "../components/Footer";
 
 export default async function RootLayout({
   children,
