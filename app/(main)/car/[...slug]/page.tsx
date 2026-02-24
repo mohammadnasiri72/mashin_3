@@ -82,15 +82,13 @@ async function page({
     getPollId(id),
   ]);
 
-
-  
-  
-
-
   return (
     <>
       <HeroSection detailsCar={detailsCar} />
-      <NvbarCar pollData={pollData} totalComment={comments[0].total} />
+      <NvbarCar
+        pollData={pollData}
+        totalComment={comments.length > 0 ? comments[0]?.total : 0}
+      />
       <CarDetails
         Attachment={Attachment.filter((e) => e.tabId === 1 || e.tabId === 3)}
         detailsCar={detailsCar}

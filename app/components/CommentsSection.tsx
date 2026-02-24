@@ -289,6 +289,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         langCode: "fa",
         score: 0,
         userIP: "",
+        name: JSON.parse(user).displayName,
+        email: userName,
+        // ...(token && { name: "" }),
+        // ...(token && { email: "" }),
       };
       try {
         const response = await postComment(data);
@@ -331,11 +335,56 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         });
       }
     } else {
-      Toast.fire({
-        icon: "error",
-        title: "لطفا ابتدا وارد حساب کاربری خود شوید",
-      });
-      setOpenLogin(true);
+      const data = {
+        ...values,
+        itemId: id,
+        parentId: openModalCommentReplay ? parentId : 0,
+        type: 0,
+        userName,
+        langCode: "fa",
+        score: 0,
+        userIP: "",
+      };
+      try {
+        const response = await postComment(data);
+        form.resetFields();
+        setOpenModalCommentReplay(false);
+
+        // بعد از ثبت کامنت جدید، کامنت‌ها را از صفحه اول مجدد بارگیری کنید
+        setPageIndex(1);
+        setLoadingMore(true);
+        try {
+          const newComments = await getComment({
+            id: Number(id),
+            langCode: "fa",
+            type: 0,
+            pageSize: 20,
+            pageIndex: 1,
+          });
+          setAllComments(newComments);
+          if (newComments.length > 0) {
+            setTotalComments(newComments[0].total || 0);
+          }
+        } catch (error) {
+          console.error("Error refreshing comments:", error);
+          Toast.fire({
+            icon: "error",
+            title: "خطا در دریافت نظرات جدید",
+          });
+        } finally {
+          setLoadingMore(false);
+        }
+
+        Toast.fire({
+          icon: "success",
+          title: "کامنت شما ثبت شد لطفا منتظر تایید ادمین بمانید",
+        });
+      } catch (error: any) {
+        Toast.fire({
+          icon: "error",
+          title: error.response?.data || "خطا در ثبت کامنت",
+        });
+      }
     }
   };
 
@@ -426,8 +475,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     setOpenModalCommentReplay(true);
   };
 
- 
-
   // بررسی آیا کامنت بیشتری برای نمایش وجود دارد یا خیر
   const hasMoreComments = totalComments > allComments.length;
 
@@ -468,26 +515,36 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
               </div>
 
               <Form form={form} layout="vertical" onFinish={onFinish}>
-                <Form.Item
-                  name="name"
-                  label="نام و نام خانوادگی"
-                  rules={[
-                    { required: true, message: "لطفا نام خود را وارد کنید" },
-                  ]}
-                >
-                  <Input placeholder="نام خود را وارد کنید" size="large" />
-                </Form.Item>
+                {!token && (
+                  <Form.Item
+                    name="name"
+                    label="نام و نام خانوادگی"
+                    rules={[
+                      {
+                        required: token ? false : true,
+                        message: "لطفا نام خود را وارد کنید",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="نام خود را وارد کنید" size="large" />
+                  </Form.Item>
+                )}
 
-                <Form.Item
-                  name="email"
-                  label="ایمیل"
-                  rules={[
-                    { required: true, message: "لطفا ایمیل خود را وارد کنید" },
-                    { type: "email", message: "ایمیل معتبر نیست" },
-                  ]}
-                >
-                  <Input placeholder="مثلا hiva@gmail.com" size="large" />
-                </Form.Item>
+                {!token && (
+                  <Form.Item
+                    name="email"
+                    label="ایمیل"
+                    rules={[
+                      {
+                        required: token ? false : true,
+                        message: "لطفا ایمیل خود را وارد کنید",
+                      },
+                      { type: "email", message: "ایمیل معتبر نیست" },
+                    ]}
+                  >
+                    <Input placeholder="مثلا hiva@gmail.com" size="large" />
+                  </Form.Item>
+                )}
 
                 <Form.Item
                   name="body"
@@ -497,7 +554,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                   ]}
                 >
                   <TextArea
-                    placeholder="نظر خود را در مورد این خودرو با کاربران دیگر به اشتراک بگذارید.."
+                    placeholder="نظر خود را با کاربران دیگر به اشتراک بگذارید.."
                     rows={4}
                     size="large"
                   />

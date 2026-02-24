@@ -31,7 +31,7 @@ export const toEnglishNumber = (number: string | number): string => {
     .replace(/[٠-٩]/g, (d: string) => String(arabicDigits.indexOf(d)));
 };
 
-export const formatPersianDate = (dateString: string): string => {
+export const formatPersianDate = (dateString: string|number): string => {
   try {
     const persianMonths = [
       "فروردین",

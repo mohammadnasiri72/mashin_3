@@ -35,6 +35,58 @@ function NewsViewDetails({
   relatedVideos: ItemsId[];
   relatedVoices: ItemsId[];
 }) {
+
+
+
+
+
+
+   // ذخیره در localStorage
+    useEffect(() => {
+      try {
+        // دریافت لیست قبلی
+        const recentViews = JSON.parse(
+          localStorage.getItem("recentCarViews") || "[]",
+        );
+  
+        // ساخت آیتم جدید
+        const newView = {
+          id: detailsNews.id,
+          title: detailsNews.title,
+          sourceName: detailsNews.sourceName,
+          publishCode: detailsNews.publishCode,
+          image: detailsNews.image,
+          timestamp: Date.now(),
+          url: detailsNews.url,
+          type: 'اخبار'
+        };
+  
+        // حذف اگر قبلا بود
+        const filteredViews = recentViews.filter(
+          (item: any) => item.id !== detailsNews.id,
+        );
+  
+        // اضافه به اول لیست و نگه داشتن حداکثر ۱۰ مورد
+        const updatedViews = [newView, ...filteredViews].slice(0, 10);
+  
+        // ذخیره
+        localStorage.setItem("recentCarViews", JSON.stringify(updatedViews));
+      } catch (error) {
+        console.error("خطا در ذخیره بازدید:", error);
+      }
+    }, [detailsNews.id]); // فقط وقتی id تغییر کند اجرا شود
+  
+
+
+
+
+
+
+
+
+
+
+
   const [activeKey, setActiveKey] = useState("1");
   const [isNavbarSticky, setIsNavbarSticky] = useState(false);
   const [isMainLonger, setIsMainLonger] = useState(true);

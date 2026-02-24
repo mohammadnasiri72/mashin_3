@@ -2,12 +2,44 @@
 
 import { createpublishCode } from "@/utils/func";
 import Link from "next/link";
+import { useEffect } from "react";
 
-const HeroSection = ({
-  detailsCar,
-}: {
-  detailsCar: ItemsId;
-}) => {
+const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
+  // ذخیره در localStorage
+  useEffect(() => {
+    try {
+      // دریافت لیست قبلی
+      const recentViews = JSON.parse(
+        localStorage.getItem("recentCarViews") || "[]",
+      );
+
+      // ساخت آیتم جدید
+      const newView = {
+        id: detailsCar.id,
+        title: detailsCar.title,
+        sourceName: detailsCar.sourceName,
+        publishCode: detailsCar.publishCode,
+        image: detailsCar.image,
+        timestamp: Date.now(),
+        url: detailsCar.url,
+        type: 'خودرو'
+      };
+
+      // حذف اگر قبلا بود
+      const filteredViews = recentViews.filter(
+        (item: any) => item.id !== detailsCar.id,
+      );
+
+      // اضافه به اول لیست و نگه داشتن حداکثر ۱۰ مورد
+      const updatedViews = [newView, ...filteredViews].slice(0, 10);
+
+      // ذخیره
+      localStorage.setItem("recentCarViews", JSON.stringify(updatedViews));
+    } catch (error) {
+      console.error("خطا در ذخیره بازدید:", error);
+    }
+  }, [detailsCar.id]); // فقط وقتی id تغییر کند اجرا شود
+
   return (
     <section
       className="relative min-h-[225px] bg-cover bg-center flex sm:block items-center justify-center"
@@ -20,7 +52,8 @@ const HeroSection = ({
         <div className="text-white! sm:w-auto w-full">
           <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center">
             <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative sm:text-3xl text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ce1a2a]">
-              {detailsCar.sourceName} {detailsCar.title} {createpublishCode(detailsCar.publishCode)}
+              {detailsCar.sourceName} {detailsCar.title}{" "}
+              {createpublishCode(detailsCar.publishCode)}
             </h3>
           </div>
           {/* Breadcrumb */}
@@ -51,8 +84,6 @@ const HeroSection = ({
           </nav>
         </div>
       </div>
-
-     
 
       <style jsx global>{`
         .breadcrumb-separator {
