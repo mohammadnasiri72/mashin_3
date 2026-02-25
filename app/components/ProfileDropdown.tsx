@@ -8,6 +8,7 @@ import { createInitialUserData, Toast } from "@/utils/func";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Divider } from "antd";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaComments, FaHeart, FaHome, FaKey, FaPowerOff } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,6 +37,7 @@ export default function ProfileDropdown() {
   const user = Cookies.get("user");
   const name = user ? JSON.parse(user)?.displayName : "";
   const token: string = useSelector((state: RootState) => state.token.token);
+  const router = useRouter();
 
   const handleLogout = async () => {
     setLoading(true);
@@ -59,6 +61,7 @@ export default function ProfileDropdown() {
       disPatch(setToken(""));
       setOpen(false);
       setLoading(false);
+      router.push("/");
     }
   };
 
@@ -153,7 +156,7 @@ export default function ProfileDropdown() {
           >
             <FaPowerOff />
             <span className="flex items-center gap-2 w-full text-right">
-              {loading ? "در حال خروج" : "خروج از حساب"}
+              {loading ? "در حال خروج..." : "خروج از حساب"}
             </span>
           </div>
         </div>

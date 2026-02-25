@@ -1,9 +1,13 @@
 "use client";
 
+import { setToken } from "@/redux/slice/token";
+import { RootState } from "@/redux/store";
+import { PostSignOut } from "@/services/Account/SignOut";
+import { createInitialUserData, Toast } from "@/utils/func";
 import { UserOutlined } from "@ant-design/icons";
 import { Avatar } from "antd";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   FaComments,
@@ -13,6 +17,7 @@ import {
   FaSignOutAlt,
   FaSpinner,
 } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 
 const Cookies = require("js-cookie");
 
@@ -55,6 +60,34 @@ export default function DashboardLayout({
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
   const user = Cookies.get("user");
+  const token: string = useSelector((state: RootState) => state.token.token);
+  const disPatch = useDispatch();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true);
+    try {
+      if (token) {
+        await PostSignOut(token);
+        Toast.fire({
+          icon: "success",
+          title: "با موفقیت خارج شدید",
+        });
+      }
+    } catch (error: any) {
+      Toast.fire({
+        icon: "error",
+        title: error.response.data || "خطا در خروج",
+      });
+    } finally {
+      Cookies.set("user", JSON.stringify(createInitialUserData()), {
+        expires: 7,
+      });
+      disPatch(setToken(""));
+      setIsLoggingOut(false);
+      router.push("/");
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -116,7 +149,7 @@ export default function DashboardLayout({
               })}
               <div className="">
                 <button
-                  //   onClick={LogoutHandler}
+                  onClick={handleLogout}
                   disabled={isLoggingOut}
                   className={`
                                     w-full flex items-center justify-start gap-3 px-4 py-3 rounded-lg 

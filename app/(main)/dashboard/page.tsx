@@ -120,7 +120,7 @@ export default function DashboardOverview() {
 
         {/* لینک‌های سریع */}
         <div className="mt-6 bg-white rounded-xl border border-gray-200 p-4">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">
+          <h3 className="text-sm font-medium text-gray-700 mb-3!">
             دسترسی سریع
           </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
