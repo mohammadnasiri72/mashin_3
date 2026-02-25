@@ -22,6 +22,7 @@ function MainBoxAutoServices({
   summary,
   lastNews,
   lastCars,
+  provinces,
 }: {
   AutoServiceData: Items[];
   brands: ItemsCategory[];
@@ -32,20 +33,29 @@ function MainBoxAutoServices({
   summary: string;
   lastNews: Items[];
   lastCars: Items[];
+  provinces: Items[];
 }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [selectedBrand, setSelectedBrand] = useState<number | null>(
-    Number(brands.find((e) => e.id === Number(id))?.id) || null,
+  const provinceId = searchParams.get("provinceid");
+
+  const [selectedBrand] = useState<number | null>(
+    Number(brands.find((e) => e.id === Number(id))?.id) || 0,
   );
-  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
+  const [selectedProvince, setSelectedProvince] = useState<number>(
+    !provinceId ? 0 : Number(provinceId),
+  );
   const [isMainLonger, setIsMainLonger] = useState(true);
 
   const mainBoxRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   const page = searchParams.get("page");
+
+  useEffect(() => {
+    setSelectedProvince(!provinceId ? 0 : Number(provinceId));
+  }, [provinceId]);
 
   // مقایسه ارتفاع باکس‌ها
   useEffect(() => {
@@ -82,41 +92,7 @@ function MainBoxAutoServices({
     });
   }, [page]);
 
-  // استخراج استان‌های منحصر به فرد (از عنوان استخراج می‌شود)
-  const provinces = useMemo(() => {
-    const provinceMap: { [key: string]: string } = {
-      تهران: "تهران",
-      کرج: "البرز",
-      دماوند: "تهران",
-      "نظام آباد": "تهران",
-      "فدائيان اسلام": "تهران",
-      "شهید نامجو": "تهران",
-      قزوین: "قزوین",
-      چیتگر: "تهران",
-      آزادی: "تهران",
-      کریمخان: "تهران",
-      تهرانپارس: "تهران",
-    };
-
-    const extractedProvinces = AutoServiceData.map((item) => {
-      for (const [keyword, province] of Object.entries(provinceMap)) {
-        if (item.title.includes(keyword)) {
-          return province;
-        }
-      }
-      return "تهران"; // پیش‌فرض
-    });
-
-    return [...new Set(extractedProvinces)].sort();
-  }, [AutoServiceData]);
-
-  const handleProvinceChange = (value: string | null) => {
-    setSelectedProvince(value);
-  };
-
   const clearFilters = () => {
-    // setSelectedBrand(null);
-    setSelectedProvince(null);
     router.push("/autoservices.html", {
       scroll: false,
     });
@@ -180,10 +156,10 @@ function MainBoxAutoServices({
             <div className="mx-auto max-w-6xl">
               {/* فیلترها */}
               <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
-                <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-                  <div className="flex flex-col lg:flex-row gap-4 w-full lg:w-auto">
+                <div className="flex flex-col lg:flex-row gap-4 items-start  lg:items-end justify-between">
+                  <div className="flex flex-col lg:flex-row gap-4 w-full ">
                     {/* فیلتر برند */}
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2 lg:w-1/2 w-full">
                       <label className="block whitespace-nowrap text-sm font-medium text-gray-700">
                         <FaCar className="inline ml-1" />
                         برند خودرو
@@ -192,13 +168,33 @@ function MainBoxAutoServices({
                         aria-label="انتخاب برند..."
                         value={selectedBrand}
                         onChange={(value: number | null) => {
-                          if (value) {
-                            // setSelectedBrand(value);
+                          if (
+                            value &&
+                            brands.find((e) => e.id === value)?.url
+                          ) {
+                            provinceId
+                              ? router.push(
+                                  brands.find((e) => e.id === value)?.url +
+                                    `?provinceid=${provinceId}` ||
+                                    "/autoservices.html" +
+                                      `?provinceid=${provinceId}`,
+                                )
+                              : router.push(
+                                  brands.find((e) => e.id === value)?.url ||
+                                    "/autoservices.html",
+                                );
                           } else {
-                            // setSelectedBrand(null);
-                            router.push("/autoservices.html", {
-                              scroll: false,
-                            });
+                            provinceId
+                              ? router.push(
+                                  "/autoservices.html" +
+                                    `?provinceid=${provinceId}`,
+                                  {
+                                    scroll: false,
+                                  },
+                                )
+                              : router.push("/autoservices.html", {
+                                  scroll: false,
+                                });
                           }
                         }}
                         placeholder="انتخاب برند..."
@@ -207,18 +203,23 @@ function MainBoxAutoServices({
                         className="w-full"
                         size="large"
                       >
+                        <Option value={0} label="همه نمایندگی‌ها">
+                          <div className="text-gray-800! w-full! block! cursor-pointer">
+                            همه نمایندگی‌ها
+                          </div>
+                        </Option>
                         {brands.map((brand) => (
                           <Option key={brand.id} value={brand.id}>
-                            <Link className="text-gray-800!" href={brand.url}>
+                            <div className="text-gray-800! w-full! block!">
                               {brand.title}
-                            </Link>
+                            </div>
                           </Option>
                         ))}
                       </Select>
                     </div>
 
                     {/* فیلتر استان */}
-                    <div className="flex flex-wrap items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2 lg:w-1/2 w-full">
                       <label className="block text-sm font-medium text-gray-700">
                         <FaMapMarkerAlt className="inline ml-1" />
                         استان
@@ -226,7 +227,24 @@ function MainBoxAutoServices({
                       <Select
                         aria-label="جستجوی استان..."
                         value={selectedProvince}
-                        onChange={handleProvinceChange}
+                        onChange={(value: number) => {
+                          if (value) {
+                            const params = new URLSearchParams(
+                              searchParams.toString(),
+                            );
+                            params.set(
+                              "provinceid",
+                              value ? value.toString() : "",
+                            );
+                            router.push(`${pathname}?${params.toString()}`);
+                          } else {
+                            const params = new URLSearchParams(
+                              searchParams.toString(),
+                            );
+                            params.delete("provinceid");
+                            router.push(`${pathname}?${params.toString()}`);
+                          }
+                        }}
                         placeholder="جستجوی استان..."
                         allowClear
                         showSearch
@@ -240,9 +258,10 @@ function MainBoxAutoServices({
                         className="w-full!"
                         size="large"
                       >
+                        <Option value={0}>همه استان‌ها</Option>
                         {provinces.map((province) => (
-                          <Option key={province} value={province}>
-                            {province}
+                          <Option key={province.id} value={province.id}>
+                            {province.title}
                           </Option>
                         ))}
                       </Select>

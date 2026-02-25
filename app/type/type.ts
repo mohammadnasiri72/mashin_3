@@ -360,6 +360,13 @@ interface CommentParams {
   pageIndex: number;
 }
 
+interface CommentUserParams {
+  langCode: string;
+  type: number;
+  pageSize: number;
+  pageIndex: number;
+}
+
 interface CommentResponse {
   rowId: number;
   id: number;

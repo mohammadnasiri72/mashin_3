@@ -1,471 +1,396 @@
 // app/dashboard/my-comments/page.tsx
-'use client';
+"use client";
 
-import { useState } from 'react';
+import ConfirmDialog from "@/app/components/ConfirmDialog";
+import CustomPagination from "@/app/components/CustomPagination";
+import { RootState } from "@/redux/store";
+import { getCommentUser } from "@/services/Comment/CommentUser";
+import { DeleteComment } from "@/services/Comment/DeleteComment";
+import { formatPersianDate, Toast } from "@/utils/func";
+import { Newspaper } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import {
   HiOutlineChat,
-  HiOutlineHeart,
-  HiOutlineThumbUp,
-  HiOutlineThumbDown,
-  HiOutlineTrash,
-  HiOutlinePencil,
-  HiOutlineEye,
-  HiOutlineFilter,
-  HiOutlineSearch,
-  HiOutlineClock,
   HiOutlineCheckCircle,
-  HiOutlineXCircle
-} from 'react-icons/hi';
+  HiOutlineChevronDown,
+  HiOutlineClock,
+  HiOutlineEye,
+  HiOutlineThumbDown,
+  HiOutlineThumbUp,
+  HiOutlineTrash,
+} from "react-icons/hi";
+import { useSelector } from "react-redux";
 
-interface Comment {
-  id: number;
-  content: string;
-  date: string;
-  likes: number;
-  dislikes: number;
-  status: 'approved' | 'pending' | 'rejected';
-  postTitle: string;
-  postType: 'car' | 'motorcycle' | 'article' | 'video';
-  postImage?: string;
-  postUrl: string;
-  replies?: number;
-}
-
-export default function MyCommentsPage() {
-  const [filter, setFilter] = useState<'all' | 'approved' | 'pending' | 'rejected'>('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedComments, setSelectedComments] = useState<number[]>([]);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
-
-  // نمونه داده‌های کامنت
-  const [comments, setComments] = useState<Comment[]>([
-    {
-      id: 1,
-      content: 'واقعا ماشین خوبیه، من چند وقت هست که دارمش، مصرف سوختش عالیه و تو شهر عالی جواب میده',
-      date: '۲۰ بهمن ۱۴۰۲',
-      likes: 15,
-      dislikes: 2,
-      status: 'approved',
-      postTitle: 'پژو ۲۰۷ اتوماتیک',
-      postType: 'car',
-      postImage: '/images/peugeot-207.jpg',
-      postUrl: '/car/peugeot-207',
-      replies: 3
-    },
-    {
-      id: 2,
-      content: 'کیفیت ساختش نسبت به قیمت مناسبه، فقط کاش نمایندگی‌های بیشتری داشت',
-      date: '۱۵ بهمن ۱۴۰۲',
-      likes: 8,
-      dislikes: 1,
-      status: 'approved',
-      postTitle: 'ام وی ام X33 کراس',
-      postType: 'car',
-      postImage: '/images/mvm-x33.jpg',
-      postUrl: '/car/mvm-x33'
-    },
-    {
-      id: 3,
-      content: 'این مدل رو مقایسه کنید با رقیبای چینی، به نظر من ارزش خرید داره',
-      date: '۱۰ بهمن ۱۴۰۲',
-      likes: 5,
-      dislikes: 3,
-      status: 'pending',
-      postTitle: 'مقایسه خودروهای چینی',
-      postType: 'article',
-      postImage: '/images/article-chinese-cars.jpg',
-      postUrl: '/article/chinese-cars-comparison'
-    },
-    {
-      id: 4,
-      content: 'واقعا ناامیدکننده بود، بعد از یک ماه گیربکس مشکل پیدا کرد',
-      date: '۵ بهمن ۱۴۰۲',
-      likes: 3,
-      dislikes: 12,
-      status: 'rejected',
-      postTitle: 'رنو ساندرو',
-      postType: 'car',
-      postImage: '/images/renault-sandero.jpg',
-      postUrl: '/car/renault-sandero'
-    },
-    {
-      id: 5,
-      content: 'این ویدیو خیلی به من کمک کرد، ممنون از تیم حرفه‌ای شما',
-      date: '۱ بهمن ۱۴۰۲',
-      likes: 25,
-      dislikes: 0,
-      status: 'approved',
-      postTitle: 'نقد و بررسی تویوتا کرولا',
-      postType: 'video',
-      postImage: '/images/toyota-corolla-review.jpg',
-      postUrl: '/video/toyota-corolla-review',
-      replies: 5
-    }
-  ]);
-
-  // فیلتر کردن کامنت‌ها
-  const filteredComments = comments.filter(comment => {
-    if (filter !== 'all' && comment.status !== filter) return false;
-    if (searchTerm && !comment.content.includes(searchTerm) && !comment.postTitle.includes(searchTerm)) return false;
-    return true;
-  });
-
-  // آمار کامنت‌ها
-  const stats = {
-    total: comments.length,
-    approved: comments.filter(c => c.status === 'approved').length,
-    pending: comments.filter(c => c.status === 'pending').length,
-    rejected: comments.filter(c => c.status === 'rejected').length,
-    totalLikes: comments.reduce((acc, c) => acc + c.likes, 0)
-  };
-
-  const handleSelectAll = () => {
-    if (selectedComments.length === filteredComments.length) {
-      setSelectedComments([]);
-    } else {
-      setSelectedComments(filteredComments.map(c => c.id));
-    }
-  };
-
-  const handleSelectComment = (id: number) => {
-    if (selectedComments.includes(id)) {
-      setSelectedComments(selectedComments.filter(cId => cId !== id));
-    } else {
-      setSelectedComments([...selectedComments, id]);
-    }
-  };
-
-  const handleDeleteSelected = () => {
-    if (confirm('آیا از حذف کامنت‌های انتخاب شده اطمینان دارید؟')) {
-      setComments(comments.filter(c => !selectedComments.includes(c.id)));
-      setSelectedComments([]);
-    }
-  };
-
-  const getStatusBadge = (status: Comment['status']) => {
-    switch (status) {
-      case 'approved':
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-            <HiOutlineCheckCircle className="w-3 h-3" />
-            تایید شده
-          </span>
-        );
-      case 'pending':
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
-            <HiOutlineClock className="w-3 h-3" />
-            در انتظار تایید
-          </span>
-        );
-      case 'rejected':
-        return (
-          <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
-            <HiOutlineXCircle className="w-3 h-3" />
-            رد شده
-          </span>
-        );
-    }
-  };
-
-  const getPostTypeLabel = (type: Comment['postType']) => {
-    switch (type) {
-      case 'car': return 'خودرو';
-      case 'motorcycle': return 'موتورسیکلت';
-      case 'article': return 'مقاله';
-      case 'video': return 'ویدیو';
-    }
-  };
-
+const CommentsSkeleton = () => {
   return (
-    <div className="space-y-6">
-      {/* هدر صفحه */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-800">نظرات من</h1>
-        <p className="text-gray-600 mt-1">نظراتی که ثبت کرده‌اید را مدیریت کنید</p>
-      </div>
-
-      {/* کارت‌های آمار */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white rounded-2xl shadow-sm p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">کل نظرات</p>
-              <p className="text-3xl font-bold text-gray-800 mt-2">{stats.total}</p>
-            </div>
-            <div className="bg-blue-50 p-4 rounded-2xl">
-              <HiOutlineChat className="w-6 h-6 text-blue-600" />
-            </div>
-          </div>
-          <div className="mt-4 text-sm text-gray-500">
-            {stats.approved} تایید شده
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">در انتظار تایید</p>
-              <p className="text-3xl font-bold text-yellow-600 mt-2">{stats.pending}</p>
-            </div>
-            <div className="bg-yellow-50 p-4 rounded-2xl">
-              <HiOutlineClock className="w-6 h-6 text-yellow-600" />
-            </div>
-          </div>
-          <div className="mt-4 text-sm text-gray-500">
-            نیاز به بررسی
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">تایید شده</p>
-              <p className="text-3xl font-bold text-green-600 mt-2">{stats.approved}</p>
-            </div>
-            <div className="bg-green-50 p-4 rounded-2xl">
-              <HiOutlineCheckCircle className="w-6 h-6 text-green-600" />
-            </div>
-          </div>
-          <div className="mt-4 text-sm text-gray-500">
-            {stats.approved} نظر فعال
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">مجموع لایک‌ها</p>
-              <p className="text-3xl font-bold text-purple-600 mt-2">{stats.totalLikes}</p>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-2xl">
-              <HiOutlineThumbUp className="w-6 h-6 text-purple-600" />
-            </div>
-          </div>
-          <div className="mt-4 text-sm text-gray-500">
-            بازخورد مثبت
-          </div>
-        </div>
-      </div>
-
-      {/* نوار ابزار */}
-      <div className="bg-white rounded-2xl shadow-sm p-4">
-        <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-          {/* جستجو */}
-          <div className="relative w-full lg:w-96">
-            <HiOutlineSearch className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="جستجو در نظرات..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pr-10 pl-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div className="flex items-center gap-3 w-full lg:w-auto">
-            {/* فیلتر وضعیت */}
-            <div className="relative">
-              <select
-                value={filter}
-                onChange={(e) => setFilter(e.target.value as typeof filter)}
-                className="appearance-none pr-10 pl-4 py-2 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-              >
-                <option value="all">همه نظرات</option>
-                <option value="approved">تایید شده</option>
-                <option value="pending">در انتظار تایید</option>
-                <option value="rejected">رد شده</option>
-              </select>
-              <HiOutlineFilter className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            </div>
-
-            {/* حالت نمایش */}
-            <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden">
-              <button
-                onClick={() => setViewMode('list')}
-                className={`px-3 py-2 ${viewMode === 'list' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
-              >
-                لیست
-              </button>
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`px-3 py-2 ${viewMode === 'grid' ? 'bg-blue-500 text-white' : 'text-gray-600 hover:bg-gray-50'}`}
-              >
-                شبکه
-              </button>
-            </div>
-
-            {/* دکمه حذف دسته‌جمعی */}
-            {selectedComments.length > 0 && (
-              <button
-                onClick={handleDeleteSelected}
-                className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white! rounded-xl hover:bg-red-600 transition-colors"
-              >
-                <HiOutlineTrash className="w-5 h-5" />
-                حذف ({selectedComments.length})
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* لیست نظرات */}
-      <div className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : 'space-y-4'}>
-        {/* انتخاب همه */}
-        {filteredComments.length > 0 && (
-          <div className="bg-white rounded-xl p-4 flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={selectedComments.length === filteredComments.length}
-              onChange={handleSelectAll}
-              className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-            />
-            <span className="text-sm text-gray-700">انتخاب همه</span>
-          </div>
-        )}
-
-        {filteredComments.map((comment) => (
+    <div className="space-y-5 max-w-5xl mx-auto pb-5!">
+      <div className="h-5 w-16 bg-gray-200 rounded-full animate-pulse"></div>
+      <div className="h-3 w-28 bg-gray-200 rounded-full animate-pulse"></div>
+      {/* لیست کامنت‌های اسکلتون */}
+      <div className="space-y-3">
+        {[...Array(3)].map((_, index) => (
           <div
-            key={comment.id}
-            className={`bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden ${
-              viewMode === 'grid' ? 'flex flex-col' : 'flex'
-            }`}
+            key={index}
+            className="bg-white rounded-xl shadow-sm overflow-hidden"
           >
-            {/* چک‌باکس انتخاب */}
-            <div className={`p-4 ${viewMode === 'grid' ? 'pb-0' : ''}`}>
-              <input
-                type="checkbox"
-                checked={selectedComments.includes(comment.id)}
-                onChange={() => handleSelectComment(comment.id)}
-                className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-              />
-            </div>
-
-            {/* محتوای کامنت */}
-            <div className={`flex-1 p-4 ${viewMode === 'grid' ? 'pt-0' : ''}`}>
-              {/* هدر کامنت */}
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    {getStatusBadge(comment.status)}
-                    <span className="text-xs text-gray-500">
-                      {comment.date}
-                    </span>
-                  </div>
-                  <h3 className="font-semibold text-gray-800">
-                    {comment.content.length > 100 
-                      ? comment.content.substring(0, 100) + '...' 
-                      : comment.content}
-                  </h3>
+            <div className="p-4">
+              {/* ردیف بالا */}
+              <div className="flex items-start justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <div className="h-5 w-16 bg-gray-200 rounded-full animate-pulse"></div>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-7 h-7 bg-gray-200 rounded-lg animate-pulse"></div>
+                  <div className="w-7 h-7 bg-gray-200 rounded-lg animate-pulse"></div>
                 </div>
               </div>
 
-              {/* اطلاعات پست */}
-              <div className="flex items-center gap-3 mt-3 p-3 bg-gray-50 rounded-xl">
-                <div className="w-12 h-12 bg-gray-200 rounded-lg shrink-0">
-                  {comment.postImage && (
-                    <img 
-                      src={comment.postImage} 
-                      alt={comment.postTitle}
-                      className="w-full h-full object-cover rounded-lg"
-                    />
-                  )}
+              {/* عنوان */}
+              <div className="flex items-center gap-2 mt-2">
+                <div className="w-4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-4 w-40 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+
+              {/* متن */}
+              <div className="space-y-2 mt-3">
+                <div className="h-3 w-full bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-3 w-5/6 bg-gray-200 rounded animate-pulse"></div>
+                <div className="h-3 w-4/6 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+
+              {/* فوتر */}
+              <div className="flex items-center justify-between border-t border-gray-100 mt-2 pt-2">
+                <div className="flex items-center gap-4">
+                  <div className="h-4 w-12 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-4 w-12 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800 truncate">
-                    {comment.postTitle}
+                <div className="h-4 w-20 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* صفحه‌بندی اسکلتون */}
+      <div className="flex items-center justify-between bg-white rounded-xl shadow-sm p-3">
+        <div className="h-4 w-32 bg-gray-200 rounded animate-pulse"></div>
+        <div className="flex gap-1">
+          <div className="w-10 h-8 bg-gray-200 rounded animate-pulse"></div>
+          <div className="w-10 h-8 bg-gray-200 rounded animate-pulse"></div>
+          <div className="w-10 h-8 bg-gray-200 rounded animate-pulse"></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// تعریف نوع داده بر اساس خروجی API
+interface CommentItem {
+  id: number;
+  parentId: number;
+  itemId: number;
+  langCode: string;
+  title: string;
+  url: string;
+  name: string;
+  fullName: string;
+  commentName: string;
+  email: string;
+  body: string;
+  userName: string;
+  userPhotoFileName: string | null;
+  userPhoto: string;
+  userIP: string;
+  confirmed: boolean;
+  isHome: boolean;
+  type: number;
+  score: number | null;
+  pos: number | null;
+  neg: number | null;
+  isPrivate: boolean;
+  seen: boolean;
+  created: string;
+  modified: string | null;
+  total: number;
+}
+
+export default function MyCommentsPage() {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [comments, setComments] = useState<CommentItem[]>([]);
+  const [expandedReplies, setExpandedReplies] = useState<number[]>([]);
+  const [flag, setFlag] = useState<boolean>(false);
+  const [deleteItem, setDeleteItem] = useState<number | null>(null);
+  const [deleting, setDeleting] = useState<boolean>(false);
+  const token = useSelector((state: RootState) => state.token.token);
+  const searchParams = useSearchParams();
+  const page = Number(searchParams.get("page"));
+
+  // دریافت داده‌ها
+  const fetchCommentUser = async () => {
+    setLoading(true);
+    try {
+      const response = await getCommentUser(
+        { langCode: "fa", pageIndex: page || 1, pageSize: 20, type: 0 },
+        token,
+      );
+      setComments(response);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetchCommentUser();
+    }
+  }, [token, flag]);
+
+  // تابع دریافت زیرکامنت‌های یک کامنت اصلی
+  const getReplies = (commentId: number) => {
+    return comments.filter((c) => c.parentId === commentId);
+  };
+
+  const handleDeleteComment = async (id: number) => {
+    setDeleting(true);
+    try {
+      await DeleteComment(id, token);
+      Toast.fire({
+        icon: "success",
+        title: "حذف با موفقیت انجام شد",
+      });
+      setFlag((e) => !e);
+      setDeleteItem(null);
+    } catch (err: any) {
+      Toast.fire({
+        icon: "error",
+        title: err.message || "خطا در حذف کامنت",
+      });
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const toggleReplies = (commentId: number) => {
+    setExpandedReplies((prev) =>
+      prev.includes(commentId)
+        ? prev.filter((id) => id !== commentId)
+        : [...prev, commentId],
+    );
+  };
+
+  // آیکون وضعیت
+  const StatusBadge = ({ confirmed }: { confirmed: boolean }) => {
+    if (confirmed) {
+      return (
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+          <HiOutlineCheckCircle className="w-3 h-3" />
+          تایید شده
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
+        <HiOutlineClock className="w-3 h-3" />
+        در انتظار
+      </span>
+    );
+  };
+
+  if (loading) {
+    return <CommentsSkeleton />;
+  }
+
+  return (
+    <div className="space-y-5 max-w-5xl mx-auto pb-5!">
+      {/* هدر */}
+      <div>
+        <h1 className="text-xl font-bold text-gray-800">نظرات من</h1>
+        <p className="text-sm text-gray-500 mt-0.5">نظرات و پاسخ‌های شما</p>
+      </div>
+
+      {/* لیست کامنت‌ها */}
+      <div className="space-y-3">
+        {comments.map((comment) => {
+          const replies = getReplies(comment.id);
+          const hasReplies = replies.length > 0;
+
+          return (
+            <div
+              key={comment.id}
+              className="bg-white rounded-xl shadow-sm overflow-hidden"
+            >
+              {/* کامنت اصلی */}
+              <div className="p-4">
+                {/* ردیف بالا */}
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <StatusBadge confirmed={comment.confirmed} />
+                  </div>
+                  <div className="flex items-center gap-1">
+                    {/* لینک به مطلب */}
+                    <a
+                      href={comment.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 text-gray-400 hover:text-blue-600 transition-colors rounded-lg hover:bg-gray-100"
+                      title="مشاهده مطلب"
+                    >
+                      <HiOutlineEye className="w-4 h-4" />
+                    </a>
+                    {/* دکمه حذف */}
+                    <button
+                      // onClick={() => {
+                      //   handleDeleteComment(comment.id);
+                      // }}
+                      onClick={() => setDeleteItem(comment.id)}
+                      className="p-1.5 cursor-pointer text-gray-400 hover:text-red-600 transition-colors rounded-lg hover:bg-gray-100"
+                      title="حذف"
+                    >
+                      <HiOutlineTrash className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Newspaper className="w-3.5 h-3.5" />
+                  <p className="text-xs font-medium text-gray-700 line-clamp-1">
+                    {comment.title}
                   </p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs px-2 py-0.5 bg-gray-200 text-gray-600 rounded-full">
-                      {getPostTypeLabel(comment.postType)}
-                    </span>
-                    {comment.replies && (
-                      <span className="text-xs text-gray-500">
-                        {comment.replies} پاسخ
-                      </span>
+                </div>
+
+                {/* متن کامنت */}
+                <p className="text-gray-700 text-sm mt-2 leading-relaxed">
+                  {comment.body}
+                </p>
+
+                {/* تعاملات و تاریخ */}
+                <div className="flex items-center justify-between border-t border-gray-100 mt-2 pt-2">
+                  <div className="flex items-center gap-4">
+                    {/* لایک و دیس‌لایک (اگر داده موجود باشد) */}
+                    {(comment.pos !== null || comment.neg !== null) && (
+                      <>
+                        <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600">
+                          <HiOutlineThumbUp className="w-3.5 h-3.5" />
+                          {comment.pos ?? 0}
+                        </button>
+                        <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600">
+                          <HiOutlineThumbDown className="w-3.5 h-3.5" />
+                          {comment.neg ?? 0}
+                        </button>
+                      </>
+                    )}
+
+                    {/* دکمه نمایش پاسخ‌ها */}
+                    {hasReplies && (
+                      <button
+                        onClick={() => toggleReplies(comment.id)}
+                        className="flex items-center gap-1 text-xs text-gray-500 hover:text-blue-600 transition-colors"
+                      >
+                        <HiOutlineChevronDown
+                          className={`w-3.5 h-3.5 transition-transform duration-300 ${
+                            expandedReplies.includes(comment.id)
+                              ? "rotate-180"
+                              : ""
+                          }`}
+                        />
+                        {replies.length} پاسخ
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="text-xs text-gray-400">
+                    {formatPersianDate(
+                      comment.modified ? comment.modified : comment.created,
                     )}
                   </div>
                 </div>
               </div>
 
-              {/* تعاملات */}
-              <div className="flex items-center justify-between mt-4">
-                <div className="flex items-center gap-3">
-                  <button className="flex items-center gap-1 text-gray-500 hover:text-blue-600 transition-colors">
-                    <HiOutlineThumbUp className="w-4 h-4" />
-                    <span className="text-xs">{comment.likes}</span>
-                  </button>
-                  <button className="flex items-center gap-1 text-gray-500 hover:text-red-600 transition-colors">
-                    <HiOutlineThumbDown className="w-4 h-4" />
-                    <span className="text-xs">{comment.dislikes}</span>
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <a
-                    href={comment.postUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                    title="مشاهده مطلب"
-                  >
-                    <HiOutlineEye className="w-5 h-5" />
-                  </a>
-                  <button
-                    className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                    title="ویرایش نظر"
-                  >
-                    <HiOutlinePencil className="w-5 h-5" />
-                  </button>
-                  <button
-                    className="p-2 text-gray-400 hover:text-red-600 transition-colors"
-                    title="حذف نظر"
-                  >
-                    <HiOutlineTrash className="w-5 h-5" />
-                  </button>
-                </div>
+              {/* بخش پاسخ‌ها با انیمیشن */}
+              <div
+                className={`transition-all duration-500 ease-in-out overflow-hidden ${
+                  expandedReplies.includes(comment.id) ? "max-h-96" : "max-h-0"
+                }`}
+              >
+                {hasReplies && (
+                  <div className="bg-gray-50 border-t border-gray-100 px-4 py-2 space-y-3">
+                    {replies.map((reply) => (
+                      <div key={reply.id} className="pr-6 relative">
+                        {/* خط عمودی برای سلسله مراتب */}
+                        <div className="absolute right-2 top-0 bottom-0 w-0.5 bg-gray-200"></div>
+                        <div className="relative">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-medium text-gray-600">
+                              {reply.commentName || reply.name}
+                            </span>
+                            <span className="text-[10px] text-gray-400">
+                              {formatPersianDate(
+                                reply.modified ? reply.modified : reply.created,
+                              )}
+                            </span>
+                            {!reply.confirmed && (
+                              <span className="text-[10px] bg-yellow-100 text-yellow-700 px-1.5 py-0.5 rounded-full">
+                                در انتظار
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-gray-600 leading-relaxed">
+                            {reply.body}
+                          </p>
+                          {(reply.pos !== null || reply.neg !== null) && (
+                            <div className="flex items-center gap-3 mt-1">
+                              <button className="flex items-center gap-0.5 text-[10px] text-gray-400 hover:text-blue-600">
+                                <HiOutlineThumbUp className="w-3 h-3" />
+                                {reply.pos ?? 0}
+                              </button>
+                              <button className="flex items-center gap-0.5 text-[10px] text-gray-400 hover:text-red-600">
+                                <HiOutlineThumbDown className="w-3 h-3" />
+                                {reply.neg ?? 0}
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {/* حالت خالی */}
-        {filteredComments.length === 0 && (
-          <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
-            <HiOutlineChat className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-700 mb-2">نظری یافت نشد</h3>
-            <p className="text-gray-500">
-              {searchTerm || filter !== 'all' 
-                ? 'هیچ نظری با این فیلترها وجود ندارد' 
-                : 'شما هنوز هیچ نظری ثبت نکرده‌اید'}
-            </p>
+        {comments.length === 0 && (
+          <div className="bg-white rounded-xl shadow-sm p-8 text-center">
+            <HiOutlineChat className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-500 text-sm">هنوز نظری ثبت نکرده‌اید</p>
           </div>
         )}
       </div>
 
-      {/* صفحه‌بندی */}
-      {filteredComments.length > 0 && (
-        <div className="flex items-center justify-between bg-white rounded-2xl shadow-sm p-4">
-          <div className="text-sm text-gray-500">
-            نمایش ۱ تا {filteredComments.length} از {comments.length} نظر
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="px-3 py-1 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
-              قبلی
-            </button>
-            <button className="px-3 py-1 bg-blue-500 text-white! rounded-lg">۱</button>
-            <button className="px-3 py-1 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
-              ۲
-            </button>
-            <button className="px-3 py-1 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
-              ۳
-            </button>
-            <button className="px-3 py-1 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
-              بعدی
-            </button>
-          </div>
-        </div>
+      {/* صفحه‌بندی ساده (در صورت نیاز) */}
+      {comments.length > 0 && (
+        <CustomPagination
+          total={comments[0].total}
+          currentPage={Number(searchParams.get("page")) || 1}
+          pageSize={20}
+        />
       )}
+
+      <ConfirmDialog
+        open={!!deleteItem}
+        onClose={() => setDeleteItem(null)}
+        onConfirm={() => handleDeleteComment(deleteItem!)}
+        title="حذف نظر"
+        message="آیا از حذف این نظر اطمینان دارید؟ این عمل قابل بازگشت نیست."
+        confirmText="حذف"
+        cancelText="انصراف"
+        loading={deleting}
+      />
     </div>
   );
 }

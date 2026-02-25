@@ -114,7 +114,7 @@ function RatingAutoService({
           <div className="flex items-center">
             <FaStar className="text-amber-500" />
             <span className="text-xs font-bold px-1">
-              {toPersianNumbers(initialPollData.pollScore / 2)}
+              {toPersianNumbers(initialPollData.pollScore)}
             </span>
             <span className="text-xs text-[#222]">
               (امتیاز از {toPersianNumbers(initialPollData.pollNumber)} نظر)

@@ -1,10 +1,10 @@
-import { getItemId } from "@/services/Item/ItemId";
-import MainBoxAutoService from "./components/MainBoxAutoService";
-import { redirect } from "next/navigation";
 import { getComment } from "@/services/Comment/Comment";
 import { getItem } from "@/services/Item/Item";
+import { getItemId } from "@/services/Item/ItemId";
 import { getPollId } from "@/services/Poll/pollId";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { redirect } from "next/navigation";
+import MainBoxAutoService from "./components/MainBoxAutoService";
 
 export async function generateMetadata({
   params,
@@ -86,12 +86,6 @@ async function pageAutoservicesDetails({
     });
 
     const pollData: PollData = await getPollId(Number(id));
-    const Latitude = detailsAuto.properties.find(
-      (e) => e.propertyKey === "p1050_latitude",
-    )?.propertyValue;
-    const Longitude = detailsAuto.properties.find(
-      (e) => e.propertyKey === "p1050_longitude",
-    )?.propertyValue;
 
     return (
       <>
@@ -102,8 +96,6 @@ async function pageAutoservicesDetails({
             id={id}
             banner={banner}
             pollData={pollData}
-            Latitude={Latitude ? Latitude : ""}
-            Longitude={Longitude ? Longitude : ""}
           />
         </div>
       </>

@@ -17,30 +17,40 @@ const MapContainer = dynamic(() => import("@/app/components/MapContainer"), {
   ),
 });
 
-function ContactUsAutoService({
-  detailsAuto,
-  Latitude,
-  Longitude,
-}: {
-  detailsAuto: ItemsId;
-  Latitude: string;
-  Longitude: string;
-}) {
+function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
+
   const address: string | undefined =
     detailsAuto.properties.length > 0
-      ? detailsAuto.properties.find((e) => e.propertyId === 22680)?.value
+      ? detailsAuto.properties.find(
+          (e) => e.propertyKey === "p1050_serviceaddress",
+        )?.value
       : undefined;
   const phone: string | undefined =
     detailsAuto.properties.length > 0
-      ? detailsAuto.properties.find((e) => e.propertyId === 22681)?.value
+      ? detailsAuto.properties.find((e) => e.propertyKey === "p1050_servicetel")
+          ?.value
       : undefined;
   const workingHours: string | undefined =
     detailsAuto.properties.length > 0
-      ? detailsAuto.properties.find((e) => e.propertyId === 22683)?.value
+      ? detailsAuto.properties.find(
+          (e) => e.propertyKey === "p1050_servicetime",
+        )?.value
       : undefined;
   const servicebosscode: string | undefined =
     detailsAuto.properties.length > 0
-      ? detailsAuto.properties.find((e) => e.propertyId === 22682)?.value
+      ? detailsAuto.properties.find(
+          (e) => e.propertyKey === "p1050_servicebosscode",
+        )?.value
+      : undefined;
+  const Latitude: string | undefined =
+    detailsAuto.properties.length > 0
+      ? detailsAuto.properties.find((e) => e.propertyKey === "p1050_latitude")
+          ?.value
+      : undefined;
+  const Longitude: string | undefined =
+    detailsAuto.properties.length > 0
+      ? detailsAuto.properties.find((e) => e.propertyKey === "p1050_longitude")
+          ?.value
       : undefined;
 
   const numbers = phone

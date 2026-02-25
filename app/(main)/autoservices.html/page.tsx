@@ -61,12 +61,14 @@ async function pageAutoService({
 }) {
   const searchParam = await searchParams;
   const page = Number(searchParam.page);
+  const provinceId = Number(searchParam.provinceid);
   const id = String(searchParam.id);
 
   const AutoServiceData: Items[] = await getItem({
     TypeId: 1050,
     langCode: "fa",
     PageIndex: page || 1,
+     ...(provinceId && { FilterProps: `23207=${provinceId}` }),
     PageSize: 15,
     OrderBy: 8,
   });
@@ -96,6 +98,15 @@ async function pageAutoService({
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
   const autoServiceCat: ItemsId | null = await getItemByUrl(decodedPathname);
+
+  const provinces: Items[] = await getItem({
+    TypeId: 1055,
+    langCode: "fa",
+    CategoryIdArray: "10190",
+    PageIndex: 1,
+    PageSize: 100,
+  });
+
 
   const lastNews: Items[] = await getItem({
     TypeId: 5,
@@ -130,6 +141,9 @@ async function pageAutoService({
           summary={autoServiceCat.summary || ""}
           lastNews={lastNews}
           lastCars={lastCars}
+          provinces={[...provinces].sort((a, b) =>
+            a.title.localeCompare(b.title, "fa"),
+          )}
         />
       )}
     </>

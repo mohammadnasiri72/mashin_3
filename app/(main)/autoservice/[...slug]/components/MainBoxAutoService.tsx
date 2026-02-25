@@ -15,16 +15,12 @@ function MainBoxAutoService({
   id,
   banner,
   pollData,
-  Latitude,
-  Longitude,
 }: {
   detailsAuto: ItemsId;
   comments: CommentResponse[];
   id: number;
   banner: Items[];
   pollData: PollData;
-  Latitude: string;
-  Longitude: string;
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isNavbarSticky, setIsNavbarSticky] = useState(false);
@@ -221,11 +217,7 @@ function MainBoxAutoService({
             <div className="space-y-8">
               {/* بخش مشخصات نمایندگی */}
               <div id="contact" className="section-anchor" ref={contactRef}>
-                <ContactUsAutoService
-                  detailsAuto={detailsAuto}
-                  Latitude={Latitude}
-                  Longitude={Longitude}
-                />
+                <ContactUsAutoService detailsAuto={detailsAuto} />
               </div>
 
               {/* بخش نظرسنجی */}

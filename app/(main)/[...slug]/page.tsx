@@ -1,6 +1,6 @@
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
-import { htmlToPlainText } from "@/utils/func";
+import { createMarkup, htmlToPlainText } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { notFound, redirect } from "next/navigation";
 
@@ -15,9 +15,8 @@ export async function generateMetadata({
   const dataPage: ItemsId | null = await getItemByUrl(path);
 
   if (dataPage && dataPage.title) {
-    
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
-   
+
     const description = dataPage.seoInfo?.seoDescription
       ? dataPage.seoInfo?.seoDescription
       : dataPage.title;
@@ -110,7 +109,12 @@ async function pageDynamic({
           title={dataPage.title}
         />
         <section className="min-h-96 p-5" aria-label="محتوای صفحه">
-          {htmlToPlainText(dataPage.body ? dataPage.body : "")}
+          <div
+            className="text-gray-700 leading-8 text-justify sm:text-sm! text-xs!"
+            dangerouslySetInnerHTML={createMarkup(
+              dataPage.body ? dataPage.body : "",
+            )}
+          />
         </section>
       </article>
     );

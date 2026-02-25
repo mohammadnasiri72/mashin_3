@@ -9,7 +9,7 @@ import { LikeComment } from "@/services/Comment/LikeComment";
 import { postComment } from "@/services/Comment/postComment";
 import { formatPersianDate, Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
-import { Button, Form, Input, message, Spin } from "antd";
+import { Button, Form, Input, Spin } from "antd";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { FaReply, FaThumbsDown, FaThumbsUp } from "react-icons/fa6";
@@ -100,7 +100,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
         icon: "success",
         title: "با موفقیت ثبت شد",
       });
-      // فقط اگه درخواست موفق بود، عدد لایک افزایش پیدا کنه
       setLikes((prev) => prev + 1);
     } catch (error: any) {
       Toast.fire({
@@ -129,7 +128,6 @@ const CommentItem: React.FC<CommentItemProps> = ({
         icon: "success",
         title: "با موفقیت ثبت شد",
       });
-      // فقط اگه درخواست موفق بود، عدد دیسلایک افزایش پیدا کنه
       setDislikes((prev) => prev + 1);
     } catch (error: any) {
       Toast.fire({
@@ -173,15 +171,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
               <button
                 aria-label="ارسال کامنت"
                 onClick={() => {
-                  if (token) {
-                    onReply(comment.id);
-                  } else {
-                    setOpenLogin(true);
-                    Toast.fire({
-                      icon: "error",
-                      title: "لطفا ابتدا وارد حساب کاربری خود شوید",
-                    });
-                  }
+                  onReply(comment.id);
                 }}
                 className="cursor-pointer group flex items-center text-xs text-gray-500 bg-white p-3 rounded-lg"
               >
@@ -251,6 +241,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   const [allComments, setAllComments] = useState<Comment[]>(comments);
   const [totalComments, setTotalComments] = useState<number>(0);
 
+  // دو نمونه فرم جداگانه
+  const [mainForm] = Form.useForm(); // فرم اصلی
+  const [replyForm] = Form.useForm(); // فرم پاسخ
+
   const token = useSelector((state: RootState) => state.token.token);
   const user = Cookies.get("user");
 
@@ -272,9 +266,8 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     }
   }, [comments]);
 
-  const [form] = Form.useForm();
-
-  const onFinish = async (values: {
+  // تابع ارسال فرم اصلی
+  const onMainFinish = async (values: {
     email: string;
     body: string;
     name: string;
@@ -283,7 +276,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       const data = {
         ...values,
         itemId: id,
-        parentId: openModalCommentReplay ? parentId : 0,
+        parentId: 0, // فرم اصلی parentId = 0
         type: 0,
         userName,
         langCode: "fa",
@@ -291,13 +284,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         userIP: "",
         name: JSON.parse(user).displayName,
         email: userName,
-        // ...(token && { name: "" }),
-        // ...(token && { email: "" }),
       };
       try {
-        const response = await postComment(data);
-        form.resetFields();
-        setOpenModalCommentReplay(false);
+        await postComment(data);
+        mainForm.resetFields(); // ریست فرم اصلی
 
         // بعد از ثبت کامنت جدید، کامنت‌ها را از صفحه اول مجدد بارگیری کنید
         setPageIndex(1);
@@ -335,10 +325,11 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         });
       }
     } else {
+      // بدون توکن
       const data = {
         ...values,
         itemId: id,
-        parentId: openModalCommentReplay ? parentId : 0,
+        parentId: 0,
         type: 0,
         userName,
         langCode: "fa",
@@ -346,11 +337,9 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         userIP: "",
       };
       try {
-        const response = await postComment(data);
-        form.resetFields();
-        setOpenModalCommentReplay(false);
+        await postComment(data);
+        mainForm.resetFields();
 
-        // بعد از ثبت کامنت جدید، کامنت‌ها را از صفحه اول مجدد بارگیری کنید
         setPageIndex(1);
         setLoadingMore(true);
         try {
@@ -388,6 +377,118 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     }
   };
 
+  // تابع ارسال فرم پاسخ
+  const onReplyFinish = async (values: {
+    email: string;
+    body: string;
+    name: string;
+  }) => {
+    if (token) {
+      const data = {
+        ...values,
+        itemId: id,
+        parentId: parentId, // از state parentId استفاده می‌کنیم
+        type: 0,
+        userName,
+        langCode: "fa",
+        score: 0,
+        userIP: "",
+        name: JSON.parse(user).displayName,
+        email: userName,
+      };
+      try {
+        await postComment(data);
+        replyForm.resetFields(); // ریست فرم پاسخ
+        setOpenModalCommentReplay(false); // بستن مودال
+
+        setPageIndex(1);
+        setLoadingMore(true);
+        try {
+          const newComments = await getComment({
+            id: Number(id),
+            langCode: "fa",
+            type: 0,
+            pageSize: 20,
+            pageIndex: 1,
+          });
+          setAllComments(newComments);
+          if (newComments.length > 0) {
+            setTotalComments(newComments[0].total || 0);
+          }
+        } catch (error) {
+          console.error("Error refreshing comments:", error);
+          Toast.fire({
+            icon: "error",
+            title: "خطا در دریافت نظرات جدید",
+          });
+        } finally {
+          setLoadingMore(false);
+        }
+
+        Toast.fire({
+          icon: "success",
+          title: "پاسخ شما ثبت شد لطفا منتظر تایید ادمین بمانید",
+        });
+      } catch (error: any) {
+        Toast.fire({
+          icon: "error",
+          title: error.response?.data || "خطا در ثبت پاسخ",
+        });
+      }
+    } else {
+      // بدون توکن
+      const data = {
+        ...values,
+        itemId: id,
+        parentId: parentId,
+        type: 0,
+        userName,
+        langCode: "fa",
+        score: 0,
+        userIP: "",
+      };
+      try {
+        await postComment(data);
+        replyForm.resetFields();
+        setOpenModalCommentReplay(false);
+
+        setPageIndex(1);
+        setLoadingMore(true);
+        try {
+          const newComments = await getComment({
+            id: Number(id),
+            langCode: "fa",
+            type: 0,
+            pageSize: 20,
+            pageIndex: 1,
+          });
+          setAllComments(newComments);
+          if (newComments.length > 0) {
+            setTotalComments(newComments[0].total || 0);
+          }
+        } catch (error) {
+          console.error("Error refreshing comments:", error);
+          Toast.fire({
+            icon: "error",
+            title: "خطا در دریافت نظرات جدید",
+          });
+        } finally {
+          setLoadingMore(false);
+        }
+
+        Toast.fire({
+          icon: "success",
+          title: "پاسخ شما ثبت شد لطفا منتظر تایید ادمین بمانید",
+        });
+      } catch (error: any) {
+        Toast.fire({
+          icon: "error",
+          title: error.response?.data || "خطا در ثبت پاسخ",
+        });
+      }
+    }
+  };
+
   // تابع ساده برای بارگیری کامنت‌های بیشتر
   const handleLoadMore = async () => {
     if (loadingMore) return;
@@ -405,7 +506,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       });
 
       if (response.length > 0) {
-        // اضافه کردن کامنت‌های جدید به کامنت‌های موجود
         setAllComments((prev) => [...prev, ...response]);
         setPageIndex(nextPageIndex);
       }
@@ -425,7 +525,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     const commentMap = new Map<number, CommentTreeNode>();
     const roots: CommentTreeNode[] = [];
 
-    // اول همه کامنت‌ها رو توی مپ قرار می‌دیم
     allComments.forEach((comment: any) => {
       commentMap.set(comment.id, {
         ...comment,
@@ -433,28 +532,22 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       });
     });
 
-    // حالا هر کامنت رو به پدرش وصل می‌کنیم
     allComments.forEach((comment: any) => {
       const node = commentMap.get(comment.id);
-
       if (!node) return;
 
       if (comment.parentId === -1) {
-        // کامنت ریشه
         roots.push(node);
       } else {
-        // کامنت فرزند
         const parent = commentMap.get(comment.parentId);
         if (parent) {
           parent.children.push(node);
         } else {
-          // اگر پدر پیدا نشد، به عنوان ریشه در نظر بگیر
           roots.push(node);
         }
       }
     });
 
-    // فرزندان رو بر اساس تاریخ مرتب می‌کنیم (جدیدترین اول)
     roots.forEach((root) => {
       if (root.children && root.children.length > 0) {
         root.children.sort(
@@ -464,7 +557,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       }
     });
 
-    // ریشه‌ها رو بر اساس تاریخ مرتب می‌کنیم (جدیدترین اول)
     return roots.sort(
       (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
     );
@@ -504,7 +596,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         </h3>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
-          {/* فرم ثبت نظر */}
+          {/* فرم ثبت نظر اصلی */}
           <div className="lg:col-span-4 ">
             <div className="contactForm_wrap bg-gray-50 rounded-xl p-6 comment-form sticky">
               <div className="title_sec mb-4">
@@ -514,7 +606,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                 </p>
               </div>
 
-              <Form form={form} layout="vertical" onFinish={onFinish}>
+              <Form form={mainForm} layout="vertical" onFinish={onMainFinish}>
                 {!token && (
                   <Form.Item
                     name="name"
@@ -645,7 +737,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
           zIndex: 99999999999,
         }}
         open={openModalCommentReplay}
-        onClose={() => setOpenModalCommentReplay(false)}
+        onClose={() => {
+          setOpenModalCommentReplay(false);
+          replyForm.resetFields(); // ریست فرم هنگام بستن مودال
+        }}
         maxWidth="sm"
         fullWidth
         PaperProps={{
@@ -668,7 +763,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         >
           پاسخ به کامنت
           <IconButton
-            onClick={() => setOpenModalCommentReplay(false)}
+            onClick={() => {
+              setOpenModalCommentReplay(false);
+              replyForm.resetFields();
+            }}
             sx={{
               position: "absolute",
               left: 8,
@@ -684,37 +782,47 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         <DialogContent sx={{ py: 3, px: 3 }}>
           <div className="lg:col-span-4 ">
             <div className="py-2">
-              <Form form={form} layout="vertical" onFinish={onFinish}>
-                <Form.Item
-                  name="name"
-                  label="نام و نام خانوادگی"
-                  rules={[
-                    { required: true, message: "لطفا نام خود را وارد کنید" },
-                  ]}
-                >
-                  <Input placeholder="نام خود را وارد کنید" size="large" />
-                </Form.Item>
+              <Form form={replyForm} layout="vertical" onFinish={onReplyFinish}>
+                {!token && (
+                  <Form.Item
+                    name="name"
+                    label="نام و نام خانوادگی"
+                    rules={[
+                      {
+                        required: token ? false : true,
+                        message: "لطفا نام خود را وارد کنید",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="نام خود را وارد کنید" size="large" />
+                  </Form.Item>
+                )}
 
-                <Form.Item
-                  name="email"
-                  label="ایمیل"
-                  rules={[
-                    { required: true, message: "لطفا ایمیل خود را وارد کنید" },
-                    { type: "email", message: "ایمیل معتبر نیست" },
-                  ]}
-                >
-                  <Input placeholder="مثلا hiva@gmail.com" size="large" />
-                </Form.Item>
+                {!token && (
+                  <Form.Item
+                    name="email"
+                    label="ایمیل"
+                    rules={[
+                      {
+                        required: token ? false : true,
+                        message: "لطفا ایمیل خود را وارد کنید",
+                      },
+                      { type: "email", message: "ایمیل معتبر نیست" },
+                    ]}
+                  >
+                    <Input placeholder="مثلا hiva@gmail.com" size="large" />
+                  </Form.Item>
+                )}
 
                 <Form.Item
                   name="body"
-                  label="پاسخ شما"
+                  label="ثبت دیدگاه"
                   rules={[
-                    { required: true, message: "لطفا پاسخ خود را وارد کنید" },
+                    { required: true, message: "لطفا دیدگاه خود را وارد کنید" },
                   ]}
                 >
                   <TextArea
-                    placeholder="پاسخ خود را به این کامنت بنویسید..."
+                    placeholder="پاسخ خود را بنویسید..."
                     rows={4}
                     size="large"
                   />
@@ -722,15 +830,26 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
                 <Form.Item>
                   <Button
-                    aria-label="ارسال پاسخ"
+                    aria-label="ثبت پاسخ"
                     type="primary"
                     htmlType="submit"
                     size="large"
                     className="w-full bg-red-600 hover:bg-red-700 border-none"
                   >
-                    ارسال پاسخ
+                    ثبت پاسخ
                   </Button>
                 </Form.Item>
+
+                <p className="text-xs text-gray-500 text-center mt-4">
+                  ثبت دیدگاه به معنی موافقت با{" "}
+                  <a
+                    href="/rules-regulations"
+                    className="text-red-600 font-medium"
+                  >
+                    قوانین انتشار ماشین سه
+                  </a>{" "}
+                  است.
+                </p>
               </Form>
             </div>
           </div>

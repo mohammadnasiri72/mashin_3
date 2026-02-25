@@ -79,11 +79,6 @@ export default function ProfileDropdown() {
     };
   }, []);
 
-  // Type guard برای بررسی اینکه آیا آیتم دارای icon است
-  const isMenuItem = (item: MenuItemType): item is MenuItem => {
-    return "key" in item && "icon" in item;
-  };
-
   return (
     <div ref={dropdownRef} className="relative px-2">
       <div
@@ -98,64 +93,71 @@ export default function ProfileDropdown() {
         <Avatar size="default" icon={<UserOutlined />} />
       </div>
 
-      {/* Dropdown Menu */}
-      {
-        <div
-          className={`absolute left-0  w-48 duration-300 bg-white rounded-lg shadow-lg border border-gray-200 z-50 ${
-            !open ? "max-h-0 mt-0 opacity-0 invisible" : "max-h-64 mt-2 visible overflow-auto"
-          }`}
-        >
-          <div>
-            <Link
-              href="/dashboard"
-              onClick={() => {}}
-              className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
-            >
-              <FaHome />
-              <span className="flex items-center gap-2">داشبورد</span>
-            </Link>
-            <Divider className="m-0! p-0!" />
-            <Link
-              href="/dashboard/favorites"
-              onClick={() => {}}
-              className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
-            >
-              <FaHeart />
-              <span className="flex items-center gap-2">علاقه‌مندی‌های من</span>
-            </Link>
-            <Divider className="m-0! p-0!" />
-            <Link
-              href="/dashboard/mycomments"
-              onClick={() => {}}
-              className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
-            >
-              <FaComments />
-              <span className="flex items-center gap-2">نظرات ارسالی</span>
-            </Link>
-            <Divider className="m-0! p-0!" />
-            <Link
-              href="/dashboard/mycomments"
-              onClick={() => {}}
-              className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
-            >
-              <FaKey />
-              <span className="flex items-center gap-2">تغییر رمز عبور</span>
-            </Link>
-            <Divider className="m-0! p-0!" />
-            <div
-              onClick={() => {
-                handleLogout();
-              }}
-              className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
-            >
-              <FaPowerOff />
-              <span className="flex items-center gap-2 w-full text-right">
-                {loading ? "در حال خروج" : "خروج از حساب"}
-              </span>
-            </div>
+      <div
+        className={`absolute left-0  w-48 duration-300 bg-white rounded-lg shadow-lg border border-gray-200 z-50 ${
+          !open
+            ? "max-h-0 mt-0 opacity-0 invisible"
+            : "max-h-64 mt-2 visible overflow-auto"
+        }`}
+      >
+        <div>
+          <Link
+            href="/dashboard"
+            onClick={() => {
+              setOpen(false);
+            }}
+            className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
+          >
+            <FaHome />
+            <span className="flex items-center gap-2">داشبورد</span>
+          </Link>
+          <Divider className="m-0! p-0!" />
+          <Link
+            href="/dashboard/favorites"
+            onClick={() => {
+              setOpen(false);
+            }}
+            className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
+          >
+            <FaHeart />
+            <span className="flex items-center gap-2">علاقه‌مندی‌های من</span>
+          </Link>
+          <Divider className="m-0! p-0!" />
+          <Link
+            href="/dashboard/mycomments"
+            onClick={() => {
+              setOpen(false);
+            }}
+            className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
+          >
+            <FaComments />
+            <span className="flex items-center gap-2">نظرات ارسالی</span>
+          </Link>
+          <Divider className="m-0! p-0!" />
+          <Link
+            href="/dashboard/mycomments"
+            onClick={() => {
+              setOpen(false);
+            }}
+            className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
+          >
+            <FaKey />
+            <span className="flex items-center gap-2">تغییر رمز عبور</span>
+          </Link>
+          <Divider className="m-0! p-0!" />
+          <div
+            onClick={() => {
+              handleLogout();
+            }}
+            className="flex items-center gap-3 px-4 py-3 text-sm text-gray-700! hover:bg-gray-50! hover:text-[#ce1a2a]! cursor-pointer transition-colors duration-150"
+          >
+            <FaPowerOff />
+            <span className="flex items-center gap-2 w-full text-right">
+              {loading ? "در حال خروج" : "خروج از حساب"}
+            </span>
           </div>
         </div>
-      }
+      </div>
     </div>
   );
 }

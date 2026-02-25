@@ -71,12 +71,14 @@ async function pageAutoServiceDetails({
   const param = await params;
   const searchParam = await searchParams;
   const page = Number(searchParam.page);
+  const provinceId = Number(searchParam.provinceid);
   const id = param.slug[0];
 
   const AutoServiceData: Items[] = await getItem({
     TypeId: 1050,
     langCode: "fa",
     PageIndex: page || 1,
+    ...(provinceId && { FilterProps: `23207=${provinceId}` }),
     CategoryIdArray: id,
     PageSize: 15,
   });
@@ -99,17 +101,25 @@ async function pageAutoServiceDetails({
 
   const autoServiceCat = await getCategoryId(Number(id));
 
-   const lastNews: Items[] = await getItem({
+  const lastNews: Items[] = await getItem({
     TypeId: 5,
     langCode: "fa",
     PageIndex: 1,
     PageSize: 7,
   });
-   const lastCars: Items[] = await getItem({
+  const lastCars: Items[] = await getItem({
     TypeId: 1042,
     langCode: "fa",
     PageIndex: 1,
     PageSize: 7,
+  });
+
+  const provinces: Items[] = await getItem({
+    TypeId: 1055,
+    langCode: "fa",
+    CategoryIdArray: "10190",
+    PageIndex: 1,
+    PageSize: 100,
   });
 
   return (
@@ -128,6 +138,9 @@ async function pageAutoServiceDetails({
         summary={autoServiceCat.summary || ""}
         lastNews={lastNews}
         lastCars={lastCars}
+        provinces={[...provinces].sort((a, b) =>
+          a.title.localeCompare(b.title, "fa"),
+        )}
       />
     </>
   );
