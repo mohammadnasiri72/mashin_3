@@ -10,6 +10,14 @@ function NvbarCar({
   pollData: PollData;
   totalComment: number;
 }) {
+  const scrollToElement = (elementId: string, offset = 80) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const y = element.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="p-2 flex gap-2 items-center">
       <div className="flex gap-1 items-center text-xs!">
@@ -19,35 +27,22 @@ function NvbarCar({
           (امتیاز {pollData.pollNumber} کاربر)
         </span>
       </div>
+
       <div
         className="bg-gray-200 rounded-full px-2 py-1 flex items-center gap-1 cursor-pointer text-xs!"
         onClick={(e) => {
           e.preventDefault();
-          const element = document.getElementById("technical");
-          if (element) {
-            element.scrollIntoView({ behavior: "smooth" });
-            // آفست برای نوار بالایی
-            setTimeout(() => {
-              window.scrollBy({ top: 0, behavior: "smooth" });
-            }, 100);
-          }
+          scrollToElement("technical", 100); // 100px آفست برای هدر
         }}
       >
         <span>مشخصات فنی</span>
         <FaAngleLeft />
-       
       </div>
+
       <div
         onClick={(e) => {
           e.preventDefault();
-          const element = document.getElementById("comments");
-          if (element) {
-            element.scrollIntoView({ behavior: "smooth" });
-            // آفست برای نوار بالایی
-            setTimeout(() => {
-              window.scrollBy({ top: 0, behavior: "smooth" });
-            }, 100);
-          }
+          scrollToElement("comments", 100);
         }}
         className="bg-gray-200 rounded-full px-2 py-1 flex items-center gap-1 cursor-pointer text-xs!"
       >
