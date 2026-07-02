@@ -3,7 +3,7 @@ import axios from "axios";
 
 // ایجاد instance ساده بدون interceptor
 const axiosInstance = axios.create({
-  baseURL: "https://api3.aitest2.ir/",
+  baseURL: "https://api.mashin3.com/",
   timeout: 10000,
 });
 

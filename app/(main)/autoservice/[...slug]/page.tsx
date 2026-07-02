@@ -5,6 +5,7 @@ import { getPollId } from "@/services/Poll/pollId";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { redirect } from "next/navigation";
 import MainBoxAutoService from "./components/MainBoxAutoService";
+import { ItemVisit } from "@/services/Item/ItemVisit";
 
 export async function generateMetadata({
   params,
@@ -86,6 +87,18 @@ async function pageAutoservicesDetails({
     });
 
     const pollData: PollData = await getPollId(Number(id));
+
+      try {
+            await ItemVisit({
+              langCode: "fa",
+              id,
+              ip: "",
+              url: detailsAuto.url,
+              userAgent:''
+            });
+          } catch (error) {
+            console.error("Error recording visit:", error);
+          }
 
     return (
       <>

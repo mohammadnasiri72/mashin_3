@@ -69,6 +69,7 @@ async function pageWhichCars({
     PageIndex: page || 1,
     ...(term && term !== "undefined" && { Term: term }),
     PageSize: 15,
+    FullData:true,
   });
   const popularComparisons: Items[] = await getItem({
     TypeId: 1045,

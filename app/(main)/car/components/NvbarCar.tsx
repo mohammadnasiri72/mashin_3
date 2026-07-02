@@ -19,17 +19,17 @@ function NvbarCar({
   };
 
   return (
-    <div className="p-2 flex gap-2 items-center">
-      <div className="flex gap-1 items-center text-xs!">
+    <div className="p-2 flex gap-2 items-center overflow-auto">
+      <div className="flex gap-1 items-center text-xs! whitespace-nowrap">
         <FaStar className="text-amber-600" />
-        <span>{pollData.pollScore}</span>
+        <span>{pollData?.pollScore || 0}</span>
         <span className="text-gray-600">
-          (امتیاز {pollData.pollNumber} کاربر)
+          (امتیاز {pollData?.pollNumber||0} کاربر)
         </span>
       </div>
 
       <div
-        className="bg-gray-200 rounded-full px-2 py-1 flex items-center gap-1 cursor-pointer text-xs!"
+        className="bg-gray-200 rounded-full px-2 py-1 flex items-center gap-1 cursor-pointer text-xs! whitespace-nowrap"
         onClick={(e) => {
           e.preventDefault();
           scrollToElement("technical", 100); // 100px آفست برای هدر
@@ -44,7 +44,7 @@ function NvbarCar({
           e.preventDefault();
           scrollToElement("comments", 100);
         }}
-        className="bg-gray-200 rounded-full px-2 py-1 flex items-center gap-1 cursor-pointer text-xs!"
+        className="bg-gray-200 rounded-full px-2 py-1 flex items-center gap-1 cursor-pointer text-xs! whitespace-nowrap"
       >
         <span>{totalComment}</span>
         <span>دیدگاه</span>

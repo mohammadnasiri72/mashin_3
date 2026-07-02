@@ -246,7 +246,7 @@ const AuthPage: React.FC = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 flex items-center justify-center ml-4">
         <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden">
           {/* هدر */}
           <div className="bg-[#ce1a2a]  text-center py-6 px-4">

@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 
-const TechnicalSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
+const TechnicalSection = ({ detailsCar ,vehicle}: { detailsCar: ItemsId ,vehicle:string}) => {
   // فیلتر مشخصات فنی
   const specifications = detailsCar.properties.filter(
     (e) => e.isTechnicalProperty,
@@ -55,10 +55,10 @@ const TechnicalSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
       <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
         <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
           <strong className="text-[#ce1a2a]">مشخصات فنی </strong>
-          ماشین {detailsCar.sourceName} {detailsCar.title}
+          {vehicle==='motor'? 'موتور':  'ماشین'} {detailsCar.sourceName} {detailsCar.title}
         </h3>
         <p className="text-gray-500 text-center py-8">
-          مشخصات فنی برای این خودرو ثبت نشده است.
+          مشخصات فنی برای این {vehicle==='motor'? 'موتور':  'ماشین'} ثبت نشده است.
         </p>
       </div>
     );
@@ -71,7 +71,7 @@ const TechnicalSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
     <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
       <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
         <strong className="text-[#ce1a2a]">مشخصات فنی </strong>
-        ماشین {detailsCar.sourceName} {detailsCar.title}
+        {vehicle==='motor'? 'موتور':  'ماشین'} {detailsCar.sourceName} {detailsCar.title}
       </h3>
 
       {/* تب‌های دسته‌بندی - فقط اگه بیش از یک دسته داشته باشیم */}

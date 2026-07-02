@@ -7,7 +7,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
-const GallerySection = ({ Attachment ,detailsCar}: { Attachment: ItemsAttachment[] , detailsCar:ItemsId}) => {
+const GallerySection = ({ Attachment ,detailsCar , vehicle}: { Attachment: ItemsAttachment[] , detailsCar:ItemsId , vehicle:string}) => {
 
   // Initialize Fancybox
   useEffect(() => {
@@ -56,7 +56,7 @@ const GallerySection = ({ Attachment ,detailsCar}: { Attachment: ItemsAttachment
     <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
       <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
         <strong className="text-red-600">تصاویر </strong>
-        ماشین {detailsCar.sourceName} {detailsCar.title}
+        {vehicle==='motor'? 'موتور':  'ماشین'} {detailsCar.sourceName} {detailsCar.title}
       </h3>
 
       <div className="space-y-4 mt-3">

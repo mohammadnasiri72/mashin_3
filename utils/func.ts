@@ -145,3 +145,50 @@ export const createpublishCode = (publishCode: string) => {
     return publishCode;
   }
 };
+
+
+export function decodeHtmlServer(html: string | null | undefined): string {
+  if (!html) return '';
+  
+  // جایگزین کردن کاراکترهای HTML Encode شده
+  const decoded = html
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec));
+  
+  return decoded;
+}
+
+// ✅ تابع مخصوص برای seoHeadTags که میتونه HTML پیچیده داشته باشه
+export function decodeSeoHeadTags(html: string | null | undefined): string {
+  if (!html) return '';
+  
+  // برای seoHeadTags، تمام تگ‌ها باید intact بمونن
+  // فقط کاراکترهای Encode شده رو Decode میکنیم
+  return decodeHtmlServer(html);
+}
+
+export function parseMetaTags(html: string) {
+  const regex = /<meta\s+([^>]+?)\/?>/g
+  const tags: Record<string, string>[] = []
+  let match
+
+  while ((match = regex.exec(html)) !== null) {
+    const attrsStr = match[1]
+    const attrRegex = /(\w[\w-]*)\s*=\s*"([^"]*)"/g
+    const attrs: Record<string, string> = {}
+    let attrMatch
+    while ((attrMatch = attrRegex.exec(attrsStr)) !== null) {
+      attrs[attrMatch[1]] = attrMatch[2]
+    }
+    tags.push(attrs)
+  }
+  return tags
+}
+
+

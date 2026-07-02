@@ -1,10 +1,8 @@
-import { getCategory } from "@/services/Category/Category";
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
-import React from "react";
-import CarsDetails from "../../cars/[...slug]/components/CarsDetails";
 import { mainDomainOld } from "@/utils/mainDomain";
-import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import CarsDetails from "../../cars/[...slug]/components/CarsDetails";
 
 export async function generateMetadata({
   searchParams,
@@ -67,13 +65,6 @@ async function pageMotorcyclesDainamic({
     CategoryIdArray: "6415",
   });
 
-  const motorBrands: ItemsCategory[] = await getCategory({
-    TypeId: 1052,
-    LangCode: "fa",
-    ParentIdArray: id,
-    PageIndex: 1,
-    PageSize: 200,
-  });
   const motorDetails: ItemsCategoryId = await getCategoryId(id);
   const motorView: Items[] = await getItem({
     TypeId: 1052,
@@ -83,36 +74,23 @@ async function pageMotorcyclesDainamic({
     PageSize: 200,
   });
 
-  const uniqueArray = motorBrands.filter(
-    (item, index, self) => index === self.findIndex((i) => i.id === item.id),
-  );
-  const productsWithCategories = uniqueArray.filter((product) =>
-    motorView.some((category) => category.categoryId === product.id),
-  );
-
-  let motorBrands2: Items[] = [];
-  if (motorBrands.length === 0) {
-    motorBrands2 = await getItem({
-      TypeId: 1052,
-      langCode: "fa",
-      CategoryIdArray: String(id),
-      PageIndex: 1,
-      PageSize: 200,
-    });
-  }
-
   return (
     <>
       <BreadcrumbCategory
         breadcrumb={motorDetails.breadcrumb}
         title={motorDetails.title}
       />
-      <CarsDetails
+      {/* <CarsDetails
         carBrands={productsWithCategories}
         carDetails={motorDetails}
         carView={motorView}
         banner={banner}
         carBrands2={motorBrands2}
+      /> */}
+      <CarsDetails
+        carView={motorView}
+        carDetails={motorDetails}
+        banner={banner}
       />
     </>
   );

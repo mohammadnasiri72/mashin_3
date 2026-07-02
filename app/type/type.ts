@@ -218,6 +218,19 @@ interface ItemsId {
   visit: number;
   score: number;
 }
+interface ItemsSeoId {
+  
+  categoryId: number;
+  categoryTitle: string;
+  id: number;
+  seoDescription: string;
+  seoKeywords: string | null;
+  seoTitle: string;
+  seoUrl: string;
+  title: string;
+  url: string;
+  seoHeadTags :string | null;
+}
 
 interface ItemCategoryParams {
   TypeId: number;
@@ -445,6 +458,7 @@ interface ItemsFindByTerm {
   typeId: number;
   type: string;
   image: string;
+  total: number;
 }
 interface pollDetails {
   questionId: number;
@@ -464,6 +478,16 @@ interface pollScoreDto {
 interface PollSaveParam {
   caseId: number;
   pollScoreDto: pollScoreDto[];
+}
+interface ItemVisitParam {
+  langCode:string;
+  id:number;
+  ip:string;
+  url:string;
+  userAgent:string;
+}
+interface ItemVisitResponse {
+  
 }
 interface FormContact {
   langCode: string;

@@ -126,13 +126,13 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
       <Dialog
         open={open}
         onClose={handleClose}
-        maxWidth="xs"
+        maxWidth="lg"
         fullWidth
         PaperProps={{
           sx: {
             borderRadius: "12px",
             boxShadow: "0 10px 40px rgba(0,0,0,0.1)",
-            maxWidth: "580px",
+            maxWidth: "450px",
           },
         }}
       >
@@ -218,7 +218,7 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
               </span>
             )}
           </div>
-          <div className="flex justify-between items-center mt-3">
+          <div className="mt-3">
             <Checkbox
               className="select-none text-xs!"
               checked={remember}
@@ -227,37 +227,30 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
               مرا به خاطر بسپار
             </Checkbox>
           </div>
-
-          <div className="flex justify-center items-center flex-wrap mt-10">
-            <div className=" w-full md:w-1/2 md:pl-1">
-              <div
-                onClick={() => {
-                  setResetPasswordModal(true);
-                }}
-                className="border bg-white! border-gray-600! hover:border-gray-800! rounded-sm! w-full! text-gray-600! hover:text-gray-800! duration-300! flex! cursor-pointer text-center! py-2! font-bold! hover:bg-gray-200! justify-center"
-              >
-                <div className="flex items-center gap-1">
-                  <FaLock />
-                  <span className="text-xs">فراموشی رمز</span>
-                </div>
-              </div>
-            </div>
-            <div className=" w-full md:w-1/2 md:pr-1">
-              <Link
-                href={"/auth"}
-                onClick={(e) => {
-                  e.preventDefault();
-                  disPatch(setRedirectRegister(fullUrl));
-                  setOpen(false);
-                }}
-                className="border text-xs border-gray-600! hover:border-gray-800! rounded-sm! w-full! text-gray-600! hover:text-gray-800! duration-300! text-center! py-2 font-bold! hover:bg-gray-200! flex! justify-center"
-              >
-                <div className="flex items-center gap-1">
-                  <FaUser />
-                  <span className="text-xs">ساخت حساب کاربری</span>
-                </div>
-              </Link>
-            </div>
+          <div className="flex justify-between items-center mt-3">
+            <Button
+              aria-label="فراموشی رمز عبور"
+              type="link"
+              onClick={() => {
+                setResetPasswordModal(true);
+              }}
+              className="text-xs! p-0! h-auto! text-blue-600 hover:text-blue-800"
+            >
+              فراموشی رمز عبور
+            </Button>
+            <Link
+              href={"/auth"}
+              aria-label="فراموشی رمز عبور"
+              type="link"
+              onClick={(e) => {
+                e.preventDefault();
+                disPatch(setRedirectRegister(fullUrl));
+                setOpen(false);
+              }}
+              className="text-xs! p-0! h-auto! text-blue-600! hover:text-blue-800!"
+            >
+              ساخت حساب کاربری
+            </Link>
           </div>
 
           <div className="mt-3 w-full">

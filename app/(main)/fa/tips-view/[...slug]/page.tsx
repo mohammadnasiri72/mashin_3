@@ -4,6 +4,7 @@ import React from "react";
 import EducationView from "./components/EducationView";
 import { getComment } from "@/services/Comment/Comment";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { ItemVisit } from "@/services/Item/ItemVisit";
 
 export async function generateMetadata({
   params,
@@ -91,6 +92,17 @@ async function pageTipView({ params }: { params: Promise<{ slug: string }> }) {
     CategoryIdArray: "6415",
   });
 
+    try {
+                    await ItemVisit({
+                      langCode: "fa",
+                      id,
+                      ip: "",
+                      url: education.url,
+                      userAgent:''
+                    });
+                  } catch (error) {
+                    console.error("Error recording visit:", error);
+                  }
   return (
     <EducationView
       education={education}

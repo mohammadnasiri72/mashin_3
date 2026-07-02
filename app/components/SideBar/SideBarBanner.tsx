@@ -8,7 +8,7 @@ function SideBarBanner({ banner }: { banner: Items[] }) {
       {banner.length > 0 &&
         banner.map((ban) => (
           <div className="w-full" key={ban.id}>
-            <Link href={ban.url ? ban.url : "#"}>
+            <Link href={ban.sourceLink ? ban.sourceLink : "#"}>
               <img
                 className="w-full"
                 src={mainDomainOld + ban.image}

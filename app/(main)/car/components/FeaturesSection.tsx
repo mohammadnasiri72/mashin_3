@@ -17,11 +17,11 @@ async function FeaturesSection({
   detailsCar: ItemsId;
   Attachment: ItemsAttachment[];
 }) {
-  const advantages = detailsCar.properties.filter(
+  const advantages = detailsCar.properties.find(
     (e) => e.propertyKey === "p1042_design",
   );
 
-  const disadvantages = detailsCar.properties.filter(
+  const disadvantages = detailsCar.properties.find(
     (e) => e.propertyKey === "p1042_performance",
   );
 
@@ -60,6 +60,7 @@ async function FeaturesSection({
           {detailsCar.title}
         </strong>
       </h2>
+      
       <div
         className={`grid grid-cols-1 gap-6 ${Attachment.length > 0 ? "sm:grid-cols-2" : "sm:grid-cols-1"}`}
       >
@@ -76,52 +77,54 @@ async function FeaturesSection({
             </strong>
           </h2>
           {/* Advantages Column */}
-          <div className="bg-green-50 rounded-xl p-6">
-            <div className="advg_title advg_plus flex items-center text-green-700 text-lg font-bold mb-4">
-              <FaSquarePlus className="ml-2 text-green-600" />
-              مزایا
-            </div>
-            <ul className="flex flex-wrap space-y-3">
-              {advantages.map((advantage) => (
-                <li
-                  key={advantage.id}
-                  className="text-gray-800 font-medium flex items-start w-full"
-                >
-                  <span className="text-green-500 ml-2 mt-1">•</span>
-                  <div
-                    className="text-gray-700 leading-8 text-justify"
-                    dangerouslySetInnerHTML={createMarkup(
-                      advantage.propertyValue,
-                    )}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
+          {advantages?.propertyValue &&
+            createMarkup(advantages.propertyValue) && (
+              <div className="bg-green-50 rounded-xl p-6">
+                <div className="advg_title advg_plus flex items-center text-green-700 text-lg font-bold mb-4">
+                  <FaSquarePlus className="ml-2 text-green-600" />
+                  مزایا
+                </div>
+                <ul className="flex flex-wrap space-y-3">
+                  <li
+                    key={advantages.id}
+                    className="text-gray-800 font-medium flex items-start w-full"
+                  >
+                    <span className="text-green-500 ml-2 mt-1">•</span>
+                    <div
+                      className="text-gray-700 leading-8 text-justify"
+                      dangerouslySetInnerHTML={createMarkup(
+                        advantages.propertyValue,
+                      )}
+                    />
+                  </li>
+                </ul>
+              </div>
+            )}
 
           {/* Disadvantages Column */}
-          <div className="bg-red-50 rounded-xl p-6">
-            <div className="advg_title advg_minus flex items-center text-red-700 text-lg font-bold mb-4">
-              <FaSquareMinus className="ml-2 text-red-600" />
-              معایب
-            </div>
-            <ul className="flex flex-wrap space-y-3">
-              {disadvantages.map((disadvantage) => (
-                <li
-                  key={disadvantage.id}
-                  className="text-gray-800 font-medium flex items-start w-full"
-                >
-                  <span className="text-red-500 ml-2 mt-1">•</span>
-                  <div
-                    className="text-gray-700 leading-8 text-justify"
-                    dangerouslySetInnerHTML={createMarkup(
-                      disadvantage.propertyValue,
-                    )}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
+          {disadvantages?.propertyValue &&
+            createMarkup(disadvantages.propertyValue) && (
+              <div className="bg-red-50 rounded-xl p-6">
+                <div className="advg_title advg_minus flex items-center text-red-700 text-lg font-bold mb-4">
+                  <FaSquareMinus className="ml-2 text-red-600" />
+                  معایب
+                </div>
+                <ul className="flex flex-wrap space-y-3">
+                  <li
+                    key={disadvantages.id}
+                    className="text-gray-800 font-medium flex items-start w-full"
+                  >
+                    <span className="text-red-500 ml-2 mt-1">•</span>
+                    <div
+                      className="text-gray-700 leading-8 text-justify"
+                      dangerouslySetInnerHTML={createMarkup(
+                        disadvantages.propertyValue,
+                      )}
+                    />
+                  </li>
+                </ul>
+              </div>
+            )}
         </div>
         {Attachment.length > 0 && <VideoPlayerCar Attachment={Attachment} />}
       </div>

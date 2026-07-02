@@ -7,9 +7,10 @@ import { RootState } from "@/redux/store";
 import { getCommentUser } from "@/services/Comment/CommentUser";
 import { DeleteComment } from "@/services/Comment/DeleteComment";
 import { formatPersianDate, Toast } from "@/utils/func";
-import { Newspaper } from "lucide-react";
+// import { Newspaper } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { FaNewspaper } from "react-icons/fa";
 import {
   HiOutlineChat,
   HiOutlineCheckCircle,
@@ -256,7 +257,7 @@ export default function MyCommentsPage() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Newspaper className="w-3.5 h-3.5" />
+                  <FaNewspaper className="w-3.5 h-3.5" />
                   <p className="text-xs font-medium text-gray-700 line-clamp-1">
                     {comment.title}
                   </p>

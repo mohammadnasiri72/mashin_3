@@ -7,35 +7,243 @@ import {
 } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaCar, FaSearch } from "react-icons/fa";
-import MarketStats from "../../../../components/SideBar/MarketStats";
 import ShowSummary from "./ShowSummary";
 import SideBarCars from "./SideBarCars";
+import { memo } from "react";
+
+// ✅ کامپوننت کارت خودرو با memo
+const CarCard = memo(({ 
+  car,
+  mainDomainOld,
+}: { 
+  car: Items;
+  mainDomainOld: string;
+}) => {
+  return (
+    <div className="group block">
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
+        {/* تصویر خودرو */}
+        <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
+          <Link 
+            href={car.url || "#"} 
+            prefetch={true}
+            className="block w-full h-full"
+          >
+            <img
+              src={mainDomainOld + car.image}
+              alt={car.title}
+              loading="lazy"
+              className="object-contain w-full h-full p-2 hover:scale-105 transition-transform duration-300"
+            />
+          </Link>
+        </div>
+
+        {/* اطلاعات خودرو */}
+        <div className="flex-1">
+          <Link
+            href={car.url || "#"}
+            prefetch={true}
+            className="block"
+          >
+            <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
+              {car.sourceName} {car.title}
+            </h3>
+          </Link>
+
+          {car.summary && car.summary !== "<!DOCTYPE html>" && (
+            <div
+              className="text-gray-600 text-sm line-clamp-3 mb-4 text-justify"
+              dangerouslySetInnerHTML={{
+                __html:
+                  car.summary.length > 150
+                    ? car.summary.substring(0, 150) + "..."
+                    : car.summary,
+              }}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+});
+
+CarCard.displayName = 'CarCard';
+
+// ✅ کامپوننت گروه خودرو (برای آیتم‌هایی که چند مدل دارن)
+const CarGroupCard = memo(({ 
+  groupKey,
+  cars,
+  mainDomainOld,
+}: { 
+  groupKey: string;
+  cars: Items[];
+  mainDomainOld: string;
+}) => {
+  const firstCar = cars[0];
+
+  return (
+    <div className="group block">
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
+        {/* تصویر خودرو */}
+        <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
+          <Link 
+            href={firstCar.url || "#"} 
+            prefetch={true}
+            className="block w-full h-full"
+          >
+            <img
+              src={mainDomainOld + firstCar.image}
+              alt={firstCar.title}
+              loading="lazy"
+              className="object-contain w-full h-full p-2 hover:scale-105 transition-transform duration-300"
+            />
+          </Link>
+          
+          {/* لینک‌های سریع - دسکتاپ (برای مدل‌های مختلف) */}
+          {cars.length > 1 && (
+            <div className="sm:flex! hidden flex-col gap-1 absolute top-0 -right-1 translate-x-full group-hover:translate-x-0 group-hover:right-0 duration-300">
+              {cars.slice(0, 3).map((ca) => (
+                <Link
+                  href={ca.url}
+                  key={ca.id}
+                  prefetch={true}
+                  className="bg-[#ce1a2a] rounded-lg px-2 py-1 text-white! hover:bg-red-800 duration-300 text-xs whitespace-nowrap"
+                >
+                  {ca.sourceName} {ca.title} {createpublishCode(ca.publishCode)}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* لینک‌های موبایل */}
+        {cars.length > 1 && (
+          <div className="sm:hidden flex flex-col gap-1 py-4 duration-300">
+            {cars.slice(0, 3).map((ca) => (
+              <Link
+                href={ca.url}
+                key={ca.id}
+                prefetch={true}
+                className="bg-[#ce1a2a] rounded-lg px-2 py-1 text-white! hover:bg-red-800 duration-300 text-xs"
+              >
+                <div className="flex flex-wrap justify-between items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-1">
+                    <span>{ca.sourceName}</span>
+                    <span>{ca.title}</span>
+                  </div>
+                  <span>{createpublishCode(ca.publishCode)}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* اطلاعات خودرو */}
+        <div className="flex-1">
+          <Link
+            href={firstCar.url || "#"}
+            prefetch={true}
+            className="block"
+          >
+            <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
+              {firstCar.sourceName} {firstCar.title}
+            </h3>
+          </Link>
+
+          {firstCar.summary && firstCar.summary !== "<!DOCTYPE html>" && (
+            <div
+              className="text-gray-600 text-sm line-clamp-3 mb-4 text-justify"
+              dangerouslySetInnerHTML={{
+                __html:
+                  firstCar.summary.length > 150
+                    ? firstCar.summary.substring(0, 150) + "..."
+                    : firstCar.summary,
+              }}
+            />
+          )}
+        </div>
+      </div>
+    </div>
+  );
+});
+
+CarGroupCard.displayName = 'CarGroupCard';
+
+interface CarsDetailsProps {
+  carView: Items[];
+  carDetails: ItemsCategoryId;
+  banner: Items[];
+}
 
 const CarsDetails = ({
-  carBrands,
-  carDetails,
   carView,
+  carDetails,
   banner,
-  carBrands2,
-}: {
-  carBrands: ItemsCategory[];
-  carDetails: ItemsCategoryId;
-  carView: Items[];
-  banner: Items[];
-  carBrands2: Items[];
-}) => {
-  const [carBrandsFilter, setCarBrandsFilter] = useState(carBrands);
-  const [carBrandsFilter2, setCarBrandsFilter2] = useState(carBrands2);
+}: CarsDetailsProps) => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [isMainLonger, setIsMainLonger] = useState(true);
-
+  
   const mainBoxRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
-  // مقایسه ارتفاع باکس‌ها
+  // ✅ دسته‌بندی بر اساس itemKey
+  const groupedCars = useMemo(() => {
+    const groups: Record<string, Items[]> = {};
+    
+    carView.forEach((car) => {
+      const key = car.categoryId;
+      if (!groups[key]) {
+        groups[key] = [];
+      }
+      groups[key].push(car);
+    });
+
+    return groups;
+  }, [carView]);
+
+  // ✅ تبدیل به آرایه برای رندر
+  const groupedCarsArray = useMemo(() => {
+    return Object.entries(groupedCars).map(([key, cars]) => ({
+      key,
+      cars,
+      // مرتب‌سازی بر اساس publishCode (جدیدترین اول)
+      sortedCars: [...cars].sort((a, b) => {
+        const yearA = parseInt(a.publishCode?.split("-")[0] || "0");
+        const yearB = parseInt(b.publishCode?.split("-")[0] || "0");
+        return yearB - yearA;
+      }),
+    }));
+  }, [groupedCars]);
+
+  // ✅ فیلتر با useMemo
+  const filteredGroups = useMemo(() => {
+    if (!searchTerm) return groupedCarsArray;
+    const term = searchTerm.toLowerCase();
+    return groupedCarsArray.filter(
+      (group) =>
+        group.key.toLowerCase().includes(term) ||
+        group.cars.some(
+          (car) =>
+            car.title?.toLowerCase().includes(term) ||
+            car.sourceName?.toLowerCase().includes(term)
+        )
+    );
+  }, [groupedCarsArray, searchTerm]);
+
+  // ✅ هندلر جستجو
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  }, []);
+
+  // ✅ useEffect برای ارتفاع با debounce
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    let isMounted = true;
+
     const checkHeights = () => {
+      if (!isMounted) return;
       if (mainBoxRef.current && sidebarRef.current) {
         const mainHeight = mainBoxRef.current.offsetHeight;
         const sidebarHeight = sidebarRef.current.offsetHeight;
@@ -43,22 +251,33 @@ const CarsDetails = ({
       }
     };
 
-    checkHeights();
+    const initialTimer = setTimeout(checkHeights, 200);
 
-    const timer = setTimeout(checkHeights, 500);
-    window.addEventListener("resize", checkHeights);
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(checkHeights, 300);
+    };
+
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener("resize", checkHeights);
-      clearTimeout(timer);
+      isMounted = false;
+      clearTimeout(initialTimer);
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", handleResize);
     };
-  }, [carBrandsFilter, carBrandsFilter2, banner]); // وابستگی به فیلترها برای وقتی جستجو تغییر میکنه
+  }, [filteredGroups]);
+
+  // ✅ محاسبه تعداد کل مدل‌ها
+  const totalModels = useMemo(() => {
+    return carView.length;
+  }, [carView]);
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4">
         <div className="flex flex-col lg:flex-row gap-6 relative">
-          {/* محتوای اصلی - 3/4 صفحه */}
+          {/* محتوای اصلی */}
           <div
             ref={mainBoxRef}
             className={`
@@ -66,29 +285,12 @@ const CarsDetails = ({
               ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
             `}
           >
-            {/* جستجو در مدل‌های این برند */}
+            {/* جستجو */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
               <div className="relative">
                 <input
-                  onChange={(e) => {
-                    if (!e.target.value) {
-                      setCarBrandsFilter([...carBrands]);
-                      setCarBrandsFilter2([...carBrands2]);
-                    } else {
-                      setCarBrandsFilter([
-                        ...carBrands.filter(
-                          (ev) =>
-                            ev.title.includes(e.target.value) ||
-                            ev.parentTitle.includes(e.target.value),
-                        ),
-                      ]);
-                      setCarBrandsFilter2([
-                        ...carBrands2.filter((ev) =>
-                          ev.title.includes(e.target.value),
-                        ),
-                      ]);
-                    }
-                  }}
+                  onChange={handleSearch}
+                  value={searchTerm}
                   type="text"
                   placeholder={`جستجو در مدل‌های ${carDetails.title}...`}
                   className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
@@ -97,7 +299,7 @@ const CarsDetails = ({
               </div>
             </div>
 
-            {/* عنوان بخش مدل‌ها */}
+            {/* عنوان */}
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <img
@@ -105,169 +307,47 @@ const CarsDetails = ({
                   alt={carDetails.title}
                   className="object-contain w-20 h-20"
                 />
-                <h2 className="text-2xl font-bold text-gray-900 ">
-                  مدل‌های{" "}
-                  <span className="text-red-600">{carDetails.title}</span>{" "}
-                  <span className="text-red-600">({carDetails.seoTitle})</span>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  مدل‌های <span className="text-red-600">{carDetails.title}</span>
                 </h2>
               </div>
               <span className="text-gray-700 text-sm">
-                {toPersianNumbers(carBrands.length || carBrands2.length)} مدل
+                {toPersianNumbers(totalModels)} مدل
               </span>
             </div>
+
+            {/* خلاصه */}
             {htmlToPlainText(carDetails.summary) && (
               <ShowSummary text={htmlToPlainText(carDetails.summary)} />
             )}
 
-            {/* گرید مدل‌های خودرو */}
+            {/* گرید */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-              {carBrandsFilter.map((car) => (
-                <div key={car.id} className="group block">
-                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
-                    {/* تصویر خودرو */}
-                    <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
-                      <Link
-                        href={
-                          carView
-                            .filter((c) => c.categoryId === car.id)
-                            .sort((a, b) => {
-                              const yearA = parseInt(
-                                a.publishCode.split("-")[0],
-                              );
-                              const yearB = parseInt(
-                                b.publishCode.split("-")[0],
-                              );
-                              return yearB - yearA;
-                            })[0]?.url || ""
-                        }
-                      >
-                        <img
-                          src={mainDomainOld + car.image}
-                          alt={car.title}
-                          className="object-contain w-full h-full p-2 hover:scale-105 transition-transform duration-300"
-                        />
-                      </Link>
-                      <div className="sm:flex! hidden flex-col gap-1 absolute top-0 -right-1 translate-x-full group-hover:translate-x-0 group-hover:right-0 duration-300">
-                        {carView
-                          .filter((c) => c.categoryId === car.id)
-                          .sort((a, b) => {
-                            const yearA = parseInt(a.publishCode.split("-")[0]);
-                            const yearB = parseInt(b.publishCode.split("-")[0]);
-                            return yearB - yearA;
-                          })
-                          .map((ca) => (
-                            <Link
-                              href={ca.url}
-                              key={ca.id}
-                              className="bg-[#ce1a2a] rounded-lg px-2 py-1 text-white! hover:bg-red-800 duration-300"
-                            >
-                              {ca.sourceName} {ca.title}{" "}
-                              {createpublishCode(ca.publishCode)}
-                            </Link>
-                          ))}
-                      </div>
-                    </div>
-
-                    <div className="sm:hidden flex flex-col gap-1 py-4 duration-300">
-                      {carView
-                        .filter((c) => c.categoryId === car.id)
-                        .map((ca) => (
-                          <Link
-                            href={ca.url}
-                            key={ca.id}
-                            className="bg-[#ce1a2a] rounded-lg px-2 py-1 text-white! hover:bg-red-800 duration-300"
-                          >
-                            <div className="flex flex-wrap justify-between items-center gap-2">
-                              <div className="flex flex-wrap items-center gap-1">
-                                <span> {ca.sourceName} </span>{" "}
-                                <span>{ca.title}</span>
-                              </div>{" "}
-                              <span>{createpublishCode(ca.publishCode)}</span>
-                            </div>
-                          </Link>
-                        ))}
-                    </div>
-
-                    {/* اطلاعات خودرو */}
-                    <div className="flex-1">
-                      <Link
-                        href={
-                          carView.filter((c) => c.categoryId === car.id)[0]
-                            ?.url || ""
-                        }
-                        onClick={(e) => {
-                          e.preventDefault();
-                        }}
-                      >
-                        <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
-                          {car.parentTitle} {car.title}
-                        </h3>
-                      </Link>
-
-                      {car.summary && car.summary !== "<!DOCTYPE html>" && (
-                        <div
-                          className="text-gray-600 text-sm line-clamp-3 mb-4 text-justify"
-                          dangerouslySetInnerHTML={{
-                            __html:
-                              car.summary.length > 150
-                                ? car.summary.substring(0, 150) + "..."
-                                : car.summary,
-                          }}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
-              {carBrandsFilter2.map((car) => (
-                <div key={car.id} className="group block">
-                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
-                    {/* تصویر خودرو */}
-                    <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
-                      <Link href={car?.url || "#"}>
-                        <img
-                          src={mainDomainOld + car.image}
-                          alt={car.title}
-                          className="object-contain w-full h-full p-2 hover:scale-105 transition-transform duration-300"
-                        />
-                      </Link>
-                    </div>
-
-                    {/* اطلاعات خودرو */}
-                    <div className="flex-1">
-                      <Link
-                        href={
-                          carView.filter((c) => c.categoryId === car.id)[0]
-                            ?.url || ""
-                        }
-                        onClick={(e) => {
-                          e.preventDefault();
-                        }}
-                      >
-                        <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
-                          {car.title} {createpublishCode(car.publishCode)}
-                        </h3>
-                      </Link>
-
-                      {car.summary && car.summary !== "<!DOCTYPE html>" && (
-                        <div
-                          className="text-gray-600 text-sm line-clamp-3 mb-4 text-justify"
-                          dangerouslySetInnerHTML={{
-                            __html:
-                              car.summary.length > 150
-                                ? car.summary.substring(0, 150) + "..."
-                                : car.summary,
-                          }}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-              ))}
+              {filteredGroups.map((group) => {
+                // اگر یک آیتم بیشتر داشت، از CarGroupCard استفاده کن
+                if (group.cars.length > 1) {
+                  return (
+                    <CarGroupCard
+                      key={group.key}
+                      groupKey={group.key}
+                      cars={group.sortedCars}
+                      mainDomainOld={mainDomainOld}
+                    />
+                  );
+                }
+                // وگرنه از CarCard معمولی
+                return (
+                  <CarCard
+                    key={group.key}
+                    car={group.cars[0]}
+                    mainDomainOld={mainDomainOld}
+                  />
+                );
+              })}
             </div>
 
-            {/* پیام زمانی که مدلی وجود ندارد */}
-            {carBrands.length === 0 && carBrands2.length === 0 && (
+            {/* Empty state */}
+            {filteredGroups.length === 0 && (
               <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
                 <FaCar className="text-gray-400 text-4xl mx-auto mb-4" />
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -280,7 +360,7 @@ const CarsDetails = ({
             )}
           </div>
 
-          {/* سایدبار - 1/4 صفحه */}
+          {/* سایدبار */}
           <aside
             ref={sidebarRef}
             className={`
@@ -288,27 +368,23 @@ const CarsDetails = ({
               ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
             `}
           >
-            <SideBarCars banner={banner}/>
-            
+            <SideBarCars banner={banner} />
           </aside>
         </div>
       </div>
 
-      {/* استایل‌های سفارشی */}
       <style jsx global>{`
         .container {
           max-width: 1200px;
           margin: 0 auto;
         }
 
-        /* استایل‌های sticky */
         .lg\\:sticky {
           position: sticky;
           bottom: 0;
           align-self: flex-end;
         }
 
-        /* غیرفعال کردن sticky در موبایل */
         @media (max-width: 1023px) {
           .lg\\:sticky {
             position: relative !important;
@@ -329,52 +405,6 @@ const CarsDetails = ({
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
           overflow: hidden;
-        }
-
-        .custom-market-tabs .ant-tabs-nav {
-          margin: 0;
-        }
-
-        .custom-market-tabs .ant-tabs-tab {
-          padding: 8px 4px !important;
-          margin: 0 2px !important;
-        }
-
-        .custom-market-tabs .ant-tabs-tab-btn {
-          font-size: 12px;
-          padding: 0 8px;
-        }
-
-        .custom-market-tabs .ant-tabs-ink-bar {
-          background: #ce1a2a;
-        }
-
-        .custom-market-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
-          color: #ce1a2a !important;
-          font-weight: 600;
-        }
-
-        .custom-market-tabs .ant-tabs-tab:hover {
-          color: #ce1a2a !important;
-        }
-
-        /* اسکرول بار سفارشی */
-        .overflow-y-auto::-webkit-scrollbar {
-          width: 4px;
-        }
-
-        .overflow-y-auto::-webkit-scrollbar-track {
-          background: #f1f1f1;
-          border-radius: 10px;
-        }
-
-        .overflow-y-auto::-webkit-scrollbar-thumb {
-          background: #c1c1c1;
-          border-radius: 10px;
-        }
-
-        .overflow-y-auto::-webkit-scrollbar-thumb:hover {
-          background: #a1a1a1;
         }
       `}</style>
     </div>

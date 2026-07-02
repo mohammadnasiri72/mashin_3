@@ -5,6 +5,7 @@ import { getItem } from "@/services/Item/Item";
 import { getComment } from "@/services/Comment/Comment";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { getItemByIds } from "@/services/Item/ItemByIds";
+import { ItemVisit } from "@/services/Item/ItemVisit";
 
 export async function generateMetadata({
   params,
@@ -121,6 +122,20 @@ async function pageNewsViewDetails({
   const relatedVoices: ItemsId[] = idsVoices
     ? await getItemByIds(idsVoices)
     : [];
+
+
+
+    try {
+        await ItemVisit({
+          langCode: "fa",
+          id,
+          ip: "",
+          url: detailsNews.url,
+          userAgent:''
+        });
+      } catch (error) {
+        console.error("Error recording visit:", error);
+      }
 
   return (
     <NewsViewDetails

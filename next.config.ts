@@ -13,7 +13,8 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "admin3.aitest2.ir",
+        // hostname: "admin3.aitest2.ir",
+        hostname: "admin.mashin3.com",
         pathname: "/**",
       },
       {
@@ -24,6 +25,11 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "m3.aitest2.ir/",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "mashin3.com/",
         pathname: "/**",
       },
     ],

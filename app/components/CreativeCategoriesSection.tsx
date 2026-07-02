@@ -23,6 +23,7 @@ function CreativeCategoriesSection({
   carView: Items[];
   education: Items[];
 }) {
+
   return (
     <section
       className="mb-16 px-4 mx-auto max-w-7xl"
@@ -177,9 +178,11 @@ function CreativeCategoriesSection({
                             {car.title}
                           </h4>
                           <div className="flex items-center gap-1 mt-1">
-                            <span className="text-xs bg-[#0a5c8c]/10 text-[#0a5c8c] px-2 py-0.5 rounded-full">
-                              {createpublishCode(car.publishCode)}
-                            </span>
+                            {car.publishCode && (
+                              <span className="text-xs bg-[#0a5c8c]/10 text-[#0a5c8c] px-2 py-0.5 rounded-full">
+                                {createpublishCode(car.publishCode)}
+                              </span>
+                            )}
                           </div>
                         </div>
                         <div className="text-2xl text-gray-300 group-hover/item:text-[#0a5c8c] transition-colors duration-300">

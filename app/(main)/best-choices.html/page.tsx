@@ -4,6 +4,7 @@ import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import MainBoxBestChoices from "./components/MainBoxBestChoices";
+import Loading from "./loading";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -67,6 +68,7 @@ async function pageBestChoices({
     PageIndex: page || 1,
     ...(term && term !== "undefined" && { Term: term }),
     PageSize: 15,
+    FullData:true,
   });
   const popularBestChoices: Items[] = await getItem({
     TypeId: 1043,
@@ -87,20 +89,19 @@ async function pageBestChoices({
 
   const bestCat: ItemsId | null = await getItemByUrl(decodedPathname);
 
-   const lastNews: Items[] = await getItem({
-        TypeId: 5,
-        langCode: "fa",
-        PageIndex: 1,
-        PageSize: 7,
-      });
-  
-      const lastCars: Items[] = await getItem({
-        TypeId: 1042,
-        langCode: "fa",
-        PageIndex: 1,
-        PageSize: 7,
-      });
-  
+  const lastNews: Items[] = await getItem({
+    TypeId: 5,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 7,
+  });
+
+  const lastCars: Items[] = await getItem({
+    TypeId: 1042,
+    langCode: "fa",
+    PageIndex: 1,
+    PageSize: 7,
+  });
 
   return (
     <>
@@ -119,7 +120,7 @@ async function pageBestChoices({
           banner={banner}
           popularBestChoices={popularBestChoices}
           lastNews={lastNews}
-lastCars={lastCars}
+          lastCars={lastCars}
         />
       )}
     </>

@@ -1,15 +1,15 @@
+import { getAttachment } from "@/services/Attachment/Attachment";
 import { getComment } from "@/services/Comment/Comment";
 import { getItemId } from "@/services/Item/ItemId";
-import React from "react";
-import MotorHeroSection from "./components/HeroSection";
-import { getAttachment } from "@/services/Attachment/Attachment";
-import MotorDetails from "./components/MotorDetails";
-import FeaturesSectionMotor from "./components/FeaturesSectionMotor";
-import { getItemByIds } from "@/services/Item/ItemByIds";
-import ContentTabsMotor from "./components/ContentTabsMotor";
-import { getItem } from "@/services/Item/Item";
 import { getPollId } from "@/services/Poll/pollId";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { Suspense } from "react";
+import CarDetails from "../../car/components/CarDetails";
+import ContentTabsSSR from "../../car/components/ContentTabsSSR";
+import FeaturesSection from "../../car/components/FeaturesSection";
+import HeroSection from "../../car/components/HeroSection";
+import NvbarCar from "../../car/components/NvbarCar";
+import { ItemVisit } from "@/services/Item/ItemVisit";
 
 export async function generateMetadata({
   searchParams,
@@ -66,69 +66,37 @@ async function pageMotorcycleDainamic({
 }) {
   const searchParam = await searchParams;
   const id = Number(searchParam.id);
-  const detailsMotorcycle: ItemsId = await getItemId(Number(id));
-  const Attachment: ItemsAttachment[] = await getAttachment(Number(id));
-  const comments: CommentResponse[] = await getComment({
-    id: Number(id),
-    langCode: "fa",
-    type: 0,
-    pageSize: 20,
-    pageIndex: 1,
-  });
 
-  const detailsMotorcompetitor: ItemsId[] = detailsMotorcycle.properties.filter(
-    (e) => e.propertyId === 22643,
-  )[0]?.value
-    ? await getItemByIds(
-        detailsMotorcycle.properties.filter((e) => e.propertyId === 22643)[0]
-          ?.value,
-      )
-    : [];
-
-  const advantages = detailsMotorcycle.properties.filter(
-    (e) => e.propertyId === 22639,
+  const [Attachment, detailsMotorcycle, comments, pollData] = await Promise.all(
+    [
+      getAttachment(id),
+      getItemId(id),
+      getComment({
+        id,
+        langCode: "fa",
+        type: 0,
+        pageSize: 20,
+        pageIndex: 1,
+      }),
+      getPollId(id),
+    ],
   );
 
-  const disadvantages = detailsMotorcycle.properties.filter(
-    (e) => e.propertyId === 22640,
-  );
-
-  const motorcyclesModel: Items[] = await getItem({
-    TypeId: 1052,
-    langCode: "fa",
-    CategoryIdArray: detailsMotorcycle.sourceLink,
-    PageIndex: 1,
-    PageSize: 5,
-  });
-  const motorcyclesModel2: Items[] = await getItem({
-    TypeId: 1052,
-    langCode: "fa",
-    CategoryIdArray: String(detailsMotorcycle.categoryId),
-    PageIndex: 1,
-    PageSize: 5,
-  });
-
-  const pollData: PollData = await getPollId(Number(id));
-
-  // آخرین اخبار
-  const lastNews: Items[] = await getItem({
-    TypeId: 5,
-    langCode: "fa",
-    PageIndex: 1,
-    PageSize: 7,
-  });
-
-  // آخرین ویدئوها
-  const lastVideos: Items[] = await getItem({
-    TypeId: 1028,
-    langCode: "fa",
-    PageIndex: 1,
-    PageSize: 5,
-  });
+   try {
+                      await ItemVisit({
+                        langCode: "fa",
+                        id,
+                        ip: "",
+                        url: detailsMotorcycle.url,
+                        userAgent:''
+                      });
+                    } catch (error) {
+                      console.error("Error recording visit:", error);
+                    }
 
   return (
     <>
-      <MotorHeroSection detailsMotorcycle={detailsMotorcycle} />
+      {/* <MotorHeroSection detailsMotorcycle={detailsMotorcycle} />
       <MotorDetails
         Attachment={Attachment}
         detailsMotorcycle={detailsMotorcycle}
@@ -147,6 +115,30 @@ async function pageMotorcycleDainamic({
         motorcyclesModel2={motorcyclesModel2}
         lastNews={lastNews}
         lastVideos={lastVideos}
+      /> */}
+
+      <HeroSection detailsCar={detailsMotorcycle} />
+      <NvbarCar
+        pollData={pollData}
+        totalComment={comments.length > 0 ? comments[0]?.total : 0}
+      />
+      <CarDetails
+        Attachment={Attachment.filter((e) => e.tabId === 1 || e.tabId === 3)}
+        detailsCar={detailsMotorcycle}
+        initialPollData={pollData}
+      />
+      <Suspense fallback={<div className="h-40 animate-pulse bg-gray-200" />}>
+        <FeaturesSection
+          detailsCar={detailsMotorcycle}
+          Attachment={Attachment.filter((e) => e.tabId === 4)}
+        />
+      </Suspense>
+      <ContentTabsSSR
+        Attachment={Attachment}
+        detailsCar={detailsMotorcycle}
+        comments={comments}
+        id={id}
+        vehicle={'motor'}
       />
     </>
   );

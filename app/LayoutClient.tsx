@@ -9,6 +9,7 @@ import { ReactNode, useEffect } from "react";
 import { Provider } from "react-redux";
 import AOSProvider from "./AOSProvider";
 import ScrollToTopButton from "./components/ScrollToTopButton";
+import { MUIProvider } from "./MUIProvider";
 const Cookies = require("js-cookie");
 
 interface LayoutClientProps {
@@ -39,7 +40,9 @@ function LayoutClient({ children }: LayoutClientProps) {
           }}
         >
           <Provider store={store}>
-            <AOSProvider>{children}</AOSProvider>
+            <MUIProvider>
+              <AOSProvider>{children}</AOSProvider>
+            </MUIProvider>
           </Provider>
         </ConfigProvider>
       </AntdRegistry>

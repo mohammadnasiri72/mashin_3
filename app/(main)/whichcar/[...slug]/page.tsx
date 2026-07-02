@@ -4,6 +4,7 @@ import { getItemId } from "@/services/Item/ItemId";
 import CompareCars from "./components/CompareCars";
 import { getComment } from "@/services/Comment/Comment";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { ItemVisit } from "@/services/Item/ItemVisit";
 
 export async function generateMetadata({
   params,
@@ -136,6 +137,17 @@ async function pageWhichcarsDainamic({
     CategoryIdArray: String(whichcars.categoryId),
   });
 
+  try {
+    await ItemVisit({
+      langCode: "fa",
+      id,
+      ip: "",
+      url: whichcars.url,
+      userAgent: "",
+    });
+  } catch (error) {
+    console.error("Error recording visit:", error);
+  }
 
   return (
     <>

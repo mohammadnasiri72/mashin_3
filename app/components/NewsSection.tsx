@@ -4,7 +4,7 @@ import { formatPersianDate } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Card } from "antd";
 import Link from "next/link";
-import { FaCalendar } from "react-icons/fa";
+import { FaCalendar, FaCircle } from "react-icons/fa";
 import OptimizedImage from "./OptimizedImage";
 import { Autoplay, Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -28,13 +28,13 @@ export default function NewsSection({
   // گرفتن عرض صفحه
   useEffect(() => {
     setWindowWidth(window.innerWidth);
-    
+
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // تعیین تعداد اسکلتون برای بخش اخبار براساس عرض صفحه
@@ -91,10 +91,10 @@ export default function NewsSection({
             <div className="lg:pl-2">
               {showSkeleton ? (
                 // اسکلتون ریسپانسیو
-                <div 
+                <div
                   className="grid gap-4"
                   style={{
-                    gridTemplateColumns: `repeat(${newsSkeletonCount}, minmax(0, 1fr))`
+                    gridTemplateColumns: `repeat(${newsSkeletonCount}, minmax(0, 1fr))`,
                   }}
                 >
                   {Array.from({ length: newsSkeletonCount }).map((_, index) => (
@@ -231,9 +231,12 @@ export default function NewsSection({
                         >
                           <Link
                             href={sale.url}
-                            className="text-[#292929]! duration-300 group-hover:text-white! font-medium block line-clamp-1"
+                            className="text-[#292929]! duration-300 group-hover:text-white! font-medium flex items-start gap-1 line-clamp-1"
                           >
-                            {sale.title}
+                            <span className="text-[#ce1a2a] group-hover:text-white! text-[10px] animate-pulse mt-1.5">
+                              <FaCircle />
+                            </span>
+                            <span>{sale.title}</span>
                           </Link>
                         </div>
                       </SwiperSlide>

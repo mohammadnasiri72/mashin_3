@@ -1,9 +1,10 @@
-import { formatPersianDate } from "@/utils/func";
+import { createpublishCode, formatPersianDate } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
-import { Car, Eye, Newspaper } from "lucide-react";
+// import { Car, Eye, Newspaper } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { FaCar, FaEye, FaNewspaper } from "react-icons/fa";
 import { FaRegCalendarDays } from "react-icons/fa6";
 
 // تایپ‌ها
@@ -71,7 +72,7 @@ function RecentViews() {
             alt={view.title}
             width={48}
             height={48}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
             unoptimized
           />
         ) : (
@@ -80,7 +81,7 @@ function RecentViews() {
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-gray-900 line-clamp-2">
-          {view.title}
+          {view.sourceName} {view.title} {createpublishCode(view.publishCode)}
         </p>
         <div className="flex items-center gap-1 mt-1">
           <FaRegCalendarDays className="w-3 h-3 text-gray-400" />
@@ -136,7 +137,7 @@ function RecentViews() {
       <div className="bg-white rounded-xl border border-gray-200 overflow-hidden md:col-span-1">
         <div className="p-4 border-b border-gray-200 flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Eye className="w-5 h-5 text-blue-600" />
+            <FaEye className="w-5 h-5 text-blue-600" />
             <h2 className="font-semibold text-gray-900">آخرین بازدیدها</h2>
           </div>
         </div>
@@ -152,7 +153,7 @@ function RecentViews() {
                 <>
                   <div className="px-3 pt-3 pb-1 bg-gray-50/50">
                     <span className="text-xs font-medium text-gray-500 flex items-center gap-1">
-                      <Car className="w-3.5 h-3.5" />
+                      <FaCar className="w-3.5 h-3.5" />
                       خودروها
                     </span>
                   </div>
@@ -165,7 +166,7 @@ function RecentViews() {
                 <>
                   <div className="px-3 pt-3 pb-1 bg-gray-50/50">
                     <span className="text-xs font-medium text-gray-500 flex items-center gap-1">
-                      <Newspaper className="w-3.5 h-3.5" />
+                      <FaNewspaper className="w-3.5 h-3.5" />
                       اخبار
                     </span>
                   </div>
@@ -176,7 +177,7 @@ function RecentViews() {
               {/* حالت خالی - فقط وقتی لودینگ تموم شده و هیچ داده‌ای نیست */}
               {!isLoading && recentViews.length === 0 && (
                 <div className="p-6 text-center text-gray-500 text-sm">
-                  <Eye className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                  <FaEye className="w-8 h-8 mx-auto mb-2 text-gray-300" />
                   <p>بازدیدی نداشته‌اید</p>
                   <p className="text-xs text-gray-400 mt-1">
                     با مشاهده خودروها و اخبار، لیست بازدیدهای شما اینجا نمایش

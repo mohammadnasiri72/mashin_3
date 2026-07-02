@@ -190,7 +190,7 @@ const Footer = ({
                     {Social.map((social) => (
                       <li key={social.id}>
                         <Link
-                          href={social.sourceLink}
+                          href={social.sourceLink||'#'}
                           className="bg-gray-100 rounded-lg w-20 h-20 flex items-center justify-center hover:bg-gray-200 transition-colors"
                         >
                           <img

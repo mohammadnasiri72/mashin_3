@@ -10,6 +10,7 @@ function SideBarListItems({
   itemsList: Items[];
   title: string;
 }) {
+  
   return (
     <>
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -20,7 +21,7 @@ function SideBarListItems({
           {itemsList.map((item) => (
             <Link
               key={item.id}
-              href={`/news/${item.id}`}
+              href={item.url}
               className="block group"
             >
               <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors">

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCategoryByUrl } from "./services/Category/CategoryByUrl";
 import { getCategoryId } from "./services/Category/CategoryId";
-import { getItemId } from "./services/Item/ItemId";
+import { getItemId, getItemSeoId } from "./services/Item/ItemId";
 import { getItemByUrl } from "./services/Item/ItemByUrl";
 import { getPriceCarBrands } from "./services/Price/PriceCarBrands";
 import { getItemByIds } from "./services/Item/ItemByIds";
@@ -92,7 +92,7 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      const detailsCar: ItemsId = await getItemId(Number(id));
+      const detailsCar = await getItemSeoId(Number(id));
 
       if (detailsCar?.url) {
         // ساخت URL کامل فعلی

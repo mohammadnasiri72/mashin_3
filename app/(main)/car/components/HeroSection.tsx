@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
+  
   // ذخیره در localStorage
   useEffect(() => {
     try {

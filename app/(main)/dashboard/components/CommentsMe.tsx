@@ -1,10 +1,11 @@
 import { RootState } from "@/redux/store";
 import { getCommentUser } from "@/services/Comment/CommentUser";
 import { formatPersianDate } from "@/utils/func";
-import { ChevronLeft, MessageCircle } from "lucide-react";
+// import { ChevronLeft, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaRegCalendarDays } from "react-icons/fa6";
+import { FaChevronLeft, FaRegCalendarDays } from "react-icons/fa6";
+import { FiMessageCircle } from "react-icons/fi";
 import { HiOutlineCheckCircle, HiOutlineClock } from "react-icons/hi";
 import { useSelector } from "react-redux";
 
@@ -55,7 +56,7 @@ function CommentsMe() {
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
       <div className="p-4 border-b border-gray-200 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <MessageCircle className="w-5 h-5 text-emerald-600" />
+          <FiMessageCircle className="w-5 h-5 text-emerald-600" />
           <h2 className="font-semibold text-gray-900">نظرات شما</h2>
         </div>
         <Link
@@ -63,7 +64,7 @@ function CommentsMe() {
           className="text-xs text-blue-600 hover:text-blue-700 flex items-center gap-0.5"
         >
           نمایش همه
-          <ChevronLeft className="w-3.5 h-3.5" />
+          <FaChevronLeft className="w-3.5 h-3.5" />
         </Link>
       </div>
 
@@ -108,7 +109,7 @@ function CommentsMe() {
             ))
           ) : (
             <div className="p-6 text-center text-gray-500 text-sm">
-              <MessageCircle className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+              <FiMessageCircle className="w-8 h-8 mx-auto mb-2 text-gray-300" />
               <p>نظری ثبت نکرده‌اید</p>
             </div>
           )}

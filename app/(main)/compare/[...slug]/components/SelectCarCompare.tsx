@@ -31,6 +31,7 @@ function SelectCarCompare({
         CategoryIdArray: String(firstCarBrand),
         PageIndex: 1,
         PageSize: 200,
+        FullData: true,
       });
       setFirstModelsCarList(modelsCarResponse);
     } catch (err) {}

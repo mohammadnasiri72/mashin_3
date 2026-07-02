@@ -48,7 +48,7 @@ function SearchCarsDetails({
   );
   const [typeId, setTypeId] = useState<number>(initialtype ? initialtype : 0);
   const [orderBy, setOrderBy] = useState<number>(
-    initialOrderby ? initialOrderby : 0,
+    initialOrderby ? initialOrderby : 1,
   );
 
   const mainBoxRef = useRef<HTMLDivElement>(null);
@@ -105,7 +105,7 @@ function SearchCarsDetails({
     if (brandId) params.append("brandId", String(brandId));
     if (modelId) params.append("modelId", String(modelId));
     if (typeId) params.append("typeId", String(typeId));
-    if (orderBy) params.append("orderby", String(orderBy));
+    if (orderBy>1) params.append("orderby", String(orderBy));
 
     const queryString = params.toString();
 
@@ -204,9 +204,8 @@ function SearchCarsDetails({
                       style={{ width: "100%" }}
                       size="large"
                     >
-                      <Option value={0}>جدیدترین‌ها</Option>
-                      <Option value={1}>محبوب ترین‌ها</Option>
-                      <Option value={2}>قدیمی‌ترین‌ها</Option>
+                      <Option value={1}>جدیدترین‌ها</Option>
+                      <Option value={11}>محبوب ترین‌ها</Option>
                       <Option value={8}>پربازدیدترین‌ها</Option>
                     </Select>
                   </div>

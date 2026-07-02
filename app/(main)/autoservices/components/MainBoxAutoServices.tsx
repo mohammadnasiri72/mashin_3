@@ -236,12 +236,14 @@ function MainBoxAutoServices({
                               "provinceid",
                               value ? value.toString() : "",
                             );
+                            params.delete("page");
                             router.push(`${pathname}?${params.toString()}`);
                           } else {
                             const params = new URLSearchParams(
                               searchParams.toString(),
                             );
                             params.delete("provinceid");
+                            params.delete("page");
                             router.push(`${pathname}?${params.toString()}`);
                           }
                         }}
@@ -325,7 +327,7 @@ function MainBoxAutoServices({
                     >
                       <div className="flex flex-col h-full">
                         {/* تصویر */}
-                        <div className="h-48 overflow-hidden bg-gray-100">
+                        <div className="h-48 overflow-hidden bg-white">
                           <Link href={service.url}>
                             <img
                               src={mainDomainOld + service.image}

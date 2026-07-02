@@ -1,5 +1,5 @@
 import { mainDomainOld } from "@/utils/mainDomain";
-import { Card } from "antd";
+import { Card, Empty } from "antd";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { FaClock, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
@@ -18,7 +18,6 @@ const MapContainer = dynamic(() => import("@/app/components/MapContainer"), {
 });
 
 function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
-
   const address: string | undefined =
     detailsAuto.properties.length > 0
       ? detailsAuto.properties.find(
@@ -165,13 +164,24 @@ function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
           {/* نقشه و مسیریابی */}
           <div className="space-y-2">
             <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center overflow-hidden">
-              <MapContainer
-                latitude={Latitude ? Number(Latitude) : 35.6892}
-                longitude={Longitude ? Number(Longitude) : 51.389}
-                zoom={14}
-                markerText={detailsAuto.title}
-                className="w-full! h-full!"
-              />
+              {Latitude && Longitude ? (
+                <MapContainer
+                  latitude={Latitude ? Number(Latitude) : 35.6892}
+                  longitude={Longitude ? Number(Longitude) : 51.389}
+                  zoom={14}
+                  markerText={detailsAuto.title}
+                  className="w-full! h-full!"
+                />
+              ) : (
+                <Empty
+                  image={<FaMapMarkerAlt className="text-4xl text-gray-400" />}
+                  description={
+                    <span className="text-gray-500 text-sm">
+                      موقیعت مکانی تعیین نشده است
+                    </span>
+                  }
+                />
+              )}
             </div>
 
             {Latitude && Longitude && (

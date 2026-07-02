@@ -125,7 +125,7 @@ async function pageSearchCars({
     ...(brandId && !modelId && { CategoryIdArray: String(brandId) }),
     PageIndex: page,
     PageSize: 20,
-    ...(typeId && { FilterProps: `22690=${typeId}` }),
+    ...(typeId && { FilterProps: `23166=${typeId}` }),
     OrderBy: orderby ? orderby : 1,
   });
   const banner: Items[] = await getItem({
@@ -133,6 +133,7 @@ async function pageSearchCars({
     langCode: "fa",
     CategoryIdArray: "6415",
   });
+
 
   const segmentCars: Items[] = await getItem({
     TypeId: 1048,

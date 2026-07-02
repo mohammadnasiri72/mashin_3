@@ -1,8 +1,8 @@
+// app/car/page.tsx
 import { getAttachment } from "@/services/Attachment/Attachment";
 import { getComment } from "@/services/Comment/Comment";
-import { getItemId } from "@/services/Item/ItemId";
+import { getItemId, getItemSeoId } from "@/services/Item/ItemId";
 import { getPollId } from "@/services/Poll/pollId";
-import { createpublishCode } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Suspense } from "react";
 import CarDetails from "../components/CarDetails";
@@ -10,6 +10,8 @@ import ContentTabsSSR from "../components/ContentTabsSSR";
 import FeaturesSection from "../components/FeaturesSection";
 import HeroSection from "../components/HeroSection";
 import NvbarCar from "../components/NvbarCar";
+import { decodeHtmlServer } from "@/utils/func";
+import { ItemVisit } from "@/services/Item/ItemVisit";
 
 export async function generateMetadata({
   searchParams,
@@ -19,23 +21,23 @@ export async function generateMetadata({
   const searchParam = await searchParams;
   const id = searchParam.id;
 
-  const dataPage: ItemsId = await getItemId(Number(id));
+  const dataPage = await getItemSeoId(Number(id));
 
   if (dataPage.title) {
-    let yearText = createpublishCode(dataPage.publishCode);
-    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.sourceName + " " + dataPage.title + " " + yearText + " | ماشین3"}`;
-    const description = dataPage.seoInfo?.seoDescription
-      ? dataPage.seoInfo?.seoDescription
-      : dataPage.title;
-    const keywords = dataPage.seoInfo?.seoKeywords
-      ? dataPage.seoInfo?.seoKeywords
-      : dataPage.seoKeywords;
-    const seoUrl = dataPage?.seoUrl
-      ? `${mainDomainOld}${dataPage?.seoUrl}`
-      : dataPage?.url
-        ? `${mainDomainOld}${dataPage?.url}`
-        : `${mainDomainOld}`;
-    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+    const title = decodeHtmlServer(
+      `${dataPage.seoTitle ? dataPage?.seoTitle : dataPage.title}`,
+    );
+    const description = decodeHtmlServer(
+      dataPage.seoDescription ? dataPage.seoDescription : dataPage.title,
+    );
+    const keywords = decodeHtmlServer(dataPage.seoKeywords || "");
+    const seoUrl = decodeHtmlServer(
+      dataPage?.seoUrl
+        ? `${mainDomainOld}${dataPage?.seoUrl}`
+        : dataPage?.url
+          ? `${mainDomainOld}${dataPage?.url}`
+          : `${mainDomainOld}`,
+    );
 
     return {
       title,
@@ -50,7 +52,7 @@ export async function generateMetadata({
         description,
       },
       other: {
-        seoHeadTags,
+        seoHeadTags: dataPage?.seoHeadTags,
       },
     };
   } else {
@@ -82,6 +84,19 @@ async function page({
     getPollId(id),
   ]);
 
+
+  try {
+    await ItemVisit({
+      langCode: "fa",
+      id,
+      ip: "",
+      url: detailsCar.url,
+      userAgent:''
+    });
+  } catch (error) {
+    console.error("Error recording visit:", error);
+  }
+
   return (
     <>
       <HeroSection detailsCar={detailsCar} />
@@ -100,14 +115,13 @@ async function page({
           Attachment={Attachment.filter((e) => e.tabId === 4)}
         />
       </Suspense>
-      <Suspense fallback={<div className="h-96 animate-pulse bg-gray-200" />}>
-        <ContentTabsSSR
-          Attachment={Attachment}
-          detailsCar={detailsCar}
-          comments={comments}
-          id={id}
-        />
-      </Suspense>
+      <ContentTabsSSR
+        Attachment={Attachment}
+        detailsCar={detailsCar}
+        comments={comments}
+        id={id}
+        vehicle={"car"}
+      />
     </>
   );
 }

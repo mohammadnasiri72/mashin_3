@@ -7,6 +7,7 @@ import React from "react";
 import MainBoxBestChoice from "./components/MainBoxBestChoice";
 import { getAttachment } from "@/services/Attachment/Attachment";
 import { getItemByIds } from "@/services/Item/ItemByIds";
+import { ItemVisit } from "@/services/Item/ItemVisit";
 
 export async function generateMetadata({
   params,
@@ -113,6 +114,19 @@ async function pageBestChoice({
       PageIndex: 1,
       PageSize: 7,
     });
+
+
+     try {
+                await ItemVisit({
+                  langCode: "fa",
+                  id,
+                  ip: "",
+                  url: detailsBest.url,
+                  userAgent:''
+                });
+              } catch (error) {
+                console.error("Error recording visit:", error);
+              }
 
     return (
       <>

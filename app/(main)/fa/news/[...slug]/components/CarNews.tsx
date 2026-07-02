@@ -39,6 +39,8 @@ const CarNews = ({
   const mainBoxRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
 
+  
+
   useEffect(() => {
     if (id) {
       setActiveTab(id);

@@ -124,6 +124,7 @@ async function pageEducationTips({
     ...(String(id) !== "NaN" && id > 0 && { CategoryIdArray: String(id) }),
     PageIndex: page || 1,
     PageSize: 20,
+    FullData:true,
   });
   const educationPopular: Items[] = await getItem({
     TypeId: 3,
@@ -155,6 +156,7 @@ async function pageEducationTips({
     ? await getItemByUrl(decodedPathname)
     : await getCategoryId(id);
 
+    
   return (
     <>
       {educationDetails && (

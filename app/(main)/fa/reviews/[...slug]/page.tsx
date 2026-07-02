@@ -87,6 +87,7 @@ async function pageReviews({ params }: { params: Promise<{ slug: string }> }) {
       PageSize: 200,
     });
   }
+  
 
   const lastNews: Items[] = await getItem({
     TypeId: 5,

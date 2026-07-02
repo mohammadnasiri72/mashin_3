@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link";
 import { useEffect } from "react";
 
@@ -5,7 +7,6 @@ import { useEffect } from "react";
 import SideBarListItems from "@/app/components/SideBar/SideBarListItems";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
-import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 const Sidebar = ({
   detailsCarcompetitor,

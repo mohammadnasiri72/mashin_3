@@ -1,11 +1,11 @@
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import MainBoxAutoServices from "../autoservices/components/MainBoxAutoServices";
-import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
-import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -68,7 +68,7 @@ async function pageAutoService({
     TypeId: 1050,
     langCode: "fa",
     PageIndex: page || 1,
-     ...(provinceId && { FilterProps: `23207=${provinceId}` }),
+    ...(provinceId && { FilterProps: `23207=${provinceId}` }),
     PageSize: 15,
     OrderBy: 8,
   });
@@ -107,7 +107,6 @@ async function pageAutoService({
     PageSize: 100,
   });
 
-
   const lastNews: Items[] = await getItem({
     TypeId: 5,
     langCode: "fa",
@@ -122,6 +121,7 @@ async function pageAutoService({
     PageSize: 7,
   });
 
+  
   return (
     <>
       {autoServiceCat && (

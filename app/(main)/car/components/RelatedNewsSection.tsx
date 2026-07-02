@@ -1,3 +1,5 @@
+"use client"
+
 import { formatPersianDate } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";

@@ -5,6 +5,7 @@ import { getItemId } from "@/services/Item/ItemId";
 import { mainDomainOld } from "@/utils/mainDomain";
 import VideoDetails from "./components/VideoDetails";
 import { getAttachment } from "@/services/Attachment/Attachment";
+import { ItemVisit } from "@/services/Item/ItemVisit";
 
 export async function generateMetadata({
   params,
@@ -129,6 +130,19 @@ async function pageVideo({
   const relatedCompares: ItemsId[] = idsCompares
     ? await getItemByIds(idsCompares)
     : [];
+
+
+     try {
+                          await ItemVisit({
+                            langCode: "fa",
+                            id,
+                            ip: "",
+                            url: video.url,
+                            userAgent:''
+                          });
+                        } catch (error) {
+                          console.error("Error recording visit:", error);
+                        }
 
   return (
     <>
