@@ -1,15 +1,92 @@
-// content-tabs-wrapper.tsx
+// components/ContentTabsWrapper.tsx
 "use client";
 
 import type { TabsProps } from "antd";
 import { Tabs } from "antd";
-import { useEffect, useRef, useState } from "react";
-import Sidebar from "./Sidebar";
-import RelatedNewsSection from "./RelatedNewsSection";
-import RelatedVideosSection from "./RelatedVideosSection";
-import RelatedComparisons from "./RelatedComparisons";
-import { getItemByIds } from "@/services/Item/ItemByIds";
-import { getItem } from "@/services/Item/Item";
+import dynamic from "next/dynamic";
+import { Suspense, useEffect, useRef, useState, useCallback } from "react";
+
+// ✅ Lazy Load برای کامپوننت‌های سنگین
+const Sidebar = dynamic(() => import("./Sidebar"), {
+  loading: () => <SidebarSkeleton />,
+  ssr: false,
+});
+
+const RelatedNewsSection = dynamic(() => import("./RelatedNewsSection"), {
+  loading: () => <NewsSkeleton />,
+});
+
+const RelatedVideosSection = dynamic(() => import("./RelatedVideosSection"), {
+  loading: () => <VideosSkeleton />,
+});
+
+const RelatedComparisons = dynamic(() => import("./RelatedComparisons"), {
+  loading: () => <ComparisonsSkeleton />,
+});
+
+// Skeleton Components
+const SidebarSkeleton = () => (
+  <div className="space-y-4 animate-pulse">
+    <div className="bg-white rounded-xl p-4 shadow-sm">
+      <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+      <div className="space-y-4">
+        <div className="h-32 bg-gray-200 rounded"></div>
+        <div className="h-32 bg-gray-200 rounded"></div>
+      </div>
+    </div>
+  </div>
+);
+
+const NewsSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[1, 2, 3].map(i => (
+        <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="h-48 bg-gray-200"></div>
+          <div className="p-4 space-y-2">
+            <div className="h-5 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const VideosSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[1, 2, 3].map(i => (
+        <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="h-48 bg-gray-200"></div>
+          <div className="p-4 space-y-2">
+            <div className="h-5 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const ComparisonsSkeleton = () => (
+  <div className="animate-pulse">
+    <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[1, 2, 3].map(i => (
+        <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="h-48 bg-gray-200"></div>
+          <div className="p-4 space-y-2">
+            <div className="h-5 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 interface ContentTabsWrapperProps {
   children: React.ReactNode;
@@ -18,231 +95,114 @@ interface ContentTabsWrapperProps {
   commentsContent: React.ReactNode;
 }
 
-interface ClientData {
-  detailsCarcompetitor: ItemsId[];
-  carsModel: Items[];
-  carsModel2: Items[];
-  lastNews: Items[];
-  lastVideos: Items[];
-  relatedNews: Items[];
-  relatedVideos: Items[];
-  relatedCompares: ItemsId[];
-}
-
 const ContentTabsWrapper = ({
   children,
   tabItems = [],
   detailsCar,
   commentsContent,
 }: ContentTabsWrapperProps) => {
-  // =============== STATE ===============
-  const [clientData, setClientData] = useState<ClientData>({
-    detailsCarcompetitor: [],
-    carsModel: [],
-    carsModel2: [],
-    lastNews: [],
-    lastVideos: [],
-    relatedNews: [],
-    relatedVideos: [],
-    relatedCompares: [],
-  });
-  const [loading, setLoading] = useState(true);
   const [activeKey, setActiveKey] = useState<string>("review");
   const [isNavbarSticky, setIsNavbarSticky] = useState(false);
   const [isMainLonger, setIsMainLonger] = useState(true);
-  const isFetched = useRef(false);
 
   const navbarRef = useRef<HTMLDivElement>(null);
   const mainBoxRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const resizeObserverRef = useRef<ResizeObserver | null>(null);
 
-  // =============== FETCH CLIENT DATA ===============
-  useEffect(() => {
-    if (isFetched.current) return;
-    isFetched.current = true;
-
-    const fetchClientData = async () => {
-      try {
-        setLoading(true);
-
-        const competitorIds = detailsCar.properties.find(
-          (e) => e.propertyKey === "p1042_relatedcars"
-        )?.propertyValue;
-
-        const idsCompares = detailsCar.properties.find(
-          (e) => e.propertyKey === "p1042_vidrelatedcompare"
-        )?.propertyValue;
-
-        const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
-        const sourceLink = detailsCar.sourceLink;
-        const categoryId = String(detailsCar.categoryId);
-
-        const [
-          detailsCarcompetitor,
-          carsModel,
-          carsModel2,
-          lastNews,
-          lastVideos,
-          relatedNews,
-          relatedVideos,
-          relatedCompares,
-        ] = await Promise.all([
-          competitorIds ? getItemByIds(competitorIds) : Promise.resolve([]),
-          sourceLink
-            ? getItem({
-                TypeId: 1042,
-                langCode: "fa",
-                CategoryIdArray: sourceLink,
-                PageIndex: 1,
-                PageSize: 5,
-              })
-            : Promise.resolve([]),
-          categoryId
-            ? getItem({
-                TypeId: 1042,
-                langCode: "fa",
-                CategoryIdArray: categoryId,
-                PageIndex: 1,
-                PageSize: 5,
-              })
-            : Promise.resolve([]),
-          getItem({
-            TypeId: 5,
-            langCode: "fa",
-            PageIndex: 1,
-            PageSize: 7,
-          }),
-          getItem({
-            TypeId: 1028,
-            langCode: "fa",
-            PageIndex: 1,
-            PageSize: 5,
-          }),
-          getItem({
-            TypeId: 5,
-            langCode: "fa",
-            Term: searchTerm,
-            PageIndex: 1,
-            PageSize: 6,
-          }),
-          getItem({
-            TypeId: 1028,
-            langCode: "fa",
-            Term: searchTerm,
-            PageIndex: 1,
-            PageSize: 6,
-          }),
-          idsCompares ? getItemByIds(idsCompares) : Promise.resolve([]),
-        ]);
-
-        setClientData({
-          detailsCarcompetitor: Array.isArray(detailsCarcompetitor) ? detailsCarcompetitor : [],
-          carsModel: Array.isArray(carsModel) ? carsModel : [],
-          carsModel2: Array.isArray(carsModel2) ? carsModel2 : [],
-          lastNews: Array.isArray(lastNews) ? lastNews : [],
-          lastVideos: Array.isArray(lastVideos) ? lastVideos : [],
-          relatedNews: Array.isArray(relatedNews) ? relatedNews : [],
-          relatedVideos: Array.isArray(relatedVideos) ? relatedVideos : [],
-          relatedCompares: Array.isArray(relatedCompares) ? relatedCompares : [],
-        });
-
-        // ✅ تنظیم تب فعال بعد از دریافت داده
-        const firstKey = tabItems.length > 0 ? tabItems[0].key : "comments";
-        setActiveKey(firstKey);
-
-      } catch (error) {
-        console.error("❌ [Client] Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchClientData();
-  }, [detailsCar, tabItems]);
-
-  // =============== ساخت تب‌های نهایی ===============
+  // =============== ساخت تب‌ها ===============
   const allTabItems: TabsProps["items"] = [
     ...tabItems,
-    ...(clientData.relatedNews.length > 0
-      ? [{ key: "news", label: "اخبار مرتبط" }]
-      : []),
-    ...(clientData.relatedVideos.length > 0
-      ? [{ key: "video", label: "ویدئوهای مرتبط" }]
-      : []),
-    ...(clientData.relatedCompares.length > 0
-      ? [{ key: "Comparisons", label: "مقایسه‌های مرتبط" }]
-      : []),
+    { key: "news", label: "اخبار مرتبط" },
+    { key: "video", label: "ویدئوهای مرتبط" },
+    { key: "Comparisons", label: "مقایسه‌های مرتبط" },
     { key: "comments", label: "نظرات" },
   ];
 
-  // =============== CHECK HEIGHTS ===============
+  // =============== ✅ استفاده از ResizeObserver (بدون Forced Reflow) ===============
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    let isMounted = true;
+    if (!mainBoxRef.current || !sidebarRef.current) return;
 
-    const checkHeights = () => {
-      if (!isMounted) return;
+    const updateHeights = () => {
       if (mainBoxRef.current && sidebarRef.current) {
         const mainHeight = mainBoxRef.current.offsetHeight;
         const sidebarHeight = sidebarRef.current.offsetHeight;
-        setIsMainLonger(mainHeight > sidebarHeight);
+        setIsMainLonger(prev => {
+          const newValue = mainHeight > sidebarHeight;
+          return prev !== newValue ? newValue : prev;
+        });
       }
     };
 
-    const initialTimer = setTimeout(checkHeights, 200);
-    const handleResize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(checkHeights, 300);
-    };
-    window.addEventListener("resize", handleResize);
+    let rafId: number | null = null;
+    const observer = new ResizeObserver(() => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        updateHeights();
+        rafId = null;
+      });
+    });
+
+    observer.observe(mainBoxRef.current);
+    observer.observe(sidebarRef.current);
+    resizeObserverRef.current = observer;
 
     return () => {
-      isMounted = false;
-      clearTimeout(initialTimer);
-      clearTimeout(timeoutId);
-      window.removeEventListener("resize", handleResize);
+      observer.disconnect();
+      if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [loading]);
+  }, []);
 
-  // =============== HANDLE SCROLL ===============
+  // =============== ✅ استفاده از IntersectionObserver (به جای getBoundingClientRect) ===============
+  useEffect(() => {
+    const sectionIds = ["review", "technical", "images", "news", "video", "Comparisons", "comments"];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        let maxRatio = 0;
+        let visibleId = "";
+
+        entries.forEach(entry => {
+          if (entry.intersectionRatio > maxRatio) {
+            maxRatio = entry.intersectionRatio;
+            visibleId = entry.target.id;
+          }
+        });
+
+        if (visibleId && visibleId !== activeKey) {
+          setActiveKey(visibleId);
+        }
+      },
+      {
+        rootMargin: "-80px 0px -50% 0px",
+        threshold: [0, 0.1, 0.2, 0.3, 0.5],
+      }
+    );
+
+    const timeoutId = setTimeout(() => {
+      sectionIds.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+          observer.observe(element);
+        }
+      });
+    }, 100);
+
+    return () => {
+      clearTimeout(timeoutId);
+      observer.disconnect();
+    };
+  }, []);
+
+  // =============== اسکرول نوار ===============
   useEffect(() => {
     let ticking = false;
-    let isMounted = true;
 
     const handleScroll = () => {
-      if (!isMounted) return;
-
-      if (navbarRef.current) {
-        setIsNavbarSticky(window.scrollY > navbarRef.current.offsetTop);
-      }
-
-      const sectionIds = ["review", "technical", "images", "news", "video", "Comparisons", "comments"];
+      if (!navbarRef.current) return;
       
-      let currentActiveKey = "";
-      for (let i = 0; i < sectionIds.length; i++) {
-        const element = document.getElementById(sectionIds[i]);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 200 && rect.bottom >= 200) {
-            currentActiveKey = sectionIds[i];
-            break;
-          }
-          if (i < sectionIds.length - 1) {
-            const nextElement = document.getElementById(sectionIds[i + 1]);
-            if (nextElement) {
-              const nextRect = nextElement.getBoundingClientRect();
-              if (rect.bottom < 200 && nextRect.top > 200) {
-                currentActiveKey = sectionIds[i];
-                break;
-              }
-            }
-          }
-        }
-      }
-
-      if (currentActiveKey && currentActiveKey !== activeKey) {
-        setActiveKey(currentActiveKey);
-      }
+      const shouldBeSticky = window.scrollY > navbarRef.current.offsetTop;
+      setIsNavbarSticky(prev => prev !== shouldBeSticky ? shouldBeSticky : prev);
     };
 
     const throttledScroll = () => {
@@ -256,34 +216,31 @@ const ContentTabsWrapper = ({
     };
 
     window.addEventListener("scroll", throttledScroll, { passive: true });
-    setTimeout(handleScroll, 300);
+    return () => window.removeEventListener("scroll", throttledScroll);
+  }, []);
 
-    return () => {
-      isMounted = false;
-      window.removeEventListener("scroll", throttledScroll);
-    };
-  }, [activeKey]);
-
-  // =============== SCROLL TO ELEMENT ===============
-  const scrollToElement = (elementId: string) => {
+  // =============== اسکرول به بخش ===============
+  const scrollToElement = useCallback((elementId: string) => {
     const element = document.getElementById(elementId);
-    if (element) {
-      const navbarHeight = navbarRef.current?.offsetHeight || 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight - 20;
+    if (!element) return;
+
+    const navbarHeight = navbarRef.current?.offsetHeight || 80;
+    const elementRect = element.getBoundingClientRect();
+    const offsetPosition = window.pageYOffset + elementRect.top - navbarHeight - 20;
+
+    requestAnimationFrame(() => {
       window.scrollTo({
         top: offsetPosition,
         behavior: "smooth",
       });
-    }
-  };
+    });
+  }, []);
 
-  const handleTabClick = (key: string) => {
+  const handleTabClick = useCallback((key: string) => {
     setActiveKey(key);
     scrollToElement(key);
-  };
+  }, [scrollToElement]);
 
-  // =============== RENDER ===============
   return (
     <div className="content-tabs-container">
       {/* نوار تب‌ها */}
@@ -324,21 +281,9 @@ const ContentTabsWrapper = ({
             ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
           `}
         >
-          {loading ? (
-            <div className="animate-pulse space-y-4">
-              <div className="h-32 bg-gray-200 rounded-lg"></div>
-              <div className="h-32 bg-gray-200 rounded-lg"></div>
-            </div>
-          ) : (
-            <Sidebar
-              detailsCarcompetitor={clientData.detailsCarcompetitor}
-              detailsCar={detailsCar}
-              carsModel={clientData.carsModel}
-              carsModel2={clientData.carsModel2}
-              lastNews={clientData.lastNews}
-              lastVideos={clientData.lastVideos}
-            />
-          )}
+          <Suspense fallback={<SidebarSkeleton />}>
+            <Sidebar detailsCar={detailsCar} />
+          </Suspense>
         </aside>
 
         {/* محتوای اصلی */}
@@ -352,40 +297,27 @@ const ContentTabsWrapper = ({
           <div className="flex items-start gap-6 lg:flex-nowrap flex-wrap-reverse mt-6">
             <div className="w-full">
               <div className="space-y-6">
-                {/* ✅ بخش‌های SSR (از سرور) */}
+                {/* بخش‌های SSR */}
                 {children}
 
-                {/* ✅ بخش‌های کلاینت (بعد از لود) */}
-                {!loading && (
-                  <>
-                    {clientData.relatedNews.length > 0 && (
-                      <div id="news" className="section-anchor">
-                        <RelatedNewsSection
-                          relatedNews={clientData.relatedNews}
-                          detailsCar={detailsCar}
-                        />
-                      </div>
-                    )}
+                {/* بخش‌های کلاینت با Lazy Loading */}
+                <div id="news" className="section-anchor">
+                  <Suspense fallback={<NewsSkeleton />}>
+                    <RelatedNewsSection detailsCar={detailsCar} />
+                  </Suspense>
+                </div>
 
-                    {clientData.relatedVideos.length > 0 && (
-                      <div id="video" className="section-anchor">
-                        <RelatedVideosSection
-                          relatedVideos={clientData.relatedVideos}
-                          detailsCar={detailsCar}
-                        />
-                      </div>
-                    )}
+                <div id="video" className="section-anchor">
+                  <Suspense fallback={<VideosSkeleton />}>
+                    <RelatedVideosSection detailsCar={detailsCar} />
+                  </Suspense>
+                </div>
 
-                    {clientData.relatedCompares.length > 0 && (
-                      <div id="Comparisons" className="section-anchor">
-                        <RelatedComparisons
-                          relatedCompares={clientData.relatedCompares}
-                          detailsCar={detailsCar}
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
+                <div id="Comparisons" className="section-anchor">
+                  <Suspense fallback={<ComparisonsSkeleton />}>
+                    <RelatedComparisons detailsCar={detailsCar} />
+                  </Suspense>
+                </div>
               </div>
             </div>
           </div>
@@ -399,21 +331,9 @@ const ContentTabsWrapper = ({
 
       {/* سایدبار موبایل */}
       <aside className="lg:w-1/4 w-full mt-6 transition-all duration-300 lg:hidden block">
-        {loading ? (
-          <div className="animate-pulse space-y-4">
-            <div className="h-32 bg-gray-200 rounded-lg"></div>
-            <div className="h-32 bg-gray-200 rounded-lg"></div>
-          </div>
-        ) : (
-          <Sidebar
-            detailsCarcompetitor={clientData.detailsCarcompetitor}
-            detailsCar={detailsCar}
-            carsModel={clientData.carsModel}
-            carsModel2={clientData.carsModel2}
-            lastNews={clientData.lastNews}
-            lastVideos={clientData.lastVideos}
-          />
-        )}
+        <Suspense fallback={<SidebarSkeleton />}>
+          <Sidebar detailsCar={detailsCar} />
+        </Suspense>
       </aside>
 
       <style jsx global>{`

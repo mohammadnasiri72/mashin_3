@@ -1,20 +1,19 @@
+// components/HeroSection.tsx
 "use client";
 
 import { createpublishCode } from "@/utils/func";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 
 const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
-  
   // ذخیره در localStorage
   useEffect(() => {
     try {
-      // دریافت لیست قبلی
       const recentViews = JSON.parse(
         localStorage.getItem("recentCarViews") || "[]",
       );
 
-      // ساخت آیتم جدید
       const newView = {
         id: detailsCar.id,
         title: detailsCar.title,
@@ -26,44 +25,53 @@ const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
         type: 'خودرو'
       };
 
-      // حذف اگر قبلا بود
       const filteredViews = recentViews.filter(
         (item: any) => item.id !== detailsCar.id,
       );
 
-      // اضافه به اول لیست و نگه داشتن حداکثر ۱۰ مورد
       const updatedViews = [newView, ...filteredViews].slice(0, 10);
-
-      // ذخیره
       localStorage.setItem("recentCarViews", JSON.stringify(updatedViews));
     } catch (error) {
       console.error("خطا در ذخیره بازدید:", error);
     }
-  }, [detailsCar.id]); // فقط وقتی id تغییر کند اجرا شود
+  }, [detailsCar.id]);
 
   return (
-    <section
-      className="relative min-h-[225px] bg-cover bg-center flex sm:block items-center justify-center"
-      style={{ backgroundImage: "url('/images/gallery/header-1.jpg')" }}
-    >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-linear-to-r from-transparent to-black"></div>
+    <section className="relative min-h-56.25 flex items-center">
+      {/* ✅ تصویر با priority و next/image */}
+      <Image
+        src="/images/gallery/header-1.jpg"
+        alt={`${detailsCar.sourceName} ${detailsCar.title}`}
+        fill
+        priority
+        fetchPriority="high"
+        sizes="100vw"
+        quality={85}
+        className="object-cover object-center"
+        placeholder="blur"
+        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAGAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAX/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCgAAAAAAAAAAAAAAAAAAA//9k="
+      />
 
-      <div className="relative mx-auto px-4 py-12 sm:w-auto w-full">
-        <div className="text-white! sm:w-auto w-full">
-          <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center">
-            <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative sm:text-3xl text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ce1a2a]">
+      {/* Overlay با گرادیانت */}
+      <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"></div>
+
+      <div className="relative z-20 container mx-auto px-4 py-12">
+        <div className="text-white!">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold inline-block relative">
+            <span className="relative z-10 text-white!">
               {detailsCar.sourceName} {detailsCar.title}{" "}
               {createpublishCode(detailsCar.publishCode)}
-            </h3>
-          </div>
+            </span>
+            <span className="absolute -bottom-1 left-0 right-0 h-1/2 bg-[#ce1a2a] -z-10"></span>
+          </h1>
+
           {/* Breadcrumb */}
           <nav className="mt-6">
-            <ol className="flex items-center flex-wrap">
+            <ol className="flex items-center flex-wrap gap-1 text-sm">
               <li>
                 <Link
-                  href={"/"}
-                  className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
+                  href="/"
+                  className="text-white/80! hover:text-white! transition-colors duration-300"
                 >
                   صفحه اصلی
                 </Link>
@@ -71,11 +79,11 @@ const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
               {detailsCar.breadcrumb &&
                 detailsCar.breadcrumb.length > 0 &&
                 detailsCar.breadcrumb.map((b, i) => (
-                  <li key={b.href}>
-                    <span className="sm:mx-2 mx-1">/</span>
+                  <li key={b.href} className="flex items-center">
+                    <span className="mx-2 text-white/50!">/</span>
                     <Link
                       href={b.href}
-                      className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
+                      className="text-white/80! hover:text-white! transition-colors duration-300"
                     >
                       {b.title}
                     </Link>
@@ -85,13 +93,6 @@ const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
           </nav>
         </div>
       </div>
-
-      <style jsx global>{`
-        .breadcrumb-separator {
-          color: #fff;
-          margin: 0 8px;
-        }
-      `}</style>
     </section>
   );
 };

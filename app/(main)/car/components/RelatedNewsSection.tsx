@@ -1,17 +1,75 @@
-"use client"
+// RelatedNewsSection.tsx
+"use client";
 
 import { formatPersianDate } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import Link from "next/link";
-import React from "react";
+import { useEffect, useState, useRef } from "react";
+import { getItem } from "@/services/Item/Item";
 
-function RelatedNewsSection({
-  relatedNews,
-  detailsCar,
-}: {
-  relatedNews: Items[];
-  detailsCar: ItemsId;
-}) {
+// کامپوننت لودینگ
+const NewsSkeleton = () => (
+  <section className="py-8 bg-white rounded-xl shadow-sm">
+    <div className="mx-auto px-4">
+      <div className="h-8 bg-gray-200 rounded w-64 mb-4 animate-pulse"></div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
+            <div className="h-48 bg-gray-200 animate-pulse"></div>
+            <div className="p-4 space-y-3">
+              <div className="h-5 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-5 bg-gray-200 rounded w-3/4 animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2 animate-pulse"></div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+function RelatedNewsSection({ detailsCar }: { detailsCar: ItemsId }) {
+  const [loading, setLoading] = useState(true);
+  const [relatedNews, setRelatedNews] = useState<Items[]>([]);
+  const isFetched = useRef(false);
+
+  useEffect(() => {
+    if (isFetched.current) return;
+    isFetched.current = true;
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
+        
+        const response = await getItem({
+          TypeId: 5,
+          langCode: "fa",
+          Term: searchTerm,
+          PageIndex: 1,
+          PageSize: 6,
+        });
+
+        setRelatedNews(Array.isArray(response) ? response : []);
+      } catch (error) {
+        console.error("❌ [RelatedNews] Error fetching data:", error);
+        setRelatedNews([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [detailsCar]);
+
+  if (loading) {
+    return <NewsSkeleton />;
+  }
+
+  if (relatedNews.length === 0) {
+    return null; // اگر خبری نبود، بخش نمایش داده نشود
+  }
+
   return (
     <section className="py-8 bg-white rounded-xl shadow-sm">
       <div className="mx-auto px-4">
