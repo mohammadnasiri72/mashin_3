@@ -1,5 +1,6 @@
 import { formatPersianDate, toPersianNumbers } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
+import Link from "next/link";
 import { BiSolidMicrophone } from "react-icons/bi";
 import {
   FaCalendar,
@@ -12,7 +13,6 @@ import { MdOutlinePodcasts } from "react-icons/md";
 import AudioPlayer from "./AudioPlayer";
 import PaginationPodcasts from "./PaginationPodcasts";
 import SearchBoxPodcasts from "./SearchBoxPodcasts";
-import Link from "next/link";
 
 function BoxPodcasts({
   podcasts,
@@ -44,7 +44,7 @@ function BoxPodcasts({
                   <div className="flex flex-col items-center gap-2">
                     <div className="relative group/icon shrink-0 sm:w-72 w-full sm:h-56 rounded-xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300">
                       <img
-                        src={mainDomainOld + podcast.image}
+                        src={mainDomain + podcast.image}
                         alt={podcast.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />

@@ -1,21 +1,20 @@
+import { getComment } from "@/services/Comment/Comment";
 import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
-import { getItemId } from "@/services/Item/ItemId";
-import CompareCars from "./components/CompareCars";
-import { getComment } from "@/services/Comment/Comment";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { ItemVisit } from "@/services/Item/ItemVisit";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import CompareCars from "./components/CompareCars";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = Number(param.slug[0]);
-  const dataPage: ItemsId = await getItemId(id);
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
     const description = dataPage.seoInfo?.seoDescription
       ? dataPage.seoInfo?.seoDescription
@@ -55,23 +54,20 @@ export async function generateMetadata({
   }
 }
 
-async function pageWhichcarsDainamic({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const param = await params;
-  const searchParam = await searchParams;
-  const id = Number(param.slug[0]);
-  const page = Number(searchParam.page);
-  const term = String(searchParam.term);
+async function pageWhichcarsDainamic() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const whichcars: ItemsId | null = await getItemByUrl(decodedPathname);
+  if (!whichcars) {
+    return notFound();
+  }
+  const id = Number(whichcars.id);
+
   if (String(id) === "NaN") {
     return <>موجود نیست</>;
   }
-
-  const whichcars: ItemsId = await getItemId(id);
 
   const ids = whichcars.properties.find(
     (w) => w.propertyKey === "p1045_whichcar",
@@ -91,6 +87,7 @@ async function pageWhichcarsDainamic({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
 
   const comments: CommentResponse[] = await getComment({

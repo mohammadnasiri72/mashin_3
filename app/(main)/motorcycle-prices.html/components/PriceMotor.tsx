@@ -26,7 +26,6 @@ import {
   CardContent,
   Chip,
   Container,
-  Divider,
   InputAdornment,
   Paper,
   Stack,
@@ -57,6 +56,7 @@ interface Category {
 
 interface PriceBrands {
   id: number;
+  priority: number;
   categoryKey: string;
   title: string;
   parentId: number;
@@ -134,13 +134,11 @@ const CustomTableSortLabel = ({
   direction,
   onClick,
   children,
-  hideSortIcon,
 }: {
   active: boolean;
   direction: Order;
   onClick: () => void;
   children: React.ReactNode;
-  hideSortIcon?: boolean;
 }) => {
   const [hover, setHover] = useState(false);
 
@@ -556,7 +554,7 @@ const DesktopPriceTable = ({
                   sx={{
                     fontSize: 16,
                     fontWeight: "bold",
-                    color: PRIMARY_COLOR,
+                    color: "#374151",
                   }}
                 >
                   {item.price2 ? item.price2.toLocaleString("fa-IR") : "---"}
@@ -638,8 +636,22 @@ function PriceMotor({
     setSelectedCategory(0);
   }, [type]);
 
+  // const sortedBrands = useMemo(() => {
+  //   return [...brands].sort((a, b) => a.title.localeCompare(b.title, "fa"));
+  // }, [brands]);
   const sortedBrands = useMemo(() => {
-    return [...brands].sort((a, b) => a.title.localeCompare(b.title, "fa"));
+    return [...brands].sort((a, b) => {
+      // اولویت اول: priority (اگر وجود نداشت 0 در نظر گرفته می‌شود)
+      const priorityA = a.priority ?? 0;
+      const priorityB = b.priority ?? 0;
+
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB; // مرتب‌سازی صعودی بر اساس priority
+      }
+
+      // اگر priority مساوی بود، بر اساس حروف الفبا
+      return a.title.localeCompare(b.title, "fa");
+    });
   }, [brands]);
 
   const filteredBrands = useMemo(() => {
@@ -887,9 +899,19 @@ function PriceMotor({
           {Object.keys(groupedData).length > 0 ? (
             Object.entries(groupedData)
               .sort(([brandIdA], [brandIdB]) => {
-                const brandNameA = getBrandNameById(parseInt(brandIdA));
-                const brandNameB = getBrandNameById(parseInt(brandIdB));
-                return brandNameA.localeCompare(brandNameB, "fa");
+                const brandA = brands.find((b) => b.id === parseInt(brandIdA));
+                const brandB = brands.find((b) => b.id === parseInt(brandIdB));
+
+                const priorityA = brandA?.priority ?? 0;
+                const priorityB = brandB?.priority ?? 0;
+
+                if (priorityA !== priorityB) {
+                  return priorityB - priorityA; // نزولی (اعداد بزرگتر اولویت بالاتر)
+                }
+
+                const nameA = brandA?.title ?? "";
+                const nameB = brandB?.title ?? "";
+                return nameA.localeCompare(nameB, "fa");
               })
               .map(([brandId, items]) => {
                 const brandName = getBrandNameById(parseInt(brandId));

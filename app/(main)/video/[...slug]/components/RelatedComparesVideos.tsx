@@ -1,7 +1,7 @@
 "use client";
 
 import { formatPersianDate } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 
 const RelatedComparesVideos = ({
@@ -25,7 +25,7 @@ const RelatedComparesVideos = ({
               <div className="h-48 overflow-hidden">
                 <Link href={compare.url} className="w-full h-full">
                   <img
-                    src={mainDomainOld + compare.image}
+                    src={mainDomain + compare.image}
                     alt={compare.title}
                     className="w-full h-full object-cover hover:scale-105 transition-transform"
                   />

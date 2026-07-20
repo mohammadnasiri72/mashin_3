@@ -1,25 +1,23 @@
 "use client";
 
-import { setToken } from "@/redux/slice/token";
 import { RootState } from "@/redux/store";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Collapse } from "@mui/material";
 import Drawer from "@mui/material/Drawer";
+import { Tooltip } from "antd";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { IoChevronDown } from "react-icons/io5";
 import { MdLogin } from "react-icons/md";
 import { TiThMenu } from "react-icons/ti";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import LoadingSkeletonAuth from "./LoadingSkeletonAuth";
 import ModalLogin from "./ModalLogin";
 import ProfileDropdown from "./ProfileDropdown";
 import RegisterLink from "./RegisterLink";
 import SearchBoxHeader from "./SearchBoxHeader";
 import SearchBoxHeaderMobile from "./SearchBoxHeaderMobile";
-import { Tooltip } from "antd";
-const Cookies = require("js-cookie");
 
 // تابع تبدیل LastMenuItem به MenuItem با ساختار سلسله‌مراتبی
 const convertApiMenuToHierarchical = (apiItems: MenuItem[]): LastMenuItem[] => {
@@ -82,33 +80,9 @@ export default function Header({
   )?.propertyValue;
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [open, setOpen] = useState(false);
-  const token = useSelector((state: RootState) => state.token.token);
-  const disPatch = useDispatch();
-  useEffect(() => {
-    const loadUserFromCookie = () => {
-      setIsLoading(true);
-      try {
-        const userCookie = Cookies.get("user");
-
-        if (userCookie) {
-          const parsedUser = JSON.parse(userCookie);
-          disPatch(setToken(parsedUser?.token || ""));
-        } else {
-          disPatch(setToken(""));
-        }
-      } catch (error) {
-        console.error("Error parsing user cookie:", error);
-        disPatch(setToken(""));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // بارگذاری اولیه
-    loadUserFromCookie();
-  }, []);
+  const user = useSelector((state: RootState) => state.user.user);
+  const isLoading = useSelector((state: RootState) => state.user.isLoading);
 
   // هندل کردن اسکرول برای sticky header
   useEffect(() => {
@@ -185,7 +159,7 @@ export default function Header({
           }}
         >
           <img
-            src={mainDomainOld + logoSrc}
+            src={mainDomain + logoSrc}
             alt={logoTitle}
             className="max-w-32"
             loading="eager"
@@ -214,7 +188,6 @@ export default function Header({
     </div>
   );
 
-
   return (
     <div
       className={`sticky-header z-10001!  ${isSticky ? "sticky-active" : ""}`}
@@ -225,7 +198,7 @@ export default function Header({
           isSticky ? "sticky" : ""
         }`}
       >
-        <div className="max-w-[2000px] mx-auto px-4 py-3 h-16 flex flex-col justify-center">
+        <div className="max-w-500 mx-auto px-4 py-3 h-16 flex flex-col justify-center">
           <div className="flex items-center w-full">
             {/* Logo and Menu Section */}
             <div className="flex w-full items-center">
@@ -233,7 +206,7 @@ export default function Header({
               <div className="w-auto flex items-center lg:pr-4">
                 <Link href="/">
                   <img
-                    src={mainDomainOld + logoSrc}
+                    src={mainDomain + logoSrc}
                     alt={logoTitle}
                     className="max-w-28!"
                     loading="eager"
@@ -300,12 +273,12 @@ export default function Header({
             <div className="w-full! flex items-center">
               <div className="flex items-center lg:justify-between justify-end w-full gap-1">
                 {/* Search Box */}
-                
+
                 <SearchBoxHeader />
 
                 <div className="w-auto ">
                   {isLoading && <LoadingSkeletonAuth />}
-                  {!token && !isLoading && (
+                  {!user.token && !isLoading && (
                     <div className="flex items-center space-x-3 space-x-reverse gap-2">
                       <Tooltip
                         styles={{ root: { zIndex: 99999999 } }}
@@ -328,7 +301,7 @@ export default function Header({
                       <RegisterLink />
                     </div>
                   )}
-                  {token && !isLoading && <ProfileDropdown />}
+                  {user.token && !isLoading && <ProfileDropdown />}
                 </div>
               </div>
             </div>

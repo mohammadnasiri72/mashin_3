@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCategoryByUrl } from "./services/Category/CategoryByUrl";
 import { getCategoryId } from "./services/Category/CategoryId";
-import { getItemId, getItemSeoId } from "./services/Item/ItemId";
+import { getItemByIds } from "./services/Item/ItemByIds";
 import { getItemByUrl } from "./services/Item/ItemByUrl";
 import { getPriceCarBrands } from "./services/Price/PriceCarBrands";
-import { getItemByIds } from "./services/Item/ItemByIds";
 import { getPriceMotorBrands } from "./services/Price/PriceMotorBrands";
 
 export async function middleware(request: NextRequest) {
@@ -48,56 +47,11 @@ export async function middleware(request: NextRequest) {
       }
     }
   } else if (pathname.startsWith("/car/")) {
-    const id = Number(searchParams.get("id"));
-    // const decodedPathname = decodeURIComponent(pathname);
-    // if (id) {
-    //   try {
-    //     const data: ItemsId = await getItemId(id);
-    //     if (data?.url && data.url !== decodedPathname) {
-    //       return NextResponse.redirect(
-    //         new URL((data.url + `?id=${data?.id}`).toLowerCase(), request.url),
-    //         {
-    //           status: 301,
-    //         }
-    //       );
-    //     }
-    //   } catch (error: any) {
-    //     const status = error.response?.status || error.status || 500;
-    //     return NextResponse.redirect(
-    //       new URL(`/error?status=${status}`, request.url),
-    //       { status: 301 }
-    //     );
-    //   }
-    // } else {
-    //   try {
-    //     const data: ItemsId = await getItemByUrl(decodedPathname);
-    //     return NextResponse.redirect(
-    //       new URL((pathname + `?id=${data?.id}`).toLowerCase(), request.url),
-    //       { status: 301 }
-    //     );
-    //   } catch (error: any) {
-    //     const status = error.response?.status || error.status || 500;
-    //     return NextResponse.redirect(
-    //       new URL(`/error?status=${status}`, request.url),
-    //       { status: 301 }
-    //     );
-    //   }
-    // }
-
-    if (!id) {
-      return NextResponse.redirect(
-        new URL(`/error?status=${404}`, request.url),
-        { status: 301 },
-      );
-    }
-
     try {
-      const detailsCar = await getItemSeoId(Number(id));
+      const currentFullUrl = decodeURIComponent(pathname);
+      const detailsCar: ItemsId | null = await getItemByUrl(currentFullUrl);
 
       if (detailsCar?.url) {
-        // ساخت URL کامل فعلی
-        const currentFullUrl = decodeURIComponent(pathname + url.search);
-
         // decode کردن URL دریافتی از API
         const decodedDetailsUrl = decodeURIComponent(detailsCar.url);
 
@@ -116,42 +70,47 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
-  } else if (pathname.startsWith("/motorcycle/")) {
-    const decodedPathname = decodeURIComponent(pathname);
-    const id = searchParams.get("id");
-    if (id && Number(id) > 0) {
-      const data: ItemsId = await getItemId(Number(id));
 
-      if (data?.url && data.url !== decodedPathname + `?id=${id}`) {
-        return NextResponse.redirect(
-          new URL(data.url.toLowerCase(), request.url),
-          {
-            status: 301,
-          },
-        );
-      }
-    } else {
-      try {
-        const data: ItemsId | null = await getItemByUrl(decodedPathname);
-        if (!data) {
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } else if (pathname.startsWith("/motorcycle/")) {
+    try {
+      const currentFullUrl = decodeURIComponent(pathname);
+      const detailsMotor: ItemsId | null = await getItemByUrl(currentFullUrl);
+      if (detailsMotor?.url) {
+        // decode کردن URL دریافتی از API
+        const decodedDetailsUrl = decodeURIComponent(detailsMotor.url);
+
+        // مقایسه URLها بعد از decode
+        if (decodedDetailsUrl !== currentFullUrl) {
           return NextResponse.redirect(
-            new URL(`/error?status=${404}`, request.url),
-            { status: 301 },
-          );
-        } else if (data && data.id > 0 && Number(id) !== data?.id) {
-          return NextResponse.redirect(
-            new URL((pathname + `?id=${data?.id}`).toLowerCase(), request.url),
+            new URL(decodedDetailsUrl.toLowerCase(), request.url),
             { status: 301 },
           );
         }
-      } catch (error: any) {
-        const status = error.response?.status || error.status || 500;
-        return NextResponse.redirect(
-          new URL(`/error?status=${status}`, request.url),
-          { status: 301 },
-        );
       }
+    } catch (error: any) {
+      const status = error.response?.status || error.status || 500;
+      return NextResponse.redirect(
+        new URL(`/error?status=${status}`, request.url),
+        { status: 301 },
+      );
     }
+
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   } else if (pathname.startsWith("/fa/reviews/")) {
     try {
       const pathParts = pathname.split("/");
@@ -208,7 +167,7 @@ export async function middleware(request: NextRequest) {
 
       // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
       const requestHeaders = new Headers(request.headers);
-      requestHeaders.set("x-pathname", pathname); // فقط مسیر
+      requestHeaders.set("x-pathname", pathname);
       return NextResponse.next({
         request: {
           headers: requestHeaders,
@@ -223,27 +182,20 @@ export async function middleware(request: NextRequest) {
     }
   } else if (pathname.startsWith("/fa/tips-view/")) {
     try {
-      const pathParts = pathname.split("/");
-      const decodedPathname = decodeURIComponent(pathname);
-      const id = Number(pathParts[3]);
-      if (!isNaN(id)) {
-        const data: ItemsId = await getItemId(id);
+      const currentFullUrl = decodeURIComponent(pathname + url.search);
+      const detailsNews: ItemsId | null = await getItemByUrl(currentFullUrl);
 
-        if (data?.url && data.url !== decodedPathname) {
+      if (detailsNews?.url) {
+        // decode کردن URL دریافتی از API
+        const decodedDetailsUrl = decodeURIComponent(detailsNews.url);
+
+        // مقایسه URLها بعد از decode
+        if (decodedDetailsUrl !== currentFullUrl) {
           return NextResponse.redirect(
-            new URL(data.url.toLowerCase(), request.url),
-            {
-              status: 301,
-            },
+            new URL(decodedDetailsUrl.toLowerCase(), request.url),
+            { status: 301 },
           );
         }
-      } else {
-        return NextResponse.redirect(
-          new URL("/fa/educationtips/نکات-آموزشی.html", request.url),
-          {
-            status: 301,
-          },
-        );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
@@ -252,34 +204,30 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   } else if (pathname.startsWith("/autoservice/")) {
-    const pathParts = pathname.split("/");
-    const id = Number(pathParts[2]);
     try {
-      if (!isNaN(id)) {
-        const data: ItemsId = await getItemId(id);
-        const decodedPathname = decodeURIComponent(pathname);
-        const searchParams = new URL(request.url).searchParams;
-        const currentIdFromQuery = searchParams.get("id");
+      const currentFullUrl = decodeURIComponent(pathname + url.search);
+      const detailsAuto: ItemsId | null = await getItemByUrl(currentFullUrl);
 
-        if (
-          data?.url &&
-          data.url !== decodedPathname + `?id=${currentIdFromQuery}`
-        ) {
+      if (detailsAuto?.url) {
+        // decode کردن URL دریافتی از API
+        const decodedDetailsUrl = decodeURIComponent(detailsAuto.url);
+
+        // مقایسه URLها بعد از decode
+        if (decodedDetailsUrl !== currentFullUrl) {
           return NextResponse.redirect(
-            new URL(data.url.toLowerCase(), request.url),
-            {
-              status: 301,
-            },
+            new URL(decodedDetailsUrl.toLowerCase(), request.url),
+            { status: 301 },
           );
         }
-      } else {
-        return NextResponse.redirect(
-          new URL("/autoservices.html", request.url),
-          {
-            status: 301,
-          },
-        );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
@@ -288,6 +236,14 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   } else if (pathname.startsWith("/autoservices/")) {
     const pathParts = pathname.split("/");
     const id = Number(pathParts[2]);
@@ -345,7 +301,7 @@ export async function middleware(request: NextRequest) {
       }
       // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
       const requestHeaders = new Headers(request.headers);
-      requestHeaders.set("x-pathname", pathname); // فقط مسیر
+      requestHeaders.set("x-pathname", pathname);
       return NextResponse.next({
         request: {
           headers: requestHeaders,
@@ -359,27 +315,21 @@ export async function middleware(request: NextRequest) {
       );
     }
   } else if (pathname.startsWith("/fa/news-view/")) {
-    const decodedPathname = decodeURIComponent(pathname);
-    const pathParts = pathname.split("/");
-    const id = Number(pathParts[3]);
     try {
-      if (!isNaN(id)) {
-        const data: ItemsId = await getItemId(id);
-        if (data?.url && data.url !== decodedPathname) {
+      const currentFullUrl = decodeURIComponent(pathname);
+      const detailsNews: ItemsId | null = await getItemByUrl(currentFullUrl);
+
+      if (detailsNews?.url) {
+        // decode کردن URL دریافتی از API
+        const decodedDetailsUrl = decodeURIComponent(detailsNews.url);
+
+        // مقایسه URLها بعد از decode
+        if (decodedDetailsUrl !== currentFullUrl) {
           return NextResponse.redirect(
-            new URL(data.url.toLowerCase(), request.url),
-            {
-              status: 301,
-            },
+            new URL(decodedDetailsUrl.toLowerCase(), request.url),
+            { status: 301 },
           );
         }
-      } else {
-        return NextResponse.redirect(
-          new URL("/fa/news/اخبار-خودرو.html", request.url),
-          {
-            status: 301,
-          },
-        );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
@@ -388,13 +338,21 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   } else if (pathname.startsWith("/price.html")) {
     const type = searchParams.get("type");
     try {
       await getPriceCarBrands(type ? type : "internal");
       // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
       const requestHeaders = new Headers(request.headers);
-      requestHeaders.set("x-pathname", pathname); // فقط مسیر
+      requestHeaders.set("x-pathname", pathname + url.search);
       return NextResponse.next({
         request: {
           headers: requestHeaders,
@@ -407,13 +365,13 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
-  } else if (pathname.startsWith("/motorcycle-prices.html")) {
+  }  else if (pathname.startsWith("/motorcycle-prices.html")) {
     const type = searchParams.get("type");
     try {
       await getPriceMotorBrands(type ? type : "all");
       // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
       const requestHeaders = new Headers(request.headers);
-      requestHeaders.set("x-pathname", pathname); // فقط مسیر
+      requestHeaders.set("x-pathname", pathname + url.search);
       return NextResponse.next({
         request: {
           headers: requestHeaders,
@@ -427,24 +385,22 @@ export async function middleware(request: NextRequest) {
       );
     }
   } else if (pathname.startsWith("/whichcar/")) {
-    const decodedPathname = decodeURIComponent(pathname);
-    const pathParts = pathname.split("/");
-    const id = Number(pathParts[2]);
+   
     try {
-      if (!isNaN(id)) {
-        const data: ItemsId = await getItemId(id);
-        if (data?.url && data.url !== decodedPathname) {
+     const currentFullUrl = decodeURIComponent(pathname + url.search);
+      const detailsWhichcar: ItemsId | null = await getItemByUrl(currentFullUrl);
+
+      if (detailsWhichcar?.url) {
+        // decode کردن URL دریافتی از API
+        const decodedDetailsUrl = decodeURIComponent(detailsWhichcar.url);
+
+        // مقایسه URLها بعد از decode
+        if (decodedDetailsUrl !== currentFullUrl) {
           return NextResponse.redirect(
-            new URL(data.url.toLowerCase(), request.url),
-            {
-              status: 301,
-            },
+            new URL(decodedDetailsUrl.toLowerCase(), request.url),
+            { status: 301 },
           );
         }
-      } else {
-        return NextResponse.redirect(new URL("/whichcars.html", request.url), {
-          status: 301,
-        });
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
@@ -453,6 +409,14 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   } else if (pathname.startsWith("/videos/")) {
     try {
       const pathParts = pathname.split("/");
@@ -483,35 +447,22 @@ export async function middleware(request: NextRequest) {
       );
     }
   } else if (pathname.startsWith("/video/")) {
-    const decodedPathname = decodeURIComponent(pathname);
-    const pathParts = pathname.split("/");
-    const id = Number(pathParts[2]);
-    const id2 = Number(searchParams.get("id"));
+  
     try {
-      if (!isNaN(id)) {
-        const data: ItemsId = await getItemId(id);
-        if (data?.url && data.url !== decodedPathname + `?id=${id2}`) {
+      const currentFullUrl = decodeURIComponent(pathname + url.search);
+      const detailsVideo: ItemsId | null = await getItemByUrl(currentFullUrl);
+
+      if (detailsVideo?.url) {
+        // decode کردن URL دریافتی از API
+        const decodedDetailsUrl = decodeURIComponent(detailsVideo.url);
+
+        // مقایسه URLها بعد از decode
+        if (decodedDetailsUrl !== currentFullUrl) {
           return NextResponse.redirect(
-            new URL(data.url.toLowerCase(), request.url),
-            {
-              status: 301,
-            },
+            new URL(decodedDetailsUrl.toLowerCase(), request.url),
+            { status: 301 },
           );
         }
-      } else if (!isNaN(id2)) {
-        const data: ItemsId = await getItemId(id2);
-        if (data?.url && data.url !== decodedPathname + `?id=${data?.id}`) {
-          return NextResponse.redirect(
-            new URL(data.url.toLowerCase(), request.url),
-            {
-              status: 301,
-            },
-          );
-        }
-      } else {
-        return NextResponse.redirect(new URL("/videos.html", request.url), {
-          status: 301,
-        });
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
@@ -520,10 +471,17 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   } else if (pathname.startsWith("/podcast/")) {
     try {
       const pathParts = pathname.split("/");
-      const decodedPathname = decodeURIComponent(pathname);
       const id = Number(pathParts[2]);
       if (!isNaN(id)) {
         const data: ItemsCategoryId = await getCategoryId(id);
@@ -632,7 +590,7 @@ export async function middleware(request: NextRequest) {
   } else if (pathname.startsWith("/autoservices.html")) {
     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    requestHeaders.set("x-pathname", pathname);
     return NextResponse.next({
       request: {
         headers: requestHeaders,
@@ -641,7 +599,7 @@ export async function middleware(request: NextRequest) {
   } else if (pathname.startsWith("/podcast.html")) {
     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    requestHeaders.set("x-pathname", pathname);
     return NextResponse.next({
       request: {
         headers: requestHeaders,
@@ -650,7 +608,7 @@ export async function middleware(request: NextRequest) {
   } else if (pathname.startsWith("/videos.html")) {
     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    requestHeaders.set("x-pathname", pathname);
     return NextResponse.next({
       request: {
         headers: requestHeaders,
@@ -659,35 +617,29 @@ export async function middleware(request: NextRequest) {
   } else if (pathname.startsWith("/whichcars.html")) {
     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    requestHeaders.set("x-pathname", pathname);
     return NextResponse.next({
       request: {
         headers: requestHeaders,
       },
     });
   } else if (pathname.startsWith("/best-choice/")) {
-    const pathParts = pathname.split("/");
-    const id = Number(pathParts[2]);
+   
     try {
-      if (!isNaN(id)) {
-        const data: ItemsId = await getItemId(id);
-        const decodedPathname = decodeURIComponent(pathname);
+    const currentFullUrl = decodeURIComponent(pathname + url.search);
+      const detailsBest: ItemsId | null = await getItemByUrl(currentFullUrl);
 
-        if (data?.url && data.url !== decodedPathname) {
+      if (detailsBest?.url) {
+        // decode کردن URL دریافتی از API
+        const decodedDetailsUrl = decodeURIComponent(detailsBest.url);
+
+        // مقایسه URLها بعد از decode
+        if (decodedDetailsUrl !== currentFullUrl) {
           return NextResponse.redirect(
-            new URL(data.url.toLowerCase(), request.url),
-            {
-              status: 301,
-            },
+            new URL(decodedDetailsUrl.toLowerCase(), request.url),
+            { status: 301 },
           );
         }
-      } else {
-        return NextResponse.redirect(
-          new URL("/best-choices.html", request.url),
-          {
-            status: 301,
-          },
-        );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
@@ -696,6 +648,14 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   } else if (pathname === "/best-choices") {
     return NextResponse.redirect(new URL("/best-choices.html", request.url), {
       status: 301,
@@ -703,7 +663,7 @@ export async function middleware(request: NextRequest) {
   } else if (pathname.startsWith("/best-choices.html")) {
     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    requestHeaders.set("x-pathname", pathname);
     return NextResponse.next({
       request: {
         headers: requestHeaders,
@@ -712,7 +672,7 @@ export async function middleware(request: NextRequest) {
   } else if (pathname.startsWith("/searchcars")) {
     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    requestHeaders.set("x-pathname", pathname);
     return NextResponse.next({
       request: {
         headers: requestHeaders,
@@ -721,7 +681,7 @@ export async function middleware(request: NextRequest) {
   } else if (pathname.startsWith("/fa/technical-words.html")) {
     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    requestHeaders.set("x-pathname", pathname);
     return NextResponse.next({
       request: {
         headers: requestHeaders,
@@ -760,27 +720,20 @@ export async function middleware(request: NextRequest) {
     }
   } else if (pathname.startsWith("/technical-word/")) {
     try {
-      const pathParts = pathname.split("/");
-      const id = Number(pathParts[2]);
-      if (!isNaN(id)) {
-        const data: ItemsId = await getItemId(id);
-        const decodedPathname = decodeURIComponent(pathname);
+      const currentFullUrl = decodeURIComponent(pathname + url.search);
+      const detailsTechnical: ItemsId | null = await getItemByUrl(currentFullUrl);
 
-        if (data?.url && data.url !== decodedPathname) {
+      if (detailsTechnical?.url) {
+        // decode کردن URL دریافتی از API
+        const decodedDetailsUrl = decodeURIComponent(detailsTechnical.url);
+
+        // مقایسه URLها بعد از decode
+        if (decodedDetailsUrl !== currentFullUrl) {
           return NextResponse.redirect(
-            new URL(data.url.toLowerCase(), request.url),
-            {
-              status: 301,
-            },
+            new URL(decodedDetailsUrl.toLowerCase(), request.url),
+            { status: 301 },
           );
         }
-      } else {
-        return NextResponse.redirect(
-          new URL("/fa/technical-words.html", request.url),
-          {
-            status: 301,
-          },
-        );
       }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
@@ -789,6 +742,14 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   } else if (pathname.startsWith("/technical-words.html")) {
     return NextResponse.redirect(
       new URL("/fa/technical-words.html", request.url),
@@ -799,36 +760,31 @@ export async function middleware(request: NextRequest) {
   } else if (pathname.startsWith("/dashboard")) {
     const userCookie = request.cookies.get("user")?.value;
     if (!userCookie) {
-      // اگر کوکی وجود نداشت، به صفحه لاگین هدایت کن
       return NextResponse.redirect(new URL("/auth", request.url));
     }
 
     try {
-      // پارس کردن آبجکت user
       const userData = JSON.parse(userCookie);
 
-      // بررسی وجود توکن
       if (!userData.token) {
-        // اگر توکن وجود نداشت، کوکی رو پاک کن و به لاگین هدایت کن
         const response = NextResponse.redirect(new URL("/auth", request.url));
         response.cookies.delete("user");
         return response;
       }
 
-      // بررسی انقضای توکن (اختیاری)
       if (userData.expiration && new Date(userData.expiration) < new Date()) {
-        // توکن منقضی شده
         const response = NextResponse.redirect(
-          new URL("/login?expired=true", request.url),
+          new URL("/auth?expired=true", request.url),
         );
         response.cookies.delete("user");
         return response;
       }
 
-      // اگر همه چیز اوکی بود، اجازه دسترسی بده
-      // می‌تونی اطلاعات کاربر رو به هدر اضافه کنی برای استفاده در صفحه
       const requestHeaders = new Headers(request.headers);
-      requestHeaders.set("x-user-data", JSON.stringify(userData));
+
+      // ✅ Encode کردن اطلاعات قبل از قرار دادن در هدر
+      const encodedUserData = encodeURIComponent(JSON.stringify(userData));
+      requestHeaders.set("x-user-data", encodedUserData);
 
       return NextResponse.next({
         request: {
@@ -836,14 +792,44 @@ export async function middleware(request: NextRequest) {
         },
       });
     } catch (error) {
-      // اگر خطا در پارس کردن پیش اومد، کوکی رو پاک کن و به لاگین هدایت کن
       console.error("Error parsing user cookie:", error);
-      const response = NextResponse.redirect(new URL("/login", request.url));
+      const response = NextResponse.redirect(new URL("/auth", request.url));
       response.cookies.delete("user");
       return response;
     }
   } else {
+
+try{
+const currentFullUrl = decodeURIComponent(pathname + url.search);
+      const detailsCar: ItemsId | null = await getItemByUrl(currentFullUrl);
+
+      if (detailsCar?.url) {
+        // decode کردن URL دریافتی از API
+        const decodedDetailsUrl = decodeURIComponent(detailsCar.url);
+
+        // مقایسه URLها بعد از decode
+        if (decodedDetailsUrl !== currentFullUrl) {
+          return NextResponse.redirect(
+            new URL(decodedDetailsUrl.toLowerCase(), request.url),
+            { status: 301 },
+          );
+        }
+      }
+}catch (error: any) {
+      const status = error.response?.status || error.status || 500;
+      return NextResponse.redirect(
+        new URL(`/error?status=${status}`, request.url),
+        { status: 301 },
+      );
+    }
+
+
+
+
+
+
     const decodedPathname = decodeURIComponent(pathname);
+
     if (decodedPathname !== decodedPathname.toLowerCase()) {
       return NextResponse.redirect(
         new URL(decodedPathname.toLowerCase(), request.url),
@@ -852,7 +838,7 @@ export async function middleware(request: NextRequest) {
     }
     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
     const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-pathname", pathname); // فقط مسیر
+    requestHeaders.set("x-pathname", pathname + url.search);
     return NextResponse.next({
       request: {
         headers: requestHeaders,

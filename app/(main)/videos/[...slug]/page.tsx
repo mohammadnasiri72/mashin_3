@@ -15,7 +15,6 @@ export async function generateMetadata({
   const param = await params;
   const id = param.slug[0];
   const dataPage: ItemsCategoryId = await getCategoryId(Number(id));
-  // const seoUrl = `${mainDomainOld}${videoCat?.seoUrl}`;
 
   if (dataPage.title) {
     const title = `${
@@ -88,6 +87,7 @@ async function pageVideosDainamic({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
   const popularVideos: Items[] = await getItem({
     TypeId: 1028,

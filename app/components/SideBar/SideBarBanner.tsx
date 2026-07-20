@@ -1,6 +1,5 @@
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
-import React from "react";
 
 function SideBarBanner({ banner }: { banner: Items[] }) {
   return (
@@ -8,10 +7,10 @@ function SideBarBanner({ banner }: { banner: Items[] }) {
       {banner.length > 0 &&
         banner.map((ban) => (
           <div className="w-full" key={ban.id}>
-            <Link href={ban.sourceLink ? ban.sourceLink : "#"}>
+            <Link target="_blank" href={ban.sourceLink ? ban.sourceLink : "#"}>
               <img
                 className="w-full"
-                src={mainDomainOld + ban.image}
+                src={mainDomain + ban.image}
                 alt={ban.title}
               />
             </Link>

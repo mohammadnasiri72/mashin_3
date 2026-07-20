@@ -1,7 +1,7 @@
 "use client";
 
 import MarketStats from "@/app/components/SideBar/MarketStats";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 
 function SideBarContact({ banner }: { banner: Items[] }) {
   return (
@@ -14,7 +14,7 @@ function SideBarContact({ banner }: { banner: Items[] }) {
                 <div className="w-full" key={ban.id}>
                   <img
                     className="w-full"
-                    src={mainDomainOld + ban.image}
+                    src={mainDomain + ban.image}
                     alt={ban.title}
                   />
                 </div>

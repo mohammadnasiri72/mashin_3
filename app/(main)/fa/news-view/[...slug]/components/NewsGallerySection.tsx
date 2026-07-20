@@ -1,6 +1,6 @@
 "use client";
 
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { useEffect } from "react";
@@ -53,13 +53,13 @@ const NewsGallerySection = ({
                   <div key={image.id} className="lg:w-1/5 sm:w-1/4 w-1/2 p-1">
                     <div className="inn_gl_item border-2 border-transparent rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:border-red-400">
                       <a
-                        href={mainDomainOld + image.fileUrl}
+                        href={mainDomain + image.fileUrl}
                         data-fancybox="news-gallery"
                         data-caption={image.title || "تصاویر محصول"}
                         aria-label={image.title || "تصاویر محصول"}
                       >
                         <img
-                          src={mainDomainOld + image.fileUrl}
+                          src={mainDomain + image.fileUrl}
                           alt={image.title || "تصاویر محصول"}
                           className="w-full h-32 object-cover"
                         />

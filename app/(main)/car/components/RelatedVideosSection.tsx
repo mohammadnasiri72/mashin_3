@@ -2,11 +2,9 @@
 "use client";
 
 import { formatPersianDate } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Card } from "antd";
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
-import { getItem } from "@/services/Item/Item";
 
 // کامپوننت لودینگ
 const VideosSkeleton = () => (
@@ -15,7 +13,10 @@ const VideosSkeleton = () => (
       <div className="h-8 bg-gray-200 rounded w-64 animate-pulse"></div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div
+            key={i}
+            className="bg-white rounded-lg shadow-md overflow-hidden"
+          >
             <div className="h-48 bg-gray-200 animate-pulse"></div>
             <div className="p-4 space-y-3">
               <div className="h-5 bg-gray-200 rounded animate-pulse"></div>
@@ -29,40 +30,15 @@ const VideosSkeleton = () => (
   </Card>
 );
 
-function RelatedVideosSection({ detailsCar }: { detailsCar: ItemsId }) {
-  const [loading, setLoading] = useState(true);
-  const [relatedVideos, setRelatedVideos] = useState<Items[]>([]);
-  const isFetched = useRef(false);
-
-  useEffect(() => {
-    if (isFetched.current) return;
-    isFetched.current = true;
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
-        
-        const response = await getItem({
-          TypeId: 1028,
-          langCode: "fa",
-          Term: searchTerm,
-          PageIndex: 1,
-          PageSize: 6,
-        });
-
-        setRelatedVideos(Array.isArray(response) ? response : []);
-      } catch (error) {
-        console.error("❌ [RelatedVideos] Error fetching data:", error);
-        setRelatedVideos([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [detailsCar]);
-
+function RelatedVideosSection({
+  detailsCar,
+  loading,
+  relatedVideos,
+}: {
+  detailsCar: ItemsId;
+  loading: boolean;
+  relatedVideos: Items[];
+}) {
   if (loading) {
     return <VideosSkeleton />;
   }
@@ -88,7 +64,7 @@ function RelatedVideosSection({ detailsCar }: { detailsCar: ItemsId }) {
               <div className="h-48 overflow-hidden">
                 <Link href={video.url} className="w-full h-full">
                   <img
-                    src={mainDomainOld + video.image}
+                    src={mainDomain + video.image}
                     alt={video.title}
                     className="w-full h-full object-cover hover:scale-105 transition-transform"
                   />

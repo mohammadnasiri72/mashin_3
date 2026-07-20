@@ -1,8 +1,9 @@
 "use client";
 
-import { PostLogin } from "@/services/Account/Login";
-import { PostRegister } from "@/services/Account/Register";
+import { setUser } from "@/redux/slice/user";
+import { RootState } from "@/redux/store";
 import { PostResetPass } from "@/services/Account/ResetPass";
+import { getCsrf } from "@/services/Csrf/Csrf";
 import { generateRandomUserId, Toast } from "@/utils/func";
 import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
 import { Button, Input, Tabs } from "antd";
@@ -15,15 +16,10 @@ import {
   MdOutlinePassword,
   MdPersonAdd,
 } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 import { LoginForm } from "./components/loginForm";
 import { RegisterForm } from "./components/registerForm";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/redux/store";
-import { setToken } from "@/redux/slice/token";
-import { getCsrf } from "@/services/Csrf/Csrf";
-const Cookies = require("js-cookie");
 
-// تایپ‌های TypeScript (همانطور که بود)
 interface LoginData {
   userName: string;
   password: string;
@@ -161,16 +157,29 @@ const AuthPage: React.FC = () => {
     }
     setLoadingLogin(true);
     try {
-      const result = await PostLogin(loginData);
-      if (result.token) {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         Toast.fire({
           icon: "success",
           title: "ورود با موفقیت انجام شد",
         });
-        Cookies.set("user", JSON.stringify(result), { expires: 7 });
 
-        disPatch(setToken(result.token));
+        // ذخیره توکن در Redux
+        disPatch(setUser(data.user));
+
+        // هدایت به صفحه قبلی یا خانه
         Router.push(url ? url : "/");
+      } else {
+        throw new Error(data.error || "خطا در ورود");
       }
     } catch (error: any) {
       Toast.fire({
@@ -183,28 +192,41 @@ const AuthPage: React.FC = () => {
   };
   const Router = useRouter();
 
-  // هندلر ثبت‌نام
+  // هندلر ثبت‌نام - استفاده از API Route
   const handleRegister = async (): Promise<void> => {
     if (!validateRegisterForm()) {
       return;
     }
     setLoadingRegister(true);
     try {
-      const result = await PostRegister(registerData);
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(registerData),
+      });
 
-      if (result.token) {
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         Toast.fire({
           icon: "success",
           title: "ثبت نام شما با موفقیت انجام شد",
         });
-        Cookies.set("user", JSON.stringify(result), { expires: 7 });
-        disPatch(setToken(result.token));
+
+        // ذخیره اطلاعات کاربر در Redux
+        disPatch(setUser(data.user));
+
+        // هدایت به صفحه قبلی یا خانه
         Router.push(url ? url : "/");
+      } else {
+        throw new Error(data.error || "خطا در ثبت‌نام");
       }
     } catch (error: any) {
       Toast.fire({
         icon: "error",
-        title: error.response.data || "خطا در ثبت‌ نام",
+        title: error.message || "خطا در ثبت‌ نام",
       });
     } finally {
       setLoadingRegister(false);

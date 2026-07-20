@@ -1,7 +1,7 @@
 "use client";
 
 import { formatPersianDate } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 
 const NewsRelatedSection = ({ relatedNews }: { relatedNews: Items[] }) => {
@@ -21,7 +21,7 @@ const NewsRelatedSection = ({ relatedNews }: { relatedNews: Items[] }) => {
               <div className="h-48 overflow-hidden">
                 <Link href={news.url} className="w-full h-full">
                   <img
-                    src={mainDomainOld + news.image}
+                    src={mainDomain + news.image}
                     alt={news.title}
                     className="w-full h-full object-cover hover:scale-105 transition-transform"
                   />

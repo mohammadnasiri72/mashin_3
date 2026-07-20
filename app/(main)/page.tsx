@@ -168,7 +168,7 @@ export default async function Home() {
     ItemsCategory[],
   ] = await Promise.all([
     getItem({ TypeId: 6, langCode: "fa" }),
-    getItem({ TypeId: 5, langCode: "fa", PageIndex: 1, PageSize: 6 }),
+    getItem({ TypeId: 5, langCode: "fa", PageIndex: 1, PageSize: 6 ,FullData: true,}),
     getItem({
       TypeId: 5,
       langCode: "fa",
@@ -207,7 +207,6 @@ export default async function Home() {
       OrderBy: 8,
       PageIndex: 1,
       PageSize: 12,
-      FullData: true,
     }),
     getItem({ TypeId: 1045, langCode: "fa", PageIndex: 1, PageSize: 10 }),
     getItem({ TypeId: 3, langCode: "fa", PageIndex: 1, PageSize: 13 }),
@@ -228,6 +227,8 @@ export default async function Home() {
     getCategory({ TypeId: 1050, LangCode: "fa", PageIndex: 1, PageSize: 13 }),
   ]);
 
+  
+
   let Properties: properties[] = [];
   if (carSpecs.length > 0) {
     Properties = await getPropertyIds(
@@ -241,10 +242,7 @@ export default async function Home() {
     BrandId: brands.brands[0].id,
   });
 
-  // ❌ حذف: دیگر نیازی به fetch مجدد dataPage نیست
-  // const dataPage: ItemsId | null = await getItemByUrl("/");
-  // const seoHeadTags = decodeHtmlServer(dataPage?.seoInfo?.seoHeadTags);
-  // const tags = parseMetaTags(seoHeadTags);
+ 
 
   return (
     <div className="page-wrapper min-h-screen bg-[#f4f4f4]">

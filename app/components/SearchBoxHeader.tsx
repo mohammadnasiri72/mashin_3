@@ -1,7 +1,7 @@
 "use client";
 
 import { getItemFindByTerm } from "@/services/Item/ItemFindByTerm";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { IoCloseSharp, IoSearch } from "react-icons/io5";
@@ -226,7 +226,7 @@ function SearchBoxHeader() {
                             {item.image ? (
                               <div className="relative w-full h-full">
                                 <img
-                                  src={mainDomainOld + item.image}
+                                  src={mainDomain + item.image}
                                   alt={item.title}
                                   className="object-contain w-full h-full"
                                  

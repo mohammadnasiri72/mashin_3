@@ -5,21 +5,20 @@ import {
   htmlToPlainText,
   toPersianNumbers,
 } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaCar, FaSearch } from "react-icons/fa";
 import ShowSummary from "./ShowSummary";
 import SideBarCars from "./SideBarCars";
-import { memo } from "react";
 
 // ✅ کامپوننت کارت خودرو با memo
 const CarCard = memo(({ 
   car,
-  mainDomainOld,
+  mainDomain,
 }: { 
   car: Items;
-  mainDomainOld: string;
+  mainDomain: string;
 }) => {
   return (
     <div className="group block">
@@ -32,7 +31,7 @@ const CarCard = memo(({
             className="block w-full h-full"
           >
             <img
-              src={mainDomainOld + car.image}
+              src={mainDomain + car.image}
               alt={car.title}
               loading="lazy"
               className="object-contain w-full h-full p-2 hover:scale-105 transition-transform duration-300"
@@ -75,11 +74,11 @@ CarCard.displayName = 'CarCard';
 const CarGroupCard = memo(({ 
   groupKey,
   cars,
-  mainDomainOld,
+  mainDomain,
 }: { 
   groupKey: string;
   cars: Items[];
-  mainDomainOld: string;
+  mainDomain: string;
 }) => {
   const firstCar = cars[0];
 
@@ -94,7 +93,7 @@ const CarGroupCard = memo(({
             className="block w-full h-full"
           >
             <img
-              src={mainDomainOld + firstCar.image}
+              src={mainDomain + firstCar.image}
               alt={firstCar.title}
               loading="lazy"
               className="object-contain w-full h-full p-2 hover:scale-105 transition-transform duration-300"
@@ -303,7 +302,7 @@ const CarsDetails = ({
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center">
                 <img
-                  src={mainDomainOld + carDetails.image}
+                  src={mainDomain + carDetails.image}
                   alt={carDetails.title}
                   className="object-contain w-20 h-20"
                 />
@@ -331,7 +330,7 @@ const CarsDetails = ({
                       key={group.key}
                       groupKey={group.key}
                       cars={group.sortedCars}
-                      mainDomainOld={mainDomainOld}
+                      mainDomain={mainDomain}
                     />
                   );
                 }
@@ -340,7 +339,7 @@ const CarsDetails = ({
                   <CarCard
                     key={group.key}
                     car={group.cars[0]}
-                    mainDomainOld={mainDomainOld}
+                    mainDomain={mainDomain}
                   />
                 );
               })}

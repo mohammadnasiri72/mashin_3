@@ -1,5 +1,5 @@
 import { createMarkup } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Card } from "antd";
 
 function DescCarCompare({ car }: { car: ItemsId }) {
@@ -15,7 +15,7 @@ function DescCarCompare({ car }: { car: ItemsId }) {
         {car.image && (
           <div className="flex justify-center mb-6!">
             <img
-              src={mainDomainOld + car.image}
+              src={mainDomain + car.image}
               alt={car.title}
               className="max-w-full h-auto max-h-80 object-contain rounded-lg"
             

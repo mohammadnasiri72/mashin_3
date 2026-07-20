@@ -1,23 +1,22 @@
 import { getAttachment } from "@/services/Attachment/Attachment";
-import { getItemId } from "@/services/Item/ItemId";
-import NewsViewDetails from "./components/NewsViewDetails";
-import { getItem } from "@/services/Item/Item";
 import { getComment } from "@/services/Comment/Comment";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { ItemVisit } from "@/services/Item/ItemVisit";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import NewsViewDetails from "./components/NewsViewDetails";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = Number(param.slug[0]);
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const dataPage: ItemsId = await getItemId(id);
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
     const description = dataPage.seoInfo?.seoDescription
       ? dataPage.seoInfo?.seoDescription
@@ -57,14 +56,16 @@ export async function generateMetadata({
   }
 }
 
-async function pageNewsViewDetails({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = Number(param.slug[0]);
-  const detailsNews: ItemsId = await getItemId(Number(id));
+async function pageNewsViewDetails() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const detailsNews: ItemsId | null = await getItemByUrl(decodedPathname);
+  if (!detailsNews) {
+    return notFound();
+  }
+  const id = Number(detailsNews.id);
 
   let relatedNews: Items[] = [];
 
@@ -99,6 +100,7 @@ async function pageNewsViewDetails({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
 
   const idsCars = detailsNews.properties.find(
@@ -123,19 +125,17 @@ async function pageNewsViewDetails({
     ? await getItemByIds(idsVoices)
     : [];
 
-
-
-    try {
-        await ItemVisit({
-          langCode: "fa",
-          id,
-          ip: "",
-          url: detailsNews.url,
-          userAgent:''
-        });
-      } catch (error) {
-        console.error("Error recording visit:", error);
-      }
+  try {
+    await ItemVisit({
+      langCode: "fa",
+      id,
+      ip: "",
+      url: detailsNews.url,
+      userAgent: "",
+    });
+  } catch (error) {
+    console.error("Error recording visit:", error);
+  }
 
   return (
     <NewsViewDetails

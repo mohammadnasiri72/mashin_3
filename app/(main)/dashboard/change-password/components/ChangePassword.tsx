@@ -1,11 +1,12 @@
 "use client";
+import { RootState } from "@/redux/store";
 import { PostChangePassword } from "@/services/Account/ChangePassword";
 import { Toast } from "@/utils/func";
 import { Spin } from "antd";
 import { useState } from "react";
 import { FaEye, FaEyeSlash, FaKey } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
-const Cookies = require("js-cookie");
 
 export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -16,6 +17,7 @@ export default function ChangePassword() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const user = useSelector((state: RootState) => state.user.user);
 
   const validateForm = () => {
     const newErrors: any = {};
@@ -53,7 +55,6 @@ export default function ChangePassword() {
 
     setLoading(true);
     try {
-      const user = JSON.parse(Cookies.get("user"));      
 
       // اطمینان از وجود مقادیر
       if (!currentPassword || !newPassword || !confirmPassword) {

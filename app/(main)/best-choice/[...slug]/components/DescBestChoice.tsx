@@ -1,7 +1,7 @@
 "use client";
 
 import { createMarkup } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import { useEffect } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
@@ -71,14 +71,14 @@ const DescBestChoice = ({
             )}
 
             <a
-              href={mainDomainOld + detailsBest.image}
+              href={mainDomain + detailsBest.image}
               data-fancybox="main-img"
               data-caption={detailsBest.title}
               aria-label={detailsBest.title}
             >
               <img
                 className="float-start! w-96 pl-5"
-                src={mainDomainOld + detailsBest.image}
+                src={mainDomain + detailsBest.image}
                 alt={detailsBest.title}
               />
             </a>

@@ -1,16 +1,15 @@
 "use client";
 
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Image from "next/image";
 import Link from "next/link";
-import OptimizedImage from "./OptimizedImage";
 import { useEffect, useRef, useState } from "react";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import type { Swiper as SwiperType } from 'swiper';
+import OptimizedImage from "./OptimizedImage";
 
 const CarSpecsSection = ({
   carSpecs,
@@ -182,7 +181,7 @@ const CarSpecsSection = ({
                         <div className="relative rounded-xl overflow-hidden mb-3 h-52 bg-gray-100">
                           <Link href={car.url} className="block relative w-full h-full">
                             <OptimizedImage
-                              src={mainDomainOld + car.image}
+                              src={mainDomain + car.image}
                               alt={car.title}
                               className="object-contain"
                               sizes="(max-width: 768px) 50vw, 25vw"

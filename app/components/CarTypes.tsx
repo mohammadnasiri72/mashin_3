@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import "swiper/css";
 
 export default function CarTypes({ segmentCars }: { segmentCars: Items[] }) {
@@ -40,7 +40,7 @@ export default function CarTypes({ segmentCars }: { segmentCars: Items[] }) {
                     <div className="duration-300">
                       <div className="">
                         <img
-                          src={mainDomainOld + car.image}
+                          src={mainDomain + car.image}
                           alt={car.title}
                           className="mx-auto object-contain w-36"
                         />

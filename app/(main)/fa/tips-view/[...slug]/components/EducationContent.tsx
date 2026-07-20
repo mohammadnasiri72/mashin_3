@@ -1,11 +1,10 @@
 import { createMarkup } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
-import { Card } from "antd";
+import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
-import Image from "next/image";
+import { Card } from "antd";
 import Link from "next/link";
-import { FaCalendar, FaEye } from "react-icons/fa";
 import { useEffect } from "react";
+import { FaCalendar, FaEye } from "react-icons/fa";
 
 function EducationContent({ education }: { education: ItemsId }) {
    useEffect(() => {
@@ -55,14 +54,14 @@ function EducationContent({ education }: { education: ItemsId }) {
         {education.image && (
           
             <a
-              href={mainDomainOld + education.image}
+              href={mainDomain + education.image}
               data-fancybox="main-img"
               data-caption={education.title}
               aria-label={education.title}
             >
               <img
                 className="float-start! w-96 pl-5"
-                src={mainDomainOld + education.image}
+                src={mainDomain + education.image}
                 alt={education.title}
               />
             </a>

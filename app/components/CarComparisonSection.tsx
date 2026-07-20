@@ -2,16 +2,15 @@
 
 import { getItem } from "@/services/Item/Item";
 import { createpublishCode } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Select } from "antd";
-import OptimizedImage from "./OptimizedImage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import type { Swiper as SwiperType } from "swiper";
+import OptimizedImage from "./OptimizedImage";
 
 const { Option } = Select;
 
@@ -348,7 +347,7 @@ const CarComparisonSection = ({
                     <Link href={item.url}>
                       <div className="relative w-full pt-[75%] bg-gray-100">
                         <OptimizedImage
-                          src={mainDomainOld + item.image}
+                          src={mainDomain + item.image}
                           alt={item.title}
                           className="object-cover"
                           sizes="(max-width: 768px) 100vw, 25vw"

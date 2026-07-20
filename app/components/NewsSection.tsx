@@ -1,15 +1,15 @@
 "use client";
 
 import { formatPersianDate } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Card } from "antd";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { FaCalendar, FaCircle } from "react-icons/fa";
-import OptimizedImage from "./OptimizedImage";
+import type { Swiper as SwiperType } from "swiper";
 import { Autoplay, Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useEffect, useState, useRef } from "react";
-import type { Swiper as SwiperType } from "swiper";
+import OptimizedImage from "./OptimizedImage";
 
 // Import Swiper styles
 import "swiper/css";
@@ -144,7 +144,7 @@ export default function NewsSection({
                           cover={
                             <div className="relative h-72 overflow-hidden bg-gray-100">
                               <OptimizedImage
-                                src={mainDomainOld + item.image}
+                                src={mainDomain + item.image}
                                 alt={item.title}
                                 className="object-cover group-hover:brightness-75 duration-300"
                                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

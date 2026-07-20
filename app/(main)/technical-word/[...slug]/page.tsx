@@ -1,20 +1,19 @@
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getItem } from "@/services/Item/Item";
-import { getItemId } from "@/services/Item/ItemId";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import DetailsDic from "./components/DetailsDic";
 import SideBarDic from "./components/SideBarDic";
-import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = Number(param.slug[0]);
-  const dataPage: ItemsId = await getItemId(id);
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
     const description = dataPage.seoInfo?.seoDescription
       ? dataPage.seoInfo?.seoDescription
@@ -54,19 +53,21 @@ export async function generateMetadata({
   }
 }
 
-async function pageTechnicalWord({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = Number(param.slug[0]);
-  const detailsDic: ItemsId = await getItemId(id);
+async function pageTechnicalWord() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const detailsDic: ItemsId | null = await getItemByUrl(decodedPathname);
+  if (!detailsDic) {
+    return notFound();
+  }
 
   const banner: Items[] = await getItem({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
 
   return (

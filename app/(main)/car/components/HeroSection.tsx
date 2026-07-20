@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
+  
   // ذخیره در localStorage
   useEffect(() => {
     try {
@@ -55,15 +56,16 @@ const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
       {/* Overlay با گرادیانت */}
       <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"></div>
 
-      <div className="relative z-20 container mx-auto px-4 py-12">
+      <div className="relative container mx-auto px-4 py-12">
         <div className="text-white!">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold inline-block relative">
             <span className="relative z-10 text-white!">
               {detailsCar.sourceName} {detailsCar.title}{" "}
-              {createpublishCode(detailsCar.publishCode)}
+              {/* {createpublishCode(detailsCar.publishCode)} */}
             </span>
-            <span className="absolute -bottom-1 left-0 right-0 h-1/2 bg-[#ce1a2a] -z-10"></span>
+            <span className="absolute -bottom-1 left-0 right-0 h-1/2 bg-[#ce1a2a]"></span>
           </h1>
+            <p>{createpublishCode(detailsCar.publishCode)}</p>
 
           {/* Breadcrumb */}
           <nav className="mt-6">

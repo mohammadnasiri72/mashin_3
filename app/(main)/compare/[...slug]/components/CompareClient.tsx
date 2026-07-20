@@ -2,7 +2,7 @@
 
 import { getAttachment } from "@/services/Attachment/Attachment";
 import { createMarkup, createpublishCode } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { Card, Tooltip } from "antd";
@@ -98,8 +98,8 @@ function CompareClient({
           dataCompare.find((e) => e.id === id)?.image,
           ...Attachment.map((obj) => obj.fileUrl),
         ].map((img) => ({
-          src: mainDomainOld + img,
-          thumb: mainDomainOld + img,
+          src: mainDomain + img,
+          thumb: mainDomain + img,
         })),
         { startIndex: 0 },
       );
@@ -127,7 +127,7 @@ function CompareClient({
                           onClick={() => {
                             getAttachmentHandler(car.id);
                           }}
-                          src={mainDomainOld + car.image}
+                          src={mainDomain + car.image}
                           alt={car.title}
                           className="w-auto mx-auto h-20 object-contain cursor-pointer"
                         />

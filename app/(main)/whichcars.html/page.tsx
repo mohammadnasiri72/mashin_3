@@ -12,7 +12,6 @@ export async function generateMetadata() {
 
   const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  // const seoUrl = `${mainDomainOld}${whichCarsCat?.seoUrl}`;
 
   if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
@@ -83,6 +82,7 @@ async function pageWhichCars({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
 
   const headersList = await headers();

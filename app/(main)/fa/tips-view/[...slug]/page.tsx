@@ -1,21 +1,19 @@
-import { getItem } from "@/services/Item/Item";
-import { getItemId } from "@/services/Item/ItemId";
-import React from "react";
-import EducationView from "./components/EducationView";
 import { getComment } from "@/services/Comment/Comment";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { getItem } from "@/services/Item/Item";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { ItemVisit } from "@/services/Item/ItemVisit";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import EducationView from "./components/EducationView";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = Number(param.slug[0]);
-  const dataPage: ItemsId = await getItemId(id);
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
     const description = dataPage.seoInfo?.seoDescription
       ? dataPage.seoInfo?.seoDescription
@@ -30,7 +28,7 @@ export async function generateMetadata({
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
-    
+
     return {
       title,
       description,
@@ -56,11 +54,18 @@ export async function generateMetadata({
   }
 }
 
-async function pageTipView({ params }: { params: Promise<{ slug: string }> }) {
-  const param = await params;
-  const id = Number(param.slug[0]);
+async function pageTipView() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const education: ItemsId = await getItemId(id);
+  const education: ItemsId | null = await getItemByUrl(decodedPathname);
+  if (!education) {
+    return notFound();
+  }
+
+  const id = Number(education.id);
+
 
   const popularEducations: Items[] = await getItem({
     TypeId: 3,
@@ -90,19 +95,20 @@ async function pageTipView({ params }: { params: Promise<{ slug: string }> }) {
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
 
-    try {
-                    await ItemVisit({
-                      langCode: "fa",
-                      id,
-                      ip: "",
-                      url: education.url,
-                      userAgent:''
-                    });
-                  } catch (error) {
-                    console.error("Error recording visit:", error);
-                  }
+  try {
+    await ItemVisit({
+      langCode: "fa",
+      id,
+      ip: "",
+      url: education.url,
+      userAgent: "",
+    });
+  } catch (error) {
+    console.error("Error recording visit:", error);
+  }
   return (
     <EducationView
       education={education}

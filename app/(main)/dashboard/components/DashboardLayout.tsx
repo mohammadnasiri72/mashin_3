@@ -1,6 +1,6 @@
 "use client";
 
-import { setToken } from "@/redux/slice/token";
+import { setUser } from "@/redux/slice/user";
 import { RootState } from "@/redux/store";
 import { PostSignOut } from "@/services/Account/SignOut";
 import { createInitialUserData, Toast } from "@/utils/func";
@@ -8,7 +8,7 @@ import { UserOutlined } from "@ant-design/icons";
 import { Avatar } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   FaComments,
   FaHeart,
@@ -19,7 +19,6 @@ import {
 } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
-const Cookies = require("js-cookie");
 
 const menuItems = [
   {
@@ -56,23 +55,37 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [userName, setUserName] = useState<string>("");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const pathname = usePathname();
-  const user = Cookies.get("user");
-  const token: string = useSelector((state: RootState) => state.token.token);
+  const user = useSelector((state: RootState) => state.user.user);
+
   const disPatch = useDispatch();
   const router = useRouter();
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
-      if (token) {
-        await PostSignOut(token);
+      if (user.token) {
+        await PostSignOut(user.token);
+      }
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         Toast.fire({
           icon: "success",
           title: "با موفقیت خارج شدید",
         });
+
+        disPatch(setUser(createInitialUserData())); // ریست کردن user
+
+        // 4. بستن dropdown و هدایت به صفحه اصلی
+        router.push("/");
+      } else {
+        throw new Error(data.error || "خطا در خروج");
       }
     } catch (error: any) {
       Toast.fire({
@@ -80,26 +93,9 @@ export default function DashboardLayout({
         title: error.response.data || "خطا در خروج",
       });
     } finally {
-      Cookies.set("user", JSON.stringify(createInitialUserData()), {
-        expires: 7,
-      });
-      disPatch(setToken(""));
       setIsLoggingOut(false);
-      router.push("/");
     }
   };
-
-  useEffect(() => {
-    if (user) {
-      try {
-        const parsedUser = JSON.parse(user);
-        setUserName(parsedUser?.displayName || "");
-      } catch (error) {
-        console.error("Error parsing user cookie:", error);
-        setUserName("");
-      }
-    }
-  }, [user]);
 
   return (
     <>
@@ -118,7 +114,7 @@ export default function DashboardLayout({
                 <div className="cursor-pointer flex justify-center items-center gap-2">
                   <Avatar size="default" icon={<UserOutlined />} />
                   <span dir="ltr" className="line-clamp-1 select-none">
-                    {userName}
+                    {user.displayName ? user.displayName : ""}
                   </span>
                 </div>
               </div>

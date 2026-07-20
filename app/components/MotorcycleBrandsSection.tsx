@@ -1,6 +1,6 @@
 "use client";
 
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import "swiper/css";
@@ -66,7 +66,7 @@ const MotorcycleBrandsSection = ({ brands }: { brands: ItemsCategory[] }) => {
 
       const actualBrandsCount = brands.length;
       const initialTotalGroups = Math.ceil(
-        actualBrandsCount / initialSlidesPerView
+        actualBrandsCount / initialSlidesPerView,
       );
       setTotalGroups(initialTotalGroups);
     }
@@ -178,7 +178,7 @@ const MotorcycleBrandsSection = ({ brands }: { brands: ItemsCategory[] }) => {
                         <div className="w-full h-28 flex items-start justify-center">
                           <div className="h-20 flex items-center justify-center">
                             <img
-                              src={mainDomainOld + brand.image}
+                              src={mainDomain + brand.image}
                               alt={brand.title}
                               className="max-w-full max-h-full object-contain"
                               loading="lazy"

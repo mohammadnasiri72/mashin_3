@@ -1,26 +1,28 @@
 import { getAttachment } from "@/services/Attachment/Attachment";
 import { getComment } from "@/services/Comment/Comment";
-import { getItemId } from "@/services/Item/ItemId";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { ItemVisit } from "@/services/Item/ItemVisit";
 import { getPollId } from "@/services/Poll/pollId";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import CarDetails from "../../car/components/CarDetails";
 import ContentTabsSSR from "../../car/components/ContentTabsSSR";
 import FeaturesSection from "../../car/components/FeaturesSection";
 import HeroSection from "../../car/components/HeroSection";
 import NvbarCar from "../../car/components/NvbarCar";
-import { ItemVisit } from "@/services/Item/ItemVisit";
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const searchParam = await searchParams;
-  const id = Number(searchParam.id);
-  const dataPage: ItemsId = await getItemId(Number(id));
+export async function generateMetadata() {
+   const headersList = await headers();
+    const pathname = headersList.get("x-pathname");
+    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  
+    const dataPage: ItemsId | null = await getItemByUrl(decodedPathname); 
 
-  if (dataPage.title) {
+
+
+  if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
     const description = dataPage.seoInfo?.seoDescription
       ? dataPage.seoInfo?.seoDescription
@@ -35,6 +37,7 @@ export async function generateMetadata({
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+    
     return {
       title,
       description,
@@ -59,18 +62,22 @@ export async function generateMetadata({
   }
 }
 
-async function pageMotorcycleDainamic({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const searchParam = await searchParams;
-  const id = Number(searchParam.id);
+async function pageMotorcycleDainamic() {
+   const headersList = await headers();
+    const pathname = headersList.get("x-pathname");
+    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  
+    const detailsMotorcycle: ItemsId | null = await getItemByUrl(decodedPathname);  
+    if (!detailsMotorcycle) {
+      return notFound();
+    }
 
-  const [Attachment, detailsMotorcycle, comments, pollData] = await Promise.all(
+
+  const id = Number(detailsMotorcycle.id);
+
+  const [Attachment, comments, pollData] = await Promise.all(
     [
       getAttachment(id),
-      getItemId(id),
       getComment({
         id,
         langCode: "fa",
@@ -82,41 +89,20 @@ async function pageMotorcycleDainamic({
     ],
   );
 
-   try {
-                      await ItemVisit({
-                        langCode: "fa",
-                        id,
-                        ip: "",
-                        url: detailsMotorcycle.url,
-                        userAgent:''
-                      });
-                    } catch (error) {
-                      console.error("Error recording visit:", error);
-                    }
+  try {
+    await ItemVisit({
+      langCode: "fa",
+      id,
+      ip: "",
+      url: detailsMotorcycle.url,
+      userAgent: "",
+    });
+  } catch (error) {
+    console.error("Error recording visit:", error);
+  }
 
   return (
     <>
-      {/* <MotorHeroSection detailsMotorcycle={detailsMotorcycle} />
-      <MotorDetails
-        Attachment={Attachment}
-        detailsMotorcycle={detailsMotorcycle}
-        initialPollData={pollData}
-      />
-      {(advantages.length !== 0 || disadvantages.length !== 0) && (
-        <FeaturesSectionMotor detailsMotorcycle={detailsMotorcycle} />
-      )}
-      <ContentTabsMotor
-        Attachment={Attachment}
-        detailsMotorcycle={detailsMotorcycle}
-        detailsMotorcompetitor={detailsMotorcompetitor}
-        comments={comments}
-        id={Number(id)}
-        motorcyclesModel={motorcyclesModel}
-        motorcyclesModel2={motorcyclesModel2}
-        lastNews={lastNews}
-        lastVideos={lastVideos}
-      /> */}
-
       <HeroSection detailsCar={detailsMotorcycle} />
       <NvbarCar
         pollData={pollData}
@@ -131,6 +117,7 @@ async function pageMotorcycleDainamic({
         <FeaturesSection
           detailsCar={detailsMotorcycle}
           Attachment={Attachment.filter((e) => e.tabId === 4)}
+          vehicle={"motor"}
         />
       </Suspense>
       <ContentTabsSSR
@@ -138,7 +125,7 @@ async function pageMotorcycleDainamic({
         detailsCar={detailsMotorcycle}
         comments={comments}
         id={id}
-        vehicle={'motor'}
+        vehicle={"motor"}
       />
     </>
   );

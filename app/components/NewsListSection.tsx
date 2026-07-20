@@ -1,11 +1,10 @@
-import { createMarkup, formatPersianDate, htmlToPlainText } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { formatPersianDate, htmlToPlainText } from "@/utils/func";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { FaCalendar, FaComments } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
 
 const NewsListSection = ({ news }: { news: Items[] }) => {
-  
   return (
     <section className="mb-5" aria-labelledby="news-list-title">
       <div className="mx-auto px-4">
@@ -39,7 +38,7 @@ const NewsListSection = ({ news }: { news: Items[] }) => {
                   <div className="sm:w-36 sm:h-36 w-full h-auto shrink-0 holographic-effect">
                     <div className="rounded-xl overflow-hidden">
                       <img
-                        src={mainDomainOld + item.image}
+                        src={mainDomain + item.image}
                         alt={item.title}
                         className="w-full sm:h-36 object-cover"
                         loading="lazy"
@@ -56,11 +55,9 @@ const NewsListSection = ({ news }: { news: Items[] }) => {
                         </h3>
                         {(item.summary || item.body) && (
                           <div className="text-gray-600 text-xs mb-3 line-clamp-3 mt-1 text-justify group-hover:text-white! duration-300">
-                            {
-                            item.summary ? 
-                            htmlToPlainText(item.summary):
-                            htmlToPlainText(item.body)
-                          }
+                            {item.summary
+                              ? htmlToPlainText(item.summary)
+                              : htmlToPlainText(item.body)}
                           </div>
                         )}
                       </div>

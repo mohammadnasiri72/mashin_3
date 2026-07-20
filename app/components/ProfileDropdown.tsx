@@ -1,7 +1,7 @@
 // components/ProfileDropdown.tsx
 "use client";
 
-import { setToken } from "@/redux/slice/token";
+import { setUser } from "@/redux/slice/user";
 import { RootState } from "@/redux/store";
 import { PostSignOut } from "@/services/Account/SignOut";
 import { createInitialUserData, Toast } from "@/utils/func";
@@ -12,7 +12,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaComments, FaHeart, FaHome, FaKey, FaPowerOff } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-const Cookies = require("js-cookie");
 
 // تعریف تایپ برای آیتم‌های منو
 interface MenuItem {
@@ -34,20 +33,36 @@ export default function ProfileDropdown() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const disPatch = useDispatch();
 
-  const user = Cookies.get("user");
-  const name = user ? JSON.parse(user)?.displayName : "";
-  const token: string = useSelector((state: RootState) => state.token.token);
+ 
+   const user = useSelector((state: RootState) => state.user.user);
   const router = useRouter();
 
   const handleLogout = async () => {
     setLoading(true);
     try {
-      if (token) {
-        await PostSignOut(token);
+      if (user.token) {
+        await PostSignOut(user.token);
+      
+      }
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
         Toast.fire({
           icon: "success",
           title: "با موفقیت خارج شدید",
         });
+
+        disPatch(setUser(createInitialUserData())); // ریست کردن user
+
+        // 4. بستن dropdown و هدایت به صفحه اصلی
+        setOpen(false);
+        router.push("/");
+      } else {
+        throw new Error(data.error || "خطا در خروج");
       }
     } catch (error: any) {
       Toast.fire({
@@ -55,13 +70,7 @@ export default function ProfileDropdown() {
         title: error.response.data || "خطا در خروج",
       });
     } finally {
-      Cookies.set("user", JSON.stringify(createInitialUserData()), {
-        expires: 7,
-      });
-      disPatch(setToken(""));
-      setOpen(false);
       setLoading(false);
-      router.push("/");
     }
   };
 
@@ -91,7 +100,7 @@ export default function ProfileDropdown() {
         className="cursor-pointer flex justify-center items-center gap-2"
       >
         <span dir="ltr" className="line-clamp-1 select-none">
-          {name}
+          {user.displayName ? user.displayName : ''}
         </span>
         <Avatar size="default" icon={<UserOutlined />} />
       </div>
@@ -138,7 +147,7 @@ export default function ProfileDropdown() {
           </Link>
           <Divider className="m-0! p-0!" />
           <Link
-            href="/dashboard/mycomments"
+            href="/dashboard/change-password"
             onClick={() => {
               setOpen(false);
             }}

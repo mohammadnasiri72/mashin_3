@@ -1,5 +1,5 @@
 import { formatPersianDate, toPersianNumbers } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { FaCalendar, FaEye, FaPlay } from "react-icons/fa";
 import PaginationVideo from "./PaginationVideo";
@@ -27,7 +27,7 @@ function BoxVideo({ videos, titleCat }: { videos: Items[]; titleCat: string }) {
                     className="relative group/icon shrink-0 w-full h-40 rounded-xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300"
                   >
                     <img
-                      src={mainDomainOld + video.image}
+                      src={mainDomain + video.image}
                       alt={video.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />

@@ -1,6 +1,5 @@
 import { createpublishCode, formatPersianDate } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
-// import { Car, Eye, Newspaper } from "lucide-react";
+import { mainDomain } from "@/utils/mainDomain";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -68,7 +67,7 @@ function RecentViews() {
       <div className="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden shrink-0">
         {view.image ? (
           <Image
-            src={mainDomainOld + view.image}
+            src={mainDomain + view.image}
             alt={view.title}
             width={48}
             height={48}

@@ -92,6 +92,7 @@ async function pageAutoServiceDetails({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
   const ids = AutoServiceData.map((item) => item.id).join(",");
   let propertyItems: ItemsId[] = [];

@@ -4,7 +4,7 @@ function HeroSectionAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
   return (
     <>
       <section
-        className="relative min-h-[225px] bg-cover bg-center flex sm:block items-center justify-center"
+        className="relative min-h-56.25 bg-cover bg-center flex sm:block items-center justify-center"
         style={{ backgroundImage: "url('/images/gallery/header-1.jpg')" }}
       >
         {/* Overlay */}
@@ -18,7 +18,7 @@ function HeroSectionAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
               </h3>
             </div>
             {/* Breadcrumb */}
-            <nav className="mt-6 sm:block! hidden">
+            <nav className="mt-6">
               <ol className="flex items-center space-x-2 space-x-reverse flex-wrap">
                 <li>
                   <Link

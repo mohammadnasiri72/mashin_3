@@ -1,23 +1,21 @@
 import { getComment } from "@/services/Comment/Comment";
 import { getItem } from "@/services/Item/Item";
-import { getItemId } from "@/services/Item/ItemId";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { ItemVisit } from "@/services/Item/ItemVisit";
 import { getPollId } from "@/services/Poll/pollId";
 import { mainDomainOld } from "@/utils/mainDomain";
-import { redirect } from "next/navigation";
+import { headers } from "next/headers";
+import { notFound, redirect } from "next/navigation";
 import MainBoxAutoService from "./components/MainBoxAutoService";
-import { ItemVisit } from "@/services/Item/ItemVisit";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = param.slug[0];
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const dataPage: ItemsId = await getItemId(Number(id));
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
 
     const description = dataPage.seoInfo?.seoDescription
@@ -62,15 +60,17 @@ export async function generateMetadata({
   }
 }
 
-async function pageAutoservicesDetails({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+async function pageAutoservicesDetails() {
   try {
-    const param = await params;
-    const id = Number(param.slug[0]);
-    const detailsAuto: ItemsId = await getItemId(id);
+    const headersList = await headers();
+    const pathname = headersList.get("x-pathname");
+    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+    const detailsAuto: ItemsId | null = await getItemByUrl(decodedPathname);
+    if (!detailsAuto) {
+      return notFound();
+    }
+    const id = Number(detailsAuto.id);
 
     const comments: CommentResponse[] = await getComment({
       id: Number(id),
@@ -84,21 +84,22 @@ async function pageAutoservicesDetails({
       TypeId: 1051,
       langCode: "fa",
       CategoryIdArray: "6415",
+      FullData: true,
     });
 
     const pollData: PollData = await getPollId(Number(id));
 
-      try {
-            await ItemVisit({
-              langCode: "fa",
-              id,
-              ip: "",
-              url: detailsAuto.url,
-              userAgent:''
-            });
-          } catch (error) {
-            console.error("Error recording visit:", error);
-          }
+    try {
+      await ItemVisit({
+        langCode: "fa",
+        id,
+        ip: "",
+        url: detailsAuto.url,
+        userAgent: "",
+      });
+    } catch (error) {
+      console.error("Error recording visit:", error);
+    }
 
     return (
       <>

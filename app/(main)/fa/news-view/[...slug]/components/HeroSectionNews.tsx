@@ -2,10 +2,11 @@ import Link from "next/link";
 import React from "react";
 
 function HeroSectionNews({ detailsNews }: { detailsNews: ItemsId }) {
+  
   return (
     <>
       <section
-        className="relative min-h-[225px] bg-cover bg-center flex sm:block items-center justify-center"
+        className="relative min-h-56.25 bg-cover bg-center flex sm:block items-center justify-center"
         style={{ backgroundImage: "url('/images/gallery/header-1.jpg')" }}
       >
         {/* Overlay */}
@@ -19,7 +20,7 @@ function HeroSectionNews({ detailsNews }: { detailsNews: ItemsId }) {
               </h3>
             </div>
             {/* Breadcrumb */}
-            <nav className="mt-6 sm:block! hidden">
+            <nav className="mt-6">
               <ol className="flex items-center space-x-2 space-x-reverse flex-wrap">
                 <li>
                   <Link
@@ -35,7 +36,7 @@ function HeroSectionNews({ detailsNews }: { detailsNews: ItemsId }) {
                     <li key={b.href}>
                       <span className="mx-2">/</span>
                       <Link
-                        href={b.href}
+                        href={b.href||'#'}
                         className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
                       >
                         {b.title}

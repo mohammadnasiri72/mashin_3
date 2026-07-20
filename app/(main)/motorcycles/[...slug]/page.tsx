@@ -63,6 +63,7 @@ async function pageMotorcyclesDainamic({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
 
   const motorDetails: ItemsCategoryId = await getCategoryId(id);

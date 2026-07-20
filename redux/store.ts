@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import settingReducer from './slice/setting'
-import tokenReducer from './slice/token'
+import userReducer from './slice/user'
 import activeTabNewsReducer from './slice/activeTabNews'
 import redirectRegisterReducer from './slice/redirectRegister'
 
 export const store = configureStore({
   reducer: {
-    token : tokenReducer,
+    user : userReducer,
     setting: settingReducer,
     activeTabNews: activeTabNewsReducer,
     redirectRegister: redirectRegisterReducer,

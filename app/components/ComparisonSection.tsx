@@ -1,6 +1,6 @@
 "use client";
 
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Card } from "antd";
 import Link from "next/link";
 import { Autoplay, EffectFade } from "swiper/modules";
@@ -8,9 +8,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import OptimizedImage from "./OptimizedImage";
 
 // Import Swiper styles
+import { useEffect, useRef, useState } from "react";
 import "swiper/css";
 import "swiper/css/effect-fade";
-import { useEffect, useRef, useState } from "react";
 
 function ComparisonSection({
   news,
@@ -25,7 +25,6 @@ function ComparisonSection({
   const bestChoicesCardRef = useRef<HTMLDivElement>(null);
   const [cardsHeight, setCardsHeight] = useState<number>(300);
   const [isCalculated, setIsCalculated] = useState(false);
-
 
   useEffect(() => {
     const calculateHeight = () => {
@@ -97,7 +96,7 @@ function ComparisonSection({
                     >
                       {news.map((item) => (
                         <SwiperSlide key={item.id}>
-                          <Link href={item.url || "#"}>
+                          <Link target="_blank" href={item.sourceLink || "#"}>
                             <Card
                               hoverable
                               className="rounded-3xl! overflow-hidden border-none shadow-sm group h-full"
@@ -107,14 +106,14 @@ function ComparisonSection({
                                   <div
                                     className="absolute inset-0 bg-cover bg-center"
                                     style={{
-                                      backgroundImage: `url('${mainDomainOld + item.image}')`,
+                                      backgroundImage: `url('${mainDomain + item.image}')`,
                                       filter: "blur(8px)",
                                       transform: "scale(1.1)",
                                     }}
                                   />
                                   {/* تصویر اصلی */}
                                   <OptimizedImage
-                                    src={mainDomainOld + item.image}
+                                    src={mainDomain + item.image}
                                     alt={item.title}
                                     className="object-contain group-hover:scale-110 duration-700"
                                     sizes="(max-width: 1024px) 100vw, 50vw"
@@ -192,14 +191,14 @@ function ComparisonSection({
                                   <div
                                     className="absolute inset-0 bg-cover bg-center"
                                     style={{
-                                      backgroundImage: `url('${mainDomainOld + item.image}')`,
+                                      backgroundImage: `url('${mainDomain + item.image}')`,
                                       filter: "blur(8px)",
                                       transform: "scale(1.1)",
                                     }}
                                   />
                                   {/* تصویر اصلی */}
                                   <OptimizedImage
-                                    src={mainDomainOld + item.image}
+                                    src={mainDomain + item.image}
                                     alt={item.title}
                                     className="object-contain group-hover:scale-110 duration-700 z-10"
                                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -272,14 +271,14 @@ function ComparisonSection({
                                   <div
                                     className="absolute inset-0 bg-cover bg-center"
                                     style={{
-                                      backgroundImage: `url('${mainDomainOld + item.image}')`,
+                                      backgroundImage: `url('${mainDomain + item.image}')`,
                                       filter: "blur(8px)",
                                       transform: "scale(1.1)",
                                     }}
                                   />
                                   {/* تصویر اصلی */}
                                   <OptimizedImage
-                                    src={mainDomainOld + item.image}
+                                    src={mainDomain + item.image}
                                     alt={item.title}
                                     className="object-contain group-hover:scale-110 duration-700 z-10"
                                     sizes="(max-width: 768px) 100vw, 50vw"

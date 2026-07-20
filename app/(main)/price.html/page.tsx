@@ -69,6 +69,9 @@ async function pagePrice({
     BrandId: brandId ? brandId : -1,
   });
 
+  
+  
+
   return (
     <>
       <BreadcrumbCategory breadcrumb={[]} title={price.title} />

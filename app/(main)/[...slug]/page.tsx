@@ -2,6 +2,7 @@ import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { createMarkup, htmlToPlainText } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 
 export async function generateMetadata({
@@ -84,16 +85,17 @@ export async function generateMetadata({
   }
 }
 
-async function pageDynamic({
-  params,
-}: {
-  params: Promise<{ slug: string | string[] }>; // تغییر این خط
-}) {
+async function pageDynamic() {
   try {
-    const param = await params;
-    const slugArray = Array.isArray(param.slug) ? param.slug : [param.slug];
-    const path = slugArray.length > 0 ? "/" + slugArray.join("/") : "/";
-    const dataPage = await getItemByUrl(path);
+     const headersList = await headers();
+     const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+    const dataPage = await getItemByUrl(decodedPathname);
+
+
+   
+    
 
     // اگر داده‌ای نبود - throw خطای 404
     if (!dataPage || !dataPage.id) {

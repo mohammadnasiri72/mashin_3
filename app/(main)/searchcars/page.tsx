@@ -1,11 +1,10 @@
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
-import SearchCarsDetails from "./components/SearchCarsDetails";
-import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
-import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import SearchCarsDetails from "./components/SearchCarsDetails";
 
 export async function generateMetadata({
   searchParams,
@@ -128,12 +127,13 @@ async function pageSearchCars({
     ...(typeId && { FilterProps: `23166=${typeId}` }),
     OrderBy: orderby ? orderby : 1,
   });
+
   const banner: Items[] = await getItem({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
-
 
   const segmentCars: Items[] = await getItem({
     TypeId: 1048,

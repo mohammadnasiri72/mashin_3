@@ -3,12 +3,19 @@
 import { useEffect } from "react";
 
 // Fancybox
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
-const GallerySection = ({ Attachment ,detailsCar , vehicle}: { Attachment: ItemsAttachment[] , detailsCar:ItemsId , vehicle:string}) => {
-
+const GallerySection = ({
+  Attachment,
+  detailsCar,
+  vehicle,
+}: {
+  Attachment: ItemsAttachment[];
+  detailsCar: ItemsId;
+  vehicle: string;
+}) => {
   // Initialize Fancybox
   useEffect(() => {
     Fancybox.bind("[data-fancybox='gallery']", {
@@ -56,7 +63,8 @@ const GallerySection = ({ Attachment ,detailsCar , vehicle}: { Attachment: Items
     <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
       <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
         <strong className="text-red-600">تصاویر </strong>
-        {vehicle==='motor'? 'موتور':  'ماشین'} {detailsCar.sourceName} {detailsCar.title}
+        {vehicle === "motor" ? "موتور" : "ماشین"} {detailsCar.sourceName}{" "}
+        {detailsCar.title}
       </h3>
 
       <div className="space-y-4 mt-3">
@@ -67,13 +75,13 @@ const GallerySection = ({ Attachment ,detailsCar , vehicle}: { Attachment: Items
             <div key={image.id} className="lg:w-1/5 sm:w-1/4 w-1/2 p-1">
               <div className="inn_gl_item border-2 border-transparent rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:border-red-400">
                 <a
-                  href={mainDomainOld + image.fileUrl}
+                  href={mainDomain + image.fileUrl}
                   data-fancybox="gallery"
                   data-caption={image.title || "تصاویر محصول"}
                   aria-label={image.title || "تصاویر محصول"}
                 >
                   <img
-                    src={mainDomainOld + image.fileUrl}
+                    src={mainDomain + image.fileUrl}
                     alt={image.title || "تصاویر محصول"}
                     className="w-full h-32 object-cover"
                   />

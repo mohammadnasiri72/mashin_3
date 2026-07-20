@@ -1,7 +1,5 @@
 import MarketStats from "@/app/components/SideBar/MarketStats";
 import SideBarBanner from "@/app/components/SideBar/SideBarBanner";
-import { mainDomainOld } from "@/utils/mainDomain";
-import React from "react";
 
 function SideBarCars({ banner }: { banner: Items[] }) {
   return (

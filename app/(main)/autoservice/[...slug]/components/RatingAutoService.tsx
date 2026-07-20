@@ -19,7 +19,7 @@ function RatingAutoService({
   initialPollData: PollData;
   detailsAuto: ItemsId;
 }) {
-  const token = useSelector((state: RootState) => state.token.token);
+  const user = useSelector((state: RootState) => state.user.user);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [openLoginModal, setOpenLoginModal] = useState<boolean>(false);
   const [pollData, setPollData] = useState<PollData>(initialPollData);
@@ -64,10 +64,10 @@ function RatingAutoService({
   };
 
   const handleSubmitRating = async () => {
-    if (token) {
+    if (user.token) {
       setIsSubmitting(true);
       try {
-        await PostPollSave(pollSaveData, token);
+        await PostPollSave(pollSaveData, user.token);
         try {
           const res = await getPollId(Number(detailsAuto.id));
           setPollData(res);

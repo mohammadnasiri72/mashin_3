@@ -5,32 +5,30 @@ import { RootState } from "@/redux/store";
 import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getLike } from "@/services/UserActivity/getLike";
 import { postLike } from "@/services/UserActivity/postLike";
-import { postLiked } from "@/services/UserActivity/postLiked";
 import { createpublishCode, Toast } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
-import { message } from "antd";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { HiOutlineHeart, HiOutlineTrash } from "react-icons/hi";
 import { useSelector } from "react-redux";
 
 export default function FavoritesPage() {
-  const token = useSelector((state: RootState) => state.token.token);
+  const user = useSelector((state: RootState) => state.user.user);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [loadingFavorites, setLoadingFavorites] = useState<boolean>(true);
   const [favorites, setFavorites] = useState<ItemsId[]>([]);
 
   useEffect(() => {
-    if (token) {
+    if (user.token) {
       fetchLike();
     }
-  }, [token]);
+  }, [user.token]);
 
   const fetchLike = async () => {
     setLoadingFavorites(true);
     try {
-      const ids = await getLike(5, token);      
-      if (ids.length>0) {
+      const ids = await getLike(5, user.token);
+      if (ids.length > 0) {
         const fav: ItemsId[] = await getItemByIds(ids.join(","));
         setFavorites(fav);
       } else {
@@ -43,10 +41,10 @@ export default function FavoritesPage() {
   };
 
   const handleLike = async (id: number) => {
-    if (token) {
+    if (user.token) {
       setIsLoading(true);
       try {
-        const response = await postLike(id, token);
+        const response = await postLike(id, user.token);
 
         Toast.fire({
           icon: "success",
@@ -90,7 +88,7 @@ export default function FavoritesPage() {
                     <div className="aspect-video bg-gray-100 rounded-xl mb-3">
                       <img
                         className="object-cover w-full h-full"
-                        src={mainDomainOld + item.image}
+                        src={mainDomain + item.image}
                         alt={item.title}
                       />
                     </div>

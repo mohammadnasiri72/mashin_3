@@ -1,7 +1,7 @@
 "use client";
 
 import { htmlToPlainText } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
@@ -102,7 +102,7 @@ const CarBrands = ({
                         <div className="flex flex-col items-center text-center">
                           <div className="overflow-hidden flex items-center justify-center w-28 h-28">
                             <img
-                              src={mainDomainOld + brand.image}
+                              src={mainDomain + brand.image}
                               alt={brand.title}
                               className="object-contain w-full h-full mb-2!"
                             />

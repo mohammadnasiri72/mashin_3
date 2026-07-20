@@ -17,12 +17,15 @@ export default async function RootLayout({
 
   const menu: MenuGroup[] = await getMenu({ langCode: "fa", menuKey: "" });
   const setting: SettingType[] = await getSetting();
-  const Social: Items[] = await getItem({ TypeId: 8, langCode: "fa" });
+  const Social: Items[] = await getItem({ TypeId: 8, langCode: "fa" , FullData: true,});
+  
   const banner: Items[] = await getItem({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6390",
+     FullData: true,
   });
+  
 
   return (
     <>

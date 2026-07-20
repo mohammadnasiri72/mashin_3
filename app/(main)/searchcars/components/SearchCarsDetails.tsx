@@ -3,7 +3,7 @@
 import CustomPagination from "@/app/components/CustomPagination";
 import { getCategory } from "@/services/Category/Category";
 import { createpublishCode, toPersianNumbers } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Button } from "@mui/material";
 import { Select } from "antd";
 import Link from "next/link";
@@ -151,7 +151,7 @@ function SearchCarsDetails({
                         ))}
                     </Select>
                   </div>
-                  <div className="lg:w-1/5 sm:w-1/3 w-full px-1">
+                  <div className="lg:w-1/5 sm:w-1/3 w-full px-1 mt-3 sm:mt-0">
                     <Select
                       aria-label="جستجوی برند..."
                       placeholder="جستجوی برند..."
@@ -210,7 +210,7 @@ function SearchCarsDetails({
                     </Select>
                   </div>
 
-                  <div className="px-3 lg:w-1/5 sm:w-1/3 w-full">
+                  <div className="px-3 lg:w-1/5 sm:w-1/3 w-full mt-3 sm:mt-0">
                     <Button
                       aria-label="جستجو خودرو"
                       variant="contained"
@@ -269,7 +269,7 @@ function SearchCarsDetails({
                 <div className="flex items-center">
                   {carDetails.length > 0 && (
                     <img
-                      src={mainDomainOld + carDetails[0].image}
+                      src={mainDomain + carDetails[0].image}
                       alt={carDetails[0].title}
                       className="object-contain w-20 h-20"
                     />
@@ -306,7 +306,7 @@ function SearchCarsDetails({
                       <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
                         <Link href={car?.url || "#"}>
                           <img
-                            src={mainDomainOld + car.image}
+                            src={mainDomain + car.image}
                             alt={car.title}
                             className="object-contain w-full h-full p-2 hover:scale-105 transition-transform duration-300"
                           />
@@ -322,12 +322,10 @@ function SearchCarsDetails({
                               key={ca.id}
                               className="bg-[#ce1a2a] rounded-lg px-2 py-1 text-white! hover:bg-red-800 duration-300"
                             >
-                              <div className="flex flex-wrap justify-between items-center gap-2">
+                              <div className="flex flex-wrap justify-between items-center gap-2 text-sm">
                                 <div className="flex flex-wrap items-center gap-1">
-                                  <span> {ca.sourceName} </span>{" "}
-                                  <span>{ca.title}</span>
-                                </div>{" "}
-                                <span>{createpublishCode(ca.publishCode)}</span>
+                                  {ca.sourceName} {ca.title}
+                                </div>
                               </div>
                             </Link>
                           ))}
@@ -345,7 +343,7 @@ function SearchCarsDetails({
                           }}
                         >
                           <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
-                            {car.title} {createpublishCode(car.publishCode)}
+                           {car.sourceName} {car.title}
                           </h3>
                         </Link>
                       </div>

@@ -16,7 +16,6 @@ import { FaReply, FaThumbsDown, FaThumbsUp } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
-const Cookies = require("js-cookie");
 
 const { TextArea } = Input;
 
@@ -245,14 +244,12 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   const [mainForm] = Form.useForm(); // فرم اصلی
   const [replyForm] = Form.useForm(); // فرم پاسخ
 
-  const token = useSelector((state: RootState) => state.token.token);
-  const user = Cookies.get("user");
+  const user = useSelector((state: RootState) => state.user.user);
 
   useEffect(() => {
     if (user) {
       try {
-        const parsedUser = JSON.parse(user);
-        setUserName(parsedUser?.userId || "");
+        setUserName(user?.userId || "");
       } catch (error) {
         console.error("Error parsing user cookie:", error);
         setUserName("");
@@ -272,7 +269,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     body: string;
     name: string;
   }) => {
-    if (token) {
+    if (user.token) {
       const data = {
         ...values,
         itemId: id,
@@ -282,7 +279,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         langCode: "fa",
         score: 0,
         userIP: "",
-        name: JSON.parse(user).displayName,
+        name: user.displayName,
         email: userName,
       };
       try {
@@ -383,7 +380,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
     body: string;
     name: string;
   }) => {
-    if (token) {
+    if (user.token) {
       const data = {
         ...values,
         itemId: id,
@@ -393,7 +390,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         langCode: "fa",
         score: 0,
         userIP: "",
-        name: JSON.parse(user).displayName,
+        name: user.displayName,
         email: userName,
       };
       try {
@@ -607,13 +604,13 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
               </div>
 
               <Form form={mainForm} layout="vertical" onFinish={onMainFinish}>
-                {!token && (
+                {!user.token && (
                   <Form.Item
                     name="name"
                     label="نام و نام خانوادگی"
                     rules={[
                       {
-                        required: token ? false : true,
+                        required: user.token ? false : true,
                         message: "لطفا نام خود را وارد کنید",
                       },
                     ]}
@@ -622,13 +619,13 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                   </Form.Item>
                 )}
 
-                {!token && (
+                {!user.token && (
                   <Form.Item
                     name="email"
                     label="ایمیل"
                     rules={[
                       {
-                        required: token ? false : true,
+                        required: user.token ? false : true,
                         message: "لطفا ایمیل خود را وارد کنید",
                       },
                       { type: "email", message: "ایمیل معتبر نیست" },
@@ -688,7 +685,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                       key={comment.id}
                       comment={comment}
                       onReply={handleReplyClick}
-                      token={token}
+                      token={user.token}
                       setOpenLogin={setOpenLogin}
                       Toast={Toast}
                       depth={0}
@@ -783,13 +780,13 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
           <div className="lg:col-span-4 ">
             <div className="py-2">
               <Form form={replyForm} layout="vertical" onFinish={onReplyFinish}>
-                {!token && (
+                {!user.token && (
                   <Form.Item
                     name="name"
                     label="نام و نام خانوادگی"
                     rules={[
                       {
-                        required: token ? false : true,
+                        required: user.token ? false : true,
                         message: "لطفا نام خود را وارد کنید",
                       },
                     ]}
@@ -798,13 +795,13 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                   </Form.Item>
                 )}
 
-                {!token && (
+                {!user.token && (
                   <Form.Item
                     name="email"
                     label="ایمیل"
                     rules={[
                       {
-                        required: token ? false : true,
+                        required: user.token ? false : true,
                         message: "لطفا ایمیل خود را وارد کنید",
                       },
                       { type: "email", message: "ایمیل معتبر نیست" },

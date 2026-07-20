@@ -1,4 +1,4 @@
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import OptimizedImage from "./OptimizedImage";
 
@@ -13,11 +13,12 @@ function BannerTop({ banner }: { banner: Items[] }) {
               className="banner_box rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow m-0 relative aspect-10/2"
             >
               <Link
-                href={ban.url || "#"}
+                target="_blank"
+                href={ban.sourceLink || "#"}
                 className="block relative w-full h-full"
               >
                 <OptimizedImage
-                  src={mainDomainOld + ban.image}
+                  src={mainDomain + ban.image}
                   alt={ban.title}
                   className="object-cover rounded-2xl transition-transform hover:scale-105"
                   sizes="(max-width: 768px) 100vw, 50vw"

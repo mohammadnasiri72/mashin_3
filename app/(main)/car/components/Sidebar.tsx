@@ -1,12 +1,12 @@
 // components/Sidebar.tsx
 "use client";
 
+import SideBarListItems from "@/app/components/SideBar/SideBarListItems";
+import { getItem } from "@/services/Item/Item";
+import { getItemByIds } from "@/services/Item/ItemByIds";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import SideBarListItems from "@/app/components/SideBar/SideBarListItems";
-import { mainDomainOld } from "@/utils/mainDomain";
-import { getItemByIds } from "@/services/Item/ItemByIds";
-import { getItem } from "@/services/Item/Item";
 
 // ✅ Skeleton
 const SidebarSkeleton = () => (
@@ -228,7 +228,7 @@ const Sidebar = ({ detailsCar }: { detailsCar: ItemsId }) => {
               >
                 <Link href={model.url} className="block w-full h-full">
                   <img
-                    src={mainDomainOld + model.image}
+                    src={mainDomain + model.image}
                     alt={model.title}
                     className="w-full h-32 object-contain group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
@@ -263,7 +263,7 @@ const Sidebar = ({ detailsCar }: { detailsCar: ItemsId }) => {
               >
                 <Link href={model.url} className="block w-full h-full">
                   <img
-                    src={mainDomainOld + model.image}
+                    src={mainDomain + model.image}
                     alt={model.title}
                     className="w-full h-32 object-contain group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
@@ -296,7 +296,7 @@ const Sidebar = ({ detailsCar }: { detailsCar: ItemsId }) => {
               >
                 <Link href={model.url} className="block w-full h-full">
                   <img
-                    src={mainDomainOld + model.image}
+                    src={mainDomain + model.image}
                     alt={model.title}
                     className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"

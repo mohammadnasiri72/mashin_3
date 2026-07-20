@@ -1,6 +1,6 @@
 import AudioPlayer from "@/app/(main)/podcast.html/components/AudioPlayer";
 import { formatPersianDate, toPersianNumbers } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { FaCalendar, FaEye } from "react-icons/fa";
 
 function VoicesRelatedSection({ relatedVoices }: { relatedVoices: ItemsId[] }) {
@@ -23,7 +23,7 @@ function VoicesRelatedSection({ relatedVoices }: { relatedVoices: ItemsId[] }) {
                 <div className="flex flex-col items-center gap-2">
                   <div className="relative group/icon shrink-0 sm:w-72 w-full sm:h-56 rounded-xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300">
                     <img
-                      src={mainDomainOld + podcast.image}
+                      src={mainDomain + podcast.image}
                       alt={podcast.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />

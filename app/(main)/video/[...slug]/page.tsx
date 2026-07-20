@@ -1,26 +1,21 @@
+import { getAttachment } from "@/services/Attachment/Attachment";
 import { getComment } from "@/services/Comment/Comment";
 import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
-import { getItemId } from "@/services/Item/ItemId";
-import { mainDomainOld } from "@/utils/mainDomain";
-import VideoDetails from "./components/VideoDetails";
-import { getAttachment } from "@/services/Attachment/Attachment";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { ItemVisit } from "@/services/Item/ItemVisit";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import VideoDetails from "./components/VideoDetails";
 
-export async function generateMetadata({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const param = await params;
-  const searchParam = await searchParams;
-  const id = Number(param.slug[0]);
-  const id2 = Number(searchParam.id);
-  const dataPage: ItemsId = await getItemId(id || id2);
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
     const description = dataPage.seoInfo?.seoDescription
       ? dataPage.seoInfo?.seoDescription
@@ -59,21 +54,18 @@ export async function generateMetadata({
   }
 }
 
-async function pageVideo({
-  params,
-  searchParams,
-}: {
-  params: Promise<{ slug: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const param = await params;
-  const searchParam = await searchParams;
-  const id = Number(param.slug[0]);
-  const id2 = Number(searchParam.id);
-  const video: ItemsId = await getItemId(id || id2);
-  const attachment: ItemsAttachment[] = await getAttachment(id || id2);
+async function pageVideo() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  
+  const video: ItemsId | null = await getItemByUrl(decodedPathname);
+  if (!video) {
+    return notFound();
+  }
+
+  const id = Number(video.id);
+  const attachment: ItemsAttachment[] = await getAttachment(id);
 
   const idsCars = video.properties.find(
     (e) => e.propertyKey === "p1027_relatedcar",
@@ -89,6 +81,7 @@ async function pageVideo({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
 
   // کامنت ها
@@ -131,18 +124,17 @@ async function pageVideo({
     ? await getItemByIds(idsCompares)
     : [];
 
-
-     try {
-                          await ItemVisit({
-                            langCode: "fa",
-                            id,
-                            ip: "",
-                            url: video.url,
-                            userAgent:''
-                          });
-                        } catch (error) {
-                          console.error("Error recording visit:", error);
-                        }
+  try {
+    await ItemVisit({
+      langCode: "fa",
+      id,
+      ip: "",
+      url: video.url,
+      userAgent: "",
+    });
+  } catch (error) {
+    console.error("Error recording visit:", error);
+  }
 
   return (
     <>
@@ -154,7 +146,7 @@ async function pageVideo({
           .slice(0, 12)}
         banner={banner}
         comments={comments}
-        id={id2}
+        id={id}
         relatedCars={relatedCars}
         relatedPodcasts={relatedPodcasts}
         relatedCompares={relatedCompares}

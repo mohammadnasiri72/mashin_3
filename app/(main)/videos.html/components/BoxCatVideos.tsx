@@ -1,4 +1,4 @@
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { FaPlay } from "react-icons/fa";
 
@@ -19,7 +19,7 @@ function BoxCatVideos({ videosCat }: { videosCat: ItemsCategory[] }) {
               <Link href={category.url} className="relative block">
                 <div className="relative h-40 overflow-hidden group/Img">
                   <img
-                    src={mainDomainOld + category.image}
+                    src={mainDomain + category.image}
                     alt={category.title}
                     className="w-full h-full object-cover group-hover/Img:scale-110 transition-transform duration-500"
                   />

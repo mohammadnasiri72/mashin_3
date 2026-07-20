@@ -124,7 +124,7 @@ export default function MyCommentsPage() {
   const [flag, setFlag] = useState<boolean>(false);
   const [deleteItem, setDeleteItem] = useState<number | null>(null);
   const [deleting, setDeleting] = useState<boolean>(false);
-  const token = useSelector((state: RootState) => state.token.token);
+  const user = useSelector((state: RootState) => state.user.user);
   const searchParams = useSearchParams();
   const page = Number(searchParams.get("page"));
 
@@ -134,7 +134,7 @@ export default function MyCommentsPage() {
     try {
       const response = await getCommentUser(
         { langCode: "fa", pageIndex: page || 1, pageSize: 20, type: 0 },
-        token,
+        user.token,
       );
       setComments(response);
     } catch (err) {
@@ -145,10 +145,10 @@ export default function MyCommentsPage() {
   };
 
   useEffect(() => {
-    if (token) {
+    if (user.token) {
       fetchCommentUser();
     }
-  }, [token, flag]);
+  }, [user.token, flag]);
 
   // تابع دریافت زیرکامنت‌های یک کامنت اصلی
   const getReplies = (commentId: number) => {
@@ -158,7 +158,7 @@ export default function MyCommentsPage() {
   const handleDeleteComment = async (id: number) => {
     setDeleting(true);
     try {
-      await DeleteComment(id, token);
+      await DeleteComment(id, user.token);
       Toast.fire({
         icon: "success",
         title: "حذف با موفقیت انجام شد",

@@ -1,18 +1,11 @@
 "use client";
 
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
-import {
-  FaArrowLeftLong,
-  FaBuilding,
-  FaCar,
-  FaBook,
-  FaPlay,
-} from "react-icons/fa6";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
+import { FaArrowLeftLong, FaBook, FaBuilding, FaCar } from "react-icons/fa6";
 import "swiper/css";
-import { createpublishCode } from "@/utils/func";
+import { Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 function CreativeCategoriesSection({
   brandsAuto,
@@ -23,7 +16,6 @@ function CreativeCategoriesSection({
   carView: Items[];
   education: Items[];
 }) {
-
   return (
     <section
       className="mb-16 px-4 mx-auto max-w-7xl"
@@ -53,7 +45,7 @@ function CreativeCategoriesSection({
               >
                 <div className="aspect-2/1 flex items-center justify-center p-4">
                   <img
-                    src={mainDomainOld + brandsAuto[0].image}
+                    src={mainDomain + brandsAuto[0].image}
                     alt={brandsAuto[0].title}
                     className="object-contain w-full h-full group-hover/item:scale-110 transition-transform duration-700"
                     loading="lazy"
@@ -96,16 +88,16 @@ function CreativeCategoriesSection({
                               href={brand.url}
                               className="group/item relative overflow-hidden rounded-xl bg-white shadow-md hover:shadow-xl transition-all duration-500"
                             >
-                              <div className="aspect-square flex items-center justify-center p-3">
+                              <div className=" flex items-center justify-center h-full">
                                 <img
-                                  src={mainDomainOld + brand.image}
+                                  src={mainDomain + brand.image}
                                   alt={brand.title}
-                                  className="object-contain w-full h-full group-hover/item:scale-110 transition-transform duration-700"
+                                  className="object-contain scale-90! w-full h-full group-hover/item:scale-100! transition-transform duration-700"
                                   loading="lazy"
                                 />
                               </div>
                               <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-transparent opacity-0 group-hover/item:opacity-90 transition-opacity duration-500" />
-                              <h4 className="absolute! bottom-0! right-0! left-0! text-white! font-bold! text-center! p-1! text-xs! translate-y-full! group-hover/item:-translate-y-full! transition-transform! duration-500!">
+                              <h4 className="absolute! bottom-0! right-0! left-0! text-white! font-bold! text-center! p-1! text-xs! translate-y-full! group-hover/item:-translate-y-full! transition-transform! duration-500! opacity-0 group-hover/item:opacity-100!">
                                 {brand.title}
                               </h4>
                             </Link>
@@ -167,7 +159,7 @@ function CreativeCategoriesSection({
                       <div className="flex items-center gap-3 p-3">
                         <div className="w-16 h-full shrink-0 bg-gray-50 rounded-lg overflow-hidden">
                           <img
-                            src={mainDomainOld + car.image}
+                            src={mainDomain + car.image}
                             alt={car.title}
                             className="object-contain w-full h-full group-hover/item:scale-110 transition-transform duration-700"
                             loading="lazy"
@@ -175,15 +167,8 @@ function CreativeCategoriesSection({
                         </div>
                         <div className="flex-1">
                           <h4 className="font-bold text-[#292929] group-hover/item:text-[#0a5c8c] transition-colors duration-300 text-sm line-clamp-2">
-                            {car.title}
+                            {car.sourceName} {car.title}
                           </h4>
-                          <div className="flex items-center gap-1 mt-1">
-                            {car.publishCode && (
-                              <span className="text-xs bg-[#0a5c8c]/10 text-[#0a5c8c] px-2 py-0.5 rounded-full">
-                                {createpublishCode(car.publishCode)}
-                              </span>
-                            )}
-                          </div>
                         </div>
                         <div className="text-2xl text-gray-300 group-hover/item:text-[#0a5c8c] transition-colors duration-300">
                           {index + 1}
@@ -230,7 +215,7 @@ function CreativeCategoriesSection({
               >
                 <div className="aspect-2/1 flex items-center justify-center">
                   <img
-                    src={mainDomainOld + education[0].image}
+                    src={mainDomain + education[0].image}
                     alt={education[0].title}
                     className="object-cover w-full h-full group-hover/item:scale-110 transition-transform duration-700"
                     loading="lazy"
@@ -275,7 +260,7 @@ function CreativeCategoriesSection({
                             >
                               <div className="aspect-square flex items-center justify-center">
                                 <img
-                                  src={mainDomainOld + brand.image}
+                                  src={mainDomain + brand.image}
                                   alt={brand.title}
                                   className="object-cover w-full h-full group-hover/item:scale-110 transition-transform duration-700"
                                   loading="lazy"

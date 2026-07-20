@@ -1,12 +1,12 @@
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import CarNews from "./components/CarNews";
-import { getItemByUrl } from "@/services/Item/ItemByUrl";
-import { headers } from "next/headers";
-import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
-import { mainDomainOld } from "@/utils/mainDomain";
 
 export async function generateMetadata({
   params,
@@ -132,14 +132,14 @@ async function pageNewsDetails({
         CategoryIdArray: String(id),
         PageIndex: page || 1,
         PageSize: 20,
-        FullData:true,
+        FullData: true,
       })
     : await getItem({
         TypeId: 5,
         langCode: "fa",
         PageIndex: page || 1,
         PageSize: 20,
-        FullData:true,
+        FullData: true,
       });
 
   const popularNews: Items[] = await getItem({
@@ -161,6 +161,7 @@ async function pageNewsDetails({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
 
   const newsCat: ItemsCategory[] = await getCategory({

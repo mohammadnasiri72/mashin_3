@@ -1,7 +1,6 @@
 import { createpublishCode } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
-import React from "react";
 
 function CompetitorsBestChoice({
   competitorsCar,
@@ -30,7 +29,7 @@ function CompetitorsBestChoice({
                 <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
                   <Link href={car?.url || "#"}>
                     <img
-                      src={mainDomainOld + car.image}
+                      src={mainDomain + car.image}
                       alt={car.title}
                       className="object-contain w-full h-full p-2 hover:scale-105 transition-transform duration-300"
                     />

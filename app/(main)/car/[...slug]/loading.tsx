@@ -8,7 +8,7 @@ function Loading() {
   return (
     <div className="min-h-screen bg-[#f4f4f4]">
       {/* Hero Section Skeleton */}
-      <section className="relative min-h-[225px] bg-gray-300 bg-cover bg-center flex sm:block items-center justify-center animate-pulse">
+      <section className="relative min-h-56.25 bg-gray-300 bg-cover bg-center flex sm:block items-center justify-center animate-pulse">
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="relative mx-auto px-4 py-12 sm:w-auto w-full">
           <div className="text-white sm:w-auto w-full">

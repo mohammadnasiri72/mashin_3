@@ -6,7 +6,7 @@ import {
   htmlToPlainText,
   toPersianNumbers,
 } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -108,7 +108,7 @@ const WhichCars = ({
                           <div className="w-full h-full bg-gray-200 rounded-lg overflow-hidden relative">
                             <Link href={comparison.url} className="rounded-lg!">
                               <img
-                                src={mainDomainOld + comparison.image}
+                                src={mainDomain + comparison.image}
                                 alt={comparison.title}
                                 className="object-contain w-full h-full hover:scale-105 rounded-lg! transition-transform duration-300"
                               />

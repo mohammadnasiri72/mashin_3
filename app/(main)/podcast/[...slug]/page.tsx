@@ -97,6 +97,7 @@ async function pagePodcastDainamic({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
   
 

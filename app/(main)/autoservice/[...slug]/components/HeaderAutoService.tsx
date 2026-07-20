@@ -1,4 +1,4 @@
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Tag } from "antd";
 import { FaStar } from "react-icons/fa";
 
@@ -17,13 +17,14 @@ function HeaderAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
           <div className="">
             <div className="flex items-start mb-4!">
               <img
-                src={mainDomainOld + detailsAuto.image}
+                src={mainDomain + detailsAuto.image}
                 alt={detailsAuto.categoryTitle}
                 className="w-16 h-16 rounded-lg bg-white ml-4"
-               
               />
               <div className="flex flex-col items-start justify-center">
-                <h1 className="text-3xl font-bold mb-2! text-white!">{detailsAuto.title}</h1>
+                <h1 className="text-3xl font-bold mb-2! text-white!">
+                  {detailsAuto.title}
+                </h1>
                 <div className="flex items-center">
                   <Tag color="red" className="text-white! font-medium">
                     {detailsAuto.categoryTitle}

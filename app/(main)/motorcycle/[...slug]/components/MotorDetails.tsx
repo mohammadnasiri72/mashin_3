@@ -18,14 +18,13 @@ import { RootState } from "@/redux/store";
 import { PostPollSave } from "@/services/Poll/PollSave";
 import { getPollId } from "@/services/Poll/pollId";
 import { createpublishCode, Toast, toPersianNumbers } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import { Skeleton } from "antd";
 import Link from "next/link";
 import { FaCalendarDays, FaCodeCompare, FaCommentDots } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 
-const Cookies = require("js-cookie");
 
 const MotorDetails = ({
   Attachment,
@@ -46,8 +45,7 @@ const MotorDetails = ({
     pollScoreDto: [],
   });
 
-  const token = useSelector((state: RootState) => state.token.token);
-  const user = Cookies.get("user");
+  const user = useSelector((state: RootState) => state.user.user);
 
   const specifications = detailsMotorcycle.properties.filter(
     (e) => e.isTechnicalProperty,
@@ -141,7 +139,7 @@ const MotorDetails = ({
   const handleSubmitRating = async () => {
     setIsSubmitting(true);
     try {
-      await PostPollSave(pollSaveData, token);
+      await PostPollSave(pollSaveData, user.token);
       setIsRatingMode(false);
       try {
         const res = await getPollId(Number(detailsMotorcycle.id));
@@ -398,14 +396,14 @@ const MotorDetails = ({
                       <SwiperSlide key={image.id}>
                         <a
                           className="sm:h-96 h-56 block cursor-pointer bg-[#ce1a2a]"
-                          href={mainDomainOld + image.fileUrl}
+                          href={mainDomain + image.fileUrl}
                           data-fancybox="main-gallery"
                           data-caption={image.title}
                           aria-label="لینک گالری تصاویر"
                         >
                           <img
                             className="w-full h-full border-4 border-[#ce1a2a]  object-cover"
-                            src={mainDomainOld + image.fileUrl}
+                            src={mainDomain + image.fileUrl}
                             alt={image.title || "تصویر محصول"}
                           />
                         </a>
@@ -441,7 +439,7 @@ const MotorDetails = ({
                         <div className="cursor-pointer border-2 border-transparent overflow-hidden transition-all hover:bg-[#ce1a2a]! swiper-slide-thumb-active:border-red-600 z-50 h-20!">
                           <img
                             className="w-full h-full object-cover"
-                            src={mainDomainOld + image.fileUrl}
+                            src={mainDomain + image.fileUrl}
                             alt={image.title || "تصویر محصول"}
                           />
                         </div>

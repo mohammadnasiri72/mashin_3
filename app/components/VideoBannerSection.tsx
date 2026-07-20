@@ -1,14 +1,14 @@
 "use client";
 
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
-import { FaPlay } from "react-icons/fa";
-import OptimizedImage from "./OptimizedImage";
-import { FaArrowLeftLong } from "react-icons/fa6";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
 import { useEffect, useRef, useState } from "react";
+import { FaPlay } from "react-icons/fa";
+import { FaArrowLeftLong } from "react-icons/fa6";
 import type { Swiper as SwiperType } from 'swiper';
+import { Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import OptimizedImage from "./OptimizedImage";
 
 // Import Swiper styles
 import "swiper/css";
@@ -136,7 +136,7 @@ const VideoBannerSection = ({ video }: { video: Items[] }) => {
                         <Link href={v.url} className="h-full w-full block">
                           <div className="relative h-full w-full bg-gray-100">
                             <OptimizedImage
-                              src={mainDomainOld + v.image}
+                              src={mainDomain + v.image}
                               alt={v.title}
                               className="object-cover bg-gray-100 transition-transform duration-700 group-hover:scale-110"
                               sizes="(max-width: 768px) 100vw, 33vw"

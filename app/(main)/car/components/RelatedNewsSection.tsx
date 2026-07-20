@@ -2,10 +2,8 @@
 "use client";
 
 import { formatPersianDate } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
-import { getItem } from "@/services/Item/Item";
 
 // کامپوننت لودینگ
 const NewsSkeleton = () => (
@@ -14,7 +12,10 @@ const NewsSkeleton = () => (
       <div className="h-8 bg-gray-200 rounded w-64 mb-4 animate-pulse"></div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div
+            key={i}
+            className="bg-white rounded-lg shadow-md overflow-hidden"
+          >
             <div className="h-48 bg-gray-200 animate-pulse"></div>
             <div className="p-4 space-y-3">
               <div className="h-5 bg-gray-200 rounded animate-pulse"></div>
@@ -28,39 +29,9 @@ const NewsSkeleton = () => (
   </section>
 );
 
-function RelatedNewsSection({ detailsCar }: { detailsCar: ItemsId }) {
-  const [loading, setLoading] = useState(true);
-  const [relatedNews, setRelatedNews] = useState<Items[]>([]);
-  const isFetched = useRef(false);
+function RelatedNewsSection({ detailsCar ,relatedNews , loading}: { detailsCar: ItemsId ,relatedNews:Items[], loading:boolean}) {
 
-  useEffect(() => {
-    if (isFetched.current) return;
-    isFetched.current = true;
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
-        
-        const response = await getItem({
-          TypeId: 5,
-          langCode: "fa",
-          Term: searchTerm,
-          PageIndex: 1,
-          PageSize: 6,
-        });
-
-        setRelatedNews(Array.isArray(response) ? response : []);
-      } catch (error) {
-        console.error("❌ [RelatedNews] Error fetching data:", error);
-        setRelatedNews([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [detailsCar]);
+ 
 
   if (loading) {
     return <NewsSkeleton />;
@@ -87,7 +58,7 @@ function RelatedNewsSection({ detailsCar }: { detailsCar: ItemsId }) {
               <div className="h-48 overflow-hidden">
                 <Link href={news.url} className="w-full h-full">
                   <img
-                    src={mainDomainOld + news.image}
+                    src={mainDomain + news.image}
                     alt={news.title}
                     className="w-full h-full object-cover hover:scale-105 transition-transform"
                   />

@@ -1,17 +1,17 @@
 "use client";
 
+import CustomPagination from "@/app/components/CustomPagination";
 import {
   formatPersianDate,
   htmlToPlainText,
   toPersianNumbers,
 } from "@/utils/func";
-import React, { useEffect, useRef, useState } from "react";
-import SearchBoxBestChoice from "./SearchBoxBestChoice";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
-import { mainDomainOld } from "@/utils/mainDomain";
-import { FaCalendar, FaCar, FaEye } from "react-icons/fa";
-import CustomPagination from "@/app/components/CustomPagination";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { FaCalendar, FaCar, FaEye } from "react-icons/fa";
+import SearchBoxBestChoice from "./SearchBoxBestChoice";
 import SideBarBestChoices from "./SideBarBestChoices";
 
 function MainBoxBestChoices({
@@ -21,15 +21,15 @@ function MainBoxBestChoices({
   banner,
   popularBestChoices,
   lastNews,
-lastCars,
+  lastCars,
 }: {
   title: string;
   summary: string | null;
   bestChoices: Items[];
   banner: Items[];
   popularBestChoices: Items[];
-  lastNews:Items[]
-lastCars:Items[]
+  lastNews: Items[];
+  lastCars: Items[];
 }) {
   const [isMainLonger, setIsMainLonger] = useState(true);
 
@@ -77,7 +77,7 @@ lastCars:Items[]
           </p>
         )}
       </div>
-      
+
       <div className="flex flex-col lg:flex-row gap-6 px-3 relative mx-auto">
         {/* محتوای اصلی - 3/4 صفحه */}
         <div
@@ -107,7 +107,7 @@ lastCars:Items[]
                           <div className="w-full h-full bg-gray-200 rounded-lg overflow-hidden relative">
                             <Link href={bestChoice.url} className="rounded-lg!">
                               <img
-                                src={mainDomainOld + bestChoice.image}
+                                src={mainDomain + bestChoice.image}
                                 alt={bestChoice.title}
                                 className="object-contain w-full h-full hover:scale-105 rounded-lg! transition-transform duration-300"
                               />
@@ -159,7 +159,7 @@ lastCars:Items[]
                 })}
               </div>
             )}
-            
+
             {bestChoices.length === 0 && (
               <div className="text-center py-12 bg-white rounded-xl shadow-sm">
                 <FaCar className="text-4xl text-gray-400 mx-auto mb-4" />
@@ -201,7 +201,7 @@ lastCars:Items[]
             popularBestChoices={popularBestChoices}
             banner={banner}
             lastNews={lastNews}
-lastCars={lastCars}
+            lastCars={lastCars}
           />
         </aside>
       </div>

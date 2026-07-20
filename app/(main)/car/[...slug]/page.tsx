@@ -1,49 +1,46 @@
 // app/car/page.tsx
 import { getAttachment } from "@/services/Attachment/Attachment";
 import { getComment } from "@/services/Comment/Comment";
-import { getItemId, getItemSeoId } from "@/services/Item/ItemId";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { ItemVisit } from "@/services/Item/ItemVisit";
 import { getPollId } from "@/services/Poll/pollId";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import CarDetails from "../components/CarDetails";
 import ContentTabsSSR from "../components/ContentTabsSSR";
 import FeaturesSection from "../components/FeaturesSection";
 import HeroSection from "../components/HeroSection";
 import NvbarCar from "../components/NvbarCar";
-import { decodeHtmlServer } from "@/utils/func";
-import { ItemVisit } from "@/services/Item/ItemVisit";
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const searchParam = await searchParams;
-  const id = searchParam.id;
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const dataPage = await getItemSeoId(Number(id));
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  if (dataPage.title) {
-    const title = decodeHtmlServer(
-      `${dataPage.seoTitle ? dataPage?.seoTitle : dataPage.title}`,
-    );
-    const description = decodeHtmlServer(
-      dataPage.seoDescription ? dataPage.seoDescription : dataPage.title,
-    );
-    const keywords = decodeHtmlServer(dataPage.seoKeywords || "");
-    const seoUrl = decodeHtmlServer(
-      dataPage?.seoUrl
-        ? `${mainDomainOld}${dataPage?.seoUrl}`
-        : dataPage?.url
-          ? `${mainDomainOld}${dataPage?.url}`
-          : `${mainDomainOld}`,
-    );
-
+  if (dataPage && dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
     return {
       title,
       description,
       keywords,
-      metadataBase: new URL(mainDomainOld),
+      metadataBase,
       alternates: {
         canonical: seoUrl,
       },
@@ -52,28 +49,32 @@ export async function generateMetadata({
         description,
       },
       other: {
-        seoHeadTags: dataPage?.seoHeadTags,
+        seoHeadTags,
       },
     };
   } else {
     return {
-      title: "مشخصات خودرو",
-      description: "مشخصات خودرو",
+      title: "ماشین3 - جزئیات خودرو",
+      description: "جزئیات خودرو",
     };
   }
 }
 
-async function page({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const searchParam = await searchParams;
-  const id = Number(searchParam.id);
+async function page() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const [Attachment, detailsCar, comments, pollData] = await Promise.all([
+  const detailsCar: ItemsId | null = await getItemByUrl(decodedPathname);
+  if (!detailsCar) {
+    return notFound();
+  }
+console.log(detailsCar);
+
+  const id = Number(detailsCar.id);
+
+  const [Attachment, comments, pollData] = await Promise.all([
     getAttachment(id),
-    getItemId(id),
     getComment({
       id,
       langCode: "fa",
@@ -84,14 +85,13 @@ async function page({
     getPollId(id),
   ]);
 
-
   try {
     await ItemVisit({
       langCode: "fa",
       id,
       ip: "",
       url: detailsCar.url,
-      userAgent:''
+      userAgent: "",
     });
   } catch (error) {
     console.error("Error recording visit:", error);
@@ -113,6 +113,7 @@ async function page({
         <FeaturesSection
           detailsCar={detailsCar}
           Attachment={Attachment.filter((e) => e.tabId === 4)}
+          vehicle={"car"}
         />
       </Suspense>
       <ContentTabsSSR

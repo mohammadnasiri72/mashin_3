@@ -1,4 +1,4 @@
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Card, Empty } from "antd";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -100,7 +100,7 @@ function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
       <Card className="rounded-xl shadow-lg">
         <div className="flex gap-2 items-center mb-6!">
           <img
-            src={mainDomainOld + detailsAuto.image}
+            src={mainDomain + detailsAuto.image}
             alt={detailsAuto.categoryTitle}
             className="w-16 rounded-lg bg-white ml-4"
           />

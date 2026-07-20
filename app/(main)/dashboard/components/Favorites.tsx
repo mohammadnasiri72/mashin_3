@@ -2,11 +2,11 @@ import { RootState } from "@/redux/store";
 import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getLike } from "@/services/UserActivity/getLike";
 import { createpublishCode } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BiChevronLeft } from "react-icons/bi";
-import { FaCar, FaHeart } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 const FavoritesSkeleton = () => {
@@ -26,20 +26,20 @@ const FavoritesSkeleton = () => {
 };
 
 function Favorites() {
-  const token = useSelector((state: RootState) => state.token.token);
+  const user = useSelector((state: RootState) => state.user.user);
   const [loadingFavorites, setLoadingFavorites] = useState<boolean>(true);
   const [favorites, setFavorites] = useState<ItemsId[]>([]);
 
   useEffect(() => {
-    if (token) {
+    if (user.token) {
       fetchLike();
     }
-  }, [token]);
+  }, [user.token]);
 
   const fetchLike = async () => {
     setLoadingFavorites(true);
     try {
-      const ids = await getLike(5, token);
+      const ids = await getLike(5, user.token);
       if (ids) {
         const fav: ItemsId[] = await getItemByIds(ids.join(","));
         setFavorites(fav);
@@ -83,7 +83,7 @@ function Favorites() {
                   <div className="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden shrink-0">
                     <img
                       className="object-contain w-full h-full"
-                      src={mainDomainOld + item.image}
+                      src={mainDomain + item.image}
                       alt={item.title}
                     />
                   </div>

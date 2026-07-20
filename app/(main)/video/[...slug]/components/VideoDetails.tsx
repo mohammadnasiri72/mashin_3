@@ -34,6 +34,7 @@ function VideoDetails({
   relatedCompares: ItemsId[];
   attachment: ItemsAttachment[];
 }) {
+  
   const [activeKey, setActiveKey] = useState("1");
   const [isNavbarSticky, setIsNavbarSticky] = useState(false);
   const [isMainLonger, setIsMainLonger] = useState(true);

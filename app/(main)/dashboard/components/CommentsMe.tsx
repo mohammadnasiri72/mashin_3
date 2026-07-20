@@ -30,14 +30,14 @@ function CommentsMe() {
   const [loading, setLoading] = useState<boolean>(true);
   const [comments, setComments] = useState<CommentResponse[]>([]);
 
-  const token = useSelector((state: RootState) => state.token.token);
+  const user = useSelector((state: RootState) => state.user.user);
 
   const fetchCommentUser = async () => {
     setLoading(true);
     try {
       const response = await getCommentUser(
         { langCode: "fa", pageIndex: 1, pageSize: 5, type: 0 },
-        token,
+        user.token,
       );
 
       setComments(response);
@@ -48,10 +48,10 @@ function CommentsMe() {
   };
 
   useEffect(() => {
-    if (token) {
+    if (user.token) {
       fetchCommentUser();
     }
-  }, [token]);
+  }, [user.token]);
   return (
     <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
       <div className="p-4 border-b border-gray-200 flex justify-between items-center">

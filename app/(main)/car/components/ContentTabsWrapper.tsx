@@ -1,6 +1,8 @@
 // components/ContentTabsWrapper.tsx
 "use client";
 
+import { getItem } from "@/services/Item/Item";
+import { getItemByIds } from "@/services/Item/ItemByIds";
 import type { TabsProps } from "antd";
 import { Tabs } from "antd";
 import dynamic from "next/dynamic";
@@ -41,7 +43,7 @@ const NewsSkeleton = () => (
   <div className="animate-pulse">
     <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {[1, 2, 3].map(i => (
+      {[1, 2, 3].map((i) => (
         <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="h-48 bg-gray-200"></div>
           <div className="p-4 space-y-2">
@@ -58,7 +60,7 @@ const VideosSkeleton = () => (
   <div className="animate-pulse">
     <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {[1, 2, 3].map(i => (
+      {[1, 2, 3].map((i) => (
         <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="h-48 bg-gray-200"></div>
           <div className="p-4 space-y-2">
@@ -75,7 +77,7 @@ const ComparisonsSkeleton = () => (
   <div className="animate-pulse">
     <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {[1, 2, 3].map(i => (
+      {[1, 2, 3].map((i) => (
         <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
           <div className="h-48 bg-gray-200"></div>
           <div className="p-4 space-y-2">
@@ -109,13 +111,119 @@ const ContentTabsWrapper = ({
   const mainBoxRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
+  const commentsRef = useRef<HTMLDivElement>(null);
+
+  const [loadingRelatedNews, setLoadingRelatedNews] = useState(true);
+  const [relatedNews, setRelatedNews] = useState<Items[]>([]);
+  const isFetchedRelatedNews = useRef(false);
+
+  useEffect(() => {
+    if (isFetchedRelatedNews.current) return;
+    isFetchedRelatedNews.current = true;
+
+    const fetchData = async () => {
+      try {
+        setLoadingRelatedNews(true);
+        const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
+
+        const response = await getItem({
+          TypeId: 5,
+          langCode: "fa",
+          Term: searchTerm,
+          PageIndex: 1,
+          PageSize: 6,
+        });
+
+        setRelatedNews(Array.isArray(response) ? response : []);
+      } catch (error) {
+        console.error("❌ [RelatedNews] Error fetching data:", error);
+        setRelatedNews([]);
+      } finally {
+        setLoadingRelatedNews(false);
+      }
+    };
+
+    fetchData();
+  }, [detailsCar]);
+
+  const [loadingRelatedVideos, setLoadingRelatedVideos] = useState(true);
+  const [relatedVideos, setRelatedVideos] = useState<Items[]>([]);
+  const isFetchedRelatedVideos = useRef(false);
+
+  useEffect(() => {
+    if (isFetchedRelatedVideos.current) return;
+    isFetchedRelatedVideos.current = true;
+
+    const fetchData = async () => {
+      try {
+        setLoadingRelatedVideos(true);
+        const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
+
+        const response = await getItem({
+          TypeId: 1028,
+          langCode: "fa",
+          Term: searchTerm,
+          PageIndex: 1,
+          PageSize: 6,
+        });
+
+        setRelatedVideos(Array.isArray(response) ? response : []);
+      } catch (error) {
+        console.error("❌ [RelatedVideos] Error fetching data:", error);
+        setRelatedVideos([]);
+      } finally {
+        setLoadingRelatedVideos(false);
+      }
+    };
+
+    fetchData();
+  }, [detailsCar]);
+
+  const [loadingRelatedCompares, setLoadingRelatedCompares] = useState(true);
+  const [relatedCompares, setRelatedCompares] = useState<ItemsId[]>([]);
+  const isFetchedRelatedCompares = useRef(false);
+
+  useEffect(() => {
+    if (isFetchedRelatedCompares.current) return;
+    isFetchedRelatedCompares.current = true;
+
+    const fetchData = async () => {
+      try {
+        setLoadingRelatedCompares(true);
+
+        const idsCompares = detailsCar.properties.find(
+          (e) => e.propertyKey === "p1042_vidrelatedcompare",
+        )?.propertyValue;
+
+        if (!idsCompares) {
+          setRelatedCompares([]);
+          setLoadingRelatedCompares(false);
+          return;
+        }
+
+        const response = await getItemByIds(idsCompares);
+        setRelatedCompares(Array.isArray(response) ? response : []);
+      } catch (error) {
+        console.error("❌ [RelatedComparisons] Error fetching data:", error);
+        setRelatedCompares([]);
+      } finally {
+        setLoadingRelatedCompares(false);
+      }
+    };
+
+    fetchData();
+  }, [detailsCar]);
 
   // =============== ساخت تب‌ها ===============
   const allTabItems: TabsProps["items"] = [
     ...tabItems,
-    { key: "news", label: "اخبار مرتبط" },
-    { key: "video", label: "ویدئوهای مرتبط" },
-    { key: "Comparisons", label: "مقایسه‌های مرتبط" },
+    ...(relatedNews.length > 0 ? [{ key: "news", label: "اخبار مرتبط" }] : []),
+    ...(relatedVideos.length > 0
+      ? [{ key: "video", label: "ویدئوهای مرتبط" }]
+      : []),
+    ...(relatedCompares.length > 0
+      ? [{ key: "Comparisons", label: "مقایسه‌های مرتبط" }]
+      : []),
     { key: "comments", label: "نظرات" },
   ];
 
@@ -127,7 +235,7 @@ const ContentTabsWrapper = ({
       if (mainBoxRef.current && sidebarRef.current) {
         const mainHeight = mainBoxRef.current.offsetHeight;
         const sidebarHeight = sidebarRef.current.offsetHeight;
-        setIsMainLonger(prev => {
+        setIsMainLonger((prev) => {
           const newValue = mainHeight > sidebarHeight;
           return prev !== newValue ? newValue : prev;
         });
@@ -153,46 +261,87 @@ const ContentTabsWrapper = ({
     };
   }, []);
 
-  // =============== ✅ استفاده از IntersectionObserver (به جای getBoundingClientRect) ===============
+  // =============== ✅ استفاده از IntersectionObserver با پشتیبانی از نظرات ===============
   useEffect(() => {
-    const sectionIds = ["review", "technical", "images", "news", "video", "Comparisons", "comments"];
+    const sectionIds = [
+      "review",
+      "technical",
+      "images",
+      "news",
+      "video",
+      "Comparisons",
+    ];
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        let maxRatio = 0;
-        let visibleId = "";
+    let observer: IntersectionObserver | null = null;
 
-        entries.forEach(entry => {
-          if (entry.intersectionRatio > maxRatio) {
-            maxRatio = entry.intersectionRatio;
-            visibleId = entry.target.id;
-          }
-        });
-
-        if (visibleId && visibleId !== activeKey) {
-          setActiveKey(visibleId);
-        }
-      },
-      {
-        rootMargin: "-80px 0px -50% 0px",
-        threshold: [0, 0.1, 0.2, 0.3, 0.5],
+    const setupObserver = () => {
+      // اگر observer قبلی وجود دارد، آن را disconnect کن
+      if (observer) {
+        observer.disconnect();
       }
-    );
 
-    const timeoutId = setTimeout(() => {
-      sectionIds.forEach(id => {
+      observer = new IntersectionObserver(
+        (entries) => {
+          let maxRatio = 0;
+          let visibleId = "";
+
+          entries.forEach((entry) => {
+            if (entry.intersectionRatio > maxRatio) {
+              maxRatio = entry.intersectionRatio;
+              visibleId = entry.target.id;
+            }
+          });
+
+          if (visibleId && visibleId !== activeKey) {
+            setActiveKey(visibleId);
+          }
+        },
+        {
+          rootMargin: "-80px 0px -50% 0px",
+          threshold: [0, 0.1, 0.2, 0.3, 0.5],
+        },
+      );
+
+      // مشاهده بخش‌های اصلی
+      sectionIds.forEach((id) => {
         const element = document.getElementById(id);
         if (element) {
-          observer.observe(element);
+          observer?.observe(element);
         }
       });
-    }, 100);
+
+      // مشاهده بخش نظرات با ref
+      if (commentsRef.current) {
+        observer?.observe(commentsRef.current);
+      }
+    };
+
+    // راه‌اندازی اولیه با تاخیر
+    const timeoutId = setTimeout(setupObserver, 100);
+
+    // استفاده از MutationObserver برای تشخیص تغییرات DOM
+    const mutationObserver = new MutationObserver(() => {
+      // بررسی کنید که آیا بخش نظرات اضافه شده است
+      const commentsElement = document.getElementById("comments");
+      if (commentsElement || commentsRef.current) {
+        // اگر بخش نظرات وجود دارد، observer را مجدداً راه‌اندازی کنید
+        setupObserver();
+      }
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
 
     return () => {
       clearTimeout(timeoutId);
-      observer.disconnect();
+      if (observer) {
+        observer.disconnect();
+      }
+      mutationObserver.disconnect();
     };
-  }, []);
+  }, [activeKey, commentsContent]); // وابستگی به commentsContent برای راه‌اندازی مجدد
 
   // =============== اسکرول نوار ===============
   useEffect(() => {
@@ -200,9 +349,11 @@ const ContentTabsWrapper = ({
 
     const handleScroll = () => {
       if (!navbarRef.current) return;
-      
+
       const shouldBeSticky = window.scrollY > navbarRef.current.offsetTop;
-      setIsNavbarSticky(prev => prev !== shouldBeSticky ? shouldBeSticky : prev);
+      setIsNavbarSticky((prev) =>
+        prev !== shouldBeSticky ? shouldBeSticky : prev,
+      );
     };
 
     const throttledScroll = () => {
@@ -226,7 +377,8 @@ const ContentTabsWrapper = ({
 
     const navbarHeight = navbarRef.current?.offsetHeight || 80;
     const elementRect = element.getBoundingClientRect();
-    const offsetPosition = window.pageYOffset + elementRect.top - navbarHeight - 20;
+    const offsetPosition =
+      window.pageYOffset + elementRect.top - navbarHeight - 20;
 
     requestAnimationFrame(() => {
       window.scrollTo({
@@ -236,10 +388,13 @@ const ContentTabsWrapper = ({
     });
   }, []);
 
-  const handleTabClick = useCallback((key: string) => {
-    setActiveKey(key);
-    scrollToElement(key);
-  }, [scrollToElement]);
+  const handleTabClick = useCallback(
+    (key: string) => {
+      setActiveKey(key);
+      scrollToElement(key);
+    },
+    [scrollToElement],
+  );
 
   return (
     <div className="content-tabs-container">
@@ -303,19 +458,31 @@ const ContentTabsWrapper = ({
                 {/* بخش‌های کلاینت با Lazy Loading */}
                 <div id="news" className="section-anchor">
                   <Suspense fallback={<NewsSkeleton />}>
-                    <RelatedNewsSection detailsCar={detailsCar} />
+                    <RelatedNewsSection
+                      detailsCar={detailsCar}
+                      relatedNews={relatedNews}
+                      loading={loadingRelatedNews}
+                    />
                   </Suspense>
                 </div>
 
                 <div id="video" className="section-anchor">
                   <Suspense fallback={<VideosSkeleton />}>
-                    <RelatedVideosSection detailsCar={detailsCar} />
+                    <RelatedVideosSection
+                      detailsCar={detailsCar}
+                      loading={loadingRelatedVideos}
+                      relatedVideos={relatedVideos}
+                    />
                   </Suspense>
                 </div>
 
                 <div id="Comparisons" className="section-anchor">
                   <Suspense fallback={<ComparisonsSkeleton />}>
-                    <RelatedComparisons detailsCar={detailsCar} />
+                    <RelatedComparisons
+                      detailsCar={detailsCar}
+                      loading={loadingRelatedCompares}
+                      relatedCompares={relatedCompares}
+                    />
                   </Suspense>
                 </div>
               </div>
@@ -325,7 +492,11 @@ const ContentTabsWrapper = ({
       </div>
 
       {/* بخش نظرات */}
-      <div id="comments" className="section-anchor py-5 container mx-auto px-2">
+      <div
+        id="comments"
+        ref={commentsRef}
+        className="section-anchor py-5 container mx-auto px-2"
+      >
         {commentsContent}
       </div>
 

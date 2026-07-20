@@ -71,7 +71,6 @@ function ContactUsForm({
     },
   ];
 
-  const token = useSelector((state: RootState) => state.token.token);
 
   const phoneRegex = /^09[0|1|2|3|9][0-9]{8}$/;
   const patternEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;

@@ -1,7 +1,7 @@
 "use client";
 
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { FaHeart, FaStar } from "react-icons/fa";
 import type { Swiper as SwiperType } from "swiper";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
@@ -14,19 +14,19 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
 // Fancybox
+import ModalLogin from "@/app/components/ModalLogin";
 import { RootState } from "@/redux/store";
 import { PostPollSave } from "@/services/Poll/PollSave";
 import { getPollId } from "@/services/Poll/pollId";
 import { postLike } from "@/services/UserActivity/postLike";
+import { postLiked } from "@/services/UserActivity/postLiked";
 import { Toast, toPersianNumbers } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import { message, Skeleton } from "antd";
 import Link from "next/link";
 import { FaCodeCompare } from "react-icons/fa6";
 import { useSelector } from "react-redux";
-import { postLiked } from "@/services/UserActivity/postLiked";
-import ModalLogin from "@/app/components/ModalLogin";
 
 const CarDetails = memo(
   ({
@@ -52,25 +52,40 @@ const CarDetails = memo(
       pollScoreDto: [],
     });
     const [selectedTab, setSelectedTab] = useState<number | null>(null); // null برای نمایش همه عکس‌ها
-    const [filteredAttachments, setFilteredAttachments] =
-      useState<ItemsAttachment[]>(Attachment);
-
-    // اثر برای فیلتر کردن عکس‌ها بر اساس tabId انتخاب شده
-    useEffect(() => {
-      if (selectedTab) {
-        setFilteredAttachments(
-          Attachment.filter((img) => img.tabId === selectedTab),
-        );
-      } else {
-        setFilteredAttachments(Attachment);
-      }
-    }, [selectedTab, Attachment]);
+   
+   
+    const filteredAttachments = useMemo(() => {
+  let attachments = [...Attachment];
+  
+  // اگر عکس اصلی در detailsCar وجود دارد
+  if (detailsCar.image) {
+    // ایجاد آبجکت جدید با ساختار مشابه Attachment
+    const mainImage: ItemsAttachment = {
+      id: 1, // یا یک id منحصر به فرد
+      tabId: 1, // یا 1 برای نمایش در کنار سایر تصاویر
+      itemId: detailsCar.id,
+      fileUrl: detailsCar.image,
+      title: detailsCar.title || "تصویر اصلی",
+      priority: -1, // اولویت بالا برای نمایش در ابتدا
+      categoryId: null,
+      itemKey: 0
+    };
+    
+    attachments = [mainImage, ...attachments];
+  }
+  
+  // فیلتر بر اساس selectedTab
+  if (selectedTab) {
+    return attachments.filter((img) => img.tabId === selectedTab);
+  }
+  return attachments;
+}, [selectedTab, Attachment, detailsCar.image, detailsCar.id, detailsCar.title]);
 
     const isShowFilter =
       Attachment.filter((e) => e.tabId === 1).length > 0 &&
       Attachment.filter((e) => e.tabId === 3).length > 0;
 
-    const token = useSelector((state: RootState) => state.token.token);
+    const user = useSelector((state: RootState) => state.user.user);
 
     const specifications = detailsCar.properties.filter(
       (e) => e.isTechnicalProperty,
@@ -164,7 +179,7 @@ const CarDetails = memo(
     const handleSubmitRating = async () => {
       setIsSubmitting(true);
       try {
-        await PostPollSave(pollSaveData, token);
+        await PostPollSave(pollSaveData, user.token);
         setIsRatingMode(false);
         try {
           const res = await getPollId(Number(detailsCar.id));
@@ -195,11 +210,11 @@ const CarDetails = memo(
     };
 
     const handleLike = async (id: number) => {
-      if (token) {
+      if (user.token) {
         setIsLoading(true);
         try {
-          const isLiked = await postLiked(id, token);
-          const response = await postLike(id, token);
+          const isLiked = await postLiked(id, user.token);
+          const response = await postLike(id, user.token);
 
           Toast.fire({
             icon: isLiked ? "warning" : "success",
@@ -435,7 +450,7 @@ const CarDetails = memo(
                         <button
                           aria-label="ثبت امتیاز"
                           onClick={() => setIsRatingMode(true)}
-                          className="mt-4 md:mt-0 mr-2 duration-300 rounded-lg bg-[#ce1a2a] hover:bg-red-700 text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
+                          className="mt-8 md:mt-0 mr-2 duration-300 rounded-lg bg-[#ce1a2a] hover:bg-red-700 text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
                         >
                           <FaStar className="ml-2" />
                           ثبت امتیاز
@@ -450,7 +465,7 @@ const CarDetails = memo(
             <div className="lg:col-span-5 lg:-mt-[38%] ">
               <div className="relative group">
                 {/* Quick Actions */}
-                <div className="absolute lg:left-full lg:translate-x-0 -translate-y-1 lg:translate-y-0 lg:top-0 lg:mr-3 lg:space-y-3 z-10 lg:z-0 flex lg:block sm:flex-row flex-col lg:py-0 py-2 lg:px-0 px-1 gap-3">
+                <div className="absolute lg:left-full lg:translate-x-0 -translate-y-1 lg:translate-y-0 lg:top-0 lg:mr-3 lg:space-y-3 z-50 lg:z-0 flex lg:block sm:flex-row flex-col lg:py-0 py-2 lg:px-0 px-1 gap-3">
                   <Link
                     href={`/compare/${detailsCar.id}`}
                     className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap block h-8 w-auto!"
@@ -469,16 +484,7 @@ const CarDetails = memo(
                       افزودن به علاقه‌مندی
                     </span>
                   </div>
-                  {/* <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap h-8 w-auto! sm:block hidden">
-                  <FaStar className="inline ml-1" />
-
-                  <span className="sm:inline hidden">امتیاز کاربران</span>
-                  {pollData.pollScore > 0 ? `${pollData.pollScore} از ۱۰` : ""}
-                </div> */}
-                  {/* <div className="bg-[#ce1a2a] text-white! px-4 py-2 text-xs text-center whitespace-nowrap h-8 w-auto lg:block hidden">
-                  <FaCalendarDays className="inline ml-1" />
-                  {createpublishCode(detailsCar.publishCode)}
-                </div> */}
+                 
                 </div>
 
                 {/* Main Image Slider */}
@@ -502,7 +508,7 @@ const CarDetails = memo(
                             <>
                               <img
                                 src={
-                                  mainDomainOld +
+                                  mainDomain +
                                   Attachment.filter((img) => img.tabId === 1)[0]
                                     .fileUrl
                                 }
@@ -534,7 +540,7 @@ const CarDetails = memo(
                             <>
                               <img
                                 src={
-                                  mainDomainOld +
+                                  mainDomain +
                                   Attachment.filter((img) => img.tabId === 3)[0]
                                     .fileUrl
                                 }
@@ -568,7 +574,7 @@ const CarDetails = memo(
                         <SwiperSlide key={image.id}>
                           <a
                             className="sm:h-96 h-56 block cursor-pointer bg-white!"
-                            href={mainDomainOld + image.fileUrl}
+                            href={mainDomain + image.fileUrl}
                             data-fancybox="main-gallery"
                             data-caption={image.title}
                             aria-label="لینک گالری تصاویر"
@@ -576,7 +582,7 @@ const CarDetails = memo(
                             <div
                               className="absolute inset-0 bg-cover bg-center"
                               style={{
-                                backgroundImage: `url('${mainDomainOld + image.fileUrl}')`,
+                                backgroundImage: `url('${mainDomain + image.fileUrl}')`,
                                 filter: "blur(8px)",
                                 transform: "scale(1.1)",
                               }}
@@ -584,7 +590,7 @@ const CarDetails = memo(
 
                             <img
                               className="w-full h-full border-4! border-[#ce1a2a]! object-contain overflow-hidden relative z-50"
-                              src={mainDomainOld + image.fileUrl}
+                              src={mainDomain + image.fileUrl}
                               alt={image.title || "تصویر محصول"}
                             />
                           </a>
@@ -595,7 +601,7 @@ const CarDetails = memo(
                     {/* Thumbnails Slider */}
                     <Swiper
                       onSwiper={setThumbsSwiper}
-                      loop={true}
+                      // loop={true}
                       grabCursor={true}
                       spaceBetween={10}
                       slidesPerView={4}
@@ -620,7 +626,7 @@ const CarDetails = memo(
                           <div className="cursor-pointer border-2 border-transparent overflow-hidden transition-all hover:bg-[#ce1a2a]! swiper-slide-thumb-active:border-red-600 z-50 h-20!">
                             <img
                               className="w-full h-full object-cover"
-                              src={mainDomainOld + image.fileUrl}
+                              src={mainDomain + image.fileUrl}
                               alt={image.title || "تصویر محصول"}
                             />
                           </div>

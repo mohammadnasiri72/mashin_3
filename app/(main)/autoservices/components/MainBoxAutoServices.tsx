@@ -2,11 +2,11 @@
 
 import CustomPagination from "@/app/components/CustomPagination";
 import { htmlToPlainText } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Card, Select } from "antd";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCar, FaClock, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import SidebarAutoServices from "./SidebarAutoServices";
 
@@ -200,6 +200,15 @@ function MainBoxAutoServices({
                         placeholder="انتخاب برند..."
                         allowClear
                         showSearch
+                        optionFilterProp="label"
+                        filterOption={(input, option) => {
+                          if (!option) return false;
+                          // تبدیل label به string با استفاده از String() یا toString()
+                          const label = String(
+                            option.label || "",
+                          ).toLowerCase();
+                          return label.includes(input.toLowerCase());
+                        }}
                         className="w-full"
                         size="large"
                       >
@@ -209,7 +218,11 @@ function MainBoxAutoServices({
                           </div>
                         </Option>
                         {brands.map((brand) => (
-                          <Option key={brand.id} value={brand.id}>
+                          <Option
+                            key={brand.id}
+                            value={brand.id}
+                            label={brand.title}
+                          >
                             <div className="text-gray-800! w-full! block!">
                               {brand.title}
                             </div>
@@ -330,7 +343,7 @@ function MainBoxAutoServices({
                         <div className="h-48 overflow-hidden bg-white">
                           <Link href={service.url}>
                             <img
-                              src={mainDomainOld + service.image}
+                              src={mainDomain + service.image}
                               alt={service.title}
                               className="w-full h-full object-contain p-4 hover:scale-105 transition-transform duration-500"
                             />
@@ -340,17 +353,16 @@ function MainBoxAutoServices({
                         {/* اطلاعات */}
                         <div className="flex-1 p-5">
                           <div className="mb-3">
-                            <Link href={service.url}>
-                              <h2 className="font-bold text-gray-800 text-lg mb-2 hover:text-[#ce1a2a]! transition-colors line-clamp-2">
-                                {service.title}
-                              </h2>
-                            </Link>
-
                             <div className="flex flex-wrap gap-2 mb-3">
                               <span className="bg-[#ce1a2a] text-white! px-2 py-1 rounded-full text-xs! font-medium">
                                 {service.categoryTitle}
                               </span>
                             </div>
+                            <Link href={service.url}>
+                              <h2 className="font-bold text-gray-800 text-[16px] mb-2 hover:text-[#ce1a2a]! transition-colors line-clamp-2">
+                                {service.title}
+                              </h2>
+                            </Link>
                           </div>
 
                           {/* اطلاعات تماس و آدرس */}
@@ -372,7 +384,7 @@ function MainBoxAutoServices({
                             <div className="flex items-center text-gray-600">
                               <FaPhone className="text-[#ce1a2a] ml-2 shrink-0" />
                               <span
-                                className={`text-xs line-clamp-1 ${tel ? "font-bold" : ""}`}
+                                className={`text-sm line-clamp-1 ${tel ? "font-bold" : ""}`}
                               >
                                 {tel
                                   ? tel?.replace(/\r\n/g, " - ")

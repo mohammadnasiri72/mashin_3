@@ -7,7 +7,7 @@ import {
   htmlToPlainText,
   toPersianNumbers,
 } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -121,7 +121,7 @@ const EducationCar = ({
                             <Link href={item.url}>
                               <div className="w-full h-full bg-gray-200 rounded-lg overflow-hidden relative">
                                 <img
-                                  src={mainDomainOld + item.image}
+                                  src={mainDomain + item.image}
                                   alt={item.title}
                                   className="object-contain hover:scale-105 transition-transform duration-300"
                                 />

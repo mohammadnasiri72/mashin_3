@@ -1,4 +1,4 @@
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Card } from "antd";
 import Link from "next/link";
 import { FaBook } from "react-icons/fa";
@@ -45,7 +45,7 @@ function RelatedEducation({
                   <div className="bg-gray-100 rounded-lg overflow-hidden hover:shadow-lg transition-shadow border border-gray-200">
                     <div className="aspect-video relative overflow-hidden">
                       <img
-                        src={mainDomainOld + related.image}
+                        src={mainDomain + related.image}
                         alt={related.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />

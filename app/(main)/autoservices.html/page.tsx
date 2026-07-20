@@ -72,6 +72,7 @@ async function pageAutoService({
     PageSize: 15,
     OrderBy: 8,
   });
+  
   //
   const ids = AutoServiceData.map((item) => item.id).join(",");
 
@@ -91,6 +92,7 @@ async function pageAutoService({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
 
   const headersList = await headers();

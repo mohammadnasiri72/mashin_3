@@ -1,9 +1,8 @@
 "use client";
 
-import { mainDomain, mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Image from "next/image";
 import Link from "next/link";
-import ScrollToTopButton from "./ScrollToTopButton";
 
 interface FooterLink {
   href: string;
@@ -19,7 +18,6 @@ const Footer = ({
   setting: SettingType[];
   Social: Items[];
 }) => {
-
   const logoSrc: string | undefined = setting.find(
     (e) => e.propertyKey === "site_logo",
   )?.propertyValue;
@@ -75,7 +73,7 @@ const Footer = ({
                 <div className="logo-footer mb-4 h-7!">
                   <Link href="/" className="h-7!">
                     <img
-                      src={mainDomainOld + logoSrc}
+                      src={mainDomain + logoSrc}
                       alt={logoTitle}
                       className="max-w-32"
                       loading="eager"
@@ -84,22 +82,25 @@ const Footer = ({
                   </Link>
                 </div>
                 {footerDescription && (
-                  <p className="text-gray-600 text-sm leading-7 mb-6 text-justify">
+                  <div className="text-gray-600 text-sm leading-7 mb-6 text-justify">
                     {footerDescription}
-                    <Link
-                      href="#"
-                      className="text-black! hover:text-[#0a58ca]! duration-300 font-bold mr-1 inline-flex items-center"
-                    >
-                      ایده پویا
-                      <Image
-                        src="/images/icons/activeidea.png"
-                        alt="ایده پویا"
-                        width={16}
-                        height={16}
-                        className="mr-1"
-                      />
-                    </Link>
-                  </p>
+                    <div className="flex">
+                      <span>طراحی سایت و بهینه سازی :</span>
+                      <Link
+                        href="https://activeidea.net/"
+                        className="text-black! hover:text-[#0a58ca]! duration-300 font-bold mr-1 inline-flex items-center"
+                      >
+                        ایده پویا
+                        <Image
+                          src="/images/icons/activeidea.png"
+                          alt="ایده پویا"
+                          width={16}
+                          height={16}
+                          className="mr-1"
+                        />
+                      </Link>
+                    </div>
+                  </div>
                 )}
 
                 <div className="rewards sm:flex p-5">
@@ -180,7 +181,7 @@ const Footer = ({
               </nav>
 
               {/* Footer Column - Social Media (Desktop) */}
-              <div className="footer-column col-span-12 md:col-span-2 lg:col-span-2 lg:block! hidden">
+              <div className="footer-column col-span-12 md:col-span-2 lg:col-span-2">
                 <h4 className="text-black text-[16px] font-bold! mb-4! sm:text-start text-center">
                   شبکه های اجتماعی
                 </h4>
@@ -188,10 +189,13 @@ const Footer = ({
                 <div>
                   <ul className="social-medias grid grid-cols-2 gap-2">
                     {Social.map((social) => (
-                      <li key={social.id}>
+                      <li
+                        className="flex justify-center sm:justify-start"
+                        key={social.id}
+                      >
                         <Link
-                          href={social.sourceLink||'#'}
-                          className="bg-gray-100 rounded-lg w-20 h-20 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                          href={social.sourceLink || "#"}
+                          className="bg-gray-100 rounded-lg w-10 h-10 flex items-center justify-center hover:bg-gray-200 transition-colors"
                         >
                           <img
                             src={mainDomain + social.image}

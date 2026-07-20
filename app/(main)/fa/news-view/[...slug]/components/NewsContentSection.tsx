@@ -1,7 +1,7 @@
 "use client";
 
 import { createMarkup } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -66,14 +66,14 @@ const NewsContentSection = ({ detailsNews }: { detailsNews: ItemsId }) => {
             )}
 
             <a
-              href={mainDomainOld + detailsNews.image}
+              href={mainDomain + detailsNews.image}
               data-fancybox="main-img"
               data-caption={detailsNews.title}
               aria-label={detailsNews.title}
             >
               <img
                 className="float-start! w-96 pl-5"
-                src={mainDomainOld + detailsNews.image}
+                src={mainDomain + detailsNews.image}
                 alt={detailsNews.title}
               />
             </a>

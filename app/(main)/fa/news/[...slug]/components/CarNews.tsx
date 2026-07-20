@@ -1,13 +1,12 @@
 "use client";
 
 import CustomPagination from "@/app/components/CustomPagination";
-import MarketStats from "@/app/components/SideBar/MarketStats";
 import {
   formatPersianDate,
   htmlToPlainText,
   toPersianNumbers,
 } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -130,7 +129,7 @@ const CarNews = ({
                           <div className="w-full h-full bg-gray-200 rounded-lg overflow-hidden relative">
                             <Link href={news.url} className="rounded-lg!">
                               <img
-                                src={mainDomainOld + news.image}
+                                src={mainDomain + news.image}
                                 alt={news.title}
                                 className="object-cover w-full h-full hover:scale-105 rounded-lg! transition-transform duration-300"
                               />

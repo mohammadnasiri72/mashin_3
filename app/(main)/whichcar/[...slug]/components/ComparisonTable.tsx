@@ -1,7 +1,7 @@
 "use client";
 
 import { getAttachment } from "@/services/Attachment/Attachment";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { Card, Tooltip } from "antd";
@@ -37,11 +37,11 @@ function ComparisonTable({ car }: { car: ItemsId }) {
       // ایجاد آرایه تصاویر برای fancybox
       const allImages = [
         {
-          src: mainDomainOld + car.image,
+          src: mainDomain + car.image,
           caption: car.title,
         },
         ...attachments.map((attachment, index) => ({
-          src: mainDomainOld + attachment.fileUrl,
+          src: mainDomain + attachment.fileUrl,
           caption: attachment.title || `${car.title} - تصویر ${index + 2}`,
         })),
       ];
@@ -74,7 +74,7 @@ function ComparisonTable({ car }: { car: ItemsId }) {
       Fancybox.show(
         [
           {
-            src: mainDomainOld + car.image,
+            src: mainDomain + car.image,
             caption: car.title,
           },
         ],
@@ -119,7 +119,7 @@ function ComparisonTable({ car }: { car: ItemsId }) {
             <div className="relative group">
               <div className="relative overflow-hidden rounded-2xl">
                 <img
-                  src={mainDomainOld + car.image}
+                  src={mainDomain + car.image}
                   alt={car.title}
                   className="w-full mx-auto h-56 object-cover rounded-2xl transition-transform duration-300 group-hover:scale-105"
                 />
@@ -147,7 +147,7 @@ function ComparisonTable({ car }: { car: ItemsId }) {
               <img
                 className="w-20 h-20 rounded-full object-contain border-4 border-[#ce1a2a] shadow-lg bg-red-100! p-1"
                 src={
-                  mainDomainOld +
+                  mainDomain +
                   car.properties.find((e) => e.propertyKey === "p1044_logopic")
                     ?.propertyValue
                 }

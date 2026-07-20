@@ -59,6 +59,7 @@ interface Category {
 
 interface PriceBrands {
   id: number;
+  priority: number;
   categoryKey: string;
   title: string;
   parentId: number;
@@ -311,7 +312,7 @@ const MobilePriceCard = ({ item }: { item: Prices }) => {
             }}
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.75 }}>
-              <FaDollarSign style={{ color: PRIMARY_COLOR, fontSize: 14 }} />
+              <FaDollarSign style={{ color: "#374151", fontSize: 14 }} />
               <Typography
                 variant="body2"
                 fontWeight="500"
@@ -325,16 +326,20 @@ const MobilePriceCard = ({ item }: { item: Prices }) => {
               component="span"
               fontWeight="bold"
               sx={{
-               
-                color: PRIMARY_COLOR,
-                fontSize: "0.9rem",
+                color: "#374151",
+                fontSize: "1rem",
               }}
             >
               {item.price1 ? item.price1.toLocaleString("fa-IR") : "---"}
               <Typography
                 component="span"
                 variant="caption"
-                sx={{ mr: 0.5, color: "#6b7280", fontWeight: 400, fontSize: "0.6rem" }}
+                sx={{
+                  mr: 0.5,
+                  color: "#6b7280",
+                  fontWeight: 400,
+                  fontSize: "0.6rem",
+                }}
               >
                 تومان
               </Typography>
@@ -347,7 +352,7 @@ const MobilePriceCard = ({ item }: { item: Prices }) => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-               backgroundColor: "#f8fafc",
+              backgroundColor: "#f8fafc",
               padding: "6px 12px",
               borderRadius: "6px",
             }}
@@ -367,7 +372,7 @@ const MobilePriceCard = ({ item }: { item: Prices }) => {
               component="span"
               fontWeight="bold"
               sx={{
-               color: "#374151",
+                color: "#374151",
                 fontSize: "1rem",
               }}
             >
@@ -375,7 +380,12 @@ const MobilePriceCard = ({ item }: { item: Prices }) => {
               <Typography
                 component="span"
                 variant="caption"
-                sx={{ mr: 0.5, color: "#6b7280", fontWeight: 400, fontSize: "0.6rem" }}
+                sx={{
+                  mr: 0.5,
+                  color: "#6b7280",
+                  fontWeight: 400,
+                  fontSize: "0.6rem",
+                }}
               >
                 تومان
               </Typography>
@@ -601,8 +611,8 @@ const DesktopPriceTable = ({
                 <TableCell
                   align="center"
                   sx={{
-                    fontSize: 14,
-                    fontWeight: 500,
+                    fontSize: 16,
+                    fontWeight: "bold",
                     color: "#374151",
                   }}
                 >
@@ -613,7 +623,7 @@ const DesktopPriceTable = ({
                   sx={{
                     fontSize: 16,
                     fontWeight: "bold",
-                    color: PRIMARY_COLOR,
+                    color: "#374151",
                   }}
                 >
                   {item.price2 ? item.price2.toLocaleString("fa-IR") : "---"}
@@ -709,7 +719,18 @@ function PriceCar({
   }, [type]);
 
   const sortedBrands = useMemo(() => {
-    return [...brands].sort((a, b) => a.title.localeCompare(b.title, "fa"));
+    return [...brands].sort((a, b) => {
+      // اولویت اول: priority (اگر وجود نداشت 0 در نظر گرفته می‌شود)
+      const priorityA = a.priority ?? 0;
+      const priorityB = b.priority ?? 0;
+
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB; // مرتب‌سازی صعودی بر اساس priority
+      }
+
+      // اگر priority مساوی بود، بر اساس حروف الفبا
+      return a.title.localeCompare(b.title, "fa");
+    });
   }, [brands]);
 
   const filteredBrands = useMemo(() => {
@@ -955,9 +976,19 @@ function PriceCar({
           {Object.keys(groupedData).length > 0 ? (
             Object.entries(groupedData)
               .sort(([brandIdA], [brandIdB]) => {
-                const brandNameA = getBrandNameById(parseInt(brandIdA));
-                const brandNameB = getBrandNameById(parseInt(brandIdB));
-                return brandNameA.localeCompare(brandNameB, "fa");
+                const brandA = brands.find((b) => b.id === parseInt(brandIdA));
+                const brandB = brands.find((b) => b.id === parseInt(brandIdB));
+
+                const priorityA = brandA?.priority ?? 0;
+                const priorityB = brandB?.priority ?? 0;
+
+                if (priorityA !== priorityB) {
+                  return priorityB - priorityA; // نزولی (اعداد بزرگتر اولویت بالاتر)
+                }
+
+                const nameA = brandA?.title ?? "";
+                const nameB = brandB?.title ?? "";
+                return nameA.localeCompare(nameB, "fa");
               })
               .map(([brandId, items]) => {
                 const brandName = getBrandNameById(parseInt(brandId));
@@ -976,7 +1007,9 @@ function PriceCar({
                         borderRight: `3px solid ${PRIMARY_COLOR}`,
                       }}
                     >
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
                         <FaCar style={{ color: PRIMARY_COLOR, fontSize: 14 }} />
                         <Typography
                           variant="subtitle2"

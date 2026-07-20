@@ -136,7 +136,7 @@ export const createInitialUserData = () => {
 };
 
 export const createpublishCode = (publishCode: string) => {
-  if (
+  if (publishCode &&
     publishCode.split("-").length > 1 &&
     publishCode.split("-")[0] === publishCode.split("-")[1]
   ) {

@@ -3,6 +3,7 @@ import "./globals.css";
 import LayoutClient from "./LayoutClient";
 import localFont from "next/font/local";
 import CustomRouteLoader from "./components/CustomRouteLoader";
+import { cookies } from "next/headers";
 
 
 
@@ -38,11 +39,16 @@ const raviFont = localFont({
   variable: "--font-ravi",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+
+   // خواندن کوکی در سرور
+ const cookieStore = await cookies();
+  const userCookie = cookieStore.get("user");
+  
   return (
     <html lang="fa" dir="rtl" className={raviFont.variable}>
       <head>
@@ -52,7 +58,7 @@ export default function RootLayout({
       </head>
       <body>
         <CustomRouteLoader />
-        <LayoutClient>{children}</LayoutClient>
+        <LayoutClient userCookie={userCookie}>{children}</LayoutClient>
       </body>
     </html>
   );

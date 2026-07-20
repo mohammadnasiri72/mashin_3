@@ -68,6 +68,7 @@ async function pageReviews({ params }: { params: Promise<{ slug: string }> }) {
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
+    FullData: true,
   });
 
   if (id === 6058) {

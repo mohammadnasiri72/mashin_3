@@ -1,8 +1,7 @@
 "use client";
 
 import { setRedirectRegister } from "@/redux/slice/redirectRegister";
-import { setToken } from "@/redux/slice/token";
-import { PostLogin } from "@/services/Account/Login";
+import { setUser } from "@/redux/slice/user"; // اضافه کردن
 import { PostResetPass } from "@/services/Account/ResetPass";
 import { getCsrf } from "@/services/Csrf/Csrf";
 import { Toast } from "@/utils/func";
@@ -14,7 +13,6 @@ import { useEffect, useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { MdClose, MdLogin, MdOutlinePassword } from "react-icons/md";
 import { useDispatch } from "react-redux";
-const Cookies = require("js-cookie");
 
 function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
   const [loading, setLoading] = useState(false);
@@ -61,18 +59,37 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
       };
       setLoading(true);
       try {
-        const dataLogin = await PostLogin(data);
-        Cookies.set("user", JSON.stringify(dataLogin), { expires: 7 });
-        disPatch(setToken(dataLogin.token));
-        setOpen(false);
-        Toast.fire({
-          icon: "success",
-          title: "با موفقیت وارد شدید",
+        // استفاده از API Route به جای مستقیم
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          // ذخیره اطلاعات کاربر در Redux
+          disPatch(setUser(result.user));
+
+          // بستن مودال
+          setOpen(false);
+
+          Toast.fire({
+            icon: "success",
+            title: "با موفقیت وارد شدید",
+          });
+
+         
+        } else {
+          throw new Error(result.error || "خطا در ورود");
+        }
       } catch (err: any) {
         Toast.fire({
           icon: "error",
-          title: err.response.data || "خطا در ورود به حساب",
+          title: err.message || "خطا در ورود به حساب",
         });
       } finally {
         setLoading(false);
@@ -112,7 +129,7 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
     } catch (error: any) {
       Toast.fire({
         icon: "error",
-        title: error.response.data || "خطا در بازیابی رمز عبور",
+        title: error.response?.data || "خطا در بازیابی رمز عبور",
       });
     } finally {
       setResetPasswordModal(false);
@@ -240,7 +257,7 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
             </Button>
             <Link
               href={"/auth"}
-              aria-label="فراموشی رمز عبور"
+              aria-label="ساخت حساب کاربری"
               type="link"
               onClick={(e) => {
                 e.preventDefault();

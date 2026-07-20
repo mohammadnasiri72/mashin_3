@@ -1,6 +1,6 @@
 "use client";
 
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Card } from "antd";
 import { useEffect, useState } from "react";
 import { FaCalendar, FaDownload, FaEye, FaFolder } from "react-icons/fa";
@@ -31,7 +31,7 @@ function VideoPlayer({
   const getVideoSize = async (fileUrl: string, index: number) => {
     if (!fileUrl) return;
     try {
-      const videoUrl = mainDomainOld + fileUrl;
+      const videoUrl = mainDomain + fileUrl;
       const response = await fetch(videoUrl, { method: "HEAD" });
       const contentLength = response.headers.get("content-length");
 
@@ -54,7 +54,7 @@ function VideoPlayer({
     const fetchAllSizes = async () => {
       const sizesPromises = attachment.map(async (att, index) => {
         try {
-          const videoUrl = mainDomainOld + att.fileUrl;
+          const videoUrl = mainDomain + att.fileUrl;
           const response = await fetch(videoUrl, { method: "HEAD" });
           const contentLength = response.headers.get("content-length");
 
@@ -142,7 +142,7 @@ function VideoPlayer({
   // تابع دانلود ویدیو
   const handleDownload = async (attachment: ItemsAttachment) => {
     try {
-      const videoUrl = mainDomainOld + attachment.fileUrl;
+      const videoUrl = mainDomain + attachment.fileUrl;
       const link = document.createElement("a");
       link.href = videoUrl;
       link.download = attachment.title || "video.mp4";
@@ -202,7 +202,7 @@ function VideoPlayer({
               <video
                 key={selectedVideoIndex} // برای اطمینان از رندر مجدد با تغییر ایندکس
                 className="w-full"
-                src={mainDomainOld + attachment[selectedVideoIndex]?.fileUrl}
+                src={mainDomain + attachment[selectedVideoIndex]?.fileUrl}
                 controls
               />
             </div>

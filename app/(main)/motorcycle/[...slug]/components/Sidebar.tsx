@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 // Fancybox
 import SideBarListItems from "@/app/components/SideBar/SideBarListItems";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
@@ -106,14 +106,14 @@ const Sidebar = ({
                 <div className="h-32 relative rounded-lg overflow-hidden group w-full ">
                   <div className="block w-full h-full">
                     <a
-                      href={mainDomainOld + model.image}
+                      href={mainDomain + model.image}
                       data-fancybox="sidebar-gallery1"
                       data-caption={model.title}
                       aria-label={`بزرگنمایی تصویر ${model.title}`}
                       className="block w-full h-full"
                     >
                       <img
-                        src={mainDomainOld + model.image}
+                        src={mainDomain + model.image}
                         alt={model.title}
                         aria-label={model.title}
                         className="w-full group-hover:scale-105 h-32 object-contain transition-transform duration-300"
@@ -150,14 +150,14 @@ const Sidebar = ({
                 <div className="h-32 relative rounded-lg overflow-hidden group w-full ">
                   <div className="block w-full h-full">
                     <a
-                      href={mainDomainOld + model.image}
+                      href={mainDomain + model.image}
                       data-fancybox="sidebar-gallery1"
                       data-caption={model.title}
                       aria-label={`بزرگنمایی تصویر ${model.title}`}
                       className="block w-full h-full"
                     >
                       <img
-                        src={mainDomainOld + model.image}
+                        src={mainDomain + model.image}
                         alt={model.title}
                         aria-label={model.title}
                         className="w-full group-hover:scale-105 h-32 object-contain transition-transform duration-300"
@@ -197,7 +197,7 @@ const Sidebar = ({
                   <div className="block w-full h-full">
                     <Link href={model.url} className="block w-full h-full">
                       <img
-                        src={mainDomainOld + model.image}
+                        src={mainDomain + model.image}
                         alt={model.title}
                         aria-label={model.title}
                         className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"

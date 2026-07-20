@@ -1,10 +1,4 @@
 "use client";
-import MarketStats from "@/app/components/SideBar/MarketStats";
-import NewsBlogForm from "@/app/components/NewsBlogForm";
-import { formatPersianDate, toPersianNumbers } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
-import Link from "next/link";
-import { FaCalendar, FaEye, FaPlay } from "react-icons/fa";
 import SideBarBanner from "@/app/components/SideBar/SideBarBanner";
 import SideBarListItems from "@/app/components/SideBar/SideBarListItems";
 

@@ -1,5 +1,5 @@
 import { formatPersianDate, toPersianNumbers } from "@/utils/func";
-import { mainDomainOld } from "@/utils/mainDomain";
+import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { FaCalendar, FaEye } from "react-icons/fa";
 
@@ -10,7 +10,6 @@ function SideBarListItems({
   itemsList: Items[];
   title: string;
 }) {
-  
   return (
     <>
       <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -19,15 +18,11 @@ function SideBarListItems({
         </h3>
         <div className="space-y-4">
           {itemsList.map((item) => (
-            <Link
-              key={item.id}
-              href={item.url}
-              className="block group"
-            >
+            <Link key={item.id} href={item.url} className="block group">
               <div className="flex items-start gap-3 p-2 rounded-lg hover:bg-[#ce1a2a] hover:text-white! transition-colors">
                 <div className="w-16 h-12 bg-gray-200 rounded shrink-0 overflow-hidden">
                   <img
-                    src={mainDomainOld + item.image}
+                    src={mainDomain + item.image}
                     alt={item.title}
                     className="w-full h-full object-cover"
                   />

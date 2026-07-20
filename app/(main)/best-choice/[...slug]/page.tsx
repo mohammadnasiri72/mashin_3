@@ -1,25 +1,21 @@
+import { getAttachment } from "@/services/Attachment/Attachment";
 import { getComment } from "@/services/Comment/Comment";
 import { getItem } from "@/services/Item/Item";
-import { getItemId } from "@/services/Item/ItemId";
-import { mainDomainOld } from "@/utils/mainDomain";
-import { redirect } from "next/navigation";
-import React from "react";
-import MainBoxBestChoice from "./components/MainBoxBestChoice";
-import { getAttachment } from "@/services/Attachment/Attachment";
 import { getItemByIds } from "@/services/Item/ItemByIds";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { ItemVisit } from "@/services/Item/ItemVisit";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound, redirect } from "next/navigation";
+import MainBoxBestChoice from "./components/MainBoxBestChoice";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = param.slug[0];
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
 
-  const dataPage: ItemsId = await getItemId(Number(id));
-
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
     const description = dataPage.seoInfo?.seoDescription
       ? dataPage.seoInfo?.seoDescription
@@ -59,15 +55,17 @@ export async function generateMetadata({
   }
 }
 
-async function pageBestChoice({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+async function pageBestChoice() {
   try {
-    const param = await params;
-    const id = Number(param.slug[0]);
-    const detailsBest: ItemsId = await getItemId(id);
+    const headersList = await headers();
+    const pathname = headersList.get("x-pathname");
+    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+    const detailsBest: ItemsId | null = await getItemByUrl(decodedPathname);
+    if (!detailsBest) {
+      return notFound();
+    }
+    const id = Number(detailsBest.id);
 
     const comments: CommentResponse[] = await getComment({
       id: Number(id),
@@ -81,6 +79,7 @@ async function pageBestChoice({
       TypeId: 1051,
       langCode: "fa",
       CategoryIdArray: "6415",
+      FullData: true,
     });
     const Attachment: ItemsAttachment[] = await getAttachment(id);
 
@@ -115,18 +114,17 @@ async function pageBestChoice({
       PageSize: 7,
     });
 
-
-     try {
-                await ItemVisit({
-                  langCode: "fa",
-                  id,
-                  ip: "",
-                  url: detailsBest.url,
-                  userAgent:''
-                });
-              } catch (error) {
-                console.error("Error recording visit:", error);
-              }
+    try {
+      await ItemVisit({
+        langCode: "fa",
+        id,
+        ip: "",
+        url: detailsBest.url,
+        userAgent: "",
+      });
+    } catch (error) {
+      console.error("Error recording visit:", error);
+    }
 
     return (
       <>
