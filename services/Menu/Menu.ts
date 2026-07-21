@@ -1,18 +1,5 @@
 import { baseUrl } from "@/utils/mainDomain";
 
-// export const getMenu = async (data: MenuParams): Promise< MenuGroup[]> => {
-//   try {
-//     const response = await axiosInstance.get< MenuGroup[]>("/api/Menu", {
-//       params: data,
-//       // withCredentials: true,
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error("خطا در دریافت منو:", error);
-//     throw error;
-//   }
-// };
-
 export const getMenu = async (data: MenuParams): Promise<MenuGroup[]> => {
   try {
     const url = new URL(`${baseUrl}api/Menu`);
@@ -37,7 +24,7 @@ export const getMenu = async (data: MenuParams): Promise<MenuGroup[]> => {
 
     if (!response.ok) {
       throw new Error(
-        `خطا در دریافت: ${response.status} ${response.statusText}`
+        `خطا در دریافت: ${response.status} ${response.statusText}`,
       );
     }
 

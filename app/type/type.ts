@@ -162,13 +162,14 @@ interface properties {
   isTechnicalProperty: boolean;
 }
 interface seoInfo {
-  seoTitle:string;
-  seoKeywords:string;
-  seoDescription:string;
-  seoHeadTags:string;
+  seoTitle: string;
+  seoKeywords: string;
+  seoDescription: string;
+  seoHeadTags: string;
 }
 
 interface ItemsId {
+  typeUrl: string;
   body: string | null;
   summary: string | null;
   breadcrumb: breadcrumb[];
@@ -219,7 +220,6 @@ interface ItemsId {
   score: number;
 }
 interface ItemsSeoId {
-  
   categoryId: number;
   categoryTitle: string;
   id: number;
@@ -229,7 +229,7 @@ interface ItemsSeoId {
   seoUrl: string;
   title: string;
   url: string;
-  seoHeadTags :string | null;
+  seoHeadTags: string | null;
 }
 
 interface ItemCategoryParams {
@@ -267,9 +267,9 @@ interface ItemsCategory {
 }
 
 interface breadcrumb {
- format:string
- href:string
- title:string
+  format: string;
+  href: string;
+  title: string;
 }
 
 interface ItemsCategoryId {
@@ -480,15 +480,13 @@ interface PollSaveParam {
   pollScoreDto: pollScoreDto[];
 }
 interface ItemVisitParam {
-  langCode:string;
-  id:number;
-  ip:string;
-  url:string;
-  userAgent:string;
+  langCode: string;
+  id: number;
+  ip: string;
+  url: string;
+  userAgent: string;
 }
-interface ItemVisitResponse {
-  
-}
+interface ItemVisitResponse {}
 interface FormContact {
   langCode: string;
   nameFamily: string;

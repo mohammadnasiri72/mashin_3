@@ -183,7 +183,7 @@ function CreativeCategoriesSection({
 
             {/* لینک نمایش بیشتر */}
             <Link
-              href="/searchcars?orderby=8"
+              href="/search-cars?orderby=8"
               className="absolute bottom-5 left-0 flex items-center justify-center gap-2 text-[#0a5c8c]! font-medium hover:gap-3 transition-all duration-300 w-full py-2 border-t border-gray-100"
             >
               نمایش بیشتر

@@ -58,21 +58,21 @@ const CarDetails = memo(
   let attachments = [...Attachment];
   
   // اگر عکس اصلی در detailsCar وجود دارد
-  if (detailsCar.image) {
-    // ایجاد آبجکت جدید با ساختار مشابه Attachment
-    const mainImage: ItemsAttachment = {
-      id: 1, // یا یک id منحصر به فرد
-      tabId: 1, // یا 1 برای نمایش در کنار سایر تصاویر
-      itemId: detailsCar.id,
-      fileUrl: detailsCar.image,
-      title: detailsCar.title || "تصویر اصلی",
-      priority: -1, // اولویت بالا برای نمایش در ابتدا
-      categoryId: null,
-      itemKey: 0
-    };
+  // if (detailsCar.image) {
+  //   // ایجاد آبجکت جدید با ساختار مشابه Attachment
+  //   const mainImage: ItemsAttachment = {
+  //     id: 1, // یا یک id منحصر به فرد
+  //     tabId: 1, // یا 1 برای نمایش در کنار سایر تصاویر
+  //     itemId: detailsCar.id,
+  //     fileUrl: detailsCar.image,
+  //     title: detailsCar.title || "تصویر اصلی",
+  //     priority: -1, // اولویت بالا برای نمایش در ابتدا
+  //     categoryId: null,
+  //     itemKey: 0
+  //   };
     
-    attachments = [mainImage, ...attachments];
-  }
+  //   attachments = [mainImage, ...attachments];
+  // }
   
   // فیلتر بر اساس selectedTab
   if (selectedTab) {

@@ -71,6 +71,7 @@ async function pageCompareDainamic({
     PageIndex: 1,
     PageSize: 200,
   });
+  
   return (
     <>
       <CompareClient

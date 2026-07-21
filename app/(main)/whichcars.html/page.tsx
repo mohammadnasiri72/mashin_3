@@ -10,7 +10,7 @@ export async function generateMetadata() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
 
 
   if (dataPage && dataPage.title) {
@@ -88,7 +88,7 @@ async function pageWhichCars({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  const whichCarsCat: ItemsId | null = await getItemByUrl(decodedPathname);
+  const whichCarsCat: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
 
   return (
     <>

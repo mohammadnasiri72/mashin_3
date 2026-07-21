@@ -1,21 +1,20 @@
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
-import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import CarBrands from "./componnents/CarBrands";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = Number(param.slug[0]);
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
-  const dataPage: ItemsCategoryId = await getCategoryId(id);
-
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${
       dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
     }`;
@@ -56,11 +55,16 @@ export async function generateMetadata({
   }
 }
 
-async function pageReviews({ params }: { params: Promise<{ slug: string }> }) {
-  const param = await params;
-  const id = Number(param.slug[0]);
-
-  const carDetails: ItemsCategoryId = await getCategoryId(id);
+async function pageReviews() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const carDetails: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
+  if (!carDetails) {
+    return notFound();
+  }
+  const id = Number(carDetails.id);
 
   let brand: ItemsCategory[] = [];
 
@@ -88,7 +92,6 @@ async function pageReviews({ params }: { params: Promise<{ slug: string }> }) {
       PageSize: 200,
     });
   }
-  
 
   const lastNews: Items[] = await getItem({
     TypeId: 5,

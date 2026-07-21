@@ -30,7 +30,10 @@ export const getItemByUrl = async (url: string): Promise<ItemsId | null> => {
 
     // بررسی سایر خطاها
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      // ایجاد خطا با status
+      const error: any = new Error(`HTTP error! status: ${response.status}`);
+      error.status = response.status; 
+      throw error;
     }
 
     const data = await response.json();

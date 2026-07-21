@@ -129,7 +129,7 @@ async function pageDynamic() {
     }
 
     // برای سایر خطاها redirect کن
-    redirect(`/error?status=${err?.status ? err?.status : "500"}`);
+    // redirect(`/error?status=${err?.status ? err?.status : "500"}`);
     // notFound();
   }
 }

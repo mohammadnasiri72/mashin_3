@@ -5,17 +5,24 @@ import { getItem } from "@/services/Item/Item";
 import { mainDomainOld } from "@/utils/mainDomain";
 import React from "react";
 import CardDic from "../../fa/technical-words.html/components/CardDic";
+import { headers } from "next/headers";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { notFound } from "next/navigation";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = Number(param.slug[0]);
-  const dataPage: ItemsCategoryId = await getCategoryId(id);
+export async function generateMetadata() {
 
-  if (dataPage.title) {
+
+
+   const headersList = await headers();
+    const pathname = headersList.get("x-pathname");
+    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+    const dataPage: ItemsId | ItemsCategoryId | null =
+      await getItemByUrl(decodedPathname);
+
+
+
+
+  if (dataPage&&dataPage.title) {
     const title = `${dataPage?.seoTitle ? dataPage?.seoTitle : dataPage.title + " | ماشین3"}`;
     const description = dataPage?.seoDescription
       ? dataPage?.seoDescription
@@ -51,16 +58,23 @@ export async function generateMetadata({
 }
 
 async function pageTechnicalWords({
-  params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const param = await params;
+   const headersList = await headers();
+    const pathname = headersList.get("x-pathname");
+    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+    const dataPage: ItemsId | ItemsCategoryId | null =
+      await getItemByUrl(decodedPathname);
+ if (!dataPage) {
+    return notFound();
+  }
+const id =
+    dataPage.typeUrl === "item" ? 0 : Number(dataPage.id);
+
+
   const searchParam = await searchParams;
-  const id = Number(param.slug[0]);
-  const dataPage: ItemsCategoryId = await getCategoryId(id);
 
   const page = Number(searchParam.page);
   const term = String(searchParam.term);

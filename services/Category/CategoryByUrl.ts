@@ -2,7 +2,7 @@ import { baseUrl } from "@/utils/mainDomain";
 
 export const getCategoryByUrl = async (
   urlParam: string,
-): Promise<ItemsCategoryId> => {
+): Promise<ItemsCategoryId|null> => {
   try {
     const url = new URL(`${baseUrl}api/Category/FindByUrl`);
     url.searchParams.append("url", urlParam);
@@ -16,10 +16,16 @@ export const getCategoryByUrl = async (
       next: { revalidate: 60 }, // برای ISR
     });
 
+     // اگر خطای 404 بود، null برگردانید
+    if (response.status === 404) {
+      return null;
+    }
+
     if (!response.ok) {
-      throw new Error(
-        `خطا در دریافت: ${response.status} ${response.statusText}`,
-      );
+      // ایجاد خطا با status
+      const error: any = new Error(`HTTP error! status: ${response.status}`);
+      error.status = response.status; 
+      throw error;
     }
 
     const responseData: ItemsCategoryId = await response.json();

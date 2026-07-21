@@ -6,17 +6,18 @@ import { getCategory } from "@/services/Category/Category";
 import { getCategoryId } from "@/services/Category/CategoryId";
 import { mainDomainOld } from "@/utils/mainDomain";
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { headers } from "next/headers";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { notFound } from "next/navigation";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = param.slug[0];
-  const dataPage: ItemsCategoryId = await getCategoryId(Number(id));
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${
       dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
     }`;
@@ -57,15 +58,23 @@ export async function generateMetadata({
 }
 
 async function pageVideosDainamic({
-  params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const param = await params;
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const videoCat: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
+ if (!videoCat) {
+    return notFound();
+  }
+const id =
+    videoCat.typeUrl === "item" ? 0 : Number(videoCat.id);
+
+
   const searchParam = await searchParams;
-  const id = param.slug[0];
   const page = Number(searchParam.page);
   const term = String(searchParam.term);
 
@@ -74,7 +83,7 @@ async function pageVideosDainamic({
     videos = await getItem({
       TypeId: 1028,
       langCode: "fa",
-      CategoryIdArray: id,
+      CategoryIdArray: String(id),
       PageIndex: page || 1,
       ...(term && term !== "undefined" && { Term: term }),
       PageSize: 12,
@@ -104,7 +113,6 @@ async function pageVideosDainamic({
     PageSize: 200,
   });
 
-  const videoCat: ItemsCategoryId = await getCategoryId(Number(id));
 
   return (
     <>

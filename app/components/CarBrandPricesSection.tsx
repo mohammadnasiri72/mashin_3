@@ -216,39 +216,42 @@ const CarBrandPricesSection = ({
           {!loadingPrices && (
             <div className="related-content">
               <div className="flex flex-wrap -mx-2 -mt-5!">
-                {prices.slice(0, 9).map((item) => (
-                  <div
-                    key={item.id}
-                    className="w-full md:w-1/2 px-2 mb-4 transition-all! duration-500!"
-                    data-aos="custom-fade-down"
-                  >
-                    <div className="bg-white rounded-2xl shadow-sm p-5 flex sm:flex-nowrap flex-wrap items-center gap-5 text-base font-bold text-gray-900">
-                      <div className="text-center sm:text-right w-1/2 line-clamp-1">
-                        {item.title}
-                      </div>
-                      {item.price1 > 0 ? (
-                        <div className="text-center flex items-center justify-center gap-2 w-1/4">
-                          <Image
-                            src="/images/icons/toman.png"
-                            alt="تومان"
-                            width={12}
-                            height={8}
-                            className="w-3 h-2"
-                          />
-                          {item.price1.toLocaleString()}
+                {prices
+                  .filter((e) => e.price1 > 0)
+                  .slice(0, 9)
+                  .map((item) => (
+                    <div
+                      key={item.id}
+                      className="w-full md:w-1/2 px-2 mb-4 transition-all! duration-500!"
+                      data-aos="custom-fade-down"
+                    >
+                      <div className="bg-white rounded-2xl shadow-sm p-5 flex sm:flex-nowrap flex-wrap items-center gap-5 text-base font-bold text-gray-900">
+                        <div className="text-center sm:text-right w-1/2 line-clamp-1">
+                          {item.title}
                         </div>
-                      ) : (
-                        <div className="text-center flex items-center justify-center gap-2 w-1/4">
-                          ---
+                        {item.price1 > 0 ? (
+                          <div className="text-center flex items-center justify-center gap-2 w-1/4">
+                            <Image
+                              src="/images/icons/toman.png"
+                              alt="تومان"
+                              width={12}
+                              height={8}
+                              className="w-3 h-2"
+                            />
+                            {item.price1.toLocaleString()}
+                          </div>
+                        ) : (
+                          <div className="text-center flex items-center justify-center gap-2 w-1/4">
+                            ---
+                          </div>
+                        )}
+                        <div className="text-center sm:text-left text-sm font-medium text-gray-500 w-1/4">
+                          {formatPersianDate(item.modified)}
                         </div>
-                      )}
-                      <div className="text-center sm:text-left text-sm font-medium text-gray-500 w-1/4">
-                        {formatPersianDate(item.modified)}
                       </div>
                     </div>
-                  </div>
-                ))}
-                {prices.length > 9 && (
+                  ))}
+                {prices.filter((e) => e.price1 > 0).length > 9 && (
                   <Link
                     href={`/price.html?type=${type}`}
                     data-aos="custom-fade-down"

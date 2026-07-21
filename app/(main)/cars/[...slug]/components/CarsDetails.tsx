@@ -172,7 +172,7 @@ CarGroupCard.displayName = 'CarGroupCard';
 
 interface CarsDetailsProps {
   carView: Items[];
-  carDetails: ItemsCategoryId;
+  carDetails: ItemsCategoryId | ItemsId;
   banner: Items[];
 }
 
@@ -316,7 +316,7 @@ const CarsDetails = ({
             </div>
 
             {/* خلاصه */}
-            {htmlToPlainText(carDetails.summary) && (
+            {carDetails.summary && htmlToPlainText(carDetails.summary) && (
               <ShowSummary text={htmlToPlainText(carDetails.summary)} />
             )}
 

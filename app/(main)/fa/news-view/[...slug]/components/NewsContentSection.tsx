@@ -59,9 +59,13 @@ const NewsContentSection = ({ detailsNews }: { detailsNews: ItemsId }) => {
                 <h3 className="text-lg font-bold text-gray-800 mb-2">
                   خلاصه خبر:
                 </h3>
-                <p className="text-gray-700 leading-relaxed">
+                {/* <p className="text-gray-700 leading-relaxed">
                   {detailsNews.summary}
-                </p>
+                </p> */}
+                <div
+                  className="text-gray-700 leading-8 text-justify"
+                  dangerouslySetInnerHTML={createMarkup(detailsNews.summary)}
+                />
               </div>
             )}
 

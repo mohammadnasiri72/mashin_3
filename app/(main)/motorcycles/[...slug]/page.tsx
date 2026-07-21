@@ -1,19 +1,19 @@
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
-import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import CarsDetails from "../../cars/[...slug]/components/CarsDetails";
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const searchParam = await searchParams;
-  const id = Number(searchParam.id);
-  const dataPage: ItemsCategoryId = await getCategoryId(id);
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${
       dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
     }`;
@@ -52,13 +52,17 @@ export async function generateMetadata({
   }
 }
 
-async function pageMotorcyclesDainamic({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const searchParam = await searchParams;
-  const id = Number(searchParam.id);
+async function pageMotorcyclesDainamic() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const motorDetails: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
+  if (!motorDetails) {
+    return notFound();
+  }
+  const id = Number(motorDetails.id);
+
   const banner: Items[] = await getItem({
     TypeId: 1051,
     langCode: "fa",
@@ -66,7 +70,6 @@ async function pageMotorcyclesDainamic({
     FullData: true,
   });
 
-  const motorDetails: ItemsCategoryId = await getCategoryId(id);
   const motorView: Items[] = await getItem({
     TypeId: 1052,
     langCode: "fa",
@@ -81,13 +84,7 @@ async function pageMotorcyclesDainamic({
         breadcrumb={motorDetails.breadcrumb}
         title={motorDetails.title}
       />
-      {/* <CarsDetails
-        carBrands={productsWithCategories}
-        carDetails={motorDetails}
-        carView={motorView}
-        banner={banner}
-        carBrands2={motorBrands2}
-      /> */}
+
       <CarsDetails
         carView={motorView}
         carDetails={motorDetails}

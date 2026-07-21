@@ -1,20 +1,19 @@
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
-import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import CarsDetails from "./components/CarsDetails";
 
-export async function generateMetadata({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const searchParam = await searchParams;
-  const id = searchParam.id;
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
-  const dataPage: ItemsCategoryId = await getCategoryId(Number(id));
-
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${
       dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
     }`;
@@ -54,13 +53,16 @@ export async function generateMetadata({
   }
 }
 
-async function pageCarsDetails({
-  searchParams,
-}: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}) {
-  const searchParam = await searchParams;
-  const id = Number(searchParam.id);
+async function pageCarsDetails() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const carDetails: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
+  if (!carDetails) {
+    return notFound();
+  }
+  const id = Number(carDetails.id);
 
   // ✅ دریافت آیتم‌های مربوط به این دسته‌بندی
   const carView: Items[] = await getItem({
@@ -69,13 +71,8 @@ async function pageCarsDetails({
     CategoryIdArray: String(id),
     PageIndex: 1,
     PageSize: 200,
-    FullData:true,
+    FullData: true,
   });
-
-  
-
-  // ✅ دریافت جزئیات برند
-  const carDetails: ItemsCategoryId = await getCategoryId(id);
 
   // ✅ دریافت بنرها
   const banner: Items[] = await getItem({

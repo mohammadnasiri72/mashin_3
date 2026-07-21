@@ -6,7 +6,7 @@ import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { ItemVisit } from "@/services/Item/ItemVisit";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import NewsViewDetails from "./components/NewsViewDetails";
 
 export async function generateMetadata() {
@@ -14,7 +14,8 @@ export async function generateMetadata() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
   if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
@@ -57,100 +58,116 @@ export async function generateMetadata() {
 }
 
 async function pageNewsViewDetails() {
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname");
-  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  try {
+    const headersList = await headers();
+    const pathname = headersList.get("x-pathname");
+    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const detailsNews: ItemsId | null = await getItemByUrl(decodedPathname);
-  if (!detailsNews) {
-    return notFound();
-  }
-  const id = Number(detailsNews.id);
+    const detailsNews: ItemsId | ItemsCategoryId | null =
+      await getItemByUrl(decodedPathname);
+    if (!detailsNews || !detailsNews.id) {
+      const error = new Error("Page not found");
+      (error as any).status = 404;
+      throw error;
+    }
+    const id = Number(detailsNews.id);
 
-  let relatedNews: Items[] = [];
+    let relatedNews: Items[] = [];
 
-  if (detailsNews.categoryId) {
-    relatedNews = await getItem({
+    if (detailsNews.categoryId) {
+      relatedNews = await getItem({
+        TypeId: 5,
+        langCode: "fa",
+        PageIndex: 1,
+        PageSize: 15,
+        CategoryIdArray: String(detailsNews.categoryId),
+      });
+    }
+
+    const popularNews: Items[] = await getItem({
       TypeId: 5,
       langCode: "fa",
+      OrderBy: 8,
       PageIndex: 1,
-      PageSize: 15,
-      CategoryIdArray: String(detailsNews.categoryId),
+      PageSize: 5,
     });
-  }
+    const Attachment: ItemsAttachment[] = await getAttachment(id);
 
-  const popularNews: Items[] = await getItem({
-    TypeId: 5,
-    langCode: "fa",
-    OrderBy: 8,
-    PageIndex: 1,
-    PageSize: 5,
-  });
-  const Attachment: ItemsAttachment[] = await getAttachment(id);
-
-  const comments: CommentResponse[] = await getComment({
-    id: Number(id),
-    langCode: "fa",
-    type: 0,
-    pageSize: 20,
-    pageIndex: 1,
-  });
-
-  const banner: Items[] = await getItem({
-    TypeId: 1051,
-    langCode: "fa",
-    CategoryIdArray: "6415",
-    FullData: true,
-  });
-
-  const idsCars = detailsNews.properties.find(
-    (e) => e.propertyKey === "p5_relatednewscar",
-  )?.propertyValue;
-
-  const relatedCars: ItemsId[] = idsCars ? await getItemByIds(idsCars) : [];
-
-  const idsVideos = detailsNews.properties.find(
-    (e) => e.propertyKey === "p5_relatedvideos",
-  )?.propertyValue;
-
-  const relatedVideos: ItemsId[] = idsVideos
-    ? await getItemByIds(idsVideos)
-    : [];
-
-  const idsVoices = detailsNews.properties.find(
-    (e) => e.propertyKey === "p5_relatedvoice",
-  )?.propertyValue;
-
-  const relatedVoices: ItemsId[] = idsVoices
-    ? await getItemByIds(idsVoices)
-    : [];
-
-  try {
-    await ItemVisit({
+    const comments: CommentResponse[] = await getComment({
+      id: Number(id),
       langCode: "fa",
-      id,
-      ip: "",
-      url: detailsNews.url,
-      userAgent: "",
+      type: 0,
+      pageSize: 20,
+      pageIndex: 1,
     });
-  } catch (error) {
-    console.error("Error recording visit:", error);
-  }
 
-  return (
-    <NewsViewDetails
-      detailsNews={detailsNews}
-      Attachment={Attachment}
-      popularNews={popularNews}
-      comments={comments}
-      id={Number(id)}
-      banner={banner}
-      relatedNews={relatedNews}
-      relatedCars={relatedCars}
-      relatedVideos={relatedVideos}
-      relatedVoices={relatedVoices}
-    />
-  );
+    const banner: Items[] = await getItem({
+      TypeId: 1051,
+      langCode: "fa",
+      CategoryIdArray: "6415",
+      FullData: true,
+    });
+
+    const idsCars = detailsNews.properties.find(
+      (e) => e.propertyKey === "p5_relatednewscar",
+    )?.propertyValue;
+
+    const relatedCars: ItemsId[] = idsCars ? await getItemByIds(idsCars) : [];
+
+    const idsVideos = detailsNews.properties.find(
+      (e) => e.propertyKey === "p5_relatedvideos",
+    )?.propertyValue;
+
+    const relatedVideos: ItemsId[] = idsVideos
+      ? await getItemByIds(idsVideos)
+      : [];
+
+    const idsVoices = detailsNews.properties.find(
+      (e) => e.propertyKey === "p5_relatedvoice",
+    )?.propertyValue;
+
+    const relatedVoices: ItemsId[] = idsVoices
+      ? await getItemByIds(idsVoices)
+      : [];
+
+    try {
+      await ItemVisit({
+        langCode: "fa",
+        id,
+        ip: "",
+        url: detailsNews.url,
+        userAgent: "",
+      });
+    } catch (error) {
+      console.error("Error recording visit:", error);
+    }
+
+    return (
+      <NewsViewDetails
+        detailsNews={detailsNews}
+        Attachment={Attachment}
+        popularNews={popularNews}
+        comments={comments}
+        id={Number(id)}
+        banner={banner}
+        relatedNews={relatedNews}
+        relatedCars={relatedCars}
+        relatedVideos={relatedVideos}
+        relatedVoices={relatedVoices}
+      />
+    );
+  } catch (err: any) {
+    console.error("Error in pageDynamic:", err);
+
+    // فقط برای خطاهای 404 از notFound استفاده کن
+    if (err?.status === 404) {
+      notFound();
+    }
+
+    // برای سایر خطاها redirect کن
+    redirect(`/error?status=${err?.status ? err?.status : "500"}`);
+    // notFound();
+  }
 }
 
 export default pageNewsViewDetails;

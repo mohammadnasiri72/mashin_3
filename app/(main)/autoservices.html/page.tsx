@@ -6,13 +6,14 @@ import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import MainBoxAutoServices from "../autoservices/components/MainBoxAutoServices";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
 
   if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
@@ -59,10 +60,20 @@ async function pageAutoService({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const autoServiceCat: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
+
+if (!autoServiceCat) {
+    return notFound();
+  }
+
   const searchParam = await searchParams;
   const page = Number(searchParam.page);
   const provinceId = Number(searchParam.provinceid);
-  const id = String(searchParam.id);
+  const id = String(autoServiceCat.id);
 
   const AutoServiceData: Items[] = await getItem({
     TypeId: 1050,
@@ -95,11 +106,9 @@ async function pageAutoService({
     FullData: true,
   });
 
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname");
-  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+ 
 
-  const autoServiceCat: ItemsId | null = await getItemByUrl(decodedPathname);
+ 
 
   const provinces: Items[] = await getItem({
     TypeId: 1055,

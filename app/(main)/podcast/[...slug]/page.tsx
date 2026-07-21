@@ -1,20 +1,20 @@
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
-import Podcast from "../../podcast.html/components/Podcast";
-import { getCategoryId } from "@/services/Category/CategoryId";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
-import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import Podcast from "../../podcast.html/components/Podcast";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = Number(param.slug[0]);
-  const dataPage: ItemsCategoryId = await getCategoryId(id);
+export async function generateMetadata() {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
-  if (dataPage.title) {
+  if (dataPage && dataPage.title) {
     const title = `${
       dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
     }`;
@@ -55,16 +55,21 @@ export async function generateMetadata({
 }
 
 async function pagePodcastDainamic({
-  params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const param = await params;
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const podcastsCa: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
+  if (!podcastsCa) {
+    return notFound();
+  }
+  const id = podcastsCa.typeUrl === "item" ? 0 : Number(podcastsCa.id);
+
   const searchParam = await searchParams;
-  const id = Number(param.slug[0]);
-  const podcastsCa: ItemsCategoryId = await getCategoryId(id);
 
   const page = Number(searchParam.page);
   const term = String(searchParam.term);
@@ -99,7 +104,6 @@ async function pagePodcastDainamic({
     CategoryIdArray: "6415",
     FullData: true,
   });
-  
 
   return (
     <>

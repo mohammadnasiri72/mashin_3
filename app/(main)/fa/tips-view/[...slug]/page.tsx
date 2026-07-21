@@ -11,7 +11,8 @@ export async function generateMetadata() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
   if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
@@ -59,13 +60,13 @@ async function pageTipView() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const education: ItemsId | null = await getItemByUrl(decodedPathname);
+  const education: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
   if (!education) {
     return notFound();
   }
 
   const id = Number(education.id);
-
 
   const popularEducations: Items[] = await getItem({
     TypeId: 3,

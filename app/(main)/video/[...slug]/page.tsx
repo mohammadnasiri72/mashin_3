@@ -13,7 +13,8 @@ export async function generateMetadata() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
   if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
@@ -59,7 +60,8 @@ async function pageVideo() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const video: ItemsId | null = await getItemByUrl(decodedPathname);
+  const video: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
   if (!video) {
     return notFound();
   }

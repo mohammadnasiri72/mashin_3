@@ -6,8 +6,19 @@ export const getSetting = async () => {
       // withCredentials: true,
     });
     return response.data;
-  } catch (error) {
+  } catch (error:any) {
      console.error("خطا در دریافت setting:", error);
-    throw error;
+    
+    // استخراج status از خطای axios
+    const status = error.response?.status || error.status || 500;
+    
+    // ایجاد خطای جدید با status
+    const newError: any = new Error(
+      error.response?.data?.message || error.message || "خطا در دریافت تنظیمات"
+    );
+    newError.status = status;
+    newError.response = error.response;
+    
+    throw newError;
   }
 };

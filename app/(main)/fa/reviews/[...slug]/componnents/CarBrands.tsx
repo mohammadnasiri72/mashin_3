@@ -15,7 +15,7 @@ const CarBrands = ({
 }: {
   carBrands: ItemsCategory[];
   banner: Items[];
-  carDetails: ItemsCategoryId;
+  carDetails: ItemsId | ItemsCategoryId;
   lastNews: Items[];
 }) => {
   const [term, setTerm] = useState("");
@@ -54,9 +54,11 @@ const CarBrands = ({
             <h1 className="text-3xl font-bold text-red-600! text-center mb-4">
               {carDetails.title}
             </h1>
-            <p className="text-gray-600 text-center max-w-2xl mx-auto">
-              {htmlToPlainText(carDetails.summary)}
-            </p>
+            {carDetails.summary && (
+              <p className="text-gray-600 text-center max-w-2xl mx-auto">
+                {htmlToPlainText(carDetails.summary)}
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col lg:flex-row gap-6 relative">

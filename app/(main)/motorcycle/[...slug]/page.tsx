@@ -14,13 +14,12 @@ import HeroSection from "../../car/components/HeroSection";
 import NvbarCar from "../../car/components/NvbarCar";
 
 export async function generateMetadata() {
-   const headersList = await headers();
-    const pathname = headersList.get("x-pathname");
-    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  
-    const dataPage: ItemsId | null = await getItemByUrl(decodedPathname); 
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
   if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
@@ -37,7 +36,7 @@ export async function generateMetadata() {
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
-    
+
     return {
       title,
       description,
@@ -63,31 +62,29 @@ export async function generateMetadata() {
 }
 
 async function pageMotorcycleDainamic() {
-   const headersList = await headers();
-    const pathname = headersList.get("x-pathname");
-    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  
-    const detailsMotorcycle: ItemsId | null = await getItemByUrl(decodedPathname);  
-    if (!detailsMotorcycle) {
-      return notFound();
-    }
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
+  const detailsMotorcycle: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
+  if (!detailsMotorcycle) {
+    return notFound();
+  }
 
   const id = Number(detailsMotorcycle.id);
 
-  const [Attachment, comments, pollData] = await Promise.all(
-    [
-      getAttachment(id),
-      getComment({
-        id,
-        langCode: "fa",
-        type: 0,
-        pageSize: 20,
-        pageIndex: 1,
-      }),
-      getPollId(id),
-    ],
-  );
+  const [Attachment, comments, pollData] = await Promise.all([
+    getAttachment(id),
+    getComment({
+      id,
+      langCode: "fa",
+      type: 0,
+      pageSize: 20,
+      pageIndex: 1,
+    }),
+    getPollId(id),
+  ]);
 
   try {
     await ItemVisit({

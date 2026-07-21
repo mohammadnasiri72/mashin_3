@@ -1,16 +1,17 @@
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import Podcast from "./components/Podcast";
-import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 
 export async function generateMetadata() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
   if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
@@ -93,7 +94,8 @@ async function pagePodcast({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  const podcastDetails: ItemsId | null = await getItemByUrl(decodedPathname);
+  const podcastDetails: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
   return (
     <>

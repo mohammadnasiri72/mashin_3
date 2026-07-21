@@ -48,9 +48,9 @@ const CarFinderSection = ({
     const queryString = params.toString();
 
     if (queryString) {
-      router.push(`/searchcars?${queryString}`);
+      router.push(`/search-cars?${queryString}`);
     } else {
-      router.push("/searchcars");
+      router.push("/search-cars");
     }
   };
 

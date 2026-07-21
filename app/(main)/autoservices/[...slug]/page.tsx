@@ -5,18 +5,23 @@ import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
 import { mainDomainOld } from "@/utils/mainDomain";
 import MainBoxAutoServices from "../components/MainBoxAutoServices";
+import { headers } from "next/headers";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { notFound } from "next/navigation";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = param.slug[0];
+export async function generateMetadata() {
+   const headersList = await headers();
+    const pathname = headersList.get("x-pathname");
+    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+    const dataPage: ItemsId | ItemsCategoryId | null =
+      await getItemByUrl(decodedPathname);
 
-  const dataPage = await getCategoryId(Number(id));
 
-  if (dataPage.title) {
+
+
+
+
+  if (dataPage&& dataPage.title) {
     const title = `${
       dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
     }`;
@@ -62,17 +67,24 @@ export async function generateMetadata({
 }
 
 async function pageAutoServiceDetails({
-  params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const param = await params;
+   const headersList = await headers();
+    const pathname = headersList.get("x-pathname");
+    const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+    const autoServiceCat: ItemsId | ItemsCategoryId | null =
+      await getItemByUrl(decodedPathname);
+
+ if (!autoServiceCat) {
+    return notFound();
+  }
+  const id = String(autoServiceCat.id);
+
   const searchParam = await searchParams;
   const page = Number(searchParam.page);
   const provinceId = Number(searchParam.provinceid);
-  const id = param.slug[0];
 
   const AutoServiceData: Items[] = await getItem({
     TypeId: 1050,
@@ -100,7 +112,6 @@ async function pageAutoServiceDetails({
     propertyItems = await getItemByIds(ids);
   }
 
-  const autoServiceCat = await getCategoryId(Number(id));
 
   const lastNews: Items[] = await getItem({
     TypeId: 5,

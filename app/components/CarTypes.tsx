@@ -34,7 +34,7 @@ export default function CarTypes({ segmentCars }: { segmentCars: Items[] }) {
               <SwiperSlide key={car.id}>
                 <div className="type_box text-center group">
                   <Link
-                    href={`searchcars?typeId=${car.id}`}
+                    href={`search-cars?typeId=${car.id}`}
                     className="flex flex-col items-center"
                   >
                     <div className="duration-300">

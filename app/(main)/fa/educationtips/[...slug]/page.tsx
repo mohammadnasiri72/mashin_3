@@ -1,121 +1,77 @@
-import React from "react";
-import EducationCar from "./components/EducationCar";
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
-import { getCategoryId } from "@/services/Category/CategoryId";
-import { mainDomainOld } from "@/utils/mainDomain";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
-import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import EducationCar from "./components/EducationCar";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
-  const param = await params;
-  const id = Number(param.slug[0]);
+export async function generateMetadata() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
-  if (isNaN(id)) {
-    const dataPage: ItemsId | null = await getItemByUrl(decodedPathname);
+  if (dataPage && dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+    const seoUrl = dataPage?.seoUrl
+      ? `${mainDomainOld}${dataPage?.seoUrl}`
+      : dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
 
-    if (dataPage && dataPage.title) {
-      const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
-      const description = dataPage.seoInfo?.seoDescription
-        ? dataPage.seoInfo?.seoDescription
-        : dataPage.title;
-      const keywords = dataPage.seoInfo?.seoKeywords
-        ? dataPage.seoInfo?.seoKeywords
-        : dataPage.seoKeywords;
-      const metadataBase = new URL(mainDomainOld);
-      const seoUrl = dataPage?.seoUrl
-        ? `${mainDomainOld}${dataPage?.seoUrl}`
-        : dataPage?.url
-          ? `${mainDomainOld}${dataPage?.url}`
-          : `${mainDomainOld}`;
-      const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
-
-      return {
+    return {
+      title,
+      description,
+      keywords,
+      metadataBase,
+      alternates: {
+        canonical: seoUrl,
+      },
+      openGraph: {
         title,
         description,
-        keywords,
-        metadataBase,
-        alternates: {
-          canonical: seoUrl,
-        },
-        openGraph: {
-          title,
-          description,
-        },
-        other: {
-          seoHeadTags,
-        },
-      };
-    } else {
-      return {
-        title: "ماشین3 - آموزش و نکات فنی",
-        description:
-          "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
-      };
-    }
+      },
+      other: {
+        seoHeadTags,
+      },
+    };
   } else {
-    const dataPage: ItemsCategoryId = await getCategoryId(id);
-
-    if (dataPage.title) {
-      const title = `${
-        dataPage.seoTitle ? dataPage.seoTitle : dataPage.title + " | ماشین3"
-      }`;
-      const description = dataPage.seoDescription
-        ? dataPage.seoDescription
-        : dataPage.title;
-      const keywords = dataPage?.seoKeywords;
-      const metadataBase = new URL(mainDomainOld);
-      const seoUrl = dataPage?.seoUrl
-        ? `${mainDomainOld}${dataPage?.seoUrl}`
-        : dataPage?.url
-          ? `${mainDomainOld}${dataPage?.url}`
-          : `${mainDomainOld}`;
-      const seoHeadTags = dataPage?.headTags;
-
-      return {
-        title,
-        description,
-        keywords,
-        metadataBase,
-        alternates: {
-          canonical: seoUrl,
-        },
-        openGraph: {
-          title,
-          description,
-        },
-        other: {
-          seoHeadTags,
-        },
-      };
-    } else {
-      return {
-        title: "ماشین3 - آموزش و نکات فنی",
-        description:
-          "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
-      };
-    }
+    return {
+      title: "ماشین3 - آموزش و نکات فنی",
+      description:
+        "جامع‌ترین منبع آموزشی برای نگهداری، تعمیر و رانندگی حرفه‌ای با خودرو و موتورسیکلت",
+    };
   }
 }
 
 async function pageEducationTips({
-  params,
   searchParams,
 }: {
-  params: Promise<{ slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const param = await params;
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const educationDetails: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
+  if (!educationDetails) {
+    return notFound();
+  }
+  const id =
+    educationDetails.typeUrl === "item" ? 0 : Number(educationDetails.id);
+
   const searchParam = await searchParams;
-  const id = Number(param.slug[0]);
   const page = Number(searchParam.page);
 
   const education: Items[] = await getItem({
@@ -124,7 +80,7 @@ async function pageEducationTips({
     ...(String(id) !== "NaN" && id > 0 && { CategoryIdArray: String(id) }),
     PageIndex: page || 1,
     PageSize: 20,
-    FullData:true,
+    FullData: true,
   });
   const educationPopular: Items[] = await getItem({
     TypeId: 3,
@@ -149,15 +105,6 @@ async function pageEducationTips({
     FullData: true,
   });
 
-  const headersList = await headers();
-  const pathname = headersList.get("x-pathname");
-  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-
-  const educationDetails: ItemsId | ItemsCategoryId | null = isNaN(id)
-    ? await getItemByUrl(decodedPathname)
-    : await getCategoryId(id);
-
-    
   return (
     <>
       {educationDetails && (
