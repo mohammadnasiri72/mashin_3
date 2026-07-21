@@ -12,6 +12,10 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
 import SideBarNews from "./SideBarNews";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/free-mode";
 
 const CarNews = ({
   id,
@@ -32,13 +36,13 @@ const CarNews = ({
 }) => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [isMainLonger, setIsMainLonger] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
 
   const searchParams = useSearchParams();
 
   const mainBoxRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
-
-  
+  const swiperRef = useRef<any>(null);
 
   useEffect(() => {
     if (id) {
@@ -48,7 +52,6 @@ const CarNews = ({
     }
   }, [id]);
 
-  // مقایسه ارتفاع باکس‌ها
   useEffect(() => {
     const checkHeights = () => {
       if (mainBoxRef.current && sidebarRef.current) {
@@ -69,11 +72,24 @@ const CarNews = ({
     };
   }, [newsData, popularNews, offerNews, banner]);
 
+  const handleSlideChange = () => {
+    setIsDragging(true);
+  };
+
+  const handleTouchStart = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchEnd = () => {
+    setTimeout(() => {
+      setIsDragging(false);
+    }, 100);
+  };
+
   return (
     <>
       <div className="min-h-screen bg-[#f4f4f4] py-8">
         <div className="mx-auto px-4">
-          {/* هدر صفحه */}
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">
               <span className="text-red-600">
@@ -90,33 +106,59 @@ const CarNews = ({
           </div>
 
           <div className="flex flex-col lg:flex-row gap-6 relative">
-            {/* محتوای اصلی - 3/4 صفحه */}
             <div
               ref={mainBoxRef}
               className={`
-                lg:w-3/4 w-full transition-all duration-300
+                lg:w-3/4 w-full transition-all duration-300 overflow-hidden
                 ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
               `}
             >
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                {/* تب‌های اخبار */}
-                <div className="mb-6 flex items-center flex-wrap gap-2">
-                  {tabConfig.map((tab) => (
-                    <Link
-                      key={tab.key}
-                      className={`hover:text-white! duration-300 px-3 py-1 rounded-lg ${
-                        activeTab === tab.key
-                          ? "text-white! bg-[#ce1a2a]"
-                          : "text-black! hover:bg-[#ce1a2a]"
-                      }`}
-                      href={tab.href}
-                    >
-                      {tab.label}
-                    </Link>
-                  ))}
+                <div className="mb-6 relative">
+                  <Swiper
+                    ref={swiperRef}
+                    modules={[FreeMode]}
+                    slidesPerView="auto"
+                    spaceBetween={8}
+                    freeMode={{
+                      enabled: true,
+                      sticky: true,
+                      momentum: true,
+                      momentumBounce: true,
+                    }}
+                    grabCursor={true}
+                    className="tabs-swiper"
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={handleTouchEnd}
+                    onSliderMove={handleSlideChange}
+                    onSlideChange={() => setIsDragging(true)}
+                  >
+                    {tabConfig.map((tab) => (
+                      <SwiperSlide key={tab.key} style={{ width: "auto" }}>
+                        <Link
+                          className={`whitespace-nowrap duration-300 px-4 py-2 rounded-lg text-sm font-medium transition-all block text-center ${
+                            activeTab === tab.key
+                              ? "text-white! bg-[#ce1a2a] shadow-md"
+                              : "text-gray-700! hover:text-red-900! hover:bg-red-100 bg-gray-100"
+                          }`}
+                          href={tab.href}
+                          onClick={(e) => {
+                            if (isDragging) {
+                              e.preventDefault();
+                            }
+                          }}
+                          onMouseDown={() => setIsDragging(false)}
+                          onMouseUp={() => {
+                            setTimeout(() => setIsDragging(false), 100);
+                          }}
+                        >
+                          {tab.label}
+                        </Link>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
                 </div>
 
-                {/* لیست اخبار */}
                 <div className="space-y-6">
                   {newsData.map((news) => (
                     <article
@@ -124,7 +166,6 @@ const CarNews = ({
                       className="py-6! border-b! border-gray-200 last:border-b-0 last:pb-0 group"
                     >
                       <div className="flex flex-col md:flex-row gap-4">
-                        {/* تصویر خبر */}
                         <div className="md:w-48 w-full h-32 shrink-0">
                           <div className="w-full h-full bg-gray-200 rounded-lg overflow-hidden relative">
                             <Link href={news.url} className="rounded-lg!">
@@ -137,7 +178,6 @@ const CarNews = ({
                           </div>
                         </div>
 
-                        {/* محتوای خبر */}
                         <div className="flex-1">
                           <Link href={news.url}>
                             <h2 className="text-xl font-bold text-gray-900 mb-2 hover:text-[#ce1a2a]! duration-300 transition-colors cursor-pointer">
@@ -150,7 +190,6 @@ const CarNews = ({
                             </div>
                           )}
 
-                          {/* متا اطلاعات */}
                           <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 mt-2">
                             <div className="flex items-center gap-1">
                               <FaCalendar />
@@ -168,7 +207,6 @@ const CarNews = ({
                   ))}
                 </div>
 
-                {/* صفحه بندی */}
                 {newsData.length > 0 && (
                   <CustomPagination
                     total={newsData[0].total}
@@ -179,7 +217,6 @@ const CarNews = ({
               </div>
             </div>
 
-            {/* سایدبار - 1/4 صفحه */}
             <aside
               ref={sidebarRef}
               className={`
@@ -196,56 +233,32 @@ const CarNews = ({
           </div>
         </div>
 
-        {/* استایل‌های سفارشی */}
         <style jsx global>{`
-          .container {
-            max-width: 1200px;
+          .tabs-swiper {
+            overflow: visible !important;
+            padding: 4px 0;
           }
 
-          .custom-news-tabs .ant-tabs-nav {
-            margin-bottom: 1rem;
-          }
-          .custom-news-tabs .ant-tabs-tab {
-            padding: 0.4rem;
-            user-select: none !important;
+          .tabs-swiper .swiper-slide {
+            width: auto !important;
+            flex-shrink: 0;
           }
 
-          .custom-news-tabs .ant-tabs-ink-bar {
-            background: transparent;
+          .tabs-swiper .swiper-slide a {
+            user-select: none;
+            -webkit-user-select: none;
           }
 
-          .custom-news-tabs .ant-tabs-tab-active {
-            background: #ce1a2a;
-            user-select: none !important;
-          }
-          .custom-news-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
-            color: #fff !important;
-            user-select: none !important;
-            font-weight: 600;
+          .tabs-swiper .swiper-wrapper {
+            transition-timing-function: ease-out;
           }
 
-          .custom-news-tabs .ant-tabs-tab:hover {
-            color: #fff !important;
-            background: #ce1a2a;
-            user-select: none !important;
-            transition: 0.4s;
-          }
-
-          .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-
-          /* استایل‌های sticky */
           .lg\\:sticky {
             position: sticky;
             bottom: 0;
             align-self: flex-end;
           }
 
-          /* غیرفعال کردن sticky در موبایل */
           @media (max-width: 1023px) {
             .lg\\:sticky {
               position: relative !important;
@@ -254,11 +267,11 @@ const CarNews = ({
             }
           }
 
-          @media (max-width: 1024px) {
-            .container {
-              padding-left: 1rem;
-              padding-right: 1rem;
-            }
+          .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
           }
         `}</style>
       </div>
