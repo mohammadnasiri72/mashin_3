@@ -13,6 +13,10 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
 import SideBarEducation from "./SideBarEducation";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { FreeMode } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/free-mode";
 
 const EducationCar = ({
   education,
@@ -29,9 +33,11 @@ const EducationCar = ({
 }) => {
   const searchParams = useSearchParams();
   const [isMainLonger, setIsMainLonger] = useState(true);
+  const [isDragging, setIsDragging] = useState(false);
 
   const mainBoxRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const swiperRef = useRef<any>(null);
 
   // مقایسه ارتفاع باکس‌ها
   useEffect(() => {
@@ -54,6 +60,20 @@ const EducationCar = ({
     };
   }, [education, educationPopular, banner]);
 
+  const handleSlideChange = () => {
+    setIsDragging(true);
+  };
+
+  const handleTouchStart = () => {
+    setIsDragging(false);
+  };
+
+  const handleTouchEnd = () => {
+    setTimeout(() => {
+      setIsDragging(false);
+    }, 100);
+  };
+
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4">
@@ -73,40 +93,77 @@ const EducationCar = ({
           <div
             ref={mainBoxRef}
             className={`
-              lg:w-3/4 w-full transition-all duration-300
+              lg:w-3/4 w-full transition-all duration-300 overflow-hidden
               ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
             `}
           >
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              {/* تب‌های آموزشی */}
-              <div className="flex flex-wrap gap-2">
-                <div>
-                  <Link
-                    className={`rounded-lg px-3 py-1 duration-300 ${
-                      id === 0
-                        ? "bg-[#ce1a2a] text-white! hover:bg-red-700"
-                        : "bg-slate-100 text-[#333] hover:bg-slate-200"
-                    }`}
-                    href={"/fa/EducationTips/نکات-آموزشی.html"}
-                  >
-                    همه نکات آموزشی
-                  </Link>
-                </div>
-                {educationCat.length > 0 &&
-                  educationCat.map((ed) => (
-                    <div key={ed.id}>
-                      <Link
-                        className={`rounded-lg px-3 py-1 duration-300 ${
-                          ed.id === id
-                            ? "bg-[#ce1a2a] text-white! hover:bg-red-700"
-                            : "bg-slate-100 text-[#333] hover:bg-slate-200"
-                        }`}
-                        href={ed.url}
-                      >
-                        {ed.title}
-                      </Link>
-                    </div>
-                  ))}
+              {/* تب‌های آموزشی - با Swiper */}
+              <div className="mb-6 relative">
+                <Swiper
+                  ref={swiperRef}
+                  modules={[FreeMode]}
+                  slidesPerView="auto"
+                  spaceBetween={8}
+                  freeMode={{
+                    enabled: true,
+                    sticky: true,
+                    momentum: true,
+                    momentumBounce: true,
+                  }}
+                  grabCursor={true}
+                  className="tabs-swiper"
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={handleTouchEnd}
+                  onSliderMove={handleSlideChange}
+                  onSlideChange={() => setIsDragging(true)}
+                >
+                  <SwiperSlide style={{ width: "auto" }}>
+                    <Link
+                      className={`whitespace-nowrap duration-300 px-4 py-2 rounded-lg text-sm font-medium transition-all block text-center ${
+                        id === 0
+                          ? "text-white! bg-[#ce1a2a] shadow-md"
+                          : "text-gray-700! hover:text-red-900! hover:bg-red-100 bg-gray-100"
+                      }`}
+                      href={"/fa/EducationTips/نکات-آموزشی.html"}
+                      onClick={(e) => {
+                        if (isDragging) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onMouseDown={() => setIsDragging(false)}
+                      onMouseUp={() => {
+                        setTimeout(() => setIsDragging(false), 100);
+                      }}
+                    >
+                      همه نکات آموزشی
+                    </Link>
+                  </SwiperSlide>
+                  {educationCat.length > 0 &&
+                    educationCat.map((ed) => (
+                      <SwiperSlide key={ed.id} style={{ width: "auto" }}>
+                        <Link
+                          className={`whitespace-nowrap duration-300 px-4 py-2 rounded-lg text-sm font-medium transition-all block text-center ${
+                            ed.id === id
+                              ? "text-white! bg-[#ce1a2a] shadow-md"
+                              : "text-gray-700! hover:text-red-900! hover:bg-red-100 bg-gray-100"
+                          }`}
+                          href={ed.url}
+                          onClick={(e) => {
+                            if (isDragging) {
+                              e.preventDefault();
+                            }
+                          }}
+                          onMouseDown={() => setIsDragging(false)}
+                          onMouseUp={() => {
+                            setTimeout(() => setIsDragging(false), 100);
+                          }}
+                        >
+                          {ed.title}
+                        </Link>
+                      </SwiperSlide>
+                    ))}
+                </Swiper>
               </div>
 
               {/* لیست مطالب آموزشی */}
@@ -217,6 +274,26 @@ const EducationCar = ({
       <style jsx global>{`
         .container {
           max-width: 1200px;
+        }
+
+        /* استایل Swiper */
+        .tabs-swiper {
+          overflow: visible !important;
+          padding: 4px 0;
+        }
+
+        .tabs-swiper .swiper-slide {
+          width: auto !important;
+          flex-shrink: 0;
+        }
+
+        .tabs-swiper .swiper-slide a {
+          user-select: none;
+          -webkit-user-select: none;
+        }
+
+        .tabs-swiper .swiper-wrapper {
+          transition-timing-function: ease-out;
         }
 
         .custom-education-tabs .ant-tabs-nav {

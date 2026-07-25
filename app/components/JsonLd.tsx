@@ -1,14 +1,22 @@
+// app/components/JsonLd.tsx
 interface JsonLdProps {
-  data: object;
+  schemas: any[];
 }
 
-export default function JsonLd({ data }: JsonLdProps) {
+export function JsonLd({ schemas }: JsonLdProps) {
+  if (!schemas || schemas.length === 0) return null;
+
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
+    <>
+      {schemas.map((schema, index) => (
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(schema)
+          }}
+        />
+      ))}
+    </>
   );
 }
-
-

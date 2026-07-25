@@ -1,5 +1,7 @@
+import { formatPersianDate, toPersianNumbers } from "@/utils/func";
 import Link from "next/link";
 import React from "react";
+import { FaCalendar, FaEye } from "react-icons/fa";
 
 function HeroSectionNews({ detailsNews }: { detailsNews: ItemsId }) {
   
@@ -16,7 +18,7 @@ function HeroSectionNews({ detailsNews }: { detailsNews: ItemsId }) {
           <div className="text-white! sm:w-auto w-full">
             <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center">
               <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative sm:text-3xl text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ce1a2a]">
-                {detailsNews.title}
+                {detailsNews.title} 
               </h3>
             </div>
             {/* Breadcrumb */}
@@ -25,7 +27,7 @@ function HeroSectionNews({ detailsNews }: { detailsNews: ItemsId }) {
                 <li>
                   <Link
                     href={"/"}
-                    className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
+                    className="text-white! font-bold! hover:text-[#ce1a2a]! text-sm duration-300"
                   >
                     صفحه اصلی
                   </Link>
@@ -45,6 +47,20 @@ function HeroSectionNews({ detailsNews }: { detailsNews: ItemsId }) {
                   ))}
               </ol>
             </nav>
+  <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 flex-wrap px-2">
+                 <div className="flex items-center gap-1 ">
+                   <FaEye className="text-white! text-xs" />
+                   <span className="font-bold text-white! text-xs">
+                     {toPersianNumbers(detailsNews.visit)}
+                   </span>
+                 </div>
+                 <div className="flex items-center gap-1">
+                   <FaCalendar className="text-white! text-xs" />
+                   <span className="font-bold text-white! text-xs">
+                     {formatPersianDate(detailsNews.created)}
+                   </span>
+                 </div>
+               </div>
           </div>
         </div>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { toPersianNumbers } from "@/utils/func";
 import React from "react";
 import { FaAngleLeft, FaStar } from "react-icons/fa";
 
@@ -13,8 +14,9 @@ function NvbarCar({
   const scrollToElement = (elementId: string, offset = 80) => {
     const element = document.getElementById(elementId);
     if (element) {
-      const y = element.getBoundingClientRect().top + window.pageYOffset - offset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      const y =
+        element.getBoundingClientRect().top + window.pageYOffset - offset;
+      window.scrollTo({ top: y, behavior: "smooth" });
     }
   };
 
@@ -22,9 +24,9 @@ function NvbarCar({
     <div className="p-2 flex gap-2 items-center overflow-auto">
       <div className="flex gap-1 items-center text-xs! whitespace-nowrap">
         <FaStar className="text-amber-600" />
-        <span>{pollData?.pollScore || 0}</span>
+        <span>{toPersianNumbers(pollData?.pollScore || 0)}</span>
         <span className="text-gray-600">
-          (امتیاز {pollData?.pollNumber||0} کاربر)
+          (امتیاز {toPersianNumbers(pollData?.pollNumber || 0)} کاربر)
         </span>
       </div>
 
@@ -46,7 +48,7 @@ function NvbarCar({
         }}
         className="bg-gray-200 rounded-full px-2 py-1 flex items-center gap-1 cursor-pointer text-xs! whitespace-nowrap"
       >
-        <span>{totalComment}</span>
+        <span>{toPersianNumbers(totalComment)}</span>
         <span>دیدگاه</span>
         <FaAngleLeft />
       </div>

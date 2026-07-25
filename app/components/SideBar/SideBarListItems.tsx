@@ -28,7 +28,7 @@ function SideBarListItems({
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-gray-900 text-sm leading-tight group-hover:text-white! transition-colors line-clamp-2">
+                  <h4 className="font-medium text-gray-900 text-sm leading-tight text-justify group-hover:text-white! transition-colors line-clamp-2">
                     {item.title}
                   </h4>
                   <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 mt-2 group-hover:text-white!">

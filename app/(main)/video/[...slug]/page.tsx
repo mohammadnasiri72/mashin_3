@@ -1,3 +1,4 @@
+import { JsonLd } from "@/app/components/JsonLd";
 import { getAttachment } from "@/services/Attachment/Attachment";
 import { getComment } from "@/services/Comment/Comment";
 import { getItem } from "@/services/Item/Item";
@@ -138,8 +139,11 @@ async function pageVideo() {
     console.error("Error recording visit:", error);
   }
 
+  const schemas = video?.seoInfo?.schemas || [];
+
   return (
     <>
+      <JsonLd schemas={schemas} />
       <VideoDetails
         video={video}
         popularVideos={popularVideos}

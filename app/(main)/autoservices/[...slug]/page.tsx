@@ -1,13 +1,12 @@
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
-import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
-import { mainDomainOld } from "@/utils/mainDomain";
-import MainBoxAutoServices from "../components/MainBoxAutoServices";
-import { headers } from "next/headers";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import MainBoxAutoServices from "../components/MainBoxAutoServices";
 
 export async function generateMetadata() {
    const headersList = await headers();

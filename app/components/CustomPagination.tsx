@@ -1,7 +1,6 @@
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Pagination } from "antd";
-import { FaAlignLeft } from "react-icons/fa";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
 const CustomPagination = ({
@@ -40,6 +39,7 @@ const CustomPagination = ({
     element: React.ReactNode,
   ) => {
     if (type === "page") {
+      const isActive = page === currentPage;
       return (
         <Link
           href={createPageUrl(page)}
@@ -47,7 +47,16 @@ const CustomPagination = ({
             e.preventDefault();
             handlePageChange(page);
           }}
-          className="ant-pagination-item-link"
+          className={`
+            ant-pagination-item-link
+            inline-flex items-center justify-center
+            min-w-[32px] h-[32px] px-2
+            rounded-lg border border-gray-200
+            text-gray-600 bg-white
+            transition-all duration-300
+            hover:border-red-600 hover:text-red-600
+            ${isActive ? '!bg-red-600 !border-red-600 !text-white hover:!text-white' : ''}
+          `}
         >
           {page}
         </Link>
@@ -55,17 +64,28 @@ const CustomPagination = ({
     }
 
     if (type === "prev") {
+      const isDisabled = currentPage <= 1;
       const prevPage = currentPage > 1 ? currentPage - 1 : 1;
       return (
         <Link
           href={createPageUrl(prevPage)}
           onClick={(e) => {
             e.preventDefault();
-            if (currentPage > 1) {
+            if (!isDisabled) {
               handlePageChange(prevPage);
             }
           }}
-          className="text-[#4b5563]! duration-300 hover:text-[#ce1a2a]!"
+          className={`
+            inline-flex items-center justify-center
+            w-[32px] h-[32px]
+            rounded-lg border border-gray-200
+            bg-white
+            transition-all duration-300
+            ${isDisabled 
+              ? 'opacity-50 cursor-not-allowed hover:border-gray-200' 
+              : 'hover:border-red-600 text-gray-600! hover:text-red-600!'
+            }
+          `}
         >
           <RightOutlined />
         </Link>
@@ -73,28 +93,81 @@ const CustomPagination = ({
     }
 
     if (type === "next") {
+      const isDisabled = currentPage >= totalPages;
       const nextPage = currentPage < totalPages ? currentPage + 1 : totalPages;
       return (
         <Link
           href={createPageUrl(nextPage)}
           onClick={(e) => {
             e.preventDefault();
-            if (currentPage < totalPages) {
+            if (!isDisabled) {
               handlePageChange(nextPage);
             }
           }}
-          className="text-[#4b5563]! duration-300 hover:text-[#ce1a2a]!"
+          className={`
+            inline-flex items-center justify-center
+            w-[32px] h-[32px]
+            rounded-lg border border-gray-200
+            bg-white
+            transition-all duration-300
+            ${isDisabled 
+              ? 'opacity-50 cursor-not-allowed hover:border-gray-200' 
+              : 'hover:border-red-600 text-gray-600! hover:text-red-600!'
+            }
+          `}
         >
           <LeftOutlined />
         </Link>
       );
     }
 
-    if (type === "jump-prev" || type === "jump-next") {
+    if (type === "jump-prev") {
+      // رفتن به ۵ صفحه قبل
+      const jumpPage = Math.max(1, currentPage - 3);
       return (
-        <span className="text-[#6b7280]! hover:text-[#ce1a2a]! duration-300">
+        <Link
+          href={createPageUrl(jumpPage)}
+          onClick={(e) => {
+            e.preventDefault();
+            handlePageChange(jumpPage);
+          }}
+          className="
+            inline-flex items-center justify-center
+            w-[32px] h-[32px]
+            rounded-lg  border-gray-200
+            bg-white
+            text-gray-500!
+            transition-all duration-300
+            hover:border-red-600! hover:text-red-600!
+          "
+        >
           •••
-        </span>
+        </Link>
+      );
+    }
+
+    if (type === "jump-next") {
+      // رفتن به ۵ صفحه بعد
+      const jumpPage = Math.min(totalPages, currentPage + 3);
+      return (
+        <Link
+          href={createPageUrl(jumpPage)}
+          onClick={(e) => {
+            e.preventDefault();
+            handlePageChange(jumpPage);
+          }}
+          className="
+            inline-flex items-center justify-center
+            w-[32px] h-[32px]
+            rounded-lg border-gray-200
+            bg-white!
+            text-gray-500!
+            transition-all duration-300
+            hover:border-red-600! hover:text-red-600!
+          "
+        >
+          •••
+        </Link>
       );
     }
 
@@ -102,7 +175,7 @@ const CustomPagination = ({
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-3 p-4 bg-white rounded-lg shadow-sm">
+    <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-3 py-4 bg-white rounded-lg shadow-sm">
       {/* اطلاعات صفحه */}
       <div className="text-sm text-gray-600">
         نمایش{" "}
@@ -125,7 +198,6 @@ const CustomPagination = ({
           onChange={handlePageChange}
           itemRender={itemRender}
           showSizeChanger={false}
-          //   showQuickJumper={totalPages > 10}
           showLessItems={true}
           hideOnSinglePage={true}
         />
@@ -140,80 +212,47 @@ const CustomPagination = ({
       {/* استایل‌های سفارشی */}
       <style jsx global>{`
         .ant-pagination-item {
-          border-radius: 8px !important;
-          border: 1px solid #e5e7eb !important;
-        }
-
-        .ant-pagination-item:hover {
-          border-color: #ce1a2a !important;
+          border: none !important;
+          background: transparent !important;
         }
 
         .ant-pagination-item a {
-          color: #4b5563 !important;
-          padding: 0 8px !important;
-        }
-
-        .ant-pagination-item:hover a {
-          color: #ce1a2a !important;
-          background-color: #fff !important;
-          border-color: #ce1a2a !important;
-          border-radius: 8px !important;
-        }
-
-        .ant-pagination-item-active:hover a {
-          border-radius: 7px !important;
-        }
-
-        .ant-pagination-item-active {
-          background-color: #ce1a2a !important;
-          border-color: #ce1a2a !important;
-        }
-
-        .ant-pagination-item-active a {
-          color: white !important;
+          padding: 0 !important;
         }
 
         .ant-pagination-prev,
         .ant-pagination-next {
-          border-radius: 8px !important;
-          border: 1px solid #e5e7eb !important;
-        }
-
-        .ant-pagination-prev:hover,
-        .ant-pagination-next:hover {
-          border-color: #ce1a2a !important;
+          border: none !important;
+          background: transparent !important;
         }
 
         .ant-pagination-prev button,
         .ant-pagination-next button {
-          color: #4b5563 !important;
+          display: none !important;
         }
 
-        .ant-pagination-prev:hover button,
-        .ant-pagination-next:hover button {
-          color: #ce1a2a !important;
+        .ant-pagination-item-active {
+          background: transparent !important;
+          border: none !important;
+        }
+
+        .ant-pagination-jump-prev,
+        .ant-pagination-jump-next {
+          border: none !important;
+          background: transparent !important;
         }
 
         .ant-pagination-disabled {
-          opacity: 0.5 !important;
-          cursor: not-allowed !important;
+          opacity: 1 !important;
         }
 
-        .ant-pagination-disabled:hover {
-          border-color: #e5e7eb !important;
+        /* حذف استایل‌های پیش‌فرض آنت */
+        .ant-pagination-item-active a {
+          color: white !important;
         }
 
-        .ant-pagination-disabled button {
-          color: #9ca3af !important;
-        }
-
-        .ant-pagination-jump-prev .ant-pagination-item-ellipsis,
-        .ant-pagination-jump-next .ant-pagination-item-ellipsis {
-          color: #6b7280 !important;
-        }
-
-        .ant-pagination-options {
-          margin-right: 8px !important;
+        .ant-pagination-item-active:hover a {
+          color: white !important;
         }
       `}</style>
     </div>
@@ -221,3 +260,88 @@ const CustomPagination = ({
 };
 
 export default CustomPagination;
+
+
+
+
+
+
+
+
+
+//  <style jsx global>{`
+//         .ant-pagination-item {
+//           border-radius: 8px !important;
+//           border: 1px solid #e5e7eb !important;
+//         }
+
+//         .ant-pagination-item:hover {
+//           border-color: #ce1a2a !important;
+//         }
+
+//         .ant-pagination-item a {
+//           color: #4b5563 !important;
+//           padding: 0 8px !important;
+//         }
+
+//         .ant-pagination-item:hover a {
+//           color: #ce1a2a !important;
+//           background-color: #fff !important;
+//           border-color: #ce1a2a !important;
+//           border-radius: 8px !important;
+//         }
+
+//         .ant-pagination-item-active:hover a {
+//           border-radius: 8px !important;
+//         }
+
+//         .ant-pagination-item-active {
+//           background-color: #ce1a2a !important;
+//           border-color: #ce1a2a !important;
+//         }
+
+//         .ant-pagination-item-active a {
+//           color: white !important;
+//         }
+
+//         .ant-pagination-prev,
+//         .ant-pagination-next {
+//           border-radius: 8px !important;
+//           border: 1px solid #e5e7eb !important;
+//         }
+
+//         .ant-pagination-prev:hover,
+//         .ant-pagination-next:hover {
+//           border-color: #ce1a2a !important;
+//         }
+
+//         .ant-pagination-prev button,
+//         .ant-pagination-next button {
+//           color: #4b5563 !important;
+//         }
+
+//         .ant-pagination-prev:hover button,
+//         .ant-pagination-next:hover button {
+//           color: #ce1a2a !important;
+//         }
+
+//         .ant-pagination-disabled {
+//           opacity: 0.5 !important;
+//           cursor: not-allowed !important;
+//         }
+
+//         .ant-pagination-disabled:hover {
+//           border-color: #e5e7eb !important;
+//         }
+
+//         .ant-pagination-disabled button {
+//           color: #9ca3af !important;
+//         }
+
+//         .ant-pagination-jump-prev .ant-pagination-item-ellipsis,
+//         .ant-pagination-jump-next .ant-pagination-item-ellipsis {
+//           color: #6b7280 !important;
+//         }
+
+       
+//       `}</style>

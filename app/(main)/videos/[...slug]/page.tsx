@@ -1,14 +1,13 @@
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import BoxCatVideos from "../../videos.html/components/BoxCatVideos";
 import Video from "../../videos.html/components/Video";
 import VideoNotFound from "./VideoNotFound";
-import BoxCatVideos from "../../videos.html/components/BoxCatVideos";
-import { getCategory } from "@/services/Category/Category";
-import { getCategoryId } from "@/services/Category/CategoryId";
-import { mainDomainOld } from "@/utils/mainDomain";
-import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
-import { headers } from "next/headers";
-import { getItemByUrl } from "@/services/Item/ItemByUrl";
-import { notFound } from "next/navigation";
 
 export async function generateMetadata() {
   const headersList = await headers();

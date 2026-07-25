@@ -1,13 +1,11 @@
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { getCategory } from "@/services/Category/Category";
-import { getCategoryId } from "@/services/Category/CategoryId";
 import { getItem } from "@/services/Item/Item";
-import { mainDomainOld } from "@/utils/mainDomain";
-import React from "react";
-import CardDic from "../../fa/technical-words.html/components/CardDic";
-import { headers } from "next/headers";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import CardDic from "../../fa/technical-words.html/components/CardDic";
 
 export async function generateMetadata() {
 

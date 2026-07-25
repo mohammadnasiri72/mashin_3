@@ -8,6 +8,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import NewsViewDetails from "./components/NewsViewDetails";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -91,6 +92,12 @@ async function pageNewsViewDetails() {
       PageIndex: 1,
       PageSize: 5,
     });
+    const newNews: Items[] = await getItem({
+      TypeId: 5,
+      langCode: "fa",
+      PageIndex: 1,
+      PageSize: 5,
+    });
     const Attachment: ItemsAttachment[] = await getAttachment(id);
 
     const comments: CommentResponse[] = await getComment({
@@ -142,19 +149,25 @@ async function pageNewsViewDetails() {
       console.error("Error recording visit:", error);
     }
 
+    const schemas = detailsNews?.seoInfo?.schemas || [];
+
     return (
-      <NewsViewDetails
-        detailsNews={detailsNews}
-        Attachment={Attachment}
-        popularNews={popularNews}
-        comments={comments}
-        id={Number(id)}
-        banner={banner}
-        relatedNews={relatedNews}
-        relatedCars={relatedCars}
-        relatedVideos={relatedVideos}
-        relatedVoices={relatedVoices}
-      />
+      <>
+        <JsonLd schemas={schemas} />
+        <NewsViewDetails
+          detailsNews={detailsNews}
+          Attachment={Attachment}
+          popularNews={popularNews}
+          comments={comments}
+          id={Number(id)}
+          banner={banner}
+          relatedNews={relatedNews}
+          relatedCars={relatedCars}
+          relatedVideos={relatedVideos}
+          relatedVoices={relatedVoices}
+          newNews={newNews}
+        />
+      </>
     );
   } catch (err: any) {
     console.error("Error in pageDynamic:", err);

@@ -23,6 +23,7 @@ function NewsViewDetails({
   relatedCars,
   relatedVideos,
   relatedVoices,
+  newNews
 }: {
   detailsNews: ItemsId;
   popularNews: Items[];
@@ -34,6 +35,7 @@ function NewsViewDetails({
   relatedCars: ItemsId[];
   relatedVideos: ItemsId[];
   relatedVoices: ItemsId[];
+  newNews:Items[]
 }) {
 
 
@@ -234,7 +236,7 @@ function NewsViewDetails({
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition - 50,
+        top: offsetPosition ,
         behavior: "smooth",
       });
     }
@@ -412,7 +414,7 @@ function NewsViewDetails({
               ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
             `}
           >
-            <SidebarNewsView popularNews={popularNews} banner={banner} />
+            <SidebarNewsView popularNews={popularNews} banner={banner} newNews={newNews}/>
           </aside>
         </div>
 

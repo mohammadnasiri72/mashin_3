@@ -175,6 +175,77 @@ export async function middleware(request: NextRequest) {
           status: 404,
         });
       }
+
+
+      // ==============================================
+    // 🎯 بخش اصلی: بازنویسی بر اساس itemTypeId
+    // ==============================================
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    requestHeaders.set("x-item-type-id", String(detailsItem.itemTypeId));
+
+    // تعیین مسیر مقصد بر اساس itemTypeId
+    let destinationPath = '';
+
+    switch (detailsItem.itemTypeId) {
+     
+      case 5: // صفحه جزئیات خبر
+        destinationPath = detailsItem.typeUrl === 'item' ?  `/fa/news-view/${detailsItem.id}` : `/fa/news/${detailsItem.id}`;
+        break;
+      case 3: // صفحه نکات آموزشی
+        destinationPath = detailsItem.typeUrl === 'item' ? `/fa/tips-view/${detailsItem.id}` : `/fa/educationtips/${detailsItem.id}`;
+        break;
+      case 1028: // صفحه فیلم های تست و بررسی خودرو
+        destinationPath = detailsItem.typeUrl === 'item' ? `/video/${detailsItem.id}`: `/videos/${detailsItem.id}`;
+        break;
+      case 1042: // صفحه معرفی خودرو
+        destinationPath = detailsItem.typeUrl === 'item' ? `/car/${detailsItem.id}` : detailsItem.parentId ? `/cars/${detailsItem.id}` : `/fa/reviews/${detailsItem.id}`;
+        break;
+      case 1043: // صفحه بهترین انتخاب
+        destinationPath = detailsItem.typeUrl === 'item' ? `/best-choice/${detailsItem.id}`:`/best-choices.html`;
+        break;
+     
+      case 1045: // صفحه مقایسه خودرو
+        destinationPath = detailsItem.typeUrl === 'item' ? `/whichcar/${detailsItem.id}` : `/whichcars.html`;
+        break;
+      case 1046: // صفحه واژگان فنی
+        destinationPath = detailsItem.typeUrl === 'item' ? `/technical-word/${detailsItem.id}` : `/fa/technical-words.html`;
+        break;
+      case 1050: // صفحه مراکز خدمات خودرو
+        destinationPath = detailsItem.typeUrl === 'item' ? `/autoservice/${detailsItem.id}` : `/autoservices/${detailsItem.id}`;
+        break;
+      case 1052: // صفحه معرفی موتور سیکلت
+        destinationPath =detailsItem.typeUrl === 'item' ? `/motorcycle/${detailsItem.id}` : detailsItem.parentId ? `/motorcycles/${detailsItem.id}` : `/fa/reviews/${detailsItem.id}`;
+        break;
+      
+    
+      
+      default:
+        // اگر نوع مشخص نبود، از slug استفاده کن
+        destinationPath = ``;
+        break;
+    }
+
+    // ساخت URL جدید برای بازنویسی
+    
+
+    if (destinationPath) {
+      const rewriteUrl = new URL(destinationPath, request.url);
+    
+    // اگر پارامترهای query وجود دارند، به مسیر جدید اضافه کن
+    if (url.search) {
+      rewriteUrl.search = url.search;
+    }
+ // انجام بازنویسی
+    return NextResponse.rewrite(rewriteUrl, {
+      request: {
+        headers: requestHeaders,
+      },
+    });
+    }
+
+    
+   
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
 
@@ -196,3 +267,11 @@ export async function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
+
+
+export const config = {
+  matcher: [
+    // Match all paths except static files, api, _next, favicon.ico
+    "/((?!_next/static|_next/image|api|favicon.ico|.*\\.(?:jpg|jpeg|png|gif|webp|svg|ico|css|js|json|xml|txt|woff|woff2|ttf|eot|otf|mp4|webm|mp3|wav|pdf|zip)).*)",
+  ],
+};

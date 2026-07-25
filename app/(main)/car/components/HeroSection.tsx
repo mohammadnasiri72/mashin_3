@@ -54,7 +54,7 @@ const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
       />
 
       {/* Overlay با گرادیانت */}
-      <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/40 to-transparent"></div>
+      <div className="absolute inset-0 bg-linear-to-r from-black/30 via-black/90 to-transparent"></div>
 
       <div className="relative container mx-auto px-4 py-12">
         <div className="text-white!">
@@ -73,7 +73,7 @@ const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
               <li>
                 <Link
                   href="/"
-                  className="text-white/80! hover:text-white! transition-colors duration-300"
+                  className="text-white! font-bold hover:text-white! transition-colors duration-300"
                 >
                   صفحه اصلی
                 </Link>
@@ -85,7 +85,7 @@ const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
                     <span className="mx-2 text-white/50!">/</span>
                     <Link
                       href={b.href}
-                      className="text-white/80! hover:text-white! transition-colors duration-300"
+                      className="text-white! font-bold hover:text-white! transition-colors duration-300"
                     >
                       {b.title}
                     </Link>

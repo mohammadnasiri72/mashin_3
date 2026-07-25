@@ -85,12 +85,6 @@ function MainBoxAutoServices({
     selectedProvince,
   ]);
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 400,
-      behavior: "smooth",
-    });
-  }, [page]);
 
   const clearFilters = () => {
     router.push("/autoservices.html", {

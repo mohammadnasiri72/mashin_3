@@ -1,7 +1,7 @@
 "use client";
 
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { FaHeart, FaStar } from "react-icons/fa";
 import type { Swiper as SwiperType } from "swiper";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
@@ -53,33 +53,15 @@ const CarDetails = memo(
     });
     const [selectedTab, setSelectedTab] = useState<number | null>(null); // null برای نمایش همه عکس‌ها
    
-   
     const filteredAttachments = useMemo(() => {
-  let attachments = [...Attachment];
-  
-  // اگر عکس اصلی در detailsCar وجود دارد
-  // if (detailsCar.image) {
-  //   // ایجاد آبجکت جدید با ساختار مشابه Attachment
-  //   const mainImage: ItemsAttachment = {
-  //     id: 1, // یا یک id منحصر به فرد
-  //     tabId: 1, // یا 1 برای نمایش در کنار سایر تصاویر
-  //     itemId: detailsCar.id,
-  //     fileUrl: detailsCar.image,
-  //     title: detailsCar.title || "تصویر اصلی",
-  //     priority: -1, // اولویت بالا برای نمایش در ابتدا
-  //     categoryId: null,
-  //     itemKey: 0
-  //   };
-    
-  //   attachments = [mainImage, ...attachments];
-  // }
-  
-  // فیلتر بر اساس selectedTab
-  if (selectedTab) {
-    return attachments.filter((img) => img.tabId === selectedTab);
-  }
-  return attachments;
-}, [selectedTab, Attachment, detailsCar.image, detailsCar.id, detailsCar.title]);
+      let attachments = [...Attachment];
+      
+      // فیلتر بر اساس selectedTab
+      if (selectedTab) {
+        return attachments.filter((img) => img.tabId === selectedTab);
+      }
+      return attachments;
+    }, [selectedTab, Attachment, detailsCar.image, detailsCar.id, detailsCar.title]);
 
     const isShowFilter =
       Attachment.filter((e) => e.tabId === 1).length > 0 &&
@@ -145,7 +127,6 @@ const CarDetails = memo(
 
     const handleRatingClick = (questionId: number, score: number) => {
       setPollSaveData((prev) => {
-        // بررسی می‌کنیم آیا این سوال قبلاً در آرایه وجود دارد یا نه
         const existingQuestionIndex = prev.pollScoreDto.findIndex(
           (item) => item.questionId === questionId,
         );
@@ -153,18 +134,15 @@ const CarDetails = memo(
         let newPollScoreDto;
 
         if (existingQuestionIndex >= 0) {
-          // اگر سوال وجود دارد، امتیاز آن را آپدیت می‌کنیم
           newPollScoreDto = [...prev.pollScoreDto];
           newPollScoreDto[existingQuestionIndex] = {
             questionId,
             score,
           };
         } else {
-          // اگر سوال وجود ندارد، آن را اضافه می‌کنیم
           newPollScoreDto = [...prev.pollScoreDto, { questionId, score }];
         }
 
-        // همچنین userRatings را هم آپدیت می‌کنیم برای نمایش UI
         setUserRatings((userPrev) => ({
           ...userPrev,
           [questionId]: score,
@@ -176,6 +154,7 @@ const CarDetails = memo(
         };
       });
     };
+
     const handleSubmitRating = async () => {
       setIsSubmitting(true);
       try {
@@ -201,7 +180,6 @@ const CarDetails = memo(
 
     const handleCancelRating = () => {
       setIsRatingMode(false);
-      // ریست کردن امتیازها
       const resetRatings: { [key: number]: number } = {};
       pollData.pollDetails.forEach((question) => {
         resetRatings[question.questionId] = 0;
@@ -239,15 +217,17 @@ const CarDetails = memo(
       }
     };
 
+    const boxPoll = useRef<HTMLDivElement>(null);
+
     return (
       <section className="py-5 bg-[#f4f4f4]">
         <div className="mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative">
             {/* Left Column - Specifications */}
-            <div className="lg:col-span-7">
+            <div className="lg:col-span-7 ">
               {/* Specifications Grid */}
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {specifications.slice(0, 6).map((spec, index) => (
+                {specifications.length > 0 && specifications.slice(0, 6).map((spec, index) => (
                   <div
                     key={index}
                     className="bg-white py-4 px-2 rounded-lg shadow-sm border border-gray-100 flex items-center"
@@ -261,7 +241,7 @@ const CarDetails = memo(
                     </div>
                     <div className="w-4/5">
                       <div className="font-bold text-gray-800 text-sm">
-                        {spec.value}
+                        {toPersianNumbers(spec.value)}
                       </div>
                       <div className="text-gray-500 text-xs mt-1">
                         {spec.title}
@@ -269,6 +249,7 @@ const CarDetails = memo(
                     </div>
                   </div>
                 ))}
+                {specifications.length === 0 && <div className="h-36"></div>}
               </div>
 
               {/* Ratings Section */}
@@ -298,16 +279,13 @@ const CarDetails = memo(
                             </span>
                             <span className="text-[#ce1a2a] font-bold">
                               {userRatings[question.questionId] > 0
-                                ? toPersianNumbers(
-                                    userRatings[question.questionId],
-                                  )
+                                ? toPersianNumbers(userRatings[question.questionId])
                                 : "۰"}
                               /۱۰
                             </span>
                           </div>
 
                           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                            {/* Rating Stars */}
                             <div className="flex gap-1">
                               {[...Array(10)].map((_, index) => {
                                 const score = index + 1;
@@ -317,10 +295,7 @@ const CarDetails = memo(
                                     key={score}
                                     type="button"
                                     onClick={() =>
-                                      handleRatingClick(
-                                        question.questionId,
-                                        score,
-                                      )
+                                      handleRatingClick(question.questionId, score)
                                     }
                                     className={`w-8 h-8 cursor-pointer flex items-center justify-center rounded-full transition-all duration-200 ${
                                       score <= userRatings[question.questionId]
@@ -337,17 +312,13 @@ const CarDetails = memo(
                             </div>
                           </div>
 
-                          {/* Rating Progress Bar */}
                           <div className="flex gap-1">
                             {[...Array(10)].map((_, i) => {
                               const score = i + 1;
                               return (
                                 <div
                                   onClick={() =>
-                                    handleRatingClick(
-                                      question.questionId,
-                                      score,
-                                    )
+                                    handleRatingClick(question.questionId, score)
                                   }
                                   key={i}
                                   className={`h-2 flex-1 rounded-full cursor-pointer ${
@@ -362,7 +333,6 @@ const CarDetails = memo(
                         </div>
                       ))}
 
-                      {/* Submit Button */}
                       <div className="pt-4 border-t border-gray-200">
                         <button
                           aria-label="ثبت نظر"
@@ -397,64 +367,60 @@ const CarDetails = memo(
                     </div>
                   ) : (
                     // Display Mode
-                    <div className="bg-gray-50 py-3 rounded-lg flex md:flex-nowrap flex-wrap">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                        {pollData.pollDetails.map((rating, index) => (
-                          <div key={index} className="text-center">
-                            <div className="flex justify-between items-center mb-2">
-                              <span className="text-gray-700 text-sm font-medium whitespace-nowrap">
-                                {rating.questionTitle}
-                              </span>
-                              <span className="text-[#ce1a2a] font-bold">
-                                {toPersianNumbers(rating.avgScore)}
-                              </span>
-                            </div>
-                            <div className="flex gap-1">
-                              {/* {[...Array(10)].map((_, i) => (
-                            <div
-                              key={i}
-                              className={`h-2 flex-1 rounded-full ${
-                                i < rating.avgScore
-                                  ? "bg-[#ce1a2a]"
-                                  : "bg-[#e7abb1]"
-                              }`}
-                            ></div>
-                          ))} */}
-                              {[...Array(10)].map((_, i) => {
-                                // محاسبه مقدار پر شدن برای این خانه
-                                const fillPercentage = Math.min(
-                                  1,
-                                  Math.max(0, rating.avgScore - i),
-                                );
+                    <div className="bg-gray-50 py-3 rounded-lg">
+                      <div className="flex flex-col lg:flex-row gap-4 items-stretch">
+                        {/* بخش نظرسنجی */}
+                        <div ref={boxPoll} className="flex-1">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {pollData.pollDetails.map((rating, index) => (
+                              <div key={index} className="text-center">
+                                <div className="flex justify-between items-center mb-2">
+                                  <span className="text-gray-700 text-sm font-medium whitespace-nowrap">
+                                    {rating.questionTitle}
+                                  </span>
+                                  <span className="text-[#ce1a2a] font-bold">
+                                    {toPersianNumbers(rating.avgScore)}
+                                  </span>
+                                </div>
+                                <div className="flex gap-1">
+                                  {[...Array(10)].map((_, i) => {
+                                    const fillPercentage = Math.min(
+                                      1,
+                                      Math.max(0, rating.avgScore - i),
+                                    );
 
-                                return (
-                                  <div
-                                    key={i}
-                                    className="h-2 flex-1 rounded-full relative overflow-hidden bg-[#e7abb1]"
-                                  >
-                                    <div
-                                      className="absolute inset-0 bg-[#ce1a2a] rounded-full"
-                                      style={{
-                                        width: `${Math.min(100, Math.max(0, fillPercentage * 100))}%`,
-                                        transition: "width 0.3s ease",
-                                      }}
-                                    />
-                                  </div>
-                                );
-                              })}
-                            </div>
+                                    return (
+                                      <div
+                                        key={i}
+                                        className="h-2 flex-1 rounded-full relative overflow-hidden bg-[#e7abb1]"
+                                      >
+                                        <div
+                                          className="absolute inset-0 bg-[#ce1a2a] rounded-full"
+                                          style={{
+                                            width: `${Math.min(100, Math.max(0, fillPercentage * 100))}%`,
+                                            transition: "width 0.3s ease",
+                                          }}
+                                        />
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                      <div className="pr-2">
-                        <button
-                          aria-label="ثبت امتیاز"
-                          onClick={() => setIsRatingMode(true)}
-                          className="mt-8 md:mt-0 mr-2 duration-300 rounded-lg bg-[#ce1a2a] hover:bg-red-700 text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center mx-auto cursor-pointer whitespace-nowrap"
-                        >
-                          <FaStar className="ml-2" />
-                          ثبت امتیاز
-                        </button>
+                        </div>
+
+                        {/* دکمه ثبت امتیاز */}
+                        <div className="flex items-center justify-center lg:justify-end pr-0 lg:pr-2">
+                          <button
+                            aria-label="ثبت امتیاز"
+                            onClick={() => setIsRatingMode(true)}
+                            className="duration-300 rounded-lg bg-[#ce1a2a] hover:bg-red-700 text-white! transition-colors px-3 py-2 font-bold flex items-center justify-center cursor-pointer whitespace-nowrap w-full lg:w-auto"
+                          >
+                            <FaStar className="ml-2" />
+                            ثبت امتیاز
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -462,8 +428,10 @@ const CarDetails = memo(
               )}
             </div>
 
-            <div className="lg:col-span-5 lg:-mt-[38%] ">
-              <div className="relative group">
+            {/* Right Column - Gallery */}
+            <div className="lg:col-span-5 lg:relative">
+              {/* isRatingMode */}
+              <div className={`lg:absolute lg:left-0 lg:w-full lg:translate-y-0 relative group ${isRatingMode ? 'lg:top-[-35%]':'lg:bottom-0'}`}>
                 {/* Quick Actions */}
                 <div className="absolute lg:left-full lg:translate-x-0 -translate-y-1 lg:translate-y-0 lg:top-0 lg:mr-3 lg:space-y-3 z-50 lg:z-0 flex lg:block sm:flex-row flex-col lg:py-0 py-2 lg:px-0 px-1 gap-3">
                   <Link
@@ -484,12 +452,11 @@ const CarDetails = memo(
                       افزودن به علاقه‌مندی
                     </span>
                   </div>
-                 
                 </div>
 
                 {/* Main Image Slider */}
                 {Attachment.length > 0 && (
-                  <div className="slider-productDetails h-full">
+                  <div className="relative h-full">
                     {/* تب‌های انتخاب در دسکتاپ (سمت چپ) */}
                     {isShowFilter && (
                       <div className="group-hover:opacity-100 opacity-0 duration-300 hidden lg:flex! absolute left-1 top-1 z-20 flex-col gap-2 bg-white/90 backdrop-blur-sm p-2 rounded-r-xl shadow-lg">
@@ -502,7 +469,9 @@ const CarDetails = memo(
                               setSelectedTab(null);
                             }
                           }}
-                          className={`cursor-pointer group relative w-24 h-20 overflow-hidden rounded-lg border-2  hover:border-[#ce1a2a] transition-all duration-300 ${selectedTab === 1 ? "border-[#ce1a2a]" : "border-transparent"}`}
+                          className={`cursor-pointer group relative w-24 h-20 overflow-hidden rounded-lg border-2 hover:border-[#ce1a2a] transition-all duration-300 ${
+                            selectedTab === 1 ? "border-[#ce1a2a]" : "border-transparent"
+                          }`}
                         >
                           {Attachment.filter((img) => img.tabId === 1)[0] && (
                             <>
@@ -516,7 +485,9 @@ const CarDetails = memo(
                                 className="w-full h-full object-cover"
                               />
                               <div
-                                className={`absolute inset-0 bg-black/40 flex items-end justify-center pb-1  group-hover:opacity-100 transition-opacity ${selectedTab === 1 ? "opacity-100" : "opacity-0"}`}
+                                className={`absolute inset-0 bg-black/40 flex items-end justify-center pb-1 group-hover:opacity-100 transition-opacity ${
+                                  selectedTab === 1 ? "opacity-100" : "opacity-0"
+                                }`}
                               >
                                 <span className="text-white! text-xs font-bold">
                                   خارج
@@ -534,7 +505,9 @@ const CarDetails = memo(
                               setSelectedTab(null);
                             }
                           }}
-                          className={`cursor-pointer group relative w-24 h-20 overflow-hidden rounded-lg border-2 hover:border-[#ce1a2a] transition-all duration-300 ${selectedTab === 3 ? "border-[#ce1a2a]" : "border-transparent"}`}
+                          className={`cursor-pointer group relative w-24 h-20 overflow-hidden rounded-lg border-2 hover:border-[#ce1a2a] transition-all duration-300 ${
+                            selectedTab === 3 ? "border-[#ce1a2a]" : "border-transparent"
+                          }`}
                         >
                           {Attachment.filter((img) => img.tabId === 3)[0] && (
                             <>
@@ -548,7 +521,9 @@ const CarDetails = memo(
                                 className="w-full h-full object-cover"
                               />
                               <div
-                                className={`absolute inset-0 bg-black/40 flex items-end justify-center pb-1  group-hover:opacity-100 transition-opacity ${selectedTab === 3 ? "opacity-100" : "opacity-0"}`}
+                                className={`absolute inset-0 bg-black/40 flex items-end justify-center pb-1 group-hover:opacity-100 transition-opacity ${
+                                  selectedTab === 3 ? "opacity-100" : "opacity-0"
+                                }`}
                               >
                                 <span className="text-white! text-xs font-bold">
                                   داخل
@@ -580,16 +555,14 @@ const CarDetails = memo(
                             aria-label="لینک گالری تصاویر"
                           >
                             <div
-                              className="absolute inset-0 bg-cover bg-center"
+                              className="absolute inset-0 bg-cover bg-center bg-gray-300"
                               style={{
-                                backgroundImage: `url('${mainDomain + image.fileUrl}')`,
                                 filter: "blur(8px)",
                                 transform: "scale(1.1)",
                               }}
                             />
-
                             <img
-                              className="w-full h-full border-4! border-[#ce1a2a]! object-contain overflow-hidden relative z-50"
+                              className="w-full h-full  object-contain overflow-hidden relative z-50 border-8! border-[#ce1a2a]!"
                               src={mainDomain + image.fileUrl}
                               alt={image.title || "تصویر محصول"}
                             />
@@ -601,25 +574,18 @@ const CarDetails = memo(
                     {/* Thumbnails Slider */}
                     <Swiper
                       onSwiper={setThumbsSwiper}
-                      // loop={true}
                       grabCursor={true}
                       spaceBetween={10}
                       slidesPerView={4}
                       breakpoints={{
-                        640: {
-                          slidesPerView: 4,
-                        },
-                        768: {
-                          slidesPerView: 4,
-                        },
-                        1024: {
-                          slidesPerView: 5,
-                        },
+                        640: { slidesPerView: 4 },
+                        768: { slidesPerView: 4 },
+                        1024: { slidesPerView: 5 },
                       }}
                       freeMode={true}
                       watchSlidesProgress={true}
                       modules={[FreeMode, Navigation, Thumbs]}
-                      className="mySwiper product-gallery-thumbs mt-3 pb-10!"
+                      className="mySwiper product-gallery-thumbs mt-3"
                     >
                       {filteredAttachments.map((image) => (
                         <SwiperSlide key={image.id}>
@@ -646,11 +612,19 @@ const CarDetails = memo(
                               setSelectedTab(null);
                             }
                           }}
-                          className={`cursor-pointer flex items-center gap-2 px-6 py-2  rounded-lg shadow-md transition-all duration-300 border border-gray-200 ${selectedTab === 1 ? "bg-[#ce1a2a] text-white!" : "bg-white text-gray-800"}`}
+                          className={`cursor-pointer flex items-center gap-2 px-6 py-2 rounded-lg shadow-md transition-all duration-300 border border-gray-200 ${
+                            selectedTab === 1
+                              ? "bg-[#ce1a2a] text-white!"
+                              : "bg-white text-gray-800"
+                          }`}
                         >
                           <span className="text-sm font-bold">خارج</span>
                           <span
-                            className={`text-xs px-2 py-0.5 rounded-full duration-300 ${selectedTab === 1 ? "bg-white text-[#ce1a2a]" : "bg-[#ce1a2a] text-white!"}`}
+                            className={`text-xs px-2 py-0.5 rounded-full duration-300 ${
+                              selectedTab === 1
+                                ? "bg-white text-[#ce1a2a]"
+                                : "bg-[#ce1a2a] text-white!"
+                            }`}
                           >
                             {Attachment.filter((img) => img.tabId === 1).length}
                           </span>
@@ -664,11 +638,19 @@ const CarDetails = memo(
                               setSelectedTab(null);
                             }
                           }}
-                          className={`cursor-pointer flex items-center gap-2 px-6 py-2  rounded-lg shadow-md transition-all duration-300 border border-gray-200 ${selectedTab === 3 ? "bg-[#ce1a2a] text-white!" : "bg-white text-gray-800"}`}
+                          className={`cursor-pointer flex items-center gap-2 px-6 py-2 rounded-lg shadow-md transition-all duration-300 border border-gray-200 ${
+                            selectedTab === 3
+                              ? "bg-[#ce1a2a] text-white!"
+                              : "bg-white text-gray-800"
+                          }`}
                         >
                           <span className="text-sm font-bold">داخل</span>
                           <span
-                            className={`text-xs px-2 py-0.5 rounded-full duration-300 ${selectedTab === 3 ? "bg-white text-[#ce1a2a]" : "bg-[#ce1a2a] text-white!"}`}
+                            className={`text-xs px-2 py-0.5 rounded-full duration-300 ${
+                              selectedTab === 3
+                                ? "bg-white text-[#ce1a2a]"
+                                : "bg-[#ce1a2a] text-white!"
+                            }`}
                           >
                             {Attachment.filter((img) => img.tabId === 3).length}
                           </span>
@@ -679,7 +661,7 @@ const CarDetails = memo(
                 )}
 
                 {Attachment.length === 0 && (
-                  <div className="slider-productDetails h-full">
+                  <div className="relative h-full">
                     {/* اسکلتون برای تصویر اصلی */}
                     <div className="mySwiper2 product-gallery-main">
                       <div className="w-full! sm:h-96 h-56 border-4 border-gray-200">
@@ -696,7 +678,7 @@ const CarDetails = memo(
                           </div>
                         ))}
                       </div>
-                      <div className="gap-2 justify-center sm:hidden flex ">
+                      <div className="gap-2 justify-center sm:hidden flex">
                         {[...Array(3)].map((_, index) => (
                           <div key={index} className="w-1/3">
                             <Skeleton.Image className="w-full! h-20! bg-white! rounded-3xl" />
@@ -714,9 +696,7 @@ const CarDetails = memo(
         <ModalLogin open={openLogin} setOpen={setOpenLogin} />
 
         <style jsx global>{`
-          .slider-productDetails {
-            position: relative;
-          }
+         
 
           .product-gallery-main {
             overflow: hidden;
@@ -740,7 +720,6 @@ const CarDetails = memo(
             background-color: #ce1a2a !important;
           }
 
-          /* تنظیم سایز برای thumbnails */
           .product-gallery-thumbs .swiper-slide {
             width: 100px;
           }
@@ -757,7 +736,6 @@ const CarDetails = memo(
             }
           }
 
-          /* استایل‌های Swiper */
           .mySwiper2 {
             width: 100%;
           }
@@ -774,22 +752,6 @@ const CarDetails = memo(
 
           .mySwiper .swiper-slide-thumb-active {
             opacity: 1;
-          }
-
-          @media (max-width: 768px) {
-            .mySwiper2 {
-            }
-
-            .mySwiper {
-            }
-          }
-
-          @media (max-width: 480px) {
-            .mySwiper2 {
-            }
-
-            .mySwiper {
-            }
           }
 
           .specs-grid {

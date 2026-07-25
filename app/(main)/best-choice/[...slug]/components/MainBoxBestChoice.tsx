@@ -167,7 +167,7 @@ function MainBoxBestChoice({
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition - 50,
+        top: offsetPosition,
         behavior: "smooth",
       });
     }

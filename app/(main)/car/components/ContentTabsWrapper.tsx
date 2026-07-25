@@ -6,6 +6,7 @@ import { getItemByIds } from "@/services/Item/ItemByIds";
 import type { TabsProps } from "antd";
 import { Tabs } from "antd";
 import dynamic from "next/dynamic";
+import React from "react";
 import { Suspense, useEffect, useRef, useState, useCallback } from "react";
 
 // ✅ Lazy Load برای کامپوننت‌های سنگین
@@ -97,6 +98,14 @@ interface ContentTabsWrapperProps {
   commentsContent: React.ReactNode;
 }
 
+// تعریف type برای child با id
+interface ChildWithId extends React.ReactElement {
+  props: {
+    id?: string;
+    children?: React.ReactNode;
+  };
+}
+
 const ContentTabsWrapper = ({
   children,
   tabItems = [],
@@ -111,6 +120,14 @@ const ContentTabsWrapper = ({
   const mainBoxRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
+
+  // رفرنس‌های مربوط به هر بخش
+  const reviewRef = useRef<HTMLDivElement>(null);
+  const technicalRef = useRef<HTMLDivElement>(null);
+  const imagesRef = useRef<HTMLDivElement>(null);
+  const newsRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLDivElement>(null);
+  const comparisonsRef = useRef<HTMLDivElement>(null);
   const commentsRef = useRef<HTMLDivElement>(null);
 
   const [loadingRelatedNews, setLoadingRelatedNews] = useState(true);
@@ -227,7 +244,7 @@ const ContentTabsWrapper = ({
     { key: "comments", label: "نظرات" },
   ];
 
-  // =============== ✅ استفاده از ResizeObserver (بدون Forced Reflow) ===============
+  // =============== ✅ استفاده از ResizeObserver ===============
   useEffect(() => {
     if (!mainBoxRef.current || !sidebarRef.current) return;
 
@@ -261,101 +278,58 @@ const ContentTabsWrapper = ({
     };
   }, []);
 
-  // =============== ✅ استفاده از IntersectionObserver با پشتیبانی از نظرات ===============
+  // =============== هندل کردن اسکرول و sticky navbar ===============
   useEffect(() => {
-    const sectionIds = [
-      "review",
-      "technical",
-      "images",
-      "news",
-      "video",
-      "Comparisons",
-    ];
-
-    let observer: IntersectionObserver | null = null;
-
-    const setupObserver = () => {
-      // اگر observer قبلی وجود دارد، آن را disconnect کن
-      if (observer) {
-        observer.disconnect();
-      }
-
-      observer = new IntersectionObserver(
-        (entries) => {
-          let maxRatio = 0;
-          let visibleId = "";
-
-          entries.forEach((entry) => {
-            if (entry.intersectionRatio > maxRatio) {
-              maxRatio = entry.intersectionRatio;
-              visibleId = entry.target.id;
-            }
-          });
-
-          if (visibleId && visibleId !== activeKey) {
-            setActiveKey(visibleId);
-          }
-        },
-        {
-          rootMargin: "-80px 0px -50% 0px",
-          threshold: [0, 0.1, 0.2, 0.3, 0.5],
-        },
-      );
-
-      // مشاهده بخش‌های اصلی
-      sectionIds.forEach((id) => {
-        const element = document.getElementById(id);
-        if (element) {
-          observer?.observe(element);
-        }
-      });
-
-      // مشاهده بخش نظرات با ref
-      if (commentsRef.current) {
-        observer?.observe(commentsRef.current);
-      }
-    };
-
-    // راه‌اندازی اولیه با تاخیر
-    const timeoutId = setTimeout(setupObserver, 100);
-
-    // استفاده از MutationObserver برای تشخیص تغییرات DOM
-    const mutationObserver = new MutationObserver(() => {
-      // بررسی کنید که آیا بخش نظرات اضافه شده است
-      const commentsElement = document.getElementById("comments");
-      if (commentsElement || commentsRef.current) {
-        // اگر بخش نظرات وجود دارد، observer را مجدداً راه‌اندازی کنید
-        setupObserver();
-      }
-    });
-
-    mutationObserver.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-
-    return () => {
-      clearTimeout(timeoutId);
-      if (observer) {
-        observer.disconnect();
-      }
-      mutationObserver.disconnect();
-    };
-  }, [activeKey, commentsContent]); // وابستگی به commentsContent برای راه‌اندازی مجدد
-
-  // =============== اسکرول نوار ===============
-  useEffect(() => {
-    let ticking = false;
-
     const handleScroll = () => {
-      if (!navbarRef.current) return;
+      if (navbarRef.current) {
+        const navbarTop = navbarRef.current.offsetTop;
+        setIsNavbarSticky(window.scrollY > navbarTop);
+      }
 
-      const shouldBeSticky = window.scrollY > navbarRef.current.offsetTop;
-      setIsNavbarSticky((prev) =>
-        prev !== shouldBeSticky ? shouldBeSticky : prev,
-      );
+      // تعیین بخش فعال بر اساس اسکرول
+      const sections = [
+        { key: "review", ref: reviewRef },
+        { key: "technical", ref: technicalRef },
+        { key: "images", ref: imagesRef },
+        { key: "news", ref: newsRef },
+        { key: "video", ref: videoRef },
+        { key: "Comparisons", ref: comparisonsRef },
+        { key: "comments", ref: commentsRef },
+      ];
+
+      let currentActiveKey = activeKey;
+
+      for (let i = 0; i < sections.length; i++) {
+        const section = sections[i];
+        if (section.ref.current) {
+          const rect = section.ref.current.getBoundingClientRect();
+          const sectionTop = rect.top;
+          const sectionBottom = rect.bottom;
+
+          if (sectionTop <= 200 && sectionBottom >= 200) {
+            currentActiveKey = section.key;
+            break;
+          }
+
+          if (i < sections.length - 1) {
+            const nextSection = sections[i + 1];
+            if (nextSection.ref.current) {
+              const nextRect = nextSection.ref.current.getBoundingClientRect();
+              if (sectionBottom < 200 && nextRect.top > 200) {
+                currentActiveKey = section.key;
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      if (currentActiveKey !== activeKey) {
+        setActiveKey(currentActiveKey);
+      }
     };
 
+    let ticking = false;
     const throttledScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
@@ -367,26 +341,52 @@ const ContentTabsWrapper = ({
     };
 
     window.addEventListener("scroll", throttledScroll, { passive: true });
+    handleScroll();
+
     return () => window.removeEventListener("scroll", throttledScroll);
-  }, []);
+  }, [activeKey]);
 
   // =============== اسکرول به بخش ===============
-  const scrollToElement = useCallback((elementId: string) => {
-    const element = document.getElementById(elementId);
-    if (!element) return;
+  const scrollToElement = useCallback(
+    (elementId: string) => {
+      const sectionRefs: {
+        [key: string]: React.RefObject<HTMLDivElement | null>;
+      } = {
+        review: reviewRef,
+        technical: technicalRef,
+        images: imagesRef,
+        news: newsRef,
+        video: videoRef,
+        Comparisons: comparisonsRef,
+        comments: commentsRef,
+      };
 
-    const navbarHeight = navbarRef.current?.offsetHeight || 80;
-    const elementRect = element.getBoundingClientRect();
-    const offsetPosition =
-      window.pageYOffset + elementRect.top - navbarHeight - 20;
+      const targetRef = sectionRefs[elementId];
+      if (targetRef?.current) {
+        const getAbsoluteOffsetTop = (element: HTMLElement): number => {
+          let offsetTop = 0;
+          let currentElement: HTMLElement | null = element;
+          while (currentElement) {
+            offsetTop += currentElement.offsetTop;
+            currentElement = currentElement.offsetParent as HTMLElement;
+          }
+          return offsetTop;
+        };
 
-    requestAnimationFrame(() => {
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    });
-  }, []);
+        const navbarHeight = isNavbarSticky
+          ? (navbarRef.current?.offsetHeight || 0) + 20
+          : 100;
+        const absoluteOffsetTop = getAbsoluteOffsetTop(targetRef.current);
+        const offsetPosition = absoluteOffsetTop - navbarHeight;
+
+        window.scrollTo({
+          top: offsetPosition - 30,
+          behavior: "smooth",
+        });
+      }
+    },
+    [isNavbarSticky],
+  );
 
   const handleTabClick = useCallback(
     (key: string) => {
@@ -396,13 +396,39 @@ const ContentTabsWrapper = ({
     [scrollToElement],
   );
 
+  // =============== تخصیص ref به بخش‌های SSR با cloneElement ===============
+  const childrenWithRef = React.Children.map(children, (child) => {
+    // ✅ بررسی اینکه child وجود دارد و React element است
+    if (!child || !React.isValidElement(child)) {
+      return child;
+    }
+
+    const childElement = child as ChildWithId;
+    const childId = childElement.props?.id;
+
+    if (childId === "review") {
+      return React.cloneElement(childElement, {
+        ref: reviewRef,
+      } as any);
+    } else if (childId === "technical") {
+      return React.cloneElement(childElement, {
+        ref: technicalRef,
+      } as any);
+    } else if (childId === "images") {
+      return React.cloneElement(childElement, {
+        ref: imagesRef,
+      } as any);
+    }
+    return child;
+  });
+
   return (
     <div className="content-tabs-container">
       {/* نوار تب‌ها */}
       {allTabItems.length > 0 && (
         <div
           ref={navbarRef}
-          className="navbar-tabs p-0! m-0!"
+          className="navbar-tabs p-0! m-0! "
           style={{
             position: "sticky",
             top: isNavbarSticky ? "112px" : "auto",
@@ -427,7 +453,7 @@ const ContentTabsWrapper = ({
         </div>
       )}
 
-      <div className="flex lg:flex-row-reverse gap-3 lg:flex-nowrap flex-wrap container mx-auto px-2">
+      <div className="flex lg:flex-row-reverse gap-3 lg:flex-nowrap flex-wrap mx-auto px-2">
         {/* سایدبار - دسکتاپ */}
         <aside
           ref={sidebarRef}
@@ -453,10 +479,10 @@ const ContentTabsWrapper = ({
             <div className="w-full">
               <div className="space-y-6">
                 {/* بخش‌های SSR */}
-                {children}
+                {childrenWithRef}
 
                 {/* بخش‌های کلاینت با Lazy Loading */}
-                <div id="news" className="section-anchor">
+                <div id="news" className="section-anchor" ref={newsRef}>
                   <Suspense fallback={<NewsSkeleton />}>
                     <RelatedNewsSection
                       detailsCar={detailsCar}
@@ -466,7 +492,7 @@ const ContentTabsWrapper = ({
                   </Suspense>
                 </div>
 
-                <div id="video" className="section-anchor">
+                <div id="video" className="section-anchor" ref={videoRef}>
                   <Suspense fallback={<VideosSkeleton />}>
                     <RelatedVideosSection
                       detailsCar={detailsCar}
@@ -476,7 +502,11 @@ const ContentTabsWrapper = ({
                   </Suspense>
                 </div>
 
-                <div id="Comparisons" className="section-anchor">
+                <div
+                  id="Comparisons"
+                  className="section-anchor"
+                  ref={comparisonsRef}
+                >
                   <Suspense fallback={<ComparisonsSkeleton />}>
                     <RelatedComparisons
                       detailsCar={detailsCar}

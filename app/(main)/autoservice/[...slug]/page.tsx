@@ -7,6 +7,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import MainBoxAutoService from "./components/MainBoxAutoService";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -102,9 +103,10 @@ async function pageAutoservicesDetails() {
     } catch (error) {
       console.error("Error recording visit:", error);
     }
-
+ const schemas = detailsAuto?.seoInfo?.schemas || [];
     return (
       <>
+      <JsonLd schemas={schemas} />
         <div className="flex flex-wrap bg-gray-50">
           <MainBoxAutoService
             detailsAuto={detailsAuto}

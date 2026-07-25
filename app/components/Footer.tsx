@@ -69,7 +69,7 @@ const Footer = ({
           <div className="mx-auto px-4 footer-wrapper">
             <div className="grid grid-cols-12 sm:gap-8 gap-2">
               {/* Footer Column - Logo and Info */}
-              <div className="footer-column col-span-12 sm:col-span-6 lg:col-span-4">
+              <div className="footer-column col-span-12 sm:col-span-6 lg:col-span-3">
                 <div className="logo-footer mb-4 h-7!">
                   <Link href="/" className="h-7!">
                     <img
@@ -103,26 +103,11 @@ const Footer = ({
                   </div>
                 )}
 
-                <div className="rewards sm:flex p-5">
-                  <div className="rw-item flex flex-col items-center text-center h-48">
-                    <Image
-                      src="/images/gallery/award.png"
-                      alt="جایزه"
-                      width={80}
-                      height={80}
-                      className="mb-2"
-                    />
-                    <p className="text-black font-semibold  text-sm mt-2">
-                      برنده جشواره وب و موبایل <br />
-                      به انتخاب مردم
-                    </p>
-                  </div>
-                </div>
+                
               </div>
 
               {/* Footer Column - Quick Links */}
-              <nav
-                className="footer-column col-span-12 lg:col-span-6 ft-lists-wrap"
+              <nav className="footer-column col-span-12 lg:col-span-5 ft-lists-wrap"
                 aria-label="دسترسی سریع"
               >
                 <h2 className="text-black text-[16px] font-bold! mb-4! sm:text-start text-center">
@@ -181,7 +166,7 @@ const Footer = ({
               </nav>
 
               {/* Footer Column - Social Media (Desktop) */}
-              <div className="footer-column col-span-12 md:col-span-2 lg:col-span-2">
+              <div className="footer-column col-span-12 md:col-span-4 lg:col-span-2">
                 <h4 className="text-black text-[16px] font-bold! mb-4! sm:text-start text-center">
                   شبکه های اجتماعی
                 </h4>
@@ -195,6 +180,7 @@ const Footer = ({
                       >
                         <Link
                           href={social.sourceLink || "#"}
+                           target="_blank"
                           className="bg-gray-100 rounded-lg w-10 h-10 flex items-center justify-center hover:bg-gray-200 transition-colors"
                         >
                           <img
@@ -207,6 +193,25 @@ const Footer = ({
                       </li>
                     ))}
                   </ul>
+                </div>
+              </div>
+              <div className="footer-column col-span-12 md:col-span-4 lg:col-span-2">
+               
+
+                <div className="rewards sm:flex p-5">
+                  <div className="rw-item flex flex-col items-center text-center h-48">
+                    <Image
+                      src="/images/gallery/award.png"
+                      alt="جایزه"
+                      width={80}
+                      height={80}
+                      className="mb-2"
+                    />
+                    <p className="text-black font-semibold  text-sm mt-2">
+                      برنده جشواره وب و موبایل <br />
+                      به انتخاب مردم
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

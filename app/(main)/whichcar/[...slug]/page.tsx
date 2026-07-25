@@ -1,3 +1,4 @@
+import { JsonLd } from "@/app/components/JsonLd";
 import { getComment } from "@/services/Comment/Comment";
 import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
@@ -12,7 +13,8 @@ export async function generateMetadata() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  const dataPage: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
   if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
@@ -59,7 +61,8 @@ async function pageWhichcarsDainamic() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const whichcars: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
+  const whichcars: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
   if (!whichcars) {
     return notFound();
   }
@@ -146,8 +149,11 @@ async function pageWhichcarsDainamic() {
     console.error("Error recording visit:", error);
   }
 
+  const schemas = whichcars?.seoInfo?.schemas || [];
+
   return (
     <>
+      <JsonLd schemas={schemas} />
       <CompareCars
         whichcars={whichcars}
         dataCompare={dataCompare}

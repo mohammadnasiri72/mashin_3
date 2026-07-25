@@ -1,4 +1,5 @@
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { JsonLd } from "@/app/components/JsonLd";
 import { getItem } from "@/services/Item/Item";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
@@ -72,8 +73,11 @@ async function pageTechnicalWord() {
     FullData: true,
   });
 
+  const schemas = detailsDic?.seoInfo?.schemas || [];
+
   return (
     <>
+      <JsonLd schemas={schemas} />
       {detailsDic?.breadcrumb && (
         <BreadcrumbCategory
           breadcrumb={detailsDic.breadcrumb}

@@ -41,8 +41,8 @@ async function FeaturesSection({
       {summary && (
         <summary className="mb-6!">
           <h2 className="text-2xl font-bold text-gray-900 mb-6!">
-            <span className="px-1">بررسی</span>
-            <strong className="text-red-700 px-1">
+            <span className="px-1">بررسی </span>
+            <strong className="text-red-700">
               {detailsCar.sourceName} {detailsCar.title}
             </strong>
           </h2>

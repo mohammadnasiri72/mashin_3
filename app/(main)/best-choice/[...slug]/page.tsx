@@ -8,6 +8,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import MainBoxBestChoice from "./components/MainBoxBestChoice";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -128,8 +129,12 @@ async function pageBestChoice() {
       console.error("Error recording visit:", error);
     }
 
+    const schemas = detailsBest?.seoInfo?.schemas || [];
+
+
     return (
       <>
+      <JsonLd schemas={schemas} />
         <div className="flex flex-wrap bg-gray-50">
           <MainBoxBestChoice
             detailsBest={detailsBest}

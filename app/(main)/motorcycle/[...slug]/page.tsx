@@ -1,3 +1,4 @@
+import { JsonLd } from "@/app/components/JsonLd";
 import { getAttachment } from "@/services/Attachment/Attachment";
 import { getComment } from "@/services/Comment/Comment";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
@@ -98,8 +99,11 @@ async function pageMotorcycleDainamic() {
     console.error("Error recording visit:", error);
   }
 
+  const schemas = detailsMotorcycle?.seoInfo?.schemas || [];
+
   return (
     <>
+      <JsonLd schemas={schemas} />
       <HeroSection detailsCar={detailsMotorcycle} />
       <NvbarCar
         pollData={pollData}

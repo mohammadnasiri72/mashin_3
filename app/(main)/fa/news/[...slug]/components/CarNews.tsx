@@ -113,7 +113,7 @@ const CarNews = ({
                 ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
               `}
             >
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              <div className="bg-white rounded-2xl sm:p-6 p-2 shadow-sm border border-gray-100">
                 <div className="mb-6 relative">
                   <Swiper
                     ref={swiperRef}

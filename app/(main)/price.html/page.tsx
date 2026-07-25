@@ -1,17 +1,19 @@
+import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { JsonLd } from "@/app/components/JsonLd";
+import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { getPriceCar } from "@/services/Price/PriceCar";
 import { getPriceCarBrands } from "@/services/Price/PriceCarBrands";
-import PriceCar from "./components/PriceCar";
 import { mainDomainOld } from "@/utils/mainDomain";
-import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { headers } from "next/headers";
-import { getItemByUrl } from "@/services/Item/ItemByUrl";
+import PriceCar from "./components/PriceCar";
 
 export async function generateMetadata() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const dataPage: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
   if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
@@ -58,6 +60,10 @@ async function pagePrice({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
   const searchParam = await searchParams;
   const type = searchParam.type;
   const brandId = Number(searchParam.brandId);
@@ -69,16 +75,19 @@ async function pagePrice({
     BrandId: brandId ? brandId : -1,
   });
 
-  
-  
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
+
+  const schemas = dataPage?.seoInfo?.schemas || [];
 
   return (
     <>
+      <JsonLd schemas={schemas} />
       <BreadcrumbCategory breadcrumb={[]} title={price.title} />
       <PriceCar
         brands={brands.brands}
         price={price.prices}
-        title={price.title}
+        title={dataPage ? dataPage.title : ""}
         summary={price.summary}
         body={price.body}
         brandIdSearchParams={brandId}

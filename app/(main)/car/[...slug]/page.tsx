@@ -13,6 +13,7 @@ import ContentTabsSSR from "../components/ContentTabsSSR";
 import FeaturesSection from "../components/FeaturesSection";
 import HeroSection from "../components/HeroSection";
 import NvbarCar from "../components/NvbarCar";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -98,8 +99,12 @@ async function page() {
     console.error("Error recording visit:", error);
   }
 
+   const schemas = detailsCar?.seoInfo?.schemas || [];
+
   return (
     <>
+    {/* اضافه کردن JSON-LD به هدر */}
+      <JsonLd schemas={schemas} />
       <HeroSection detailsCar={detailsCar} />
       <NvbarCar
         pollData={pollData}

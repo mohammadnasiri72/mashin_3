@@ -1,3 +1,4 @@
+import { JsonLd } from "@/app/components/JsonLd";
 import { getComment } from "@/services/Comment/Comment";
 import { getItem } from "@/services/Item/Item";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
@@ -110,15 +111,24 @@ async function pageTipView() {
   } catch (error) {
     console.error("Error recording visit:", error);
   }
+  const schemas = education?.seoInfo?.schemas || [];
+
   return (
-    <EducationView
-      education={education}
-      popularEducations={popularEducations.filter((e) => e.id !== education.id)}
-      relatedEducations={relatedEducations.filter((e) => e.id !== education.id)}
-      id={id}
-      comments={comments}
-      banner={banner}
-    />
+    <>
+      <JsonLd schemas={schemas} />
+      <EducationView
+        education={education}
+        popularEducations={popularEducations.filter(
+          (e) => e.id !== education.id,
+        )}
+        relatedEducations={relatedEducations.filter(
+          (e) => e.id !== education.id,
+        )}
+        id={id}
+        comments={comments}
+        banner={banner}
+      />
+    </>
   );
 }
 

@@ -52,46 +52,52 @@ const Sidebar = ({ detailsCar }: { detailsCar: ItemsId }) => {
         setLoading(true);
 
         const competitorIds = detailsCar.properties.find(
-          (e) => e.propertyKey === "p1042_relatedcars"
+          (e) => e.propertyKey === "p1042_relatedcars",
         )?.propertyValue;
 
         const sourceLink = detailsCar.sourceLink;
         const categoryId = String(detailsCar.categoryId);
 
-        const [detailsCarcompetitor, carsModel, carsModel2, lastNews, lastVideos] =
-          await Promise.all([
-            competitorIds ? getItemByIds(competitorIds) : Promise.resolve([]),
-            sourceLink
-              ? getItem({
-                  TypeId: 1042,
-                  langCode: "fa",
-                  CategoryIdArray: sourceLink,
-                  PageIndex: 1,
-                  PageSize: 5,
-                })
-              : Promise.resolve([]),
-            categoryId
-              ? getItem({
-                  TypeId: 1042,
-                  langCode: "fa",
-                  CategoryIdArray: categoryId,
-                  PageIndex: 1,
-                  PageSize: 5,
-                })
-              : Promise.resolve([]),
-            getItem({
-              TypeId: 5,
-              langCode: "fa",
-              PageIndex: 1,
-              PageSize: 7,
-            }),
-            getItem({
-              TypeId: 1028,
-              langCode: "fa",
-              PageIndex: 1,
-              PageSize: 5,
-            }),
-          ]);
+        const [
+          detailsCarcompetitor,
+          carsModel,
+          carsModel2,
+          lastNews,
+          lastVideos,
+        ] = await Promise.all([
+          competitorIds ? getItemByIds(competitorIds) : Promise.resolve([]),
+          sourceLink
+            ? getItem({
+                TypeId: 1042,
+                langCode: "fa",
+                CategoryIdArray: sourceLink,
+                PageIndex: 1,
+                PageSize: 5,
+              })
+            : Promise.resolve([]),
+          categoryId
+            ? getItem({
+                TypeId: 1042,
+                langCode: "fa",
+                CategoryIdArray: categoryId,
+                PageIndex: 1,
+                PageSize: 5,
+                FullData: true,
+              })
+            : Promise.resolve([]),
+          getItem({
+            TypeId: 5,
+            langCode: "fa",
+            PageIndex: 1,
+            PageSize: 5,
+          }),
+          getItem({
+            TypeId: 1028,
+            langCode: "fa",
+            PageIndex: 1,
+            PageSize: 5,
+          }),
+        ]);
 
         setData({
           detailsCarcompetitor: Array.isArray(detailsCarcompetitor)
@@ -123,7 +129,7 @@ const Sidebar = ({ detailsCar }: { detailsCar: ItemsId }) => {
           loadFancybox();
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.1 },
     );
 
     const sidebarElement = document.querySelector(".sidebar");
@@ -211,6 +217,7 @@ const Sidebar = ({ detailsCar }: { detailsCar: ItemsId }) => {
   const { detailsCarcompetitor, carsModel, carsModel2, lastNews, lastVideos } =
     data;
 
+
   return (
     <div className="sidebar space-y-6">
       {/* مدل‌های خودرو */}
@@ -230,13 +237,13 @@ const Sidebar = ({ detailsCar }: { detailsCar: ItemsId }) => {
                   <img
                     src={mainDomain + model.image}
                     alt={model.title}
-                    className="w-full h-32 object-contain group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-32 object-contain group-hover:scale-95 scale-90 transition-transform duration-300"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/20 transition-all duration-300"></div>
-                  <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center absolute left-0 bottom-0">
-                    <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative text-sm z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#5d5dff]">
-                      {model.title}
+                  <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fffa]! rounded-xl flex sm:justify-start justify-center items-center absolute left-0 bottom-0">
+                    <h3 className="pb-0! mb-0! text-center text-black! font-bold! inline-block relative text-sm z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/4 after:-z-10 sm:after:bg-red-300">
+                      {model.sourceName} {model.title}
                     </h3>
                   </div>
                 </Link>
@@ -265,13 +272,16 @@ const Sidebar = ({ detailsCar }: { detailsCar: ItemsId }) => {
                   <img
                     src={mainDomain + model.image}
                     alt={model.title}
-                    className="w-full h-32 object-contain group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-32 object-contain group-hover:scale-95 scale-90 transition-transform duration-300"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-black/20 transition-all duration-300"></div>
-                  <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center absolute left-0 bottom-0">
-                    <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative text-sm z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#5d5dff]">
-                      {model.publishCode}
+                  <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fffa]! rounded-xl flex sm:justify-start justify-center items-center absolute left-0 bottom-0">
+                    <h3 className="pb-0! mb-0! text-center text-black! font-bold! inline-block relative text-sm z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/4 after:-z-10 sm:after:bg-red-300">
+                      <p>
+                        {model.sourceName} {model.title}{" "}
+                      </p>
+                      <p>{model.publishCode}</p>
                     </h3>
                   </div>
                 </Link>
@@ -284,32 +294,34 @@ const Sidebar = ({ detailsCar }: { detailsCar: ItemsId }) => {
       {/* ماشین‌های رقبا */}
       {detailsCarcompetitor.length > 0 && (
         <div className="sidebar_widget bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-          <h3 className="widget_title text-lg font-bold text-gray-900 mb-3">
+          <h3 className="widget_title text-lg font-bold text-gray-900 mb-3!">
             <span>ماشین های رقبا</span>
           </h3>
 
           <div className="space-y-4">
-            {detailsCarcompetitor.map((model) => (
-              <div
-                key={model.id}
-                className="item_wd relative rounded-lg overflow-hidden group"
-              >
-                <Link href={model.url} className="block w-full h-full">
-                  <img
-                    src={mainDomain + model.image}
-                    alt={model.title}
-                    className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-black/20 transition-all duration-300"></div>
-                  <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center absolute left-0 bottom-0">
-                    <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative text-sm z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#5d5dff]">
-                      {model.title}
-                    </h3>
-                  </div>
-                </Link>
-              </div>
-            ))}
+            {detailsCarcompetitor
+              // .slice(0,5)
+              .map((model) => (
+                <div
+                  key={model.id}
+                  className="item_wd relative rounded-lg overflow-hidden group"
+                >
+                  <Link href={model.url} className="block w-full h-full">
+                    <img
+                      src={mainDomain + model.image}
+                      alt={model.title}
+                      className="w-full h-32 object-cover group-hover:scale-85 scale-80 transition-transform duration-300"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/20 transition-all duration-300"></div>
+                    <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fffa]! rounded-xl flex sm:justify-start justify-center items-center absolute left-0 bottom-0">
+                      <h3 className="pb-0! mb-0! text-center text-black! font-bold! inline-block relative text-sm z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/4 after:-z-10 sm:after:bg-red-300">
+                        {model.sourceName} {model.title}
+                      </h3>
+                    </div>
+                  </Link>
+                </div>
+              ))}
           </div>
         </div>
       )}

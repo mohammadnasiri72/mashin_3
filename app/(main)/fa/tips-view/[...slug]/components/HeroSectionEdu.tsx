@@ -1,11 +1,13 @@
+import { formatPersianDate, toPersianNumbers } from "@/utils/func";
 import Link from "next/link";
 import React from "react";
+import { FaCalendar, FaEye } from "react-icons/fa";
 
 function HeroSectionEdu({ education }: { education: ItemsId }) {
   return (
     <>
       <section
-        className="relative min-h-[225px] bg-cover bg-center flex sm:block items-center justify-center"
+        className="relative min-h-56.25 bg-cover bg-center flex sm:block items-center justify-center"
         style={{ backgroundImage: "url('/images/gallery/header-1.jpg')" }}
       >
         {/* Overlay */}
@@ -24,7 +26,7 @@ function HeroSectionEdu({ education }: { education: ItemsId }) {
                 <li>
                   <Link
                     href={"/"}
-                    className="text-white! hover:text-[#ce1a2a]! text-sm duration-300"
+                    className="text-white! font-bold hover:text-[#ce1a2a]! text-sm duration-300"
                   >
                     صفحه اصلی
                   </Link>
@@ -44,6 +46,20 @@ function HeroSectionEdu({ education }: { education: ItemsId }) {
                   ))}
               </ol>
             </nav>
+            <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 flex-wrap px-2">
+                             <div className="flex items-center gap-1 ">
+                               <FaEye className="text-white! text-xs" />
+                               <span className="font-bold text-white! text-xs">
+                                 {toPersianNumbers(education.visit)}
+                               </span>
+                             </div>
+                             <div className="flex items-center gap-1">
+                               <FaCalendar className="text-white! text-xs" />
+                               <span className="font-bold text-white! text-xs">
+                                 {formatPersianDate(education.created)}
+                               </span>
+                             </div>
+                           </div>
           </div>
         </div>
 

@@ -1,20 +1,14 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Suspense, useEffect, useTransition } from "react";
 import Loading from "./loader";
 
 function CustomRouteLoaderContent() {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const pathname = usePathname();
 
-  useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  }, [pathname]);
+
 
   useEffect(() => {
     // Monkey patch کردن router.push و router.replace

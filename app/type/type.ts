@@ -166,6 +166,7 @@ interface seoInfo {
   seoKeywords: string;
   seoDescription: string;
   seoHeadTags: string;
+  schemas:any[]
 }
 
 interface ItemsId {
@@ -185,6 +186,7 @@ interface ItemsId {
   itemKey: string;
   amount: number;
   parentId: number | null;
+  parentTitle: string;
   image: string;
   imageMobile: string | null;
   url: string;
