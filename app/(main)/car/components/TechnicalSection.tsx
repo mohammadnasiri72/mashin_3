@@ -53,7 +53,7 @@ const TechnicalSection = ({ detailsCar ,vehicle}: { detailsCar: ItemsId ,vehicle
   if (specifications.length === 0) {
     return (
       <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
+        <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
           <strong className="text-[#ce1a2a]">مشخصات فنی </strong>
           {vehicle==='motor'? 'موتور':  'ماشین'} {detailsCar.sourceName} {detailsCar.title}
         </h3>
@@ -69,7 +69,7 @@ const TechnicalSection = ({ detailsCar ,vehicle}: { detailsCar: ItemsId ,vehicle
 
   return (
     <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-      <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
+      <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
         <strong className="text-[#ce1a2a]">مشخصات فنی </strong>
         {vehicle==='motor'? 'موتور':  'ماشین'} {detailsCar.sourceName} {detailsCar.title}
       </h3>

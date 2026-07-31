@@ -18,6 +18,8 @@ import NewsListSection from "../components/NewsListSection";
 import NewsSection from "../components/NewsSection";
 import VideoBannerSection from "../components/VideoBannerSection";
 import { decodeHtmlServer } from "@/utils/func";
+import EducationSection from "../components/EducationSection";
+import { getItemByIds } from "@/services/Item/ItemByIds";
 
 export const revalidate = 60;
 
@@ -209,7 +211,7 @@ export default async function Home() {
       PageSize: 12,
     }),
     getItem({ TypeId: 1045, langCode: "fa", PageIndex: 1, PageSize: 10 }),
-    getItem({ TypeId: 3, langCode: "fa", PageIndex: 1, PageSize: 13 }),
+    getItem({ TypeId: 3, langCode: "fa", PageIndex: 1, PageSize: 4 }),
     getCategory({
       TypeId: 1052,
       LangCode: "fa",
@@ -224,7 +226,7 @@ export default async function Home() {
       PageIndex: 1,
       PageSize: 200,
     }),
-    getCategory({ TypeId: 1050, LangCode: "fa", PageIndex: 1, PageSize: 13 }),
+    getCategory({ TypeId: 1050, LangCode: "fa", PageIndex: 1, PageSize: 12 }),
   ]);
 
   
@@ -242,23 +244,40 @@ export default async function Home() {
     BrandId: brands.brands[0].id,
   });
 
- 
+ const AutoServiceData: Items[] = await getItem({
+    TypeId: 1050,
+    langCode: "fa",
+    PageIndex:  1,
+    PageSize: 15,
+     OrderBy: 13,
+  });
+
+   const ids = AutoServiceData.map((item) => item.id).join(",");
+    let propertyItems: ItemsId[] = [];
+    if (ids) {
+      propertyItems = await getItemByIds(ids);
+    }
 
   return (
     <div className="page-wrapper min-h-screen bg-[#f4f4f4]">
-      <div className="content-box pt-4">
+      <div className="content-box ">
         {/* Hero Slider */}
-        {/* {slider.length > 0 && <HeroSlider slider={slider} />} */}
+       {slider.length > 0 && <HeroSlider
+        slider={slider}
+        latestNews={news}
+        latestComparisons={compare}
+        latestPresales={saleNews}
+      />}
 
         {/* News */}
-        <NewsSection news={newsCar} saleNews={saleNews} />
+        <NewsSection news={news} saleNews={saleNews} />
         
         {/* compare & bestChoices & instaLink */}
-        <ComparisonSection
+        {/* <ComparisonSection
           news={linkSelected}
           compare={compare}
           bestChoices={bestChoices}
-        />
+        /> */}
 
         {/* Car Types */}
         <CarTypes segmentCars={segmentCars} />
@@ -267,7 +286,7 @@ export default async function Home() {
         <VideoBannerSection video={video} />
 
         {/* News List Section */}
-        <NewsListSection news={news} />
+        {/* <NewsListSection news={news} /> */}
 
         {/* Car Specs Section */}
         <CarSpecsSection carSpecs={carSpecs} Properties={Properties} />
@@ -283,10 +302,11 @@ export default async function Home() {
         
         {/* Brands AutoServices & education */}
         <CreativeCategoriesSection
-          brandsAuto={brandsAuto}
-          carView={carView}
-          education={education}
+          brandsAuto={AutoServiceData}
+          carView={brandsAuto}
+          propertyItems={propertyItems}
         />
+        <EducationSection education={education}/>
 
         {/* Motorcycle Brands Section */}
         <MotorcycleBrandsSection brands={brandMotor} />

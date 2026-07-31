@@ -7,8 +7,8 @@ function Loading() {
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4 max-w-7xl">
         {/* Hero Section Skeleton */}
-        <div className="text-center mb-8 animate-pulse">
-          <div className="h-8 w-64 bg-gray-200 rounded-lg mx-auto mb-4"></div>
+        <div className="text-center mb-8! animate-pulse">
+          <div className="h-8 w-64 bg-gray-200 rounded-lg mx-auto mb-4!"></div>
           <div className="h-4 w-96 max-w-full bg-gray-200 rounded-lg mx-auto"></div>
         </div>
 
@@ -16,13 +16,13 @@ function Loading() {
         <div className="p-3 flex justify-center items-center sm:flex-nowrap flex-wrap gap-3">
           <div className="flex justify-center items-center w-64">
             <div className="border border-gray-200 shadow-lg min-h-20 p-3 rounded-lg flex items-center justify-center flex-col w-full bg-white animate-pulse">
-              <div className="w-8 h-8 bg-gray-200 rounded-full mb-2"></div>
+              <div className="w-8 h-8 bg-gray-200 rounded-full mb-2!"></div>
               <div className="h-4 w-12 bg-gray-200 rounded"></div>
             </div>
           </div>
           <div className="flex justify-center items-center w-64">
             <div className="border border-gray-200 shadow-lg min-h-20 p-3 rounded-lg flex items-center justify-center flex-col w-full bg-white animate-pulse">
-              <div className="w-8 h-8 bg-gray-200 rounded-full mb-2"></div>
+              <div className="w-8 h-8 bg-gray-200 rounded-full mb-2!"></div>
               <div className="h-4 w-16 bg-gray-200 rounded"></div>
             </div>
           </div>
@@ -31,7 +31,7 @@ function Loading() {
         {/* Compare Section Skeleton (after type selection) */}
         <div className="mt-8">
           {/* Header with breadcrumb and title */}
-          <div className="flex justify-between items-center mb-6 flex-wrap gap-4 animate-pulse">
+          <div className="flex justify-between items-center mb-6! flex-wrap gap-4 animate-pulse">
             <div className="flex items-center gap-2">
               <div className="h-6 w-24 bg-gray-200 rounded"></div>
               <div className="h-4 w-4 bg-gray-200 rounded"></div>
@@ -49,12 +49,12 @@ function Loading() {
               </div>
               <div className="p-4">
                 {/* Search Box Skeleton */}
-                <div className="relative mb-4">
+                <div className="relative mb-4!">
                   <div className="w-full h-10 bg-gray-200 rounded-lg"></div>
                 </div>
                 {/* Brand Filter Skeleton */}
-                <div className="mb-4">
-                  <div className="h-5 w-24 bg-gray-200 rounded mb-2"></div>
+                <div className="mb-4!">
+                  <div className="h-5 w-24 bg-gray-200 rounded mb-2!"></div>
                   <div className="flex gap-2 overflow-x-auto pb-2">
                     {[...Array(6)].map((_, i) => (
                       <div key={i} className="h-8 w-20 bg-gray-200 rounded-full shrink-0"></div>
@@ -67,8 +67,8 @@ function Loading() {
                     <div key={i} className="flex gap-3 p-3 border border-gray-100 rounded-lg">
                       <div className="w-20 h-20 bg-gray-200 rounded-lg shrink-0"></div>
                       <div className="flex-1">
-                        <div className="h-5 w-32 bg-gray-200 rounded mb-2"></div>
-                        <div className="h-4 w-24 bg-gray-200 rounded mb-1"></div>
+                        <div className="h-5 w-32 bg-gray-200 rounded mb-2!"></div>
+                        <div className="h-4 w-24 bg-gray-200 rounded mb-1!"></div>
                         <div className="h-3 w-20 bg-gray-200 rounded"></div>
                       </div>
                       <div className="w-6 h-6 bg-gray-200 rounded-full"></div>
@@ -85,15 +85,15 @@ function Loading() {
               </div>
               <div className="p-4">
                 {/* VS Badge Skeleton (centered) */}
-                <div className="flex justify-center mb-4">
+                <div className="flex justify-center mb-4!">
                   <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
                     <div className="h-5 w-8 bg-gray-300 rounded"></div>
                   </div>
                 </div>
                 {/* Empty State Skeleton */}
                 <div className="text-center py-12">
-                  <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4"></div>
-                  <div className="h-5 w-48 bg-gray-200 rounded mx-auto mb-2"></div>
+                  <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4!"></div>
+                  <div className="h-5 w-48 bg-gray-200 rounded mx-auto mb-2!"></div>
                   <div className="h-4 w-64 bg-gray-200 rounded mx-auto"></div>
                 </div>
               </div>

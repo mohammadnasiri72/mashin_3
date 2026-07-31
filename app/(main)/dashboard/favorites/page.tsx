@@ -74,7 +74,7 @@ export default function FavoritesPage() {
         <>
           {favorites.length === 0 ? (
             <div className="bg-white rounded-2xl shadow-sm p-12 text-center">
-              <HiOutlineHeart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <HiOutlineHeart className="w-16 h-16 text-gray-300 mx-auto mb-4!" />
               <p className="text-gray-500">لیست علاقه‌مندی‌ها خالی است</p>
             </div>
           ) : (
@@ -85,7 +85,7 @@ export default function FavoritesPage() {
                   className="bg-white rounded-2xl shadow-sm p-4"
                 >
                   <Link href={item.url}>
-                    <div className="aspect-video bg-gray-100 rounded-xl mb-3">
+                    <div className="aspect-video bg-gray-100 rounded-xl mb-3!">
                       <img
                         className="object-cover w-full h-full"
                         src={mainDomain + item.image}
@@ -100,7 +100,7 @@ export default function FavoritesPage() {
                     </h3>
                   </Link>
                   {item.amount >= 0 && (
-                    <p className="text-xs text-gray-500 mb-3">
+                    <p className="text-xs text-gray-500 mb-3!">
                       {item.amount.toLocaleString()} تومان
                     </p>
                   )}

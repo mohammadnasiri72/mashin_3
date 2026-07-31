@@ -29,7 +29,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
 }) => (
   <div className="space-y-4">
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-gray-700 mb-1!">
         <span className="text-red-600">*</span> نام
       </label>
       <Input
@@ -52,7 +52,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     </div>
 
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-gray-700 mb-1!">
         <span className="text-red-600">*</span> نام خانوادگی
       </label>
       <Input
@@ -73,7 +73,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     </div>
 
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-gray-700 mb-1!">
         <span className="text-red-600">*</span> ایمیل
       </label>
       <Input
@@ -94,7 +94,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
     </div>
 
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-gray-700 mb-1!">
         <span className="text-red-600">*</span> رمز عبور
       </label>
       <Input.Password

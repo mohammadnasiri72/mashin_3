@@ -175,7 +175,7 @@ const CustomPagination = ({
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-3 py-4 bg-white rounded-lg shadow-sm">
+    <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-3 px-2 py-4 bg-white rounded-lg shadow-sm">
       {/* اطلاعات صفحه */}
       <div className="text-sm text-gray-600">
         نمایش{" "}
@@ -267,81 +267,3 @@ export default CustomPagination;
 
 
 
-
-
-//  <style jsx global>{`
-//         .ant-pagination-item {
-//           border-radius: 8px !important;
-//           border: 1px solid #e5e7eb !important;
-//         }
-
-//         .ant-pagination-item:hover {
-//           border-color: #ce1a2a !important;
-//         }
-
-//         .ant-pagination-item a {
-//           color: #4b5563 !important;
-//           padding: 0 8px !important;
-//         }
-
-//         .ant-pagination-item:hover a {
-//           color: #ce1a2a !important;
-//           background-color: #fff !important;
-//           border-color: #ce1a2a !important;
-//           border-radius: 8px !important;
-//         }
-
-//         .ant-pagination-item-active:hover a {
-//           border-radius: 8px !important;
-//         }
-
-//         .ant-pagination-item-active {
-//           background-color: #ce1a2a !important;
-//           border-color: #ce1a2a !important;
-//         }
-
-//         .ant-pagination-item-active a {
-//           color: white !important;
-//         }
-
-//         .ant-pagination-prev,
-//         .ant-pagination-next {
-//           border-radius: 8px !important;
-//           border: 1px solid #e5e7eb !important;
-//         }
-
-//         .ant-pagination-prev:hover,
-//         .ant-pagination-next:hover {
-//           border-color: #ce1a2a !important;
-//         }
-
-//         .ant-pagination-prev button,
-//         .ant-pagination-next button {
-//           color: #4b5563 !important;
-//         }
-
-//         .ant-pagination-prev:hover button,
-//         .ant-pagination-next:hover button {
-//           color: #ce1a2a !important;
-//         }
-
-//         .ant-pagination-disabled {
-//           opacity: 0.5 !important;
-//           cursor: not-allowed !important;
-//         }
-
-//         .ant-pagination-disabled:hover {
-//           border-color: #e5e7eb !important;
-//         }
-
-//         .ant-pagination-disabled button {
-//           color: #9ca3af !important;
-//         }
-
-//         .ant-pagination-jump-prev .ant-pagination-item-ellipsis,
-//         .ant-pagination-jump-next .ant-pagination-item-ellipsis {
-//           color: #6b7280 !important;
-//         }
-
-       
-//       `}</style>

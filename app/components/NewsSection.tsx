@@ -13,6 +13,7 @@ import OptimizedImage from "./OptimizedImage";
 
 // Import Swiper styles
 import "swiper/css";
+import NewsListSection from "./NewsListSection";
 
 export default function NewsSection({
   news,
@@ -69,113 +70,17 @@ export default function NewsSection({
   const newsSkeletonCount = getNewsSkeletonCount();
 
   return (
-    <section className="" aria-labelledby="news-section-title">
-      <div className="mx-auto px-4">
+    <section className="" aria-labelledby="news-section-title ">
+      <div className="mx-auto px-4 ">
         <div className="flex flex-wrap">
           {/* بخش اصلی اخبار */}
-          <article className="lg:w-3/4 w-full h-100">
-            <div className="p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
-              <div className="pr-3">
-                <Link href={"/fa/news/اخبار-خودرو.html"}>
-                  <h2
-                    id="news-section-title"
-                    className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]"
-                  >
-                    آخرین اخبار
-                  </h2>
-                </Link>
-              </div>
-            </div>
-
-            {/* اسلایدر Swiper برای اخبار */}
-            <div className="lg:pl-2">
-              {showSkeleton ? (
-                // اسکلتون ریسپانسیو
-                <div
-                  className="grid gap-4"
-                  style={{
-                    gridTemplateColumns: `repeat(${newsSkeletonCount}, minmax(0, 1fr))`,
-                  }}
-                >
-                  {Array.from({ length: newsSkeletonCount }).map((_, index) => (
-                    <div
-                      key={index}
-                      className="h-72 bg-gray-200 rounded-3xl animate-pulse"
-                    />
-                  ))}
-                </div>
-              ) : (
-                <Swiper
-                  modules={[Autoplay]}
-                  spaceBetween={16}
-                  slidesPerView={1}
-                  loop={true}
-                  navigation={false}
-                  autoplay={{
-                    delay: 3000,
-                    disableOnInteraction: false,
-                  }}
-                  breakpoints={{
-                    640: {
-                      slidesPerView: 2,
-                      spaceBetween: 16,
-                    },
-                    1024: {
-                      slidesPerView: 3,
-                      spaceBetween: 16,
-                    },
-                  }}
-                  className="news-swiper"
-                  observer={true}
-                  observeParents={true}
-                  onSwiper={(swiper) => {
-                    swiperRef.current = swiper;
-                  }}
-                  onInit={(swiper) => {
-                    setTimeout(() => swiper.update(), 100);
-                  }}
-                >
-                  {news.map((item) => (
-                    <SwiperSlide key={item.id}>
-                      <Link href={item.url} className="block">
-                        <Card
-                          hoverable
-                          className="rounded-3xl! h-72 overflow-hidden border-none shadow-sm group"
-                          cover={
-                            <div className="relative h-72 overflow-hidden bg-gray-100">
-                              <OptimizedImage
-                                src={mainDomain + item.image}
-                                alt={item.title}
-                                className="object-cover group-hover:brightness-75 duration-300"
-                                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                                loading="lazy"
-                                onLoad={handleImageLoad}
-                              />
-                              <div className="absolute font-bold! bottom-0 right-0 left-0 bg-linear-to-t from-black/70 to-transparent p-4">
-                                <span className="text-white! inline-block relative pl-2.5 text-[16px] line-clamp-2! z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 after:bg-[#292929]">
-                                  {item.title}
-                                </span>
-                              </div>
-                              <div className="absolute top-3 left-3">
-                                <div className="text-white! flex items-center gap-1 text-[10px] bg-black/30 px-2 py-1 rounded-full">
-                                  <FaCalendar className="text-[10px]" />
-                                  {formatPersianDate(item.created)}
-                                </div>
-                              </div>
-                            </div>
-                          }
-                        />
-                      </Link>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              )}
-            </div>
+          <article className="lg:w-3/4 w-full">
+            <NewsListSection news={news} />
           </article>
 
           {/* بخش شرایط فروش و پیش فروش */}
           <aside
-            className="lg:w-1/4 w-full h-100"
+            className="lg:w-1/4 w-full"
             aria-label="شرایط فروش و پیش فروش"
           >
             <div className="mb-2! p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
@@ -189,25 +94,25 @@ export default function NewsSection({
             {/* اسلایدر عمودی */}
             {showSkeleton ? (
               <div className="flex flex-col gap-2">
-                {[1, 2, 3, 4].map((e) => (
+                {[1, 2, 3, 4, 5].map((e) => (
                   <div
                     key={e}
-                    className="h-16 bg-gray-200 rounded-lg animate-pulse"
+                    className="h-14 bg-gray-200 rounded-lg animate-pulse"
                   />
                 ))}
               </div>
             ) : (
-              <div className="vertical-swiper-container">
+              <div className="vertical-swiper-container ">
                 {saleNews.length > 0 ? (
                   <Swiper
                     modules={[Autoplay, Mousewheel]}
                     direction="vertical"
-                    slidesPerView={4}
+                    slidesPerView={5}
                     spaceBetween={0}
                     slidesPerGroup={1}
-                    loop={false}
+                    loop={true}
                     autoplay={{
-                      delay: 2500,
+                      delay: 3000,
                       disableOnInteraction: false,
                       pauseOnMouseEnter: true,
                     }}
@@ -219,21 +124,27 @@ export default function NewsSection({
                     className="vertical-sale-swiper"
                     observer={true}
                     observeParents={true}
+                    onSwiper={(swiper) => {
+                      swiperRef.current = swiper;
+                    }}
+                    onInit={(swiper) => {
+                      setTimeout(() => swiper.update(), 100);
+                    }}
                   >
                     {saleNews.map((sale, index) => (
-                      <SwiperSlide key={sale.id}>
+                      <SwiperSlide key={sale.id} className="border-b border-[#ce1a2a]">
                         <div
-                          className={`p-4 rounded-sm group transition-all cursor-pointer bg-white hover:bg-[#ce1a2a] hover:text-white! border-r-2 duration-300 sale-item ${
+                          className={`px-3  rounded-sm group transition-all cursor-pointer bg-white hover:bg-[#ce1a2a] hover:text-white! border-r-2 duration-300 sale-item ${
                             index === 0
-                              ? " border-[#ce1a2a]"
+                              ? " border-transparent"
                               : " border-transparent"
                           }`}
                         >
                           <Link
                             href={sale.url}
-                            className="text-[#292929]! duration-300 group-hover:text-white! font-medium flex items-start gap-1 line-clamp-1"
+                            className="text-[#292929]! duration-300 group-hover:text-white! font-medium flex items-start gap-1 text-sm"
                           >
-                            <span className="text-[#ce1a2a] group-hover:text-white! text-[10px] animate-pulse mt-1.5">
+                            <span className="text-[#ce1a2a] group-hover:text-white! text-[8px] animate-pulse mt-1 shrink-0">
                               <FaCircle />
                             </span>
                             <span>{sale.title}</span>
@@ -260,7 +171,7 @@ export default function NewsSection({
 
         .vertical-swiper-container {
           width: 100%;
-          height: 292px;
+          height: 485px;
           overflow: hidden;
           border-radius: 0.5rem;
         }
@@ -272,20 +183,22 @@ export default function NewsSection({
 
         .vertical-sale-swiper .swiper-wrapper {
           height: 100% !important;
+          transition-timing-function: ease-in-out !important;
         }
 
         .vertical-sale-swiper .swiper-slide {
-          height: 73px !important;
+          height: calc(100% / 5) !important;
           opacity: 0.9;
           transition: opacity 0.3s ease;
           overflow: hidden;
         }
 
         .sale-item {
-          height: 73px;
+          height: 100%;
           display: flex;
           align-items: center;
           box-sizing: border-box;
+          border-radius: 6px;
         }
 
         .vertical-sale-swiper .swiper-slide:hover {
@@ -326,6 +239,17 @@ export default function NewsSection({
         
         .animate-pulse {
           animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* ریسپانسیو */
+        @media (max-width: 640px) {
+          .vertical-swiper-container {
+            height: 250px;
+          }
+          
+          .vertical-sale-swiper .swiper-slide {
+            height: calc(100% / 4) !important;
+          }
         }
       `}</style>
     </section>

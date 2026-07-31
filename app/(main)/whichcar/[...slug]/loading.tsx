@@ -30,7 +30,7 @@ function Loading() {
 
       {/* Tabs Navbar Skeleton - Sticky */}
       <div
-        className="navbar-tabs w-full px-2 mt-4 mb-8 sticky top-28 bg-white shadow-sm pt-2 pb-2 transition-all duration-300"
+        className="navbar-tabs w-full px-2 mt-4 mb-8! sticky top-28 bg-white shadow-sm pt-2 pb-2 transition-all duration-300"
         style={{ zIndex: 1000 }}
       >
         <div className="rounded-xl shadow-lg bg-white">
@@ -55,8 +55,8 @@ function Loading() {
                 <Card className="rounded-xl shadow-lg border-0 animate-pulse">
                   <div className="space-y-8">
                     {/* Summary Card Skeleton */}
-                    <Card className="shadow-lg mb-5">
-                      <div className="h-7 w-64 bg-gray-200 rounded mb-4"></div>
+                    <Card className="shadow-lg mb-5!">
+                      <div className="h-7 w-64 bg-gray-200 rounded mb-4!"></div>
                       <div className="space-y-3">
                         <div className="h-4 w-full bg-gray-200 rounded"></div>
                         <div className="h-4 w-full bg-gray-200 rounded"></div>
@@ -72,8 +72,8 @@ function Loading() {
                             <div className="relative p-6 bg-white">
                               <div className="w-full h-56 bg-gray-200 rounded-2xl"></div>
                             </div>
-                            <div className="text-center mb-6 p-4">
-                              <div className="h-6 w-32 bg-gray-200 rounded mx-auto mb-2"></div>
+                            <div className="text-center mb-6! p-4">
+                              <div className="h-6 w-32 bg-gray-200 rounded mx-auto mb-2!"></div>
                               <div className="h-4 w-24 bg-gray-200 rounded mx-auto"></div>
                             </div>
                             <div className="p-4 space-y-3">
@@ -87,8 +87,8 @@ function Loading() {
                               ))}
                               <div className="flex justify-center pt-5">
                                 <div className="rounded-full w-28 h-28 bg-gray-100 border-4 border-gray-200 p-4 flex flex-col justify-center items-center">
-                                  <div className="h-4 w-16 bg-gray-200 rounded mb-1"></div>
-                                  <div className="h-8 w-8 bg-gray-200 rounded mb-1"></div>
+                                  <div className="h-4 w-16 bg-gray-200 rounded mb-1!"></div>
+                                  <div className="h-8 w-8 bg-gray-200 rounded mb-1!"></div>
                                   <div className="flex gap-0.5">
                                     {[...Array(3)].map((_, k) => (
                                       <div key={k} className="w-4 h-4 bg-gray-200 rounded"></div>
@@ -104,11 +104,11 @@ function Loading() {
 
                     {/* Description Cards Skeleton */}
                     {[...Array(2)].map((_, i) => (
-                      <Card key={i} className="shadow-lg mb-6">
-                        <div className="text-center mb-6">
-                          <div className="h-7 w-48 bg-gray-200 rounded mx-auto mb-2"></div>
+                      <Card key={i} className="shadow-lg mb-6!">
+                        <div className="text-center mb-6!">
+                          <div className="h-7 w-48 bg-gray-200 rounded mx-auto mb-2!"></div>
                         </div>
-                        <div className="flex justify-center mb-6">
+                        <div className="flex justify-center mb-6!">
                           <div className="w-64 h-48 bg-gray-200 rounded-lg"></div>
                         </div>
                         <div className="space-y-3">
@@ -130,13 +130,13 @@ function Loading() {
 
               {/* Related Comparisons Section Skeleton */}
               <div className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
-                <div className="h-7 w-40 bg-gray-200 rounded mb-4"></div>
+                <div className="h-7 w-40 bg-gray-200 rounded mb-4!"></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {[...Array(3)].map((_, i) => (
                     <div key={i} className="bg-white rounded-lg overflow-hidden">
                       <div className="h-48 bg-gray-200"></div>
                       <div className="p-4">
-                        <div className="h-5 w-full bg-gray-200 rounded mb-2"></div>
+                        <div className="h-5 w-full bg-gray-200 rounded mb-2!"></div>
                         <div className="h-4 w-24 bg-gray-200 rounded"></div>
                       </div>
                     </div>
@@ -146,13 +146,13 @@ function Loading() {
 
               {/* Related Videos Section Skeleton */}
               <div className="bg-white rounded-xl shadow-sm p-6 animate-pulse">
-                <div className="h-7 w-40 bg-gray-200 rounded mb-4"></div>
+                <div className="h-7 w-40 bg-gray-200 rounded mb-4!"></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {[...Array(3)].map((_, i) => (
                     <div key={i} className="bg-white rounded-lg overflow-hidden">
                       <div className="h-48 bg-gray-200"></div>
                       <div className="p-4">
-                        <div className="h-5 w-full bg-gray-200 rounded mb-2"></div>
+                        <div className="h-5 w-full bg-gray-200 rounded mb-2!"></div>
                         <div className="h-4 w-24 bg-gray-200 rounded"></div>
                       </div>
                     </div>
@@ -162,15 +162,15 @@ function Loading() {
 
               {/* Related Podcasts Section Skeleton */}
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 animate-pulse">
-                <div className="h-7 w-40 bg-gray-200 rounded mb-4"></div>
+                <div className="h-7 w-40 bg-gray-200 rounded mb-4!"></div>
                 <div className="space-y-4">
                   {[...Array(2)].map((_, i) => (
                     <div key={i} className="bg-gray-50 rounded-xl p-5">
                       <div className="flex md:flex-row flex-col gap-4">
                         <div className="w-full sm:w-72 h-56 bg-gray-200 rounded-xl"></div>
                         <div className="flex-1">
-                          <div className="h-6 w-3/4 bg-gray-200 rounded mb-3"></div>
-                          <div className="h-4 w-full bg-gray-200 rounded mb-2"></div>
+                          <div className="h-6 w-3/4 bg-gray-200 rounded mb-3!"></div>
+                          <div className="h-4 w-full bg-gray-200 rounded mb-2!"></div>
                           <div className="h-4 w-2/3 bg-gray-200 rounded"></div>
                         </div>
                       </div>
@@ -186,13 +186,13 @@ function Loading() {
             <div className="space-y-6">
               {/* Popular Comparisons Skeleton */}
               <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 animate-pulse">
-                <div className="h-6 w-40 bg-gray-200 rounded mb-3"></div>
+                <div className="h-6 w-40 bg-gray-200 rounded mb-3!"></div>
                 <div className="space-y-3">
                   {[...Array(5)].map((_, i) => (
                     <div key={i} className="flex gap-3">
                       <div className="w-16 h-16 bg-gray-200 rounded"></div>
                       <div className="flex-1">
-                        <div className="h-4 w-full bg-gray-200 rounded mb-2"></div>
+                        <div className="h-4 w-full bg-gray-200 rounded mb-2!"></div>
                         <div className="h-3 w-2/3 bg-gray-200 rounded"></div>
                       </div>
                     </div>
@@ -207,8 +207,8 @@ function Loading() {
 
               {/* Market Stats Skeleton */}
               <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 animate-pulse">
-                <div className="h-6 w-24 bg-gray-200 rounded mb-3"></div>
-                <div className="mb-3">
+                <div className="h-6 w-24 bg-gray-200 rounded mb-3!"></div>
+                <div className="mb-3!">
                   <div className="flex gap-2 border-b pb-2">
                     <div className="h-8 w-28 bg-gray-200 rounded"></div>
                     <div className="h-8 w-28 bg-gray-200 rounded"></div>
@@ -220,12 +220,12 @@ function Loading() {
                       <div className="flex items-center gap-2 flex-1">
                         <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
                         <div className="flex-1">
-                          <div className="h-4 w-24 bg-gray-200 rounded mb-1"></div>
+                          <div className="h-4 w-24 bg-gray-200 rounded mb-1!"></div>
                           <div className="h-3 w-16 bg-gray-200 rounded"></div>
                         </div>
                       </div>
                       <div className="text-left">
-                        <div className="h-4 w-16 bg-gray-200 rounded mb-1"></div>
+                        <div className="h-4 w-16 bg-gray-200 rounded mb-1!"></div>
                         <div className="h-3 w-12 bg-gray-200 rounded"></div>
                       </div>
                     </div>
@@ -242,15 +242,15 @@ function Loading() {
         {/* Comments Section Skeleton */}
         <div className="section-anchor mt-8">
           <div className="bg-white rounded-xl p-6 animate-pulse">
-            <div className="h-7 w-32 bg-gray-200 rounded mb-6"></div>
+            <div className="h-7 w-32 bg-gray-200 rounded mb-6!"></div>
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
                 <div key={i} className="border-b pb-4">
-                  <div className="flex justify-between mb-2">
+                  <div className="flex justify-between mb-2!">
                     <div className="h-4 w-24 bg-gray-200 rounded"></div>
                     <div className="h-3 w-20 bg-gray-200 rounded"></div>
                   </div>
-                  <div className="h-4 w-full bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 w-full bg-gray-200 rounded mb-2!"></div>
                   <div className="h-4 w-3/4 bg-gray-200 rounded"></div>
                 </div>
               ))}

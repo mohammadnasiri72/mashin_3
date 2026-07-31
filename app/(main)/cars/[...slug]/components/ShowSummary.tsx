@@ -47,7 +47,7 @@ const ShowSummary: React.FC<ExpandableTextProps> = ({
   };
 
   return (
-    <div className="mb-6">
+    <div className="mb-6!">
       <div
         ref={textRef}
         className="text-gray-800 leading-relaxed whitespace-pre-line overflow-hidden transition-all duration-500 ease-in-out"

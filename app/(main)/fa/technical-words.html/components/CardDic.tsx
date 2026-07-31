@@ -68,8 +68,8 @@ function CardDic({
       <div className="min-h-screen">
         <div className="p-4 mx-auto">
           {/* هدر صفحه */}
-          <div className="mb-4 text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <div className="mb-4! text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4!">
               <span className="text-red-600">{title}</span>
             </h1>
             <p className="text-gray-600 max-w-2xl mx-auto">
@@ -88,7 +88,7 @@ function CardDic({
             >
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 {/* تب‌های واژگان فنی */}
-                <div className="mb-6 flex items-center flex-wrap gap-2">
+                <div className="mb-6! flex items-center flex-wrap gap-2">
                   {tabConfig.map((tab) => (
                     <Link
                       key={tab.key}
@@ -109,7 +109,7 @@ function CardDic({
 
                 {/* نمایش عبارت جستجو */}
                 {searchTerm && (
-                  <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200 text-blue-700">
+                  <div className="mb-4! p-3 bg-blue-50 rounded-lg border border-blue-200 text-blue-700">
                     نتایج جستجو برای:{" "}
                     <span className="font-bold">"{searchTerm}"</span>
                     <button
@@ -138,7 +138,7 @@ function CardDic({
                               <FaTag className="text-red-500 group-hover:rotate-12 transition-transform" />
                             </div>
                             <div className="flex-1">
-                              <h2 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-red-700 transition-colors">
+                              <h2 className="text-xl font-bold text-gray-800 mb-2! group-hover:text-red-700 transition-colors">
                                 {d.title}
                               </h2>
                               <p className="text-gray-600 leading-relaxed">

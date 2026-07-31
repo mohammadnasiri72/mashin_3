@@ -9,7 +9,7 @@ import Link from "next/link";
 const NewsSkeleton = () => (
   <section className="py-8 bg-white rounded-xl shadow-sm">
     <div className="mx-auto px-4">
-      <div className="h-8 bg-gray-200 rounded w-64 mb-4 animate-pulse"></div>
+      <div className="h-8 bg-gray-200 rounded w-64 mb-4! animate-pulse"></div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[1, 2, 3].map((i) => (
           <div
@@ -42,7 +42,7 @@ function RelatedNewsSection({ detailsCar ,relatedNews , loading}: { detailsCar: 
   }
 
   return (
-    <section className="py-8 bg-white rounded-xl shadow-sm">
+    <section className=" bg-white rounded-xl shadow-sm p-6">
       <div className="mx-auto px-4">
         <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
           <strong className="text-red-600">اخبار مرتبط </strong>
@@ -73,7 +73,7 @@ function RelatedNewsSection({ detailsCar ,relatedNews , loading}: { detailsCar: 
                 </Link>
 
                 <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>{formatPersianDate(news.created)}</span>
+                  <span>{formatPersianDate(news.modified ? news.modified : news.created)}</span>
                 </div>
               </div>
             </div>

@@ -6,9 +6,11 @@ import { FaCalendar, FaEye } from "react-icons/fa";
 function SideBarListItems({
   itemsList,
   title,
+  type=''
 }: {
   itemsList: Items[];
   title: string;
+  type?:string
 }) {
   return (
     <>
@@ -29,12 +31,12 @@ function SideBarListItems({
                 </div>
                 <div className="flex-1 min-w-0">
                   <h4 className="font-medium text-gray-900 text-sm leading-tight text-justify group-hover:text-white! transition-colors line-clamp-2">
-                    {item.title}
+                    {type ==='car' ? item.sourceName : ''} {item.title}
                   </h4>
                   <div className="flex flex-wrap items-center gap-4 text-xs text-gray-600 mt-2 group-hover:text-white!">
                     <div className="flex items-center gap-1">
                       <FaCalendar />
-                      <span>{formatPersianDate(item.created)}</span>
+                      <span>{formatPersianDate(item.modified ? item.modified:item.created)}</span>
                     </div>
 
                     <div className="flex items-center gap-1">

@@ -256,7 +256,7 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
               فراموشی رمز عبور
             </Button>
             <Link
-              href={"/auth"}
+              href={"/register"}
               aria-label="ساخت حساب کاربری"
               type="link"
               onClick={(e) => {
@@ -347,7 +347,7 @@ function ModalLogin({ open, setOpen }: { open: boolean; setOpen: any }) {
             </p>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1!">
                 <span className="text-red-600">*</span> ایمیل
               </label>
               <Input

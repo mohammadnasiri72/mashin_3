@@ -131,22 +131,23 @@ async function pageBestChoice() {
 
     const schemas = detailsBest?.seoInfo?.schemas || [];
 
-
     return (
       <>
-      <JsonLd schemas={schemas} />
-        <div className="flex flex-wrap bg-gray-50">
-          <MainBoxBestChoice
-            detailsBest={detailsBest}
-            comments={comments}
-            id={id}
-            banner={banner}
-            Attachment={Attachment}
-            competitorsCar={competitorsCar}
-            popularBestChoices={popularBestChoices}
-            lastNews={lastNews}
-            lastCars={lastCars}
-          />
+        <div data-id={id}>
+          <JsonLd schemas={schemas} />
+          <div className="flex flex-wrap bg-gray-50">
+            <MainBoxBestChoice
+              detailsBest={detailsBest}
+              comments={comments}
+              id={id}
+              banner={banner}
+              Attachment={Attachment}
+              competitorsCar={competitorsCar}
+              popularBestChoices={popularBestChoices}
+              lastNews={lastNews}
+              lastCars={lastCars}
+            />
+          </div>
         </div>
       </>
     );

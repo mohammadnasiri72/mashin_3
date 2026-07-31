@@ -6,9 +6,11 @@ import Link from "next/link";
 
 const CarsRelatedSection = ({ relatedCars }: { relatedCars: ItemsId[] }) => {
   return (
-    <section className="py-8 bg-white rounded-xl shadow-sm">
-      <div className="mx-auto px-4">
-        <h3 className="dt_title text-2xl font-bold text-gray-900 mb-4!">
+    <section className="bg-gray-50">
+      <div className="mx-auto pr-4 lg:pl-2 pl-4">
+
+      <div className="bg-white rounded-xl shadow-sm px-8 pb-8">
+        <h3 className="dt_title text-2xl font-bold text-gray-900 py-4">
           <strong className="text-red-600"> خودروهای مرتبط</strong>
         </h3>
 
@@ -23,7 +25,7 @@ const CarsRelatedSection = ({ relatedCars }: { relatedCars: ItemsId[] }) => {
                   <img
                     src={mainDomain + car.image}
                     alt={car.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform"
+                    className="w-full h-full object-contain hover:scale-95 scale-90 transition-transform"
                   />
                 </Link>
               </div>
@@ -31,17 +33,18 @@ const CarsRelatedSection = ({ relatedCars }: { relatedCars: ItemsId[] }) => {
               <div className="p-4">
                 <Link href={car.url} className="font-medium group">
                   <h3 className="font-bold text-gray-800 mt-3! mb-2! line-clamp-2 duration-300 group-hover:text-[#ce1a2a]!">
-                    {car.title}
+              بررسی مشخصات فنی   {car.sourceName} {car.title}
                   </h3>
                 </Link>
 
-                <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>{formatPersianDate(car.created)}</span>
-                </div>
+                {/* <div className="flex justify-between items-center text-sm text-gray-500">
+                  <span>{formatPersianDate(car.modified ? car.modified: car.created)}</span>
+                </div> */}
               </div>
             </div>
           ))}
         </div>
+      </div>
       </div>
 
       <style jsx global>{`

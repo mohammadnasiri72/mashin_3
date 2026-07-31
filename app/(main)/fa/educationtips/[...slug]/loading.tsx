@@ -7,7 +7,7 @@ function Loading() {
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4">
         {/* Breadcrumb Skeleton */}
-        <div className="mb-4 animate-pulse">
+        <div className="mb-4! animate-pulse">
           <div className="flex items-center gap-2">
             <div className="h-4 w-16 bg-gray-200 rounded"></div>
             <div className="h-4 w-4 bg-gray-200 rounded"></div>
@@ -18,8 +18,8 @@ function Loading() {
         </div>
 
         {/* Header Skeleton */}
-        <div className="mb-8 text-center animate-pulse">
-          <div className="h-10 w-64 bg-gray-200 rounded mx-auto mb-4"></div>
+        <div className="mb-8! text-center animate-pulse">
+          <div className="h-10 w-64 bg-gray-200 rounded mx-auto mb-4!"></div>
           <div className="h-5 w-96 max-w-full bg-gray-200 rounded mx-auto"></div>
         </div>
 
@@ -45,8 +45,8 @@ function Loading() {
 
                       {/* Content Skeleton */}
                       <div className="flex-1">
-                        <div className="h-7 w-3/4 bg-gray-200 rounded mb-3 animate-pulse"></div>
-                        <div className="space-y-2 mb-3">
+                        <div className="h-7 w-3/4 bg-gray-200 rounded mb-3! animate-pulse"></div>
+                        <div className="space-y-2 mb-3!">
                           <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
                           <div className="h-4 w-full bg-gray-200 rounded animate-pulse"></div>
                           <div className="h-4 w-2/3 bg-gray-200 rounded animate-pulse"></div>
@@ -83,13 +83,13 @@ function Loading() {
               <div className="space-y-6">
                 {/* Popular Tips Skeleton */}
                 <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 animate-pulse">
-                  <div className="h-6 w-48 bg-gray-200 rounded mb-3"></div>
+                  <div className="h-6 w-48 bg-gray-200 rounded mb-3!"></div>
                   <div className="space-y-3">
                     {[...Array(5)].map((_, i) => (
                       <div key={i} className="flex gap-3">
                         <div className="w-16 h-16 bg-gray-200 rounded"></div>
                         <div className="flex-1">
-                          <div className="h-4 w-full bg-gray-200 rounded mb-2"></div>
+                          <div className="h-4 w-full bg-gray-200 rounded mb-2!"></div>
                           <div className="h-3 w-2/3 bg-gray-200 rounded"></div>
                         </div>
                       </div>
@@ -104,10 +104,10 @@ function Loading() {
 
                 {/* Market Stats Skeleton */}
                 <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 animate-pulse">
-                  <div className="h-6 w-24 bg-gray-200 rounded mb-3"></div>
+                  <div className="h-6 w-24 bg-gray-200 rounded mb-3!"></div>
 
                   {/* Tabs Skeleton */}
-                  <div className="mb-3">
+                  <div className="mb-3!">
                     <div className="flex gap-2 border-b pb-2">
                       <div className="h-8 w-28 bg-gray-200 rounded"></div>
                       <div className="h-8 w-28 bg-gray-200 rounded"></div>
@@ -124,12 +124,12 @@ function Loading() {
                         <div className="flex items-center gap-2 flex-1">
                           <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
                           <div className="flex-1">
-                            <div className="h-4 w-24 bg-gray-200 rounded mb-1"></div>
+                            <div className="h-4 w-24 bg-gray-200 rounded mb-1!"></div>
                             <div className="h-3 w-16 bg-gray-200 rounded"></div>
                           </div>
                         </div>
                         <div className="text-left">
-                          <div className="h-4 w-16 bg-gray-200 rounded mb-1"></div>
+                          <div className="h-4 w-16 bg-gray-200 rounded mb-1!"></div>
                           <div className="h-3 w-12 bg-gray-200 rounded"></div>
                         </div>
                       </div>

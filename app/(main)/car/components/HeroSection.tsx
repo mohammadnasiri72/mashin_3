@@ -38,7 +38,7 @@ const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
   }, [detailsCar.id]);
 
   return (
-    <section className="relative min-h-56.25 flex items-center">
+    <section className="relative sm:min-h-56.25 flex items-center">
       {/* ✅ تصویر با priority و next/image */}
       <Image
         src="/images/gallery/header-1.jpg"
@@ -56,7 +56,7 @@ const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
       {/* Overlay با گرادیانت */}
       <div className="absolute inset-0 bg-linear-to-r from-black/30 via-black/90 to-transparent"></div>
 
-      <div className="relative container mx-auto px-4 py-12">
+      <div className="relative container mx-auto px-4 sm:py-12 py-5">
         <div className="text-white!">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold inline-block relative">
             <span className="relative z-10 text-white!">
@@ -82,7 +82,7 @@ const HeroSection = ({ detailsCar }: { detailsCar: ItemsId }) => {
                 detailsCar.breadcrumb.length > 0 &&
                 detailsCar.breadcrumb.map((b, i) => (
                   <li key={b.href} className="flex items-center">
-                    <span className="mx-2 text-white/50!">/</span>
+                    <span className="text-white/50!">/</span>
                     <Link
                       href={b.href}
                       className="text-white! font-bold hover:text-white! transition-colors duration-300"

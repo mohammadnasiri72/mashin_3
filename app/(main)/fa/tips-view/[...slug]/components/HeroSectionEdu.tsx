@@ -1,24 +1,21 @@
-import { formatPersianDate, toPersianNumbers } from "@/utils/func";
 import Link from "next/link";
-import React from "react";
-import { FaCalendar, FaEye } from "react-icons/fa";
 
 function HeroSectionEdu({ education }: { education: ItemsId }) {
   return (
     <>
       <section
-        className="relative min-h-56.25 bg-cover bg-center flex sm:block items-center justify-center"
+        className="relative sm:min-h-56.25 bg-cover bg-center flex sm:block items-center justify-center"
         style={{ backgroundImage: "url('/images/gallery/header-1.jpg')" }}
       >
         {/* Overlay */}
         <div className="absolute inset-0 bg-linear-to-r from-transparent to-black"></div>
 
-        <div className="relative mx-auto px-4 py-12 sm:w-auto w-full">
+        <div className="relative mx-auto px-4 sm:py-12 py-5 sm:w-auto w-full">
           <div className="text-white! sm:w-auto w-full">
             <div className="sm:w-auto w-full p-3 sm:bg-transparent bg-[#fff2] rounded-xl flex sm:justify-start justify-center items-center">
-              <h3 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative sm:text-3xl text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ce1a2a]">
+              <h1 className="pb-0! mb-0! text-center text-white! font-bold! inline-block relative sm:text-3xl text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ce1a2a]">
                 {education.title}
-              </h3>
+              </h1>
             </div>
             {/* Breadcrumb */}
             <nav className="mt-6">
@@ -46,20 +43,6 @@ function HeroSectionEdu({ education }: { education: ItemsId }) {
                   ))}
               </ol>
             </nav>
-            <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 flex-wrap px-2">
-                             <div className="flex items-center gap-1 ">
-                               <FaEye className="text-white! text-xs" />
-                               <span className="font-bold text-white! text-xs">
-                                 {toPersianNumbers(education.visit)}
-                               </span>
-                             </div>
-                             <div className="flex items-center gap-1">
-                               <FaCalendar className="text-white! text-xs" />
-                               <span className="font-bold text-white! text-xs">
-                                 {formatPersianDate(education.created)}
-                               </span>
-                             </div>
-                           </div>
           </div>
         </div>
 

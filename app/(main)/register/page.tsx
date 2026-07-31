@@ -389,7 +389,7 @@ const AuthPage: React.FC = () => {
             </p>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 mb-1!">
                 <span className="text-red-600">*</span> ایمیل
               </label>
               <Input

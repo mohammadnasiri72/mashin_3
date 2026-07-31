@@ -2,7 +2,7 @@
 
 import { Button, Input, Space } from "antd";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 function SearchBoxVideo() {
@@ -10,10 +10,30 @@ function SearchBoxVideo() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const termSearchparams = searchParams.get("term");
+
+  useEffect(() => {
+    if (termSearchparams) {
+      setTerm(termSearchparams);
+    }
+  }, [termSearchparams]);
 
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("term", term.toString());
+    if (term.trim()) {
+      params.set("term", term.toString());
+    } else {
+      params.delete("term");
+    }
+    router.push(`${pathname}?${params.toString()}`, {
+      scroll: false,
+    });
+  };
+
+  const handleClear = () => {
+    setTerm("");
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("term");
     router.push(`${pathname}?${params.toString()}`, {
       scroll: false,
     });
@@ -29,7 +49,9 @@ function SearchBoxVideo() {
           onChange={(e) => {
             setTerm(e.target.value);
           }}
-          onPressEnter={handleSearch} // اضافه کردن این خط
+          onPressEnter={handleSearch}
+          
+          onClear={handleClear}
         />
         <Button 
           aria-label="جستجو"

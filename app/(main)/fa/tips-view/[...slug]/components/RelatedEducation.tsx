@@ -3,20 +3,9 @@ import { Card } from "antd";
 import Link from "next/link";
 import { FaBook } from "react-icons/fa";
 
-interface ItemsId {
-  id: number;
-  categoryTitle: string;
-}
 
-interface Items {
-  id: number;
-  title: string;
-  image: string;
-  url: string;
-  visit: number;
-  created: string;
-  categoryTitle: string;
-}
+
+
 
 function RelatedEducation({
   relatedEducations,
@@ -58,7 +47,7 @@ function RelatedEducation({
                       <div className="flex items-center justify-between mt-2 text-xs text-gray-600">
                         <span>{related.visit} بازدید</span>
                         <span>
-                          {new Date(related.created).toLocaleDateString(
+                          {new Date(related.modified ? related.modified : related.created).toLocaleDateString(
                             "fa-IR"
                           )}
                         </span>
@@ -70,7 +59,7 @@ function RelatedEducation({
             </div>
           ) : (
             <div className="text-center py-8 text-gray-600">
-              <div className="text-4xl mb-2">📚</div>
+              <div className="text-4xl mb-2!">📚</div>
               <p>مطلب مرتبطی یافت نشد</p>
             </div>
           )}

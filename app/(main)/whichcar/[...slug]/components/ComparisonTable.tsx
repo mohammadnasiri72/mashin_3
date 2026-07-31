@@ -161,9 +161,9 @@ function ComparisonTable({ car }: { car: ItemsId }) {
         }
       >
         {/* هدر کارد */}
-        <div className="text-center mb-6 h-20">
+        <div className="text-center mb-6! h-20">
           <Link
-            href={`/car/${car.title}?id=${id}`}
+            href={`/sl?id=${id}`}
             className="text-xl font-bold text-[#333]! mb-2!"
           >
             {car.title}

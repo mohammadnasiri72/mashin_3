@@ -102,7 +102,7 @@ function Favorites() {
               ))
             ) : (
               <div className="p-6 text-center text-gray-500 text-sm">
-                <FaHeart className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                <FaHeart className="w-8 h-8 mx-auto mb-2! text-gray-300" />
                 <p>علاقه‌مندی‌ای ندارید</p>
               </div>
             )}

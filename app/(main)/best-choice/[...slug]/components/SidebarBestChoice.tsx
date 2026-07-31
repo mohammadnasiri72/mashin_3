@@ -38,7 +38,7 @@ function SidebarBestChoice({
           />
 
           {/* جدیدترین خودروها */}
-          <SideBarListItems itemsList={lastCars} title={"جدیدترین خودروها"} />
+          <SideBarListItems itemsList={lastCars} title={"جدیدترین خودروها"} type={"car"}/>
         </div>
       </section>
     </>

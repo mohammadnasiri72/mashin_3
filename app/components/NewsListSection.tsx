@@ -6,17 +6,19 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 
 const NewsListSection = ({ news }: { news: Items[] }) => {
   return (
-    <section className="mb-5" aria-labelledby="news-list-title">
+    <section className="" aria-labelledby="news-list-title">
       <div className="mx-auto px-4">
         {/* هدر */}
-        <header className="flex sm:flex-row flex-col justify-between items-center mb-4">
+        <header className="flex sm:flex-row flex-col justify-between items-center">
           <div className="mb-2! sm:w-auto w-full p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
-            <h2
-              id="news-list-title"
-              className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]"
-            >
-              لیست اخبار
-            </h2>
+            <Link href={"/fa/news/اخبار-خودرو.html"}>
+              <h2
+                id="news-list-title"
+                className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]"
+              >
+                لیست اخبار
+              </h2>
+            </Link>
           </div>
 
           <Link
@@ -31,16 +33,16 @@ const NewsListSection = ({ news }: { news: Items[] }) => {
         {/* لیست اخبار */}
         <div className="flex flex-wrap -mx-2">
           {news.map((item) => (
-            <article key={item.id} className="w-full md:w-1/2 px-2 mb-4">
+            <article key={item.id} className="w-full md:w-1/2 px-2 mb-4!">
               <Link href={item.url} className="block">
                 <div className="bg-white relative duration-300 cursor-pointer group hover:bg-linear-to-b hover:from-[#ff5363] hover:to-[#ce1a2a] rounded-2xl shadow-sm p-4 flex sm:flex-row flex-col sm:items-stretch items-center gap-4 hover:shadow-md transition-shadow overflow-hidden">
                   {/* تصویر */}
-                  <div className="sm:w-36 sm:h-36 w-full h-auto shrink-0 holographic-effect">
+                  <div className="sm:w-28 sm:h-28 w-full h-auto shrink-0 holographic-effect">
                     <div className="rounded-xl overflow-hidden">
                       <img
                         src={mainDomain + item.image}
                         alt={item.title}
-                        className="w-full sm:h-36 object-cover"
+                        className="w-full sm:h-28 object-cover"
                         loading="lazy"
                       />
                     </div>
@@ -50,11 +52,11 @@ const NewsListSection = ({ news }: { news: Items[] }) => {
                   <div className="flex-1">
                     <div className="flex flex-col justify-between items-start w-full h-full">
                       <div>
-                        <h3 className="font-bold! text-[#222]! mb-2 line-clamp-2 text-lg group-hover:text-white! duration-300">
+                        <h3 className="font-bold! text-[#222]! mb-2! line-clamp-2 text-lg group-hover:text-white! duration-300">
                           {item.title}
                         </h3>
                         {(item.summary || item.body) && (
-                          <div className="text-gray-600 text-xs mb-3 line-clamp-3 mt-1 text-justify group-hover:text-white! duration-300">
+                          <div className="text-gray-600 text-xs mb-3! line-clamp-2 mt-1 text-justify group-hover:text-white! duration-300">
                             {item.summary
                               ? htmlToPlainText(item.summary)
                               : htmlToPlainText(item.body)}
@@ -64,7 +66,12 @@ const NewsListSection = ({ news }: { news: Items[] }) => {
                       <div className="flex justify-between text-xs text-gray-500  w-full group-hover:text-white! duration-300 sm:mt-0 mt-3 ">
                         <div className="flex items-center gap-1">
                           <FaCalendar className="" />
-                          <span> {formatPersianDate(item.created)}</span>
+                          <span>
+                            {" "}
+                            {formatPersianDate(
+                              item.modified ? item.modified : item.created,
+                            )}
+                          </span>
                         </div>
                         <div className="flex items-center gap-1">
                           <FaComments />

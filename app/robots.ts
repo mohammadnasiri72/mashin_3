@@ -10,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: [
           "/dashboard/",
-          "/auth/",
+          "/register/",
           "/api/",
           "/api-proxy/",
           "/*?*", // جلوگیری از ایندکس شدن URLهای با کوئری استرینگ تکراری
@@ -19,12 +19,12 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "Googlebot",
         allow: "/",
-        disallow: ["/dashboard/", "/auth/", "/api/", "/api-proxy/"],
+        disallow: ["/dashboard/", "/register/", "/api/", "/api-proxy/"],
       },
       {
         userAgent: "Bingbot",
         allow: "/",
-        disallow: ["/dashboard/", "/auth/", "/api/", "/api-proxy/"],
+        disallow: ["/dashboard/", "/register/", "/api/", "/api-proxy/"],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

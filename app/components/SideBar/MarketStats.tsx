@@ -58,10 +58,10 @@ function MarketStats() {
     <>
       {/* آمار بازار */}
       <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-        <h3 className="text-lg font-bold text-gray-900 mb-3">آمار بازار</h3>
+        <h3 className="text-lg font-bold text-gray-900 mb-3!">آمار بازار</h3>
 
         {/* تب‌های Ant Design */}
-        <div className="mb-3">
+        <div className="mb-3!">
           <Tabs
             activeKey={type}
             onChange={setType}

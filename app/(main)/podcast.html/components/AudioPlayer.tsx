@@ -205,7 +205,7 @@ function AudioPlayer({ podcast }: { podcast: Items }) {
       dir="ltr"
     >
       {/* هدر پلیر */}
-      <div className="flex items-start justify-between mb-4" dir="rtl">
+      <div className="flex items-start justify-between mb-4!" dir="rtl">
         <div className="flex-1 min-w-0">
           <h3 className="font-bold text-gray-800 text-lg lg:text-xl line-clamp-2 leading-tight">
             {podcast.title}

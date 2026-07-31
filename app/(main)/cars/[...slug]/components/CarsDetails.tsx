@@ -19,7 +19,7 @@ const CarCard = memo(
       <div className="group block">
         <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
           {/* تصویر خودرو */}
-          <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-white! flex items-center justify-center relative">
+          <div className="w-full h-40 overflow-hidden rounded-lg mb-4! bg-white! flex items-center justify-center relative">
             <Link
               href={car.url || "#"}
               prefetch={true}
@@ -37,14 +37,14 @@ const CarCard = memo(
           {/* اطلاعات خودرو */}
           <div className="flex-1">
             <Link href={car.url || "#"} prefetch={true} className="block">
-              <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
+              <h3 className="font-bold text-gray-900 text-lg mb-2! text-center hover:text-[#ce1a2a]! transition-colors">
                 {car.sourceName} {car.title}
               </h3>
             </Link>
 
             {car.summary && car.summary !== "<!DOCTYPE html>" && (
               <div
-                className="text-gray-600 text-sm line-clamp-3 mb-4 text-justify"
+                className="text-gray-600 text-sm line-clamp-3 mb-4! text-justify CarCard-summary-cars"
                 dangerouslySetInnerHTML={{
                   __html:
                     car.summary.length > 150
@@ -65,7 +65,7 @@ const CarCard2 = memo(
       <div className="group block">
         <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
           {/* تصویر خودرو */}
-          <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-white! flex items-center justify-center relative">
+          <div className="w-full h-40 overflow-hidden rounded-lg mb-4! bg-white! flex items-center justify-center relative">
             <Link
               href={car.url || "#"}
               prefetch={true}
@@ -83,7 +83,7 @@ const CarCard2 = memo(
           {/* اطلاعات خودرو */}
           <div className="flex-1">
             <Link href={car.url || "#"} prefetch={true} className="block">
-              <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
+              <h3 className="font-bold text-gray-900 text-lg mb-2! text-center hover:text-[#ce1a2a]! transition-colors">
                 <p>
                   {car.sourceName} {car.title}{" "}
                 </p>
@@ -93,7 +93,7 @@ const CarCard2 = memo(
 
             {car.summary && car.summary !== "<!DOCTYPE html>" && (
               <div
-                className="text-gray-600 text-sm line-clamp-3 mb-4 text-justify"
+                className="text-gray-600 text-sm line-clamp-3 mb-4! text-justify CarCard2-summary-cars"
                 dangerouslySetInnerHTML={{
                   __html:
                     car.summary.length > 150
@@ -128,7 +128,7 @@ const CarGroupCard = memo(
       <div className="group block">
         <div className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
           {/* تصویر خودرو */}
-          <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-white! flex items-center justify-center relative">
+          <div className="w-full h-40 overflow-hidden rounded-lg mb-4! bg-white! flex items-center justify-center relative">
             <Link
               href={firstCar.url || "#"}
               prefetch={true}
@@ -185,14 +185,14 @@ const CarGroupCard = memo(
           {/* اطلاعات خودرو */}
           <div className="flex-1">
             <Link href={firstCar.url || "#"} prefetch={true} className="block">
-              <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
+              <h3 className="font-bold text-gray-900 text-lg mb-2! text-center hover:text-[#ce1a2a]! transition-colors">
                 {firstCar.sourceName} {firstCar.title}
               </h3>
             </Link>
 
             {firstCar.summary && firstCar.summary !== "<!DOCTYPE html>" && (
               <div
-                className="text-gray-600 text-sm line-clamp-3 mb-4 text-justify"
+                className="text-gray-600 text-sm line-clamp-3 mb-4! text-justify CarGroupCard-summary-cars"
                 dangerouslySetInnerHTML={{
                   __html:
                     firstCar.summary.length > 150
@@ -281,14 +281,14 @@ const CarsDetails = ({ carView, carDetails, banner }: CarsDetailsProps) => {
           {/* محتوای اصلی - sticky از بالا */}
           <div className="lg:w-3/4 w-full lg:sticky lg:top-20 lg:self-start">
             {/* جستجو */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6!">
               <div className="relative">
                 <input
                   onChange={handleSearch}
                   value={searchTerm}
                   type="text"
                   placeholder={`جستجو در مدل‌های ${carDetails.title}...`}
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-xs placeholder:text-gray-400"
                 />
                 <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
               </div>
@@ -296,13 +296,9 @@ const CarsDetails = ({ carView, carDetails, banner }: CarsDetailsProps) => {
 
             {/* عنوان */}
             
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-4!">
               <div className="flex items-center">
-                <img
-                  src={mainDomain + carDetails.image}
-                  alt={carDetails.title}
-                  className="object-contain w-20 h-20"
-                />
+                
                 <h2 className="text-2xl font-bold text-gray-900">
                   مدل‌های{" "}
                   <span className="text-red-600">{ filteredGroups.length===1&& carDetails.parentTitle} {carDetails.title}</span>
@@ -319,7 +315,7 @@ const CarsDetails = ({ carView, carDetails, banner }: CarsDetailsProps) => {
             )}
 
             {/* گرید */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
               {filteredGroups.length > 1 &&
                 filteredGroups.map((group) => {
                   // اگر یک آیتم بیشتر داشت، از CarGroupCard استفاده کن
@@ -380,8 +376,8 @@ const CarsDetails = ({ carView, carDetails, banner }: CarsDetailsProps) => {
             {/* Empty state */}
             {filteredGroups.length === 0 && (
               <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
-                <FaCar className="text-gray-400 text-4xl mx-auto mb-4" />
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                <FaCar className="text-gray-400 text-4xl mx-auto mb-4!" />
+                <h3 className="text-xl font-bold text-gray-900 mb-2!">
                   مدلی یافت نشد
                 </h3>
                 <p className="text-gray-600">

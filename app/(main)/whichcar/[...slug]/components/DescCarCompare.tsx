@@ -25,7 +25,7 @@ function DescCarCompare({ car }: { car: ItemsId }) {
 
         {car.body && (
           <div
-            className="prose prose-lg max-w-none text-justify text-gray-700 leading-8"
+            className="prose prose-lg max-w-none text-justify text-gray-700 leading-8 body-whichcar-car"
             dangerouslySetInnerHTML={createMarkup(
               car.body.replace(/<span style="font-size: 12pt;">|<\/span>/g, ""),
             )}

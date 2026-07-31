@@ -63,6 +63,7 @@
     "swiper": "^11.2.5"
   },
   "devDependencies": {
+    "@anthropic-ai/claude-code": "^2.1.220",
     "@eslint/eslintrc": "^3",
     "@next/bundle-analyzer": "^14.2.32",
     "@tailwindcss/postcss": "^4",

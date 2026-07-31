@@ -8,12 +8,11 @@ import { useDispatch } from "react-redux";
 
 interface AOSProviderProps {
   children: React.ReactNode;
-  userCookie:any
+  userCookie: any;
 }
 
-const AOSProvider = ({ children , userCookie}: AOSProviderProps) => {
-  
-   const disPatch = useDispatch()
+const AOSProvider = ({ children, userCookie }: AOSProviderProps) => {
+  const disPatch = useDispatch();
   useEffect(() => {
     AOS.init({
       duration: 500,
@@ -24,15 +23,16 @@ const AOSProvider = ({ children , userCookie}: AOSProviderProps) => {
     });
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (userCookie && userCookie.value) {
-      
       disPatch(setUser(JSON.parse(userCookie.value)));
     }
     disPatch(setIsLoading(false));
-  },[userCookie])
+  }, [userCookie]);
 
-  return <div className="max-w-[2000px] mx-auto">{children}</div>;
+  return (
+    <div className="max-w-500 mx-auto">{children}</div>
+  );
 };
 
 export default AOSProvider;

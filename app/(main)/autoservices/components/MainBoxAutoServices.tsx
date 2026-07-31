@@ -131,13 +131,13 @@ function MainBoxAutoServices({
   return (
     <>
       {/* هدر */}
-      <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold mb-4 text-[#ce1a2a]!">{title}</h1>
+      <div className="text-center mb-8!">
+        <h1 className="text-2xl font-bold mb-4! text-[#ce1a2a]!">{title}</h1>
         <p className="text-gray-600 max-w-2xl mx-auto">
           {htmlToPlainText(summary)}
         </p>
       </div>
-      <div className="flex flex-wrap lg:flex-nowrap gap-6 relative mx-auto px-4">
+      <div className="flex flex-wrap lg:flex-nowrap gap-6 relative mx-auto px-4 bg-[#f4f4f4]">
         {/* محتوای اصلی */}
         <div
           ref={mainBoxRef}
@@ -146,10 +146,10 @@ function MainBoxAutoServices({
             ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
           `}
         >
-          <div className="min-h-screen bg-[#f4f4f4] py-8">
+          <div className="min-h-screen  py-8">
             <div className="mx-auto max-w-6xl">
               {/* فیلترها */}
-              <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+              <div className="bg-white rounded-xl shadow-sm p-6 mb-8!">
                 <div className="flex flex-col lg:flex-row gap-4 items-start  lg:items-end justify-between">
                   <div className="flex flex-col lg:flex-row gap-4 w-full ">
                     {/* فیلتر برند */}
@@ -291,7 +291,7 @@ function MainBoxAutoServices({
               </div>
 
               {/* لیست گریدی نمایندگی‌ها */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8!">
                 {AutoServiceData.map((service) => {
                   const propertyItem = propertyItems.find(
                     (e) => e.id === service.id,
@@ -346,21 +346,21 @@ function MainBoxAutoServices({
 
                         {/* اطلاعات */}
                         <div className="flex-1 p-5">
-                          <div className="mb-3">
-                            <div className="flex flex-wrap gap-2 mb-3">
+                          <div className="mb-3!">
+                            <div className="flex flex-wrap gap-2 mb-3!">
                               <span className="bg-[#ce1a2a] text-white! px-2 py-1 rounded-full text-xs! font-medium">
                                 {service.categoryTitle}
                               </span>
                             </div>
                             <Link href={service.url}>
-                              <h2 className="font-bold text-gray-800 text-[16px] mb-2 hover:text-[#ce1a2a]! transition-colors line-clamp-2">
+                              <h2 className="font-bold text-gray-800 text-[16px] mb-2! hover:text-[#ce1a2a]! transition-colors line-clamp-2">
                                 {service.title}
                               </h2>
                             </Link>
                           </div>
 
                           {/* اطلاعات تماس و آدرس */}
-                          <div className="space-y-3 mb-4">
+                          <div className="space-y-3 mb-4!">
                             <div className="flex items-start text-gray-600">
                               <FaMapMarkerAlt className="text-[#ce1a2a] ml-2 mt-1 shrink-0" />
                               <span className="text-xs line-clamp-2">
@@ -434,11 +434,11 @@ function MainBoxAutoServices({
               {/* پیام عدم وجود داده */}
               {AutoServiceData.length === 0 && (
                 <div className="text-center py-12 bg-white rounded-xl shadow-sm">
-                  <FaCar className="text-4xl text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-bold text-gray-600 mb-2">
+                  <FaCar className="text-4xl text-gray-400 mx-auto mb-4!" />
+                  <h3 className="text-xl font-bold text-gray-600 mb-2!">
                     هیچ نمایندگی یافت نشد
                   </h3>
-                  <p className="text-gray-500 mb-4">
+                  <p className="text-gray-500 mb-4!">
                     با تغییر فیلترها مجدداً تلاش کنید
                   </p>
                   <button

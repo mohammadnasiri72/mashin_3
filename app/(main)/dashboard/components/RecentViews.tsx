@@ -176,7 +176,7 @@ function RecentViews() {
               {/* حالت خالی - فقط وقتی لودینگ تموم شده و هیچ داده‌ای نیست */}
               {!isLoading && recentViews.length === 0 && (
                 <div className="p-6 text-center text-gray-500 text-sm">
-                  <FaEye className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                  <FaEye className="w-8 h-8 mx-auto mb-2! text-gray-300" />
                   <p>بازدیدی نداشته‌اید</p>
                   <p className="text-xs text-gray-400 mt-1">
                     با مشاهده خودروها و اخبار، لیست بازدیدهای شما اینجا نمایش

@@ -34,7 +34,7 @@ export default async function RootLayout({
       <>
         <Header menu={menu} setting={setting} />
         {!decodedPathname.includes("/dashboard") && (
-          <section aria-label="بنرهای تبلیغاتی">
+          <section aria-label="بنرهای تبلیغاتی" className="bg-[#1a1a1a]">
             <BannerTop banner={banner} />
           </section>
         )}

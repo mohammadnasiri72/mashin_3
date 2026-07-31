@@ -36,7 +36,7 @@ function BoxCatVideos({ videosCat }: { videosCat: ItemsCategory[] }) {
               {/* Content */}
               <div className="p-4">
                 <Link href={category.url} className="text-center">
-                  <h3 className="font-bold text-gray-900 text-sm leading-relaxed hover:text-[#ce1a2a]! transition-colors duration-300 line-clamp-2 mb-2">
+                  <h3 className="font-bold text-gray-900 text-sm leading-relaxed hover:text-[#ce1a2a]! transition-colors duration-300 line-clamp-2 mb-2!">
                     {category.title}
                   </h3>
                 </Link>

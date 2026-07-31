@@ -153,20 +153,22 @@ async function pageWhichcarsDainamic() {
 
   return (
     <>
-      <JsonLd schemas={schemas} />
-      <CompareCars
-        whichcars={whichcars}
-        dataCompare={dataCompare}
-        popularComparisons={popularComparisons}
-        ralatedComparisons={ralatedComparisons
-          .filter((e) => e.id !== id)
-          .slice(0, 12)}
-        comments={comments}
-        id={Number(id)}
-        banner={banner}
-        relatedVideos={relatedVideos}
-        relatedVoices={relatedVoices}
-      />
+      <div data-id={id}>
+        <JsonLd schemas={schemas} />
+        <CompareCars
+          whichcars={whichcars}
+          dataCompare={dataCompare}
+          popularComparisons={popularComparisons}
+          ralatedComparisons={ralatedComparisons
+            .filter((e) => e.id !== id)
+            .slice(0, 12)}
+          comments={comments}
+          id={Number(id)}
+          banner={banner}
+          relatedVideos={relatedVideos}
+          relatedVoices={relatedVoices}
+        />
+      </div>
     </>
   );
 }

@@ -48,8 +48,8 @@ function MainPageTags({
       <div className="min-h-screen">
         <div className="p-4 mx-auto">
           {/* هدر صفحه */}
-          <div className="mb-4 text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <div className="mb-4! text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4!">
               <span className="text-red-600">{term}</span>
             </h1>
           </div>
@@ -66,7 +66,7 @@ function MainPageTags({
               <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 {/* نمایش عبارت جستجو */}
                 {term && (
-                  <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200 text-blue-700">
+                  <div className="mb-4! p-3 bg-blue-50 rounded-lg border border-blue-200 text-blue-700">
                     نتایج جستجو برای:{" "}
                     <span className="font-bold">"{term}"</span>
                   </div>
@@ -78,7 +78,7 @@ function MainPageTags({
                       <div key={car.id} className="group block">
                         <div className="bg-white rounded-2xl overflow-hidden pb-2 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
                           {/* تصویر خودرو */}
-                          <div className="w-full h-40 overflow-hidden rounded-lg mb-4 bg-gray-50 flex items-center justify-center relative">
+                          <div className="w-full h-40 overflow-hidden rounded-lg mb-4! bg-gray-50 flex items-center justify-center relative">
                             <Link href={car?.url || "#"}>
                               <img
                                 src={mainDomain + car.image}
@@ -96,7 +96,7 @@ function MainPageTags({
                                 e.preventDefault();
                               }}
                             >
-                              <h3 className="font-bold text-gray-900 text-lg mb-2 text-center hover:text-[#ce1a2a]! transition-colors">
+                              <h3 className="font-bold text-gray-900 text-lg mb-2! text-center hover:text-[#ce1a2a]! transition-colors">
                                 {car.title}
                               </h3>
                             </Link>

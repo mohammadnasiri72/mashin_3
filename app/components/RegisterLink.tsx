@@ -30,7 +30,7 @@ export default function RegisterLink() {
     >
       <Link
         aria-label="ثبت نام"
-        href="/auth"
+        href="/register"
         onClick={(e) => {
           e.preventDefault();
           if (fullUrl) {

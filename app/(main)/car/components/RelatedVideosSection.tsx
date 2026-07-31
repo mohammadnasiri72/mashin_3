@@ -48,7 +48,7 @@ function RelatedVideosSection({
   }
 
   return (
-    <Card className="rounded-xl shadow-lg">
+    <Card className="rounded-xl shadow-lg p-6">
       <div className="space-y-4">
         <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
           <strong className="text-red-600">ویدئوهای مرتبط </strong>
@@ -79,7 +79,7 @@ function RelatedVideosSection({
                 </Link>
 
                 <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>{formatPersianDate(video.created)}</span>
+                  <span>{formatPersianDate(video.modified ? video.modified : video.created)}</span>
                 </div>
               </div>
             </div>

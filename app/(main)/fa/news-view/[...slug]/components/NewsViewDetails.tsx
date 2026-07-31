@@ -259,22 +259,23 @@ function NewsViewDetails({
           },
         ]
       : []),
-    ...(relatedNews.length > 0
+       ...(relatedCars.length > 0
       ? [
           {
             key: "3",
-            label: "اخبار مرتبط",
-          },
-        ]
-      : []),
-    ...(relatedCars.length > 0
-      ? [
-          {
-            key: "4",
             label: "خودروهای مرتبط",
           },
         ]
       : []),
+    ...(relatedNews.length > 0
+      ? [
+          {
+            key: "4",
+            label: "اخبار مرتبط",
+          },
+        ]
+      : []),
+   
     ...(relatedVideos.length > 0
       ? [
           {
@@ -362,24 +363,25 @@ function NewsViewDetails({
                   />
                 </div>
               )}
-
-              {/* بخش اخبار مرتبط */}
-              {relatedNews.length > 0 && (
-                <div id="related" className="section-anchor" ref={relatedRef}>
-                  <NewsRelatedSection relatedNews={relatedNews} />
-                </div>
-              )}
-
-              {/* بخش خودروهای مرتبط */}
+               {/* بخش خودروهای مرتبط */}
               {relatedCars.length > 0 && (
                 <div
                   id="relatedCars"
                   className="section-anchor"
-                  ref={relatedCarRef}
+                  ref={relatedRef}
                 >
                   <CarsRelatedSection relatedCars={relatedCars} />
                 </div>
               )}
+
+              {/* بخش اخبار مرتبط */}
+              {relatedNews.length > 0 && (
+                <div id="related" className="section-anchor" ref={relatedCarRef} >
+                  <NewsRelatedSection relatedNews={relatedNews} />
+                </div>
+              )}
+
+             
 
               {/* بخش ویدئوهای مرتبط */}
               {relatedVideos.length > 0 && (
@@ -424,91 +426,98 @@ function NewsViewDetails({
         </div>
       </div>
 
-      <style jsx global>{`
-        .navbar-tabs {
-          transition: all 0.3s ease;
-          z-index: 1000;
-        }
+    <style jsx global>{`
+  .navbar-tabs {
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
 
-        .navbar-tabs .ant-card-body {
-          padding: 0 !important;
-          margin: 0 !important;
-        }
+  .navbar-tabs .ant-card-body {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 
-        .news-details-tabs .ant-tabs-nav {
-          margin: 0 !important;
-        }
+  .news-details-tabs .ant-tabs-nav {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 
-        .news-details-tabs .ant-tabs-tab {
-          padding: 8px 16px;
-          font-weight: 600;
-          font-size: 14px;
-          height: 50px !important;
-          transition: all 0.2s;
-        }
+  .news-details-tabs .ant-tabs-tab {
+    padding: 8px 16px !important;
+    font-weight: 600 !important;
+    color: #6b7280 !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    height: 50px !important;
+    margin: 0 !important;
+  }
 
-        .news-details-tabs .ant-tabs-tab-active {
-          background: #ce1a2a !important;
-          border-color: #ce1a2a !important;
-        }
+  .news-details-tabs .ant-tabs-tab:hover {
+    color: #ce1a2a;
+  }
 
-        .news-details-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
-          color: white !important;
-        }
+  .news-details-tabs .ant-tabs-tab-active {
+    color: #fff !important;
+    background: #ce1a2a !important;
+  }
 
-        .news-details-tabs .ant-tabs-ink-bar {
-          background: #ce1a2a;
-        }
+  .news-details-tabs .ant-tabs-tab .ant-tabs-tab-btn {
+    color: #222 !important;
+  }
 
-        .section-anchor {
-          scroll-margin-top: 180px;
-        }
+  .news-details-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #fff !important;
+  }
 
-        @keyframes slideDown {
-          from {
-            transform: translateY(-100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0);
-            opacity: 1;
-          }
-        }
+  .news-details-tabs .ant-tabs-ink-bar {
+    background: #ce1a2a;
+  }
 
-        /* دسکتاپ */
-        @media (min-width: 1024px) {
-          .navbar-tabs[style*="position: sticky"] {
-            top: 60px !important;
-          }
-          .section-anchor {
-            scroll-margin-top: 120px;
-          }
-        }
+  .section-anchor {
+    scroll-margin-top: 180px;
+  }
 
-        /* غیرفعال کردن sticky در موبایل */
-        @media (max-width: 1023px) {
-          .lg\\:sticky {
-            position: relative !important;
-            bottom: auto !important;
-            align-self: auto !important;
-          }
+  @keyframes slideDown {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 
-          .navbar-tabs[style*="position: sticky"] {
-            position: sticky !important;
-            top: 115px !important;
-          }
-        }
+  /* دسکتاپ */
+  @media (min-width: 1024px) {
+    .navbar-tabs[style*="position: sticky"] {
+      top: 60px !important;
+    }
+    .section-anchor {
+      scroll-margin-top: 120px;
+    }
+  }
 
-        @media (max-width: 768px) {
-          .news-details-tabs .ant-tabs-tab {
-            padding: 8px 12px;
-            font-size: 12px;
-          }
-          .section-anchor {
-            scroll-margin-top: 140px;
-          }
-        }
-      `}</style>
+  /* غیرفعال کردن sticky در موبایل */
+  @media (max-width: 1023px) {
+    .lg\\:sticky {
+      position: relative !important;
+      bottom: auto !important;
+      align-self: auto !important;
+    }
+
+    .navbar-tabs[style*="position: sticky"] {
+      position: sticky !important;
+      top: 115px !important;
+    }
+
+    .news-details-tabs .ant-tabs-tab {
+      padding: 0px 10px !important;
+      font-size: 12px !important;
+      height: 40px !important;
+    }
+  }
+`}</style>
     </article>
   );
 }

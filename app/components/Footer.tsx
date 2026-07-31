@@ -61,16 +61,16 @@ const Footer = ({
   const column3Links = convertToFooterLinks(footerColumns[2]);
 
   return (
-    <footer className="footer-wrap">
+    <footer className="footer-wrap border-t border-neutral-800/60">
       {/* Main Footer */}
-      <div className="main-footer bg-white">
+      <div className="main-footer bg-[#1a1a1a]">
         {/* Widgets Section */}
         <div className="widgets-section py-8">
           <div className="mx-auto px-4 footer-wrapper">
             <div className="grid grid-cols-12 sm:gap-8 gap-2">
               {/* Footer Column - Logo and Info */}
               <div className="footer-column col-span-12 sm:col-span-6 lg:col-span-3">
-                <div className="logo-footer mb-4 h-7!">
+                <div className="logo-footer mb-4! h-7!">
                   <Link href="/" className="h-7!">
                     <img
                       src={mainDomain + logoSrc}
@@ -82,13 +82,13 @@ const Footer = ({
                   </Link>
                 </div>
                 {footerDescription && (
-                  <div className="text-gray-600 text-sm leading-7 mb-6 text-justify">
+                  <div className="text-neutral-300! text-sm leading-7 mb-6! text-justify">
                     {footerDescription}
                     <div className="flex">
-                      <span>طراحی سایت و بهینه سازی :</span>
+                      <span className="text-neutral-400!">طراحی سایت و بهینه سازی :</span>
                       <Link
                         href="https://activeidea.net/"
-                        className="text-black! hover:text-[#0a58ca]! duration-300 font-bold mr-1 inline-flex items-center"
+                        className="text-white! hover:text-red-500! duration-300 font-bold mr-1 inline-flex items-center"
                       >
                         ایده پویا
                         <Image
@@ -102,15 +102,14 @@ const Footer = ({
                     </div>
                   </div>
                 )}
-
-                
               </div>
 
               {/* Footer Column - Quick Links */}
-              <nav className="footer-column col-span-12 lg:col-span-5 ft-lists-wrap"
+              <nav
+                className="footer-column col-span-12 lg:col-span-5 ft-lists-wrap"
                 aria-label="دسترسی سریع"
               >
-                <h2 className="text-black text-[16px] font-bold! mb-4! sm:text-start text-center">
+                <h2 className="text-white! text-[16px] font-bold! mb-4! sm:text-start text-center">
                   {footerMenu?.title || "دسترسی سریع"}
                 </h2>
 
@@ -122,7 +121,7 @@ const Footer = ({
                         <li key={index}>
                           <Link
                             href={link.href}
-                            className="text-[#292929]! hover:text-[#ce1a2a]! transition-colors text-sm font-semibold!"
+                            className="text-neutral-300! hover:text-red-500! transition-colors text-sm font-semibold!"
                           >
                             {link.text}
                           </Link>
@@ -138,7 +137,7 @@ const Footer = ({
                         <li key={index}>
                           <Link
                             href={link.href}
-                            className="text-[#292929]! hover:text-[#ce1a2a]! transition-colors text-sm font-semibold!"
+                            className="text-neutral-300! hover:text-red-500! transition-colors text-sm font-semibold!"
                           >
                             {link.text}
                           </Link>
@@ -154,7 +153,7 @@ const Footer = ({
                         <li key={index}>
                           <Link
                             href={link.href}
-                            className="text-[#292929]! hover:text-[#ce1a2a]! transition-colors text-sm font-semibold!"
+                            className="text-neutral-300! hover:text-red-500! transition-colors text-sm font-semibold!"
                           >
                             {link.text}
                           </Link>
@@ -167,7 +166,7 @@ const Footer = ({
 
               {/* Footer Column - Social Media (Desktop) */}
               <div className="footer-column col-span-12 md:col-span-4 lg:col-span-2">
-                <h4 className="text-black text-[16px] font-bold! mb-4! sm:text-start text-center">
+                <h4 className="text-white! text-[16px] font-bold! mb-4! sm:text-start text-center">
                   شبکه های اجتماعی
                 </h4>
 
@@ -180,8 +179,8 @@ const Footer = ({
                       >
                         <Link
                           href={social.sourceLink || "#"}
-                           target="_blank"
-                          className="bg-gray-100 rounded-lg w-10 h-10 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                          target="_blank"
+                          className="bg-[#2a2a2a] rounded-lg w-10 h-10 flex items-center justify-center hover:bg-[#3a3a3a] transition-colors border border-neutral-700/60"
                         >
                           <img
                             src={mainDomain + social.image}
@@ -195,9 +194,8 @@ const Footer = ({
                   </ul>
                 </div>
               </div>
-              <div className="footer-column col-span-12 md:col-span-4 lg:col-span-2">
-               
 
+              <div className="footer-column col-span-12 md:col-span-4 lg:col-span-2">
                 <div className="rewards sm:flex p-5">
                   <div className="rw-item flex flex-col items-center text-center h-48">
                     <Image
@@ -205,9 +203,9 @@ const Footer = ({
                       alt="جایزه"
                       width={80}
                       height={80}
-                      className="mb-2"
+                      className="mb-2! "
                     />
-                    <p className="text-black font-semibold  text-sm mt-2">
+                    <p className="text-neutral-300! font-semibold text-sm mt-2">
                       برنده جشواره وب و موبایل <br />
                       به انتخاب مردم
                     </p>

@@ -39,6 +39,38 @@ const raviFont = localFont({
   variable: "--font-ravi",
 });
 
+// const raviFont = localFont({
+//   src: [
+//     {
+//       path: "../public/fonts/IRANSansWeb(FaNum)_Light.woff",
+//       weight: "400",
+//       style: "normal",
+//     },
+//     {
+//       path: "../public/fonts/IRANSansXV (1).woff2",
+//       weight: "500",
+//       style: "normal",
+//     },
+//     {
+//       path: "../public/fonts/IRANSansXV (1).woff2",
+//       weight: "600",
+//       style: "normal",
+//     },
+//     {
+//       path: "../public/fonts/IRANSansXV (1).woff2",
+//       weight: "700",
+//       style: "normal",
+//     },
+//     {
+//       path: "../public/fonts/IRANSansXV.woff2",
+//       weight: "900",
+//       style: "normal",
+//     },
+//   ],
+//   display: "swap",
+//   variable: "--font-ravi",
+// });
+
 export default async function RootLayout({
   children,
 }: {
@@ -54,6 +86,8 @@ export default async function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/images/logo.png" />
+        <link rel="preload" href="/style/style.css" as="style" />
+        <link rel="stylesheet" href="/style/style.css" />
         <meta name="theme-color" content="#1890ff" />
       </head>
       <body>

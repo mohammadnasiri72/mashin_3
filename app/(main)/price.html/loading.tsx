@@ -11,7 +11,7 @@ function Loading() {
     >
       <div className="max-w-7xl mx-auto">
         {/* Breadcrumb Skeleton */}
-        <div className="mb-4 animate-pulse">
+        <div className="mb-4! animate-pulse">
           <div className="flex items-center gap-2 overflow-auto pb-3">
             <div className="h-4 w-16 bg-gray-200 rounded"></div>
             <div className="h-4 w-4 bg-gray-200 rounded"></div>
@@ -20,14 +20,14 @@ function Loading() {
         </div>
 
         {/* Header Skeleton */}
-        <div className="text-center mb-5 animate-pulse">
-          <div className="h-7 w-64 bg-gray-200 rounded mx-auto mb-2"></div>
+        <div className="text-center mb-5! animate-pulse">
+          <div className="h-7 w-64 bg-gray-200 rounded mx-auto mb-2!"></div>
           <div className="h-4 w-80 max-w-full bg-gray-200 rounded mx-auto"></div>
           <div className="h-3 w-96 max-w-full bg-gray-200 rounded mx-auto mt-2"></div>
         </div>
 
         {/* Tabs Skeleton */}
-        <div className="mb-4 animate-pulse">
+        <div className="mb-4! animate-pulse">
           <div className="flex justify-center gap-2">
             <div className="h-10 w-32 bg-gray-200 rounded-lg"></div>
             <div className="h-10 w-32 bg-gray-200 rounded-lg"></div>
@@ -35,12 +35,12 @@ function Loading() {
         </div>
 
         {/* Search Box Skeleton */}
-        <div className="mb-4 max-w-2xl mx-auto animate-pulse">
+        <div className="mb-4! max-w-2xl mx-auto animate-pulse">
           <div className="w-full h-10 bg-gray-200 rounded-lg"></div>
         </div>
 
         {/* Brands Swiper Skeleton */}
-        <div className="mb-5 px-1">
+        <div className="mb-5! px-1">
           <div className="flex gap-2 overflow-x-auto pb-2">
             {[...Array(12)].map((_, i) => (
               <div
@@ -61,7 +61,7 @@ function Loading() {
             >
               {/* Brand Header Skeleton */}
               <div
-                className="p-2.5 mb-3 rounded-lg"
+                className="p-2.5 mb-3! rounded-lg"
                 style={{ backgroundColor: "#fdf2f2" }}
               >
                 <div className="flex items-center justify-between">
@@ -76,7 +76,7 @@ function Loading() {
               {/* Desktop Table Skeleton (hidden on mobile) */}
               <div className="hidden md:block">
                 {/* Table Header Skeleton */}
-                <div className="flex bg-gray-50 rounded-lg p-2 mb-2">
+                <div className="flex bg-gray-50 rounded-lg p-2 mb-2!">
                   <div className="flex-1 h-5 bg-gray-200 rounded mx-1"></div>
                   <div className="flex-1 h-5 bg-gray-200 rounded mx-1"></div>
                   <div className="flex-1 h-5 bg-gray-200 rounded mx-1"></div>
@@ -100,10 +100,10 @@ function Loading() {
                     key={i}
                     className="bg-white rounded-xl border border-gray-200 p-3"
                   >
-                    <div className="flex items-center gap-3 mb-3 pb-2 border-b border-gray-100">
+                    <div className="flex items-center gap-3 mb-3! pb-2 border-b border-gray-100">
                       <div className="w-10 h-10 rounded-full bg-gray-200"></div>
                       <div className="flex-1">
-                        <div className="h-4 w-24 bg-gray-200 rounded mb-1"></div>
+                        <div className="h-4 w-24 bg-gray-200 rounded mb-1!"></div>
                         <div className="h-3 w-16 bg-gray-200 rounded"></div>
                       </div>
                     </div>
@@ -249,11 +249,11 @@ function Loading() {
             padding-right: 12px !important;
           }
 
-          .mb-5 {
+          .mb-5! {
             margin-bottom: 20px !important;
           }
 
-          .mb-4 {
+          .mb-4! {
             margin-bottom: 16px !important;
           }
         }

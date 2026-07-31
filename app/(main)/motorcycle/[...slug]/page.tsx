@@ -99,35 +99,70 @@ async function pageMotorcycleDainamic() {
     console.error("Error recording visit:", error);
   }
 
-  const schemas = detailsMotorcycle?.seoInfo?.schemas || [];
+  // ✅ فقط اگر pollData وجود داشت و مقدار معتبری داشت، aggregateRating رو اضافه کن
+  let schemas = detailsMotorcycle?.seoInfo?.schemas || [];
+
+  if (
+    pollData &&
+    pollData.pollScore !== undefined &&
+    pollData.pollNumber !== undefined
+  ) {
+    const aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: pollData.pollScore,
+      bestRating: 10,
+      worstRating: 1,
+      ratingCount: pollData.pollNumber,
+    };
+
+    // ✅ فقط اگر schemas وجود داشت، به schema های موجود aggregateRating اضافه کن
+    if (schemas.length > 0) {
+      schemas = schemas.map((schema) => {
+        if (
+          schema["@type"] === "Product" ||
+          schema["@type"] === "Car" ||
+          schema["@type"] === "Vehicle" ||
+          schema["@type"] === "Motorcycle"
+        ) {
+          return {
+            ...schema,
+            aggregateRating: aggregateRating,
+          };
+        }
+        return schema;
+      });
+    }
+  }
 
   return (
     <>
-      <JsonLd schemas={schemas} />
-      <HeroSection detailsCar={detailsMotorcycle} />
-      <NvbarCar
-        pollData={pollData}
-        totalComment={comments.length > 0 ? comments[0]?.total : 0}
-      />
-      <CarDetails
-        Attachment={Attachment.filter((e) => e.tabId === 1 || e.tabId === 3)}
-        detailsCar={detailsMotorcycle}
-        initialPollData={pollData}
-      />
-      <Suspense fallback={<div className="h-40 animate-pulse bg-gray-200" />}>
-        <FeaturesSection
+      <div data-id={id}>
+        <JsonLd schemas={schemas} />
+        <HeroSection detailsCar={detailsMotorcycle} />
+        <NvbarCar
+          pollData={pollData}
+          totalComment={comments.length > 0 ? comments[0]?.total : 0}
+        />
+        <CarDetails
+          Attachment={Attachment.filter((e) => e.tabId === 1 || e.tabId === 3)}
           detailsCar={detailsMotorcycle}
-          Attachment={Attachment.filter((e) => e.tabId === 4)}
+          initialPollData={pollData}
+        />
+        <Suspense fallback={<div className="h-40 animate-pulse bg-gray-200" />}>
+          <FeaturesSection
+            detailsCar={detailsMotorcycle}
+            Attachment={Attachment.filter((e) => e.tabId === 4)}
+            vehicle={"motor"}
+          />
+        </Suspense>
+        <ContentTabsSSR
+          Attachment={Attachment}
+          detailsCar={detailsMotorcycle}
+          comments={comments}
+          id={id}
           vehicle={"motor"}
         />
-      </Suspense>
-      <ContentTabsSSR
-        Attachment={Attachment}
-        detailsCar={detailsMotorcycle}
-        comments={comments}
-        id={id}
-        vehicle={"motor"}
-      />
+      </div>
     </>
   );
 }

@@ -4,11 +4,7 @@ import { formatPersianDate } from "@/utils/func";
 import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 
-const RelatedVideos = ({
-  relatedVideos,
-}: {
-  relatedVideos: Items[];
-}) => {
+const RelatedVideos = ({ relatedVideos }: { relatedVideos: Items[] }) => {
   return (
     <section className="py-5 bg-white rounded-xl shadow-sm">
       <div className="mx-auto px-4">
@@ -40,7 +36,11 @@ const RelatedVideos = ({
                 </Link>
 
                 <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>{formatPersianDate(video.created)}</span>
+                  <span>
+                    {formatPersianDate(
+                      video.modified ? video.modified : video.created,
+                    )}
+                  </span>
                 </div>
               </div>
             </div>

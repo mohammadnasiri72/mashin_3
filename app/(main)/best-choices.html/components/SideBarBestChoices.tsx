@@ -32,7 +32,7 @@ function SideBarBestChoices({
         <SideBarListItems itemsList={lastNews} title={"جدیدترین اخبار خودرو"} />
 
         {/* جدیدترین خودروها */}
-        <SideBarListItems itemsList={lastCars} title={"جدیدترین خودروها"} />
+        <SideBarListItems itemsList={lastCars} title={"جدیدترین خودروها"} type={"car"}/>
       </div>
     </>
   );

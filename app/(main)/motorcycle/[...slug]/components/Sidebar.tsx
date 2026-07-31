@@ -181,7 +181,7 @@ const Sidebar = ({
       {/* ماشین‌های رقبا */}
       {detailsMotorcompetitor.length > 0 && (
         <div className="sidebar_widget bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-          <h3 className="widget_title text-lg font-bold text-gray-900 mb-3">
+          <h3 className="widget_title text-lg font-bold text-gray-900 mb-3!">
             <span className="hover:text-red-600 transition-colors">
               ماشین های رقبا
             </span>

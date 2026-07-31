@@ -60,8 +60,8 @@ const DescBestChoice = ({
           <div className="">
             {/* News Summary */}
             {detailsBest.summary && (
-              <div className="mb-8 p-4 bg-blue-50 border-r-4 border-blue-500 rounded">
-                <h3 className="text-lg font-bold text-gray-800 mb-2">
+              <div className="mb-8! p-4 bg-blue-50 border-r-4 border-blue-500 rounded">
+                <h3 className="text-lg font-bold text-gray-800 mb-2!">
                   خلاصه خبر:
                 </h3>
                 <p className="text-gray-700 leading-relaxed">
@@ -86,12 +86,12 @@ const DescBestChoice = ({
             {/* Main Content */}
             {detailsBest.body && (
               <div className="prose prose-lg max-w-none">
-                <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
+                <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
                   <strong className="text-red-600">درباره‌ </strong>
                   {title}
                 </h3>
                 <div
-                  className="text-gray-700 leading-8 text-justify"
+                  className="text-gray-700 leading-8 text-justify body-best-choice"
                   dangerouslySetInnerHTML={createMarkup(detailsBest.body)}
                 />
               </div>
@@ -117,7 +117,7 @@ const DescBestChoice = ({
                 <div className="flex items-center gap-1">
                   <FaCalendar className="text-[#666] text-xs" />
                   <span className="font-bold text-[#666] text-xs">
-                    {new Date(detailsBest.created).toLocaleDateString("fa-IR")}
+                    {new Date(detailsBest.modified ? detailsBest.modified : detailsBest.created).toLocaleDateString("fa-IR")}
                   </span>
                 </div>
               </div>

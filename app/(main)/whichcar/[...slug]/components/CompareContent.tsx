@@ -15,8 +15,9 @@ function CompareContent({
   whichcars: ItemsId;
   dataCompare: ItemsId[];
 }) {
+  
   return (
-    <Card className="rounded-xl shadow-lg border-0">
+    <div className="rounded-xl border-0 p-3">
       <div className="space-y-8">
         {/* خلاصه مقایسه از whichcars */}
         {whichcars.body && (
@@ -35,7 +36,7 @@ function CompareContent({
               ))}
             </h3>
             <div
-              className="prose prose-lg max-w-none text-justify text-gray-700 leading-8"
+              className="prose prose-lg max-w-none text-justify text-gray-700 leading-8 body-whichcar"
               dangerouslySetInnerHTML={createMarkup(
                 whichcars.body.replace(
                   /<span style="font-size: 12pt;">|<\/span>/g,
@@ -72,7 +73,7 @@ function CompareContent({
             <div className="flex items-center gap-1">
               <FaCalendar className="text-[#666] text-xs" />
               <span className="font-bold text-[#666] text-xs">
-                {new Date(whichcars.created).toLocaleDateString("fa-IR")}
+                {new Date(whichcars.modified ? whichcars.modified:whichcars.created).toLocaleDateString("fa-IR")}
               </span>
             </div>
           </div>
@@ -113,7 +114,7 @@ function CompareContent({
           line-height: 2;
         }
       `}</style>
-    </Card>
+    </div>
   );
 }
 

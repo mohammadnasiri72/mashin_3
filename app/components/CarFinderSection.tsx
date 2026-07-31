@@ -65,7 +65,7 @@ const CarFinderSection = ({
         }}
       >
         {/* Header Section */}
-        <div className="mb-4 mt-3 sm:px-5 px-2 flex sm:flex-row flex-col justify-center items-center">
+        <div className="mb-4! mt-3 sm:px-5 px-2 flex sm:flex-row flex-col justify-center items-center">
           <h3 className="pb-0! mb-0! text-white! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ce1a2a] ">
             خودرو یاب
           </h3>

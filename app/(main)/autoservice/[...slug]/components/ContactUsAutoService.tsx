@@ -10,7 +10,7 @@ const MapContainer = dynamic(() => import("@/app/components/MapContainer"), {
   loading: () => (
     <div className="w-full h-96 flex items-center justify-center bg-gray-100 rounded-lg">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ce1a2a] mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ce1a2a] mx-auto mb-4!"></div>
         <p className="text-gray-600">در حال بارگذاری نقشه...</p>
       </div>
     </div>
@@ -101,7 +101,7 @@ function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
         <div className="flex gap-2 items-center mb-6!">
           <img
             src={mainDomain + detailsAuto.image}
-            alt={detailsAuto.categoryTitle}
+            alt={detailsAuto.title}
             className="w-16 rounded-lg bg-white ml-4"
           />
           <h3 className="text-xl font-bold text-gray-800 ">

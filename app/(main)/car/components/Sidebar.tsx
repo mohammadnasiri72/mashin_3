@@ -12,14 +12,14 @@ import { useEffect, useRef, useState } from "react";
 const SidebarSkeleton = () => (
   <div className="space-y-6 animate-pulse">
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-      <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+      <div className="h-6 bg-gray-200 rounded w-3/4 mb-4!"></div>
       <div className="space-y-4">
         <div className="h-32 bg-gray-200 rounded"></div>
         <div className="h-32 bg-gray-200 rounded"></div>
       </div>
     </div>
     <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-      <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+      <div className="h-6 bg-gray-200 rounded w-3/4 mb-4!"></div>
       <div className="space-y-4">
         <div className="h-20 bg-gray-200 rounded"></div>
         <div className="h-20 bg-gray-200 rounded"></div>
@@ -310,7 +310,7 @@ const Sidebar = ({ detailsCar }: { detailsCar: ItemsId }) => {
                     <img
                       src={mainDomain + model.image}
                       alt={model.title}
-                      className="w-full h-32 object-cover group-hover:scale-85 scale-80 transition-transform duration-300"
+                      className="w-full h-32 object-contain group-hover:scale-95 scale-90 transition-transform duration-300"
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-black/20 transition-all duration-300"></div>

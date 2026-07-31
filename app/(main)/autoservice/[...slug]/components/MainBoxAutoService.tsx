@@ -248,70 +248,88 @@ function MainBoxAutoService({
         </div>
       </div>
 
-      <style jsx global>{`
-        .navbar-tabs {
-          transition: all 0.3s ease;
-          z-index: 10000;
-        }
+    <style jsx global>{`
+  .navbar-tabs {
+    transition: all 0.3s ease;
+    z-index: 10000;
+  }
 
-        .navbar-tabs .ant-card-body {
-          padding: 0 !important;
-          margin: 0 !important;
-        }
+  .navbar-tabs .ant-card-body {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
 
-        .autoService-tabs .ant-tabs-nav {
-          margin: 0 !important;
-        }
+  .autoService-tabs .ant-tabs-nav {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 
-        .autoService-tabs .ant-tabs-tab {
-          padding: 8px 16px;
-          font-weight: 600;
-          transition: all 0.2s;
-          height: 50px !important;
-        }
+  .autoService-tabs .ant-tabs-tab {
+    padding: 8px 16px !important;
+    font-weight: 600 !important;
+    color: #6b7280 !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    height: 50px !important;
+    margin: 0 !important;
+  }
 
-        .autoService-tabs .ant-tabs-tab-active {
-          background: #ce1a2a !important;
-          border-color: #ce1a2a !important;
-        }
+  .autoService-tabs .ant-tabs-tab:hover {
+    color: #ce1a2a;
+  }
 
-        .autoService-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
-          color: white !important;
-        }
+  .autoService-tabs .ant-tabs-tab-active {
+    color: #fff !important;
+    background: #ce1a2a !important;
+  }
 
-        .autoService-tabs .ant-tabs-ink-bar {
-          background: #ce1a2a;
-        }
+  .autoService-tabs .ant-tabs-tab .ant-tabs-tab-btn {
+    color: #222 !important;
+  }
 
-        .section-anchor {
-          scroll-margin-top: 180px;
-        }
+  .autoService-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+    color: #fff !important;
+  }
 
-        /* دسکتاپ */
-        @media (min-width: 1024px) {
-          .navbar-tabs[style*="position: sticky"] {
-            top: 60px !important;
-          }
+  .autoService-tabs .ant-tabs-ink-bar {
+    background: #ce1a2a;
+  }
 
-          .section-anchor {
-            scroll-margin-top: 120px;
-          }
-        }
+  .section-anchor {
+    scroll-margin-top: 180px;
+  }
 
-        /* غیرفعال کردن sticky در موبایل */
-        @media (max-width: 1023px) {
-          .lg\\:sticky {
-            position: relative !important;
-            bottom: auto !important;
-            align-self: auto !important;
-          }
+  /* دسکتاپ */
+  @media (min-width: 1024px) {
+    .navbar-tabs[style*="position: sticky"] {
+      top: 60px !important;
+    }
 
-          .navbar-tabs[style*="position: sticky"] {
-            position: sticky !important;
-            top: 115px !important;
-          }
-        }
-      `}</style>
+    .section-anchor {
+      scroll-margin-top: 120px;
+    }
+  }
+
+  /* موبایل */
+  @media (max-width: 1023px) {
+    .lg\\:sticky {
+      position: relative !important;
+      bottom: auto !important;
+      align-self: auto !important;
+    }
+
+    .navbar-tabs[style*="position: sticky"] {
+      position: sticky !important;
+      top: 115px !important;
+    }
+
+    .autoService-tabs .ant-tabs-tab {
+      padding: 0px 10px !important;
+      font-size: 12px !important;
+      height: 40px !important;
+    }
+  }
+`}</style>
     </div>
   );
 }

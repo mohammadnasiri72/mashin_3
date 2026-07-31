@@ -13,7 +13,7 @@ function Loading() {
           <div className="min-h-screen bg-[#f4f4f4] py-8">
             <div className="mx-auto max-w-6xl">
               {/* فیلترهای اسکلتون */}
-              <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+              <div className="bg-white rounded-xl shadow-sm p-6 mb-8!">
                 <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end justify-between">
                   <div className="flex flex-col lg:flex-row gap-4 w-full">
                     {/* مشخصات نمایندگی اسکلتون */}

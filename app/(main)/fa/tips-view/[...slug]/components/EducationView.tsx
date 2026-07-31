@@ -274,22 +274,34 @@ function EducationView({
 
         .education-details-tabs .ant-tabs-nav {
           margin: 0 !important;
+          padding: 0 !important;
         }
 
         .education-details-tabs .ant-tabs-tab {
-          padding: 8px 16px;
-          font-weight: 600;
+          padding: 8px 16px !important;
+          font-weight: 600 !important;
+          color: #6b7280 !important;
+          transition: all 0.3s ease !important;
+          cursor: pointer !important;
           height: 50px !important;
-          transition: all 0.2s;
+          margin: 0 !important;
+        }
+
+        .education-details-tabs .ant-tabs-tab:hover {
+          color: #ce1a2a;
         }
 
         .education-details-tabs .ant-tabs-tab-active {
+          color: #fff !important;
           background: #ce1a2a !important;
-          border-color: #ce1a2a !important;
+        }
+
+        .education-details-tabs .ant-tabs-tab .ant-tabs-tab-btn {
+          color: #222 !important;
         }
 
         .education-details-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
-          color: white !important;
+          color: #fff !important;
         }
 
         .education-details-tabs .ant-tabs-ink-bar {
@@ -332,6 +344,12 @@ function EducationView({
           .navbar-tabs[style*="position: sticky"] {
             position: sticky !important;
             top: 115px !important;
+          }
+
+          .education-details-tabs .ant-tabs-tab {
+            padding: 0px 10px !important;
+            font-size: 12px !important;
+            height: 40px !important;
           }
         }
 

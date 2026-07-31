@@ -6,7 +6,7 @@ function Loading() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb Skeleton */}
-      <div className="mb-4 animate-pulse">
+      <div className="mb-4! animate-pulse">
         <div className="flex items-center gap-2 overflow-auto pb-3 px-3">
           <div className="h-4 w-16 bg-gray-200 rounded"></div>
           <div className="h-4 w-4 bg-gray-200 rounded"></div>
@@ -19,7 +19,7 @@ function Loading() {
       <div className="flex flex-col lg:flex-row gap-4 p-3 relative mx-auto">
         {/* Main Content - 3/4 صفحه */}
         <div className="lg:w-3/4 w-full">
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 mb-5 animate-pulse">
+          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 mb-5! animate-pulse">
             {/* Header with Gradient Skeleton */}
             <div className="bg-linear-to-l from-red-400 to-red-300 px-6 py-4">
               <div className="flex items-center justify-between">
@@ -33,12 +33,12 @@ function Loading() {
             {/* Main Content Skeleton */}
             <div className="px-6 py-3">
               {/* Title Skeleton */}
-              <div className="mb-2">
-                <div className="h-8 w-48 bg-gray-200 rounded mb-3"></div>
+              <div className="mb-2!">
+                <div className="h-8 w-48 bg-gray-200 rounded mb-3!"></div>
               </div>
 
               {/* Body Content Skeleton */}
-              <div className="mb-3 border-b border-gray-200 pb-3">
+              <div className="mb-3! border-b border-gray-200 pb-3">
                 <div className="space-y-3">
                   <div className="h-4 w-full bg-gray-200 rounded"></div>
                   <div className="h-4 w-full bg-gray-200 rounded"></div>
@@ -75,10 +75,10 @@ function Loading() {
 
             {/* Market Stats Skeleton (commented in original but added for consistency) */}
             <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 animate-pulse">
-              <div className="h-6 w-24 bg-gray-200 rounded mb-3"></div>
+              <div className="h-6 w-24 bg-gray-200 rounded mb-3!"></div>
               
               {/* Tabs Skeleton */}
-              <div className="mb-3">
+              <div className="mb-3!">
                 <div className="flex gap-2 border-b pb-2">
                   <div className="h-8 w-28 bg-gray-200 rounded"></div>
                   <div className="h-8 w-28 bg-gray-200 rounded"></div>
@@ -95,12 +95,12 @@ function Loading() {
                     <div className="flex items-center gap-2 flex-1">
                       <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
                       <div className="flex-1">
-                        <div className="h-4 w-24 bg-gray-200 rounded mb-1"></div>
+                        <div className="h-4 w-24 bg-gray-200 rounded mb-1!"></div>
                         <div className="h-3 w-16 bg-gray-200 rounded"></div>
                       </div>
                     </div>
                     <div className="text-left">
-                      <div className="h-4 w-16 bg-gray-200 rounded mb-1"></div>
+                      <div className="h-4 w-16 bg-gray-200 rounded mb-1!"></div>
                       <div className="h-3 w-12 bg-gray-200 rounded"></div>
                     </div>
                   </div>

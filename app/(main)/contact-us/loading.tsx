@@ -10,15 +10,15 @@ function Loading() {
         <div className="lg:w-3/4 w-full p-2">
           <div className="py-8">
             {/* Header Section Skeleton */}
-            <div className="bg-white rounded-lg shadow-lg p-6 mb-8 border-r-4 border-[#ce1a2a] animate-pulse">
-              <div className="h-8 w-48 bg-gray-200 rounded mx-auto mb-6"></div>
+            <div className="bg-white rounded-lg shadow-lg p-6 mb-8! border-r-4 border-[#ce1a2a] animate-pulse">
+              <div className="h-8 w-48 bg-gray-200 rounded mx-auto mb-6!"></div>
               
-              <div className="grid md:grid-cols-2 gap-6 mb-8">
+              <div className="grid md:grid-cols-2 gap-6 mb-8!">
                 {/* Phone Info Skeleton */}
                 <div className="flex items-center space-x-3 space-x-reverse gap-2">
                   <div className="bg-gray-200 p-3 rounded-full w-10 h-10"></div>
                   <div>
-                    <div className="h-5 w-24 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-5 w-24 bg-gray-200 rounded mb-2!"></div>
                     <div className="h-6 w-32 bg-gray-200 rounded"></div>
                   </div>
                 </div>
@@ -27,7 +27,7 @@ function Loading() {
                 <div className="flex items-center space-x-3 space-x-reverse gap-2">
                   <div className="bg-gray-200 p-3 rounded-full w-10 h-10"></div>
                   <div>
-                    <div className="flex items-center mb-2">
+                    <div className="flex items-center mb-2!">
                       <div className="h-5 w-40 bg-gray-200 rounded"></div>
                     </div>
                     <div className="h-6 w-32 bg-gray-200 rounded"></div>
@@ -49,7 +49,7 @@ function Loading() {
                   <div className="flex flex-col gap-5">
                     {/* Name Field */}
                     <div>
-                      <div className="flex items-center gap-0.5 mb-2">
+                      <div className="flex items-center gap-0.5 mb-2!">
                         <div className="h-4 w-8 bg-gray-200 rounded"></div>
                       </div>
                       <div className="h-12 w-full bg-gray-200 rounded-lg"></div>
@@ -57,7 +57,7 @@ function Loading() {
                     
                     {/* Mobile Field */}
                     <div>
-                      <div className="flex items-center gap-0.5 mb-2">
+                      <div className="flex items-center gap-0.5 mb-2!">
                         <div className="h-4 w-12 bg-gray-200 rounded"></div>
                       </div>
                       <div className="h-12 w-full bg-gray-200 rounded-lg"></div>
@@ -65,7 +65,7 @@ function Loading() {
                     
                     {/* Email Field */}
                     <div>
-                      <div className="flex items-center gap-0.5 mb-2">
+                      <div className="flex items-center gap-0.5 mb-2!">
                         <div className="h-4 w-24 bg-gray-200 rounded"></div>
                       </div>
                       <div className="h-12 w-full bg-gray-200 rounded-lg"></div>
@@ -73,7 +73,7 @@ function Loading() {
                     
                     {/* Message Field */}
                     <div>
-                      <div className="flex items-center gap-0.5 mb-2">
+                      <div className="flex items-center gap-0.5 mb-2!">
                         <div className="h-4 w-12 bg-gray-200 rounded"></div>
                       </div>
                       <div className="h-32 w-full bg-gray-200 rounded-lg"></div>
@@ -97,14 +97,14 @@ function Loading() {
                   {/* Map Placeholder Skeleton */}
                   <div className="w-full h-96 bg-gray-200 rounded-lg flex items-center justify-center">
                     <div className="text-center">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-300 mx-auto mb-4"></div>
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-300 mx-auto mb-4!"></div>
                       <div className="h-4 w-32 bg-gray-300 rounded mx-auto"></div>
                     </div>
                   </div>
                   
                   {/* Address Section Skeleton */}
                   <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                    <div className="h-5 w-20 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-5 w-20 bg-gray-200 rounded mb-2!"></div>
                     <div className="h-4 w-full bg-gray-200 rounded"></div>
                     <div className="h-4 w-3/4 bg-gray-200 rounded mt-2"></div>
                   </div>
@@ -126,10 +126,10 @@ function Loading() {
 
                 {/* Market Stats Skeleton */}
                 <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 animate-pulse">
-                  <div className="h-6 w-24 bg-gray-200 rounded mb-3"></div>
+                  <div className="h-6 w-24 bg-gray-200 rounded mb-3!"></div>
                   
                   {/* Tabs Skeleton */}
-                  <div className="mb-3">
+                  <div className="mb-3!">
                     <div className="flex gap-2 border-b pb-2">
                       <div className="h-8 w-28 bg-gray-200 rounded"></div>
                       <div className="h-8 w-28 bg-gray-200 rounded"></div>
@@ -146,12 +146,12 @@ function Loading() {
                         <div className="flex items-center gap-2 flex-1">
                           <div className="w-10 h-10 bg-gray-200 rounded-lg"></div>
                           <div className="flex-1">
-                            <div className="h-4 w-24 bg-gray-200 rounded mb-1"></div>
+                            <div className="h-4 w-24 bg-gray-200 rounded mb-1!"></div>
                             <div className="h-3 w-16 bg-gray-200 rounded"></div>
                           </div>
                         </div>
                         <div className="text-left">
-                          <div className="h-4 w-16 bg-gray-200 rounded mb-1"></div>
+                          <div className="h-4 w-16 bg-gray-200 rounded mb-1!"></div>
                           <div className="h-3 w-12 bg-gray-200 rounded"></div>
                         </div>
                       </div>

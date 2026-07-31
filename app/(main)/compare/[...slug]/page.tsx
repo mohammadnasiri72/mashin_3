@@ -3,47 +3,80 @@ import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
 import CompareClient from "./components/CompareClient";
+import { headers } from "next/headers";
+
+function extractAfterSecondSlash(url: string) {
+  // پیدا کردن دومین اسلش (با رد کردن اسلش‌های پروتکل مثل https://)
+  const firstSlash = url.indexOf("/", url.indexOf("//") + 2);
+  if (firstSlash === -1) return ""; // اگر اسلش دومی وجود نداشت
+
+  // پیدا کردن علامت سوال
+  const questionMark = url.indexOf("?", firstSlash);
+
+  // اگر ? وجود داشت تا قبل از ?، وگرنه تا آخر رشته
+  const result =
+    questionMark !== -1
+      ? url.substring(firstSlash + 1, questionMark)
+      : url.substring(firstSlash + 1);
+
+  return result;
+}
 
 export async function generateMetadata() {
-  const dataPage: ItemsId | null = await getItemByUrl("/compare");
+  const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+  const ids = extractAfterSecondSlash(decodedPathname);
+  const dataCompare: ItemsId[] = await getItemByIds(ids);
+  const result = dataCompare
+    .map((item) => `${item.sourceName} ${item.title}`)
+    .join(" با ");
 
-  if (dataPage && dataPage.title) {
-    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
-    const description = dataPage.seoInfo?.seoDescription
-      ? dataPage.seoInfo?.seoDescription
-      : dataPage.title;
-    const keywords = dataPage.seoInfo?.seoKeywords
-      ? dataPage.seoInfo?.seoKeywords
-      : dataPage.seoKeywords;
-    const metadataBase = new URL(mainDomainOld);
-    const seoUrl = dataPage?.seoUrl
-      ? `${mainDomainOld}${dataPage?.seoUrl}`
-      : dataPage?.url
-        ? `${mainDomainOld}${dataPage?.url}`
-        : `${mainDomainOld}`;
-    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
-
+  if (result) {
     return {
-      title,
-      description,
-      keywords,
-      metadataBase,
-      alternates: {
-        canonical: seoUrl,
-      },
-      openGraph: {
-        title,
-        description,
-      },
-      other: {
-        seoHeadTags,
-      },
+      title: `مقایسه ${result}`,
+      description: `بررسی و مقایسه ${result}`,
     };
   } else {
-    return {
-      title: "مقایسه خودروهای بازار",
-      description: "مقایسه خودروهای بازار",
-    };
+    const dataPage: ItemsId | null = await getItemByUrl("/compare");
+    if (dataPage && dataPage.title) {
+      const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+      const description = dataPage.seoInfo?.seoDescription
+        ? dataPage.seoInfo?.seoDescription
+        : dataPage.title;
+      const keywords = dataPage.seoInfo?.seoKeywords
+        ? dataPage.seoInfo?.seoKeywords
+        : dataPage.seoKeywords;
+      const metadataBase = new URL(mainDomainOld);
+      const seoUrl = dataPage?.seoUrl
+        ? `${mainDomainOld}${dataPage?.seoUrl}`
+        : dataPage?.url
+          ? `${mainDomainOld}${dataPage?.url}`
+          : `${mainDomainOld}`;
+      const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+
+      return {
+        title,
+        description,
+        keywords,
+        metadataBase,
+        alternates: {
+          canonical: seoUrl,
+        },
+        openGraph: {
+          title,
+          description,
+        },
+        other: {
+          seoHeadTags,
+        },
+      };
+    } else {
+      return {
+        title: "مقایسه خودروهای بازار",
+        description: "مقایسه خودروهای بازار",
+      };
+    }
   }
 }
 
@@ -71,7 +104,7 @@ async function pageCompareDainamic({
     PageIndex: 1,
     PageSize: 200,
   });
-  
+
   return (
     <>
       <CompareClient

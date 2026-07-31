@@ -4,11 +4,7 @@ import { formatPersianDate } from "@/utils/func";
 import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 
-const RelatedCarsVideos = ({
-  relatedCars,
-}: {
-  relatedCars: ItemsId[];
-}) => {
+const RelatedCarsVideos = ({ relatedCars }: { relatedCars: ItemsId[] }) => {
   return (
     <section className="py-5 bg-white rounded-xl shadow-sm">
       <div className="mx-auto px-4">
@@ -40,7 +36,11 @@ const RelatedCarsVideos = ({
                 </Link>
 
                 <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>{formatPersianDate(car.created)}</span>
+                  <span>
+                    {formatPersianDate(
+                      car.modified ? car.modified : car.created,
+                    )}
+                  </span>
                 </div>
               </div>
             </div>

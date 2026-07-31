@@ -206,7 +206,7 @@ const MotorDetails = ({
               {isRatingMode ? (
                 // Rating Form Mode
                 <div className="space-y-6">
-                  <div className="flex justify-between items-center mb-4">
+                  <div className="flex justify-between items-center mb-4!">
                     <h3 className="text-lg font-bold text-gray-800">
                       ثبت نظر و امتیاز شما
                     </h3>
@@ -322,7 +322,7 @@ const MotorDetails = ({
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
                     {pollData.pollDetails.map((rating, index) => (
                       <div key={index} className="text-center">
-                        <div className="flex justify-between items-center mb-2">
+                        <div className="flex justify-between items-center mb-2!">
                           <span className="text-gray-700 text-sm font-medium whitespace-nowrap">
                             {rating.questionTitle}
                           </span>
@@ -404,7 +404,7 @@ const MotorDetails = ({
                           <img
                             className="w-full h-full border-4 border-[#ce1a2a]  object-cover"
                             src={mainDomain + image.fileUrl}
-                            alt={image.title || "تصویر محصول"}
+                            alt={image.title || detailsMotorcycle.title}
                           />
                         </a>
                       </SwiperSlide>
@@ -440,7 +440,7 @@ const MotorDetails = ({
                           <img
                             className="w-full h-full object-cover"
                             src={mainDomain + image.fileUrl}
-                            alt={image.title || "تصویر محصول"}
+                            alt={image.title || detailsMotorcycle.title}
                           />
                         </div>
                       </SwiperSlide>

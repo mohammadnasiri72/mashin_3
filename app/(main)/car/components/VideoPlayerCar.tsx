@@ -37,7 +37,7 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
     <div className="w-full max-w-5xl mx-auto" dir="ltr">
       {/* عنوان ویدئو */}
       {currentVideo?.title && (
-        <h2 dir="rtl" className="text-2xl font-bold text-gray-900 mb-4">
+        <h2 dir="rtl" className="text-2xl font-bold text-gray-900 mb-4!">
           {currentVideo.title}
         </h2>
       )}
@@ -57,7 +57,7 @@ function VideoPlayerCar({ Attachment }: { Attachment: ItemsAttachment[] }) {
       {/* لیست ویدئوها */}
       {videos.length > 1 && (
         <div className="mt-6">
-          <h3 dir="rtl" className="text-lg font-bold mb-3 text-gray-800">
+          <h3 dir="rtl" className="text-lg font-bold mb-3! text-gray-800">
             لیست ویدئوها
           </h3>
           <div dir="rtl" className="grid grid-cols-2 md:grid-cols-4 gap-4">

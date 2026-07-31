@@ -110,9 +110,9 @@ async function pageDynamic() {
           breadcrumb={dataPage.breadcrumb}
           title={dataPage.title}
         />
-        <section className="min-h-96 p-5" aria-label="محتوای صفحه">
+        <section className="min-h-96 p-5 border rounded-lg border-gray-200 mb-3!" aria-label="محتوای صفحه">
           <div
-            className="text-gray-700 leading-8 text-justify sm:text-sm! text-xs!"
+            className="text-gray-700 leading-8 text-justify sm:text-sm! text-xs! body-page-dainamic"
             dangerouslySetInnerHTML={createMarkup(
               dataPage.body ? dataPage.body : "",
             )}

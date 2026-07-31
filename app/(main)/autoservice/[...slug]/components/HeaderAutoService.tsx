@@ -18,7 +18,7 @@ function HeaderAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
             <div className="flex items-start mb-4!">
               <img
                 src={mainDomain + detailsAuto.image}
-                alt={detailsAuto.categoryTitle}
+                alt={detailsAuto.title}
                 className="w-16 h-16 rounded-lg bg-white ml-4"
               />
               <div className="flex flex-col items-start justify-center">

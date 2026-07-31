@@ -1,5 +1,6 @@
 "use client";
 
+import { createMarkup } from "@/utils/func";
 import { mainDomain } from "@/utils/mainDomain";
 import { Card } from "antd";
 import { useEffect, useState } from "react";
@@ -118,7 +119,7 @@ function VideoPlayer({
     if (!videoId) return null;
 
     return (
-      <Card className="rounded-xl shadow-lg border-0">
+      <Card className="rounded-xl shadow-lg border-0 ">
         <div className="space-y-4">
           {/* پلیر ویدئو آپارات */}
           <div className="bg-black rounded-xl overflow-hidden shadow-md">
@@ -162,7 +163,7 @@ function VideoPlayer({
           <div className="bg-black rounded-lg overflow-hidden">
             <div className="w-full aspect-video flex items-center justify-center">
               <div className="text-white! text-center">
-                <p className="text-lg mb-4">در حال بارگذاری ویدئو...</p>
+                <p className="text-lg mb-4!">در حال بارگذاری ویدئو...</p>
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
               </div>
             </div>
@@ -174,13 +175,13 @@ function VideoPlayer({
 
   if (!videoId && attachment.length === 0) {
     return (
-      <Card className="rounded-xl shadow-lg">
+      <Card className="rounded-xl shadow-lg ">
         <div className="space-y-4">
           <h2 className="text-xl font-bold text-gray-800 mb-2!">پخش ویدئو</h2>
           <div className="bg-black rounded-lg overflow-hidden">
             <div className="w-full aspect-video flex items-center justify-center">
               <div className="text-white! text-center">
-                <p className="text-lg mb-4">شناسه ویدئو یافت نشد</p>
+                <p className="text-lg mb-4!">شناسه ویدئو یافت نشد</p>
               </div>
             </div>
           </div>
@@ -200,8 +201,8 @@ function VideoPlayer({
               </h2>
               {/* نمایش ویدئوی انتخاب‌شده (کم‌حجم‌ترین) */}
               <video
-                key={selectedVideoIndex} // برای اطمینان از رندر مجدد با تغییر ایندکس
-                className="w-full"
+                key={selectedVideoIndex}
+                className="w-full max-h-[calc(100vh-200px)]"
                 src={mainDomain + attachment[selectedVideoIndex]?.fileUrl}
                 controls
               />
@@ -224,7 +225,9 @@ function VideoPlayer({
               <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-100">
                 <FaCalendar className="text-[#ce1a2a] text-sm" />
                 <span className="font-medium text-gray-700">
-                  {new Date(video.created).toLocaleDateString("fa-IR")}
+                  {new Date(
+                    video.modified ? video.modified : video.created,
+                  ).toLocaleDateString("fa-IR")}
                 </span>
               </div>
 
@@ -258,6 +261,19 @@ function VideoPlayer({
               </div>
             )}
           </div>
+
+          {/* ✅ توضیحات ویدئو */}
+          {video.body && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <h3 className="text-lg font-bold text-gray-800 mb-2">
+                توضیحات ویدئو
+              </h3>
+              <div
+                className="text-gray-700 leading-relaxed text-justify prose prose-sm max-w-none body-video"
+                dangerouslySetInnerHTML={createMarkup(video.body)}
+              />
+            </div>
+          )}
         </div>
         {renderAparatOfficial()}
       </>
@@ -267,9 +283,9 @@ function VideoPlayer({
   return (
     <Card className="rounded-xl shadow-lg border-0">
       <div className="space-y-4">
-        <h2 className="text-xl font-bold text-gray-800 mb-2">پخش ویدئو</h2>
+        <h2 className="text-xl font-bold text-gray-800 mb-2!">پخش ویدئو</h2>
 
-        <div className="bg-black rounded-xl overflow-hidden shadow-md">
+        <div className="bg-black rounded-xl overflow-hidden shadow-md ">
           {renderAparatOfficial()}
         </div>
 
@@ -286,7 +302,9 @@ function VideoPlayer({
               <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-100">
                 <FaCalendar className="text-[#ce1a2a] text-sm" />
                 <span className="font-medium text-gray-700">
-                  {new Date(video.created).toLocaleDateString("fa-IR")}
+                  {new Date(
+                    video.modified ? video.modified : video.created,
+                  ).toLocaleDateString("fa-IR")}
                 </span>
               </div>
 
@@ -326,6 +344,19 @@ function VideoPlayer({
                   )}
                 </button>
               ))}
+            </div>
+          )}
+
+          {/* ✅ توضیحات ویدئو */}
+          {video.body && (
+            <div className="mt-4 pt-4 border-t border-gray-200">
+              <h3 className="text-lg font-bold text-gray-800 mb-2">
+                توضیحات ویدئو
+              </h3>
+              <div
+                className="text-gray-700 leading-relaxed text-justify prose prose-sm max-w-none body-video"
+                dangerouslySetInnerHTML={createMarkup(video.body)}
+              />
             </div>
           )}
         </div>

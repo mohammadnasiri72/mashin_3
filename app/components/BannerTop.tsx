@@ -4,7 +4,7 @@ import OptimizedImage from "./OptimizedImage";
 
 function BannerTop({ banner }: { banner: Items[] }) {
   return (
-    <div className="bannerTop_wrap my-8">
+    <div className="bannerTop_wrap pt-8">
       <div className="mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {banner.map((ban, index) => (

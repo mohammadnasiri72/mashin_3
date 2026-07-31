@@ -5,8 +5,8 @@ function Loading() {
     <div className="min-h-screen bg-gray-50 py-6">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header Skeleton */}
-        <div className="mb-6 animate-pulse">
-          <div className="h-8 w-32 bg-gray-200 rounded mb-2"></div>
+        <div className="mb-6! animate-pulse">
+          <div className="h-8 w-32 bg-gray-200 rounded mb-2!"></div>
           <div className="h-4 w-64 bg-gray-200 rounded"></div>
         </div>
 
@@ -99,7 +99,7 @@ function Loading() {
 
         {/* Quick Links Skeleton */}
         <div className="mt-6 bg-white rounded-xl border border-gray-200 p-4 animate-pulse">
-          <div className="h-5 w-24 bg-gray-200 rounded mb-3"></div>
+          <div className="h-5 w-24 bg-gray-200 rounded mb-3!"></div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[...Array(4)].map((_, i) => (
               <div

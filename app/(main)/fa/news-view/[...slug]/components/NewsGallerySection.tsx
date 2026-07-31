@@ -39,8 +39,8 @@ const NewsGallerySection = ({
 
   return (
     <section className=" bg-gray-50">
-      <div className="mx-auto px-4">
-        <div className="bg-white rounded-xl shadow-sm px-8">
+      <div className="mx-auto pr-4 lg:pl-2 pl-4">
+        <div className="bg-white rounded-xl shadow-sm px-8 pb-8">
           {/* <h3 className="py-4">تصاویر خبر {detailsNews.title}</h3> */}
           <h3 className="dt_title text-xl font-bold text-gray-900 py-4">
             <strong className="text-[#ce1a2a]!">تصاویر </strong>
@@ -55,12 +55,12 @@ const NewsGallerySection = ({
                       <a
                         href={mainDomain + image.fileUrl}
                         data-fancybox="news-gallery"
-                        data-caption={image.title || "تصاویر محصول"}
-                        aria-label={image.title || "تصاویر محصول"}
+                        data-caption={image.title || detailsNews.title}
+                        aria-label={image.title || detailsNews.title}
                       >
                         <img
                           src={mainDomain + image.fileUrl}
-                          alt={image.title || "تصاویر محصول"}
+                          alt={image.title || detailsNews.title}
                           className="w-full h-32 object-cover"
                         />
                       </a>

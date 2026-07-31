@@ -225,7 +225,7 @@ function CompareClient({
                                 •
                               </span>
                               <div
-                                className="text-gray-600 text-justify sm:text-sm! text-xs!"
+                                className="text-gray-600 text-justify sm:text-sm! text-xs! advantages-compare-car"
                                 dangerouslySetInnerHTML={createMarkup(
                                   advantage.value,
                                 )}
@@ -267,7 +267,7 @@ function CompareClient({
                             >
                               <span className="text-red-500 ml-2 mt-1">•</span>
                               <div
-                                className="text-gray-700 leading-8 text-justify sm:text-sm! text-xs!"
+                                className="text-gray-700 leading-8 text-justify sm:text-sm! text-xs! disadvantages-compare-car"
                                 dangerouslySetInnerHTML={createMarkup(
                                   disadvantage.value,
                                 )}

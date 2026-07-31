@@ -31,7 +31,7 @@ const RelatedComparisons = dynamic(() => import("./RelatedComparisons"), {
 const SidebarSkeleton = () => (
   <div className="space-y-4 animate-pulse">
     <div className="bg-white rounded-xl p-4 shadow-sm">
-      <div className="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+      <div className="h-6 bg-gray-200 rounded w-3/4 mb-4!"></div>
       <div className="space-y-4">
         <div className="h-32 bg-gray-200 rounded"></div>
         <div className="h-32 bg-gray-200 rounded"></div>
@@ -42,7 +42,7 @@ const SidebarSkeleton = () => (
 
 const NewsSkeleton = () => (
   <div className="animate-pulse">
-    <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
+    <div className="h-8 bg-gray-200 rounded w-48 mb-4!"></div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {[1, 2, 3].map((i) => (
         <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -59,7 +59,7 @@ const NewsSkeleton = () => (
 
 const VideosSkeleton = () => (
   <div className="animate-pulse">
-    <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
+    <div className="h-8 bg-gray-200 rounded w-48 mb-4!"></div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {[1, 2, 3].map((i) => (
         <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -76,7 +76,7 @@ const VideosSkeleton = () => (
 
 const ComparisonsSkeleton = () => (
   <div className="animate-pulse">
-    <div className="h-8 bg-gray-200 rounded w-48 mb-4"></div>
+    <div className="h-8 bg-gray-200 rounded w-48 mb-4!"></div>
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {[1, 2, 3].map((i) => (
         <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -480,41 +480,44 @@ const ContentTabsWrapper = ({
               <div className="space-y-6">
                 {/* بخش‌های SSR */}
                 {childrenWithRef}
-
                 {/* بخش‌های کلاینت با Lazy Loading */}
-                <div id="news" className="section-anchor" ref={newsRef}>
-                  <Suspense fallback={<NewsSkeleton />}>
-                    <RelatedNewsSection
-                      detailsCar={detailsCar}
-                      relatedNews={relatedNews}
-                      loading={loadingRelatedNews}
-                    />
-                  </Suspense>
-                </div>
-
-                <div id="video" className="section-anchor" ref={videoRef}>
-                  <Suspense fallback={<VideosSkeleton />}>
-                    <RelatedVideosSection
-                      detailsCar={detailsCar}
-                      loading={loadingRelatedVideos}
-                      relatedVideos={relatedVideos}
-                    />
-                  </Suspense>
-                </div>
-
-                <div
-                  id="Comparisons"
-                  className="section-anchor"
-                  ref={comparisonsRef}
-                >
-                  <Suspense fallback={<ComparisonsSkeleton />}>
-                    <RelatedComparisons
-                      detailsCar={detailsCar}
-                      loading={loadingRelatedCompares}
-                      relatedCompares={relatedCompares}
-                    />
-                  </Suspense>
-                </div>
+                {relatedNews.length > 0 && (
+                  <div id="news" className="section-anchor" ref={newsRef}>
+                    <Suspense fallback={<NewsSkeleton />}>
+                      <RelatedNewsSection
+                        detailsCar={detailsCar}
+                        relatedNews={relatedNews}
+                        loading={loadingRelatedNews}
+                      />
+                    </Suspense>
+                  </div>
+                )}
+                {relatedVideos.length > 0 && (
+                  <div id="video" className="section-anchor" ref={videoRef}>
+                    <Suspense fallback={<VideosSkeleton />}>
+                      <RelatedVideosSection
+                        detailsCar={detailsCar}
+                        loading={loadingRelatedVideos}
+                        relatedVideos={relatedVideos}
+                      />
+                    </Suspense>
+                  </div>
+                )}
+                {relatedCompares.length > 0 && (
+                  <div
+                    id="Comparisons"
+                    className="section-anchor"
+                    ref={comparisonsRef}
+                  >
+                    <Suspense fallback={<ComparisonsSkeleton />}>
+                      <RelatedComparisons
+                        detailsCar={detailsCar}
+                        loading={loadingRelatedCompares}
+                        relatedCompares={relatedCompares}
+                      />
+                    </Suspense>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -525,7 +528,7 @@ const ContentTabsWrapper = ({
       <div
         id="comments"
         ref={commentsRef}
-        className="section-anchor py-5 container mx-auto px-2"
+        className="section-anchor py-5 mx-auto px-2"
       >
         {commentsContent}
       </div>

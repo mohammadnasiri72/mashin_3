@@ -7,8 +7,8 @@ function Loading() {
   return (
     <div className="bg-[#f4f4f4] py-8 mx-auto px-4 min-h-screen">
       {/* Hero Section Skeleton */}
-      <div className="text-center mb-8 animate-pulse">
-        <div className="h-8 w-64 bg-gray-200 rounded-lg mx-auto mb-4"></div>
+      <div className="text-center mb-8! animate-pulse">
+        <div className="h-8 w-64 bg-gray-200 rounded-lg mx-auto mb-4!"></div>
         <div className="h-4 w-96 max-w-full bg-gray-200 rounded-lg mx-auto"></div>
       </div>
 
@@ -47,8 +47,8 @@ function Loading() {
         {/* Card 3 - Select Car Skeleton */}
         <div className="lg:w-1/3 w-full animate-pulse">
           <div className="flex-col gap-2 px-3 w-full">
-            <div className="w-full h-10 bg-gray-200 rounded-lg mb-3"></div>
-            <div className="w-full h-10 bg-gray-200 rounded-lg mb-3"></div>
+            <div className="w-full h-10 bg-gray-200 rounded-lg mb-3!"></div>
+            <div className="w-full h-10 bg-gray-200 rounded-lg mb-3!"></div>
             <div className="w-full h-10 bg-gray-200 rounded-lg"></div>
           </div>
         </div>
@@ -57,14 +57,14 @@ function Loading() {
       {/* Features List Skeleton */}
       <div className="mt-8">
         {/* Technical Specifications Section */}
-        <div className="mb-6">
-          <div className="h-7 w-48 bg-gray-200 rounded mb-4 animate-pulse"></div>
+        <div className="mb-6!">
+          <div className="h-7 w-48 bg-gray-200 rounded mb-4! animate-pulse"></div>
           {[...Array(8)].map((_, i) => (
             <div
               key={i}
               className="py-3 border-b border-dashed border-gray-200 animate-pulse"
             >
-              <div className="h-5 w-32 bg-gray-200 rounded mb-3"></div>
+              <div className="h-5 w-32 bg-gray-200 rounded mb-3!"></div>
               <div className="flex gap-2">
                 <div className="lg:w-1/3 w-1/2">
                   <div className="h-4 w-24 bg-gray-200 rounded"></div>
@@ -82,7 +82,7 @@ function Loading() {
 
         {/* Advantages Section Skeleton */}
         <div className="sm:px-3 py-3 border-b border-gray-200 animate-pulse">
-          <div className="h-6 w-20 bg-gray-200 rounded mb-3"></div>
+          <div className="h-6 w-20 bg-gray-200 rounded mb-3!"></div>
           <div className="flex gap-2">
             <div className="lg:w-1/3 w-1/2">
               <div className="bg-green-50 rounded-xl px-4 py-2 mt-2">
@@ -116,7 +116,7 @@ function Loading() {
 
         {/* Disadvantages Section Skeleton */}
         <div className="sm:px-3 py-3 border-b border-gray-200 animate-pulse">
-          <div className="h-6 w-20 bg-gray-200 rounded mb-3"></div>
+          <div className="h-6 w-20 bg-gray-200 rounded mb-3!"></div>
           <div className="flex gap-2">
             <div className="lg:w-1/3 w-1/2">
               <div className="bg-red-50 rounded-xl px-4 py-2 mt-2">

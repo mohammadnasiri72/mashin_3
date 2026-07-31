@@ -99,12 +99,36 @@ async function page() {
     console.error("Error recording visit:", error);
   }
 
-   const schemas = detailsCar?.seoInfo?.schemas || [];
+  // ✅ فقط اگر pollData وجود داشت و مقدار معتبری داشت، aggregateRating رو اضافه کن
+  let schemas = detailsCar?.seoInfo?.schemas || [];
+
+  if (pollData && pollData.pollScore !== undefined && pollData.pollNumber !== undefined) {
+    const aggregateRating = {
+      "@type": "AggregateRating",
+      "ratingValue": pollData.pollScore,
+      "bestRating": 10,
+      "worstRating": 1,
+      "ratingCount": pollData.pollNumber
+    };
+
+    // ✅ فقط اگر schemas وجود داشت، به schema های موجود aggregateRating اضافه کن
+    if (schemas.length > 0) {
+      schemas = schemas.map((schema) => {
+        if (schema['@type'] === 'Product' || schema['@type'] === 'Car' || schema['@type'] === 'Vehicle') {
+          return {
+            ...schema,
+            aggregateRating: aggregateRating
+          };
+        }
+        return schema;
+      });
+    }
+  }
 
   return (
     <>
-    {/* اضافه کردن JSON-LD به هدر */}
-      <JsonLd schemas={schemas} />
+   <div data-id={id}>
+       <JsonLd schemas={schemas} />
       <HeroSection detailsCar={detailsCar} />
       <NvbarCar
         pollData={pollData}
@@ -129,6 +153,7 @@ async function page() {
         id={id}
         vehicle={"car"}
       />
+   </div>
     </>
   );
 }

@@ -21,7 +21,7 @@ export default function DashboardOverview() {
     <div className="min-h-screen bg-gray-50 py-6">
       <div className="max-w-6xl mx-auto px-4">
         {/* هدر صفحه */}
-        <div className="mb-6">
+        <div className="mb-6!">
           <h1 className="text-2xl font-bold text-gray-900">داشبورد</h1>
           <p className="text-gray-600 text-sm mt-1">
             خلاصه فعالیت‌های شما در ماشین‌۳

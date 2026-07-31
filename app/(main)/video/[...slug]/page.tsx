@@ -143,21 +143,23 @@ async function pageVideo() {
 
   return (
     <>
-      <JsonLd schemas={schemas} />
-      <VideoDetails
-        video={video}
-        popularVideos={popularVideos}
-        relatedVideos={relatedVideos
-          .filter((e) => e.id !== video.id)
-          .slice(0, 12)}
-        banner={banner}
-        comments={comments}
-        id={id}
-        relatedCars={relatedCars}
-        relatedPodcasts={relatedPodcasts}
-        relatedCompares={relatedCompares}
-        attachment={attachment}
-      />
+      <div data-id={id}>
+        <JsonLd schemas={schemas} />
+        <VideoDetails
+          video={video}
+          popularVideos={popularVideos}
+          relatedVideos={relatedVideos
+            .filter((e) => e.id !== video.id)
+            .slice(0, 12)}
+          banner={banner}
+          comments={comments}
+          id={id}
+          relatedCars={relatedCars}
+          relatedPodcasts={relatedPodcasts}
+          relatedCompares={relatedCompares}
+          attachment={attachment}
+        />
+      </div>
     </>
   );
 }

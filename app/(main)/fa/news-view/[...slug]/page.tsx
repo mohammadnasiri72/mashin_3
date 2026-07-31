@@ -80,7 +80,7 @@ async function pageNewsViewDetails() {
         TypeId: 5,
         langCode: "fa",
         PageIndex: 1,
-        PageSize: 15,
+        PageSize: 6,
         CategoryIdArray: String(detailsNews.categoryId),
       });
     }
@@ -153,20 +153,22 @@ async function pageNewsViewDetails() {
 
     return (
       <>
-        <JsonLd schemas={schemas} />
-        <NewsViewDetails
-          detailsNews={detailsNews}
-          Attachment={Attachment}
-          popularNews={popularNews}
-          comments={comments}
-          id={Number(id)}
-          banner={banner}
-          relatedNews={relatedNews}
-          relatedCars={relatedCars}
-          relatedVideos={relatedVideos}
-          relatedVoices={relatedVoices}
-          newNews={newNews}
-        />
+        <div data-id={id}>
+          <JsonLd schemas={schemas} />
+          <NewsViewDetails
+            detailsNews={detailsNews}
+            Attachment={Attachment}
+            popularNews={popularNews}
+            comments={comments}
+            id={Number(id)}
+            banner={banner}
+            relatedNews={relatedNews}
+            relatedCars={relatedCars}
+            relatedVideos={relatedVideos}
+            relatedVoices={relatedVoices}
+            newNews={newNews}
+          />
+        </div>
       </>
     );
   } catch (err: any) {

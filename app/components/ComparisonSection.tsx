@@ -61,7 +61,7 @@ function ComparisonSection({
 
   return (
     <section className="">
-      <section className="mb-12 px-4" aria-label="مقایسه و بهترین انتخاب‌ها">
+      <section className="mb-12! px-4" aria-label="مقایسه و بهترین انتخاب‌ها">
         <div className="flex flex-wrap">
           {/* اسلایدر سمت راست - News */}
           <div className="lg:w-5/12 w-full px-2">
@@ -119,10 +119,10 @@ function ComparisonSection({
                                     sizes="(max-width: 1024px) 100vw, 50vw"
                                   />
                                   {/* گرادینت روی تصویر */}
-                                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent"></div>
+                                  <div className="absolute inset-0 bg-linear-to-tr from-black/80 via-black/40 to-transparent"></div>
                                   {/* عنوان */}
                                   <div className="absolute font-bold! bottom-0 right-0 left-0 p-4 lg:p-6 z-10">
-                                    <span className="text-white! inline-block relative text-lg lg:text-xl mb-2 line-clamp-2!">
+                                    <span className="text-white! inline-block relative text-lg lg:text-xl mb-2! line-clamp-2!">
                                       {item.title}
                                     </span>
                                   </div>
@@ -204,10 +204,10 @@ function ComparisonSection({
                                     sizes="(max-width: 768px) 100vw, 50vw"
                                   />
                                   {/* گرادینت روی تصویر */}
-                                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent z-20"></div>
+                                  <div className="absolute inset-0 bg-linear-to-tr from-black  to-black/5 z-20"></div>
                                   {/* عنوان */}
                                   <div className="absolute font-bold! bottom-0 right-0 left-0 p-4 z-30">
-                                    <span className="text-white! inline-block relative text-base lg:text-lg mb-1 line-clamp-2!">
+                                    <span className="text-white! inline-block relative text-base lg:text-lg mb-1! line-clamp-2!">
                                       {item.title}
                                     </span>
                                   </div>
@@ -284,10 +284,10 @@ function ComparisonSection({
                                     sizes="(max-width: 768px) 100vw, 50vw"
                                   />
                                   {/* گرادینت روی تصویر */}
-                                  <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent z-20"></div>
+                                  <div className="absolute inset-0 bg-linear-to-tr from-black/80 via-black/40 to-transparent z-20"></div>
                                   {/* عنوان */}
                                   <div className="absolute font-bold! bottom-0 right-0 left-0 p-4 z-30">
-                                    <span className="text-white! inline-block relative text-base lg:text-lg mb-1 line-clamp-2!">
+                                    <span className="text-white! inline-block relative text-base lg:text-lg mb-1! line-clamp-2!">
                                       {item.title}
                                     </span>
                                   </div>

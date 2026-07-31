@@ -17,8 +17,7 @@ function DetailsDic({ detailsDic }: { detailsDic: ItemsId }) {
   const [isBookmarked, setIsBookmarked] = React.useState(false);
 
   // تاریخ نمونه - در صورت وجود در detailsDic
-  const publishDate = formatPersianDate(detailsDic?.created);
-  const author = detailsDic?.authorId;
+  const publishDate = formatPersianDate(detailsDic?.modified ? detailsDic?.modified:detailsDic?.created);
 
   return (
     <div className=" bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 mb-5!">
@@ -35,7 +34,7 @@ function DetailsDic({ detailsDic }: { detailsDic: ItemsId }) {
       {/* محتوای اصلی */}
       <div className="px-6 py-3">
         {/* عنوان اصلی */}
-        <div className="mb-2">
+        <div className="mb-2!">
           <h2 className="text-2xl font-bold text-gray-900 mb-3! p-0! m-0!">
             <span className="border-b-4 border-[#ce1a2a]">
               {detailsDic.title}

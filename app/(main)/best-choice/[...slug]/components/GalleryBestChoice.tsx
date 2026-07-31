@@ -16,6 +16,7 @@ const GalleryBestChoice = ({
   detailsBest: ItemsId;
   title: string | undefined;
 }) => {
+  
   // Initialize Fancybox
   useEffect(() => {
     Fancybox.bind("[data-fancybox='gallery']", {
@@ -61,7 +62,7 @@ const GalleryBestChoice = ({
 
   return (
     <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100 ">
-      <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
+      <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
         <strong className="text-red-600">تصاویر </strong>
         {title}
       </h3>
@@ -76,12 +77,12 @@ const GalleryBestChoice = ({
                 <a
                   href={mainDomain + image.fileUrl}
                   data-fancybox="gallery"
-                  data-caption={image.title || "تصاویر محصول"}
-                  aria-label={image.title || "تصاویر محصول"}
+                  data-caption={image.title || title}
+                  aria-label={image.title || title}
                 >
                   <img
                     src={mainDomain + image.fileUrl}
-                    alt={image.title || "تصاویر محصول"}
+                    alt={image.title || title}
                     className="w-full h-32 object-contain"
                   />
                 </a>

@@ -40,7 +40,7 @@ const VideosRelatedSection = ({
                 </Link>
 
                 <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>{formatPersianDate(video.created)}</span>
+                  <span>{formatPersianDate(video.modified ? video.modified :video.created)}</span>
                 </div>
               </div>
             </div>

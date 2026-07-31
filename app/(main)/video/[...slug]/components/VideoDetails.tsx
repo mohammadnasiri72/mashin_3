@@ -34,7 +34,6 @@ function VideoDetails({
   relatedCompares: ItemsId[];
   attachment: ItemsAttachment[];
 }) {
-  
   const [activeKey, setActiveKey] = useState("1");
   const [isNavbarSticky, setIsNavbarSticky] = useState(false);
   const [isMainLonger, setIsMainLonger] = useState(true);
@@ -357,22 +356,34 @@ function VideoDetails({
 
         .video-details-tabs .ant-tabs-nav {
           margin: 0 !important;
+          padding: 0 !important;
         }
 
         .video-details-tabs .ant-tabs-tab {
-          padding: 8px 16px;
-          font-weight: 600;
+          padding: 8px 16px !important;
+          font-weight: 600 !important;
+          color: #6b7280 !important;
+          transition: all 0.3s ease !important;
+          cursor: pointer !important;
           height: 50px !important;
-          transition: all 0.2s;
+          margin: 0 !important;
+        }
+
+        .video-details-tabs .ant-tabs-tab:hover {
+          color: #ce1a2a;
         }
 
         .video-details-tabs .ant-tabs-tab-active {
+          color: #fff !important;
           background: #ce1a2a !important;
-          border-color: #ce1a2a !important;
+        }
+
+        .video-details-tabs .ant-tabs-tab .ant-tabs-tab-btn {
+          color: #222 !important;
         }
 
         .video-details-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
-          color: white !important;
+          color: #fff !important;
         }
 
         .video-details-tabs .ant-tabs-ink-bar {
@@ -415,6 +426,12 @@ function VideoDetails({
           .navbar-tabs[style*="position: sticky"] {
             position: sticky !important;
             top: 115px !important;
+          }
+
+          .video-details-tabs .ant-tabs-tab {
+            padding: 0px 10px !important;
+            font-size: 12px !important;
+            height: 40px !important;
           }
         }
 

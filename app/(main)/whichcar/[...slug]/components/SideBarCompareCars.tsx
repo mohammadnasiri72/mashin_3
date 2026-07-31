@@ -12,7 +12,7 @@ function SideBarCompareCars({
 }) {
   return (
     <>
-      <div className="space-y-6">
+      <div className="space-y-6 px-4">
         {/*پرطرفدارترین مقایسه‌ها*/}
         <SideBarListItems
           itemsList={popularComparisons}

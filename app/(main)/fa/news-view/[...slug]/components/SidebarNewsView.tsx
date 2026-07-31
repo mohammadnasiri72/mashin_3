@@ -13,7 +13,7 @@ function SidebarNewsView({
 }) {
   return (
     <>
-      <section className="py-8 bg-gray-50">
+      <section className=" bg-gray-50">
         <div className="mx-auto pl-4 lg:pr-2 pr-4">
           <div className="space-y-6">
             {/* جدیدترین اخبار */}

@@ -21,15 +21,12 @@ import SearchBoxHeaderMobile from "./SearchBoxHeaderMobile";
 
 // تابع تبدیل LastMenuItem به MenuItem با ساختار سلسله‌مراتبی
 const convertApiMenuToHierarchical = (apiItems: MenuItem[]): LastMenuItem[] => {
-  // ایجاد یک مپ برای دسترسی سریع به آیتم‌ها بر اساس id
   const itemsMap = new Map<number, MenuItem>();
 
-  // اول همه آیتم‌ها را در مپ قرار می‌دهیم
   apiItems.forEach((item) => {
     itemsMap.set(item.id, item);
   });
 
-  // تابع بازگشتی برای ایجاد ساختار سلسله‌مراتبی
   const buildHierarchy = (parentId: number | null): LastMenuItem[] => {
     const children: LastMenuItem[] = [];
 
@@ -40,7 +37,6 @@ const convertApiMenuToHierarchical = (apiItems: MenuItem[]): LastMenuItem[] => {
           url: item.url || item.href || "#",
         };
 
-        // بررسی می‌کنیم که آیا این آیتم فرزند دارد یا نه
         const childItems = buildHierarchy(item.id);
         if (childItems.length > 0) {
           menuItem.children = childItems;
@@ -50,7 +46,6 @@ const convertApiMenuToHierarchical = (apiItems: MenuItem[]): LastMenuItem[] => {
       }
     });
 
-    // بر اساس priority مرتب می‌کنیم (اعداد کمتر اولویت بالاتر)
     return children.sort((b, a) => {
       const aItem = apiItems.find((item) => item.title === a.title);
       const bItem = apiItems.find((item) => item.title === b.title);
@@ -84,7 +79,6 @@ export default function Header({
   const user = useSelector((state: RootState) => state.user.user);
   const isLoading = useSelector((state: RootState) => state.user.isLoading);
 
-  // هندل کردن اسکرول برای sticky header
   useEffect(() => {
     const handleScroll = () => {
       const scrollThreshold = 200;
@@ -104,17 +98,17 @@ export default function Header({
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-      <div className="border-b border-gray-100 last:border-b-0">
+      <div className="border-b! border-white/30!">
         {item.children ? (
           <>
             <button
               aria-label={item.title}
               onClick={() => setIsOpen(!isOpen)}
-              className="flex items-center cursor-pointer justify-between w-full py-4 text-gray-700 text-right text-sm font-medium"
+              className="flex items-center cursor-pointer justify-between w-full py-4 text-white! text-right text-sm font-medium"
             >
               <span>{item.title}</span>
               <IoChevronDown
-                className={`text-gray-400 transition-transform duration-300 ${
+                className={`text-neutral-400! transition-transform duration-300 ${
                   isOpen ? "rotate-180" : ""
                 }`}
               />
@@ -127,7 +121,7 @@ export default function Header({
                     key={childIndex}
                     href={child.url}
                     onClick={onClose}
-                    className="block py-3 px-4 text-gray-600 hover:text-[#ce1a2a] rounded-lg text-sm"
+                    className="block py-3 px-4 text-neutral-300! hover:text-red-500 rounded-lg text-sm"
                   >
                     {child.title}
                   </Link>
@@ -139,7 +133,7 @@ export default function Header({
           <Link
             href={item.url}
             onClick={onClose}
-            className="flex items-center justify-between w-full py-4 text-gray-700 text-right text-sm font-medium"
+            className="flex items-center justify-between w-full py-4 text-white! text-right text-sm font-medium"
           >
             <span>{item.title}</span>
           </Link>
@@ -149,9 +143,8 @@ export default function Header({
   };
 
   const menuItemMobileDrawer = (
-    <div className="w-80 h-full bg-white flex flex-col pr-3">
-      {/* Header با لوگو */}
-      <header className="p-4 border-b border-gray-200 flex items-center justify-between">
+    <div className="w-80 h-full bg-[#1a1a1a] flex flex-col pr-3">
+      <header className="p-4 border-b border-neutral-800/60! flex items-center justify-between">
         <Link
           href={"/"}
           onClick={() => {
@@ -169,13 +162,12 @@ export default function Header({
         <button
           aria-label="بستن منو"
           onClick={() => setIsMenuOpen(false)}
-          className="text-gray-500 cursor-pointer p-2 hover:bg-gray-100 rounded-lg transition-colors"
+          className="text-white! cursor-pointer p-2 hover:bg-neutral-800/50 rounded-lg transition-colors"
         >
           <FiX size={24} />
         </button>
       </header>
 
-      {/* Navigation */}
       <nav className="flex-1 overflow-y-auto p-4" aria-label="منوی موبایل">
         {menuItems.map((item, index) => (
           <MobileMenuItem
@@ -190,19 +182,16 @@ export default function Header({
 
   return (
     <div
-      className={`sticky-header z-10001!  ${isSticky ? "sticky-active" : ""}`}
+      className={`sticky-header z-10001! border-b! border-white/40!  ${isSticky ? "sticky-active" : ""}`}
     >
-      {/* Main Header */}
       <header
-        className={`header-main bg-white duration-300 shadow-lg ${
+        className={`header-main bg-[#1a1a1a] duration-300 shadow-lg border-b! border-neutral-800/60! ${
           isSticky ? "sticky" : ""
         }`}
       >
         <div className="max-w-500 mx-auto px-4 py-3 h-16 flex flex-col justify-center">
           <div className="flex items-center w-full">
-            {/* Logo and Menu Section */}
             <div className="flex w-full items-center">
-              {/* Logo */}
               <div className="w-auto flex items-center lg:pr-4">
                 <Link href="/">
                   <img
@@ -215,8 +204,7 @@ export default function Header({
                 </Link>
               </div>
 
-              {/* Desktop Menu */}
-              <div className="hidden lg:block!  ">
+              <div className="hidden lg:block!">
                 <nav
                   className="flex items-center space-x-1 space-x-reverse"
                   aria-label="منوی اصلی"
@@ -226,7 +214,7 @@ export default function Header({
                       <div key={index} className="relative group">
                         <Link
                           href={item.url}
-                          className="flex items-center text-[13px] whitespace-nowrap font-medium text-[#222]! hover:bg-[#ce1a2a] hover:text-white! rounded-lg px-2 py-2 duration-300 transition-all"
+                          className="flex items-center text-[13px] whitespace-nowrap font-medium text-white! hover:bg-[#ce1a2a] hover:text-white! rounded-lg px-2 py-2 duration-300 transition-all"
                         >
                           {item.title}
                           {item.children && (
@@ -234,15 +222,14 @@ export default function Header({
                           )}
                         </Link>
 
-                        {/* Dropdown Menu */}
                         {item.children && (
                           <div className="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
-                            <div className="bg-white rounded-lg shadow-lg border border-gray-200 min-w-[230px] py-2">
+                            <div className="bg-[#1a1a1a] rounded-lg shadow-lg border! border-neutral-800/60! min-w-57.5 py-2">
                               {item.children.map((child, childIndex) => (
                                 <Link
                                   key={childIndex}
                                   href={child.url}
-                                  className="block px-4 py-3 text-sm text-gray-700 hover:text-white! hover:bg-[#ce1a2a]! transition-all duration-200 border-b border-gray-100 last:border-b-0"
+                                  className="block px-4 py-3 text-sm text-neutral-300! hover:text-white! hover:bg-[#ce1a2a]! transition-all duration-200 border-b! border-neutral-800/60! last:border-b-0"
                                 >
                                   {child.title}
                                 </Link>
@@ -254,26 +241,19 @@ export default function Header({
                     ))}
                   {menuItems.length === 0 && (
                     <div className="flex items-center gap-5 px-5">
-                      <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
-                      /
-                      <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
-                      /
-                      <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
-                      /
-                      <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />{" "}
-                      /
-                      <div className=" bg-gray-200 animate-pulse rounded h-5 w-20" />
+                      <div className=" bg-neutral-800 animate-pulse rounded h-5 w-20" />
+                      <div className=" bg-neutral-800 animate-pulse rounded h-5 w-20" />
+                      <div className=" bg-neutral-800 animate-pulse rounded h-5 w-20" />
+                      <div className=" bg-neutral-800 animate-pulse rounded h-5 w-20" />
+                      <div className=" bg-neutral-800 animate-pulse rounded h-5 w-20" />
                     </div>
                   )}
                 </nav>
               </div>
             </div>
 
-            {/* Search and Login Section */}
             <div className="w-full! flex items-center">
               <div className="flex items-center lg:justify-between justify-end w-full gap-1">
-                {/* Search Box */}
-
                 <SearchBoxHeader />
 
                 <div className="w-auto ">
@@ -288,11 +268,11 @@ export default function Header({
                         <button
                           aria-label="ورود"
                           onClick={() => setOpen(true)}
-                          className="font-bold cursor-pointer whitespace-nowrap text-[#ce1a2a]! text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_5px_1px_rgba(206,26,42)]"
+                          className="font-bold cursor-pointer whitespace-nowrap text-white! text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_5px_1px_rgba(206,26,42)]"
                         >
                           <div className="flex items-center">
-                            <MdLogin className="text-lg" />
-                            <span className="lg:hidden">ورود</span>
+                            <MdLogin className="text-lg text-white!" />
+                            <span className="lg:hidden text-white!">ورود</span>
                           </div>
                         </button>
                       </Tooltip>
@@ -308,13 +288,10 @@ export default function Header({
           </div>
         </div>
 
-        {/* Mobile Header */}
         <div className={`lg:hidden bg-[#ce1a2a] transition-all duration-300`}>
           <div className="flex items-center justify-between">
-            {/* Search Box */}
             <SearchBoxHeaderMobile />
 
-            {/* Close Button */}
             <button
               aria-label="منو"
               className="text-white! cursor-pointer p-2 text-2xl hover:bg-[#d1182b] rounded-lg transition-all duration-300"
@@ -350,7 +327,7 @@ export default function Header({
           width: 100%;
           z-index: 1000;
           animation: slideDown 0.3s ease;
-          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .sticky-active::before {
@@ -379,6 +356,18 @@ export default function Header({
         .header-main.sticky .header-main {
           padding-top: 0.5rem;
           padding-bottom: 0.5rem;
+        }
+
+        /* اسکرول بار برای منوی موبایل */
+        .overflow-y-auto::-webkit-scrollbar {
+          width: 4px;
+        }
+        .overflow-y-auto::-webkit-scrollbar-track {
+          background: #1a1a1a;
+        }
+        .overflow-y-auto::-webkit-scrollbar-thumb {
+          background: #ce1a2a;
+          border-radius: 10px;
         }
       `}</style>
     </div>

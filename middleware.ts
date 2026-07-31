@@ -88,24 +88,34 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
+     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
   } else if (pathname.startsWith("/dashboard")) {
     const userCookie = request.cookies.get("user")?.value;
     if (!userCookie) {
-      return NextResponse.redirect(new URL("/auth", request.url));
+      return NextResponse.redirect(new URL("/register", request.url));
     }
 
     try {
       const userData = JSON.parse(userCookie);
 
       if (!userData.token) {
-        const response = NextResponse.redirect(new URL("/auth", request.url));
+        const response = NextResponse.redirect(
+          new URL("/register", request.url),
+        );
         response.cookies.delete("user");
         return response;
       }
 
       if (userData.expiration && new Date(userData.expiration) < new Date()) {
         const response = NextResponse.redirect(
-          new URL("/auth?expired=true", request.url),
+          new URL("/register?expired=true", request.url),
         );
         response.cookies.delete("user");
         return response;
@@ -124,10 +134,28 @@ export async function middleware(request: NextRequest) {
       });
     } catch (error) {
       console.error("Error parsing user cookie:", error);
-      const response = NextResponse.redirect(new URL("/auth", request.url));
+      const response = NextResponse.redirect(new URL("/register", request.url));
       response.cookies.delete("user");
       return response;
     }
+  } else if (pathname === "/404") {
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      status: 404,
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } else if (pathname === "/410") {
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      status: 410,
+      request: {
+        headers: requestHeaders,
+      },
+    });
   } else {
     try {
       const currentUrl = decodeURIComponent(pathname);
@@ -158,7 +186,7 @@ export async function middleware(request: NextRequest) {
         // مقایسه URLها بعد از decode
         if (decodedDetailsUrl !== currentUrl) {
           return NextResponse.redirect(
-            new URL(decodedDetailsUrl.toLowerCase(), request.url),
+            new URL(decodedDetailsUrl, request.url),
             { status: 301 },
           );
         }
@@ -176,76 +204,99 @@ export async function middleware(request: NextRequest) {
         });
       }
 
-
       // ==============================================
-    // 🎯 بخش اصلی: بازنویسی بر اساس itemTypeId
-    // ==============================================
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set("x-pathname", pathname + url.search);
-    requestHeaders.set("x-item-type-id", String(detailsItem.itemTypeId));
+      // 🎯 بخش اصلی: بازنویسی بر اساس itemTypeId
+      // ==============================================
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("x-pathname", pathname + url.search);
+      requestHeaders.set("x-item-type-id", String(detailsItem.itemTypeId));
 
-    // تعیین مسیر مقصد بر اساس itemTypeId
-    let destinationPath = '';
+      // تعیین مسیر مقصد بر اساس itemTypeId
+      let destinationPath = "";
 
-    switch (detailsItem.itemTypeId) {
-     
-      case 5: // صفحه جزئیات خبر
-        destinationPath = detailsItem.typeUrl === 'item' ?  `/fa/news-view/${detailsItem.id}` : `/fa/news/${detailsItem.id}`;
-        break;
-      case 3: // صفحه نکات آموزشی
-        destinationPath = detailsItem.typeUrl === 'item' ? `/fa/tips-view/${detailsItem.id}` : `/fa/educationtips/${detailsItem.id}`;
-        break;
-      case 1028: // صفحه فیلم های تست و بررسی خودرو
-        destinationPath = detailsItem.typeUrl === 'item' ? `/video/${detailsItem.id}`: `/videos/${detailsItem.id}`;
-        break;
-      case 1042: // صفحه معرفی خودرو
-        destinationPath = detailsItem.typeUrl === 'item' ? `/car/${detailsItem.id}` : detailsItem.parentId ? `/cars/${detailsItem.id}` : `/fa/reviews/${detailsItem.id}`;
-        break;
-      case 1043: // صفحه بهترین انتخاب
-        destinationPath = detailsItem.typeUrl === 'item' ? `/best-choice/${detailsItem.id}`:`/best-choices.html`;
-        break;
-     
-      case 1045: // صفحه مقایسه خودرو
-        destinationPath = detailsItem.typeUrl === 'item' ? `/whichcar/${detailsItem.id}` : `/whichcars.html`;
-        break;
-      case 1046: // صفحه واژگان فنی
-        destinationPath = detailsItem.typeUrl === 'item' ? `/technical-word/${detailsItem.id}` : `/fa/technical-words.html`;
-        break;
-      case 1050: // صفحه مراکز خدمات خودرو
-        destinationPath = detailsItem.typeUrl === 'item' ? `/autoservice/${detailsItem.id}` : `/autoservices/${detailsItem.id}`;
-        break;
-      case 1052: // صفحه معرفی موتور سیکلت
-        destinationPath =detailsItem.typeUrl === 'item' ? `/motorcycle/${detailsItem.id}` : detailsItem.parentId ? `/motorcycles/${detailsItem.id}` : `/fa/reviews/${detailsItem.id}`;
-        break;
-      
-    
-      
-      default:
-        // اگر نوع مشخص نبود، از slug استفاده کن
-        destinationPath = ``;
-        break;
-    }
+      switch (detailsItem.itemTypeId) {
+        case 5: // صفحه جزئیات خبر
+          destinationPath =
+            detailsItem.typeUrl === "item"
+              ? `/fa/news-view/${detailsItem.id}`
+              : `/fa/news/${detailsItem.id}`;
+          break;
+        case 3: // صفحه نکات آموزشی
+          destinationPath =
+            detailsItem.typeUrl === "item"
+              ? `/fa/tips-view/${detailsItem.id}`
+              : `/fa/educationtips/${detailsItem.id}`;
+          break;
+        case 1028: // صفحه فیلم های تست و بررسی خودرو
+          destinationPath =
+            detailsItem.typeUrl === "item"
+              ? `/video/${detailsItem.id}`
+              : `/videos/${detailsItem.id}`;
+          break;
+        case 1042: // صفحه معرفی خودرو
+          destinationPath =
+            detailsItem.typeUrl === "item"
+              ? `/car/${detailsItem.id}`
+              : detailsItem.parentId
+                ? `/cars/${detailsItem.id}`
+                : `/fa/reviews/${detailsItem.id}`;
+          break;
+        case 1043: // صفحه بهترین انتخاب
+          destinationPath =
+            detailsItem.typeUrl === "item"
+              ? `/best-choice/${detailsItem.id}`
+              : `/best-choices.html`;
+          break;
 
-    // ساخت URL جدید برای بازنویسی
-    
+        case 1045: // صفحه مقایسه خودرو
+          destinationPath =
+            detailsItem.typeUrl === "item"
+              ? `/whichcar/${detailsItem.id}`
+              : `/whichcars.html`;
+          break;
+        case 1046: // صفحه واژگان فنی
+          destinationPath =
+            detailsItem.typeUrl === "item"
+              ? `/technical-word/${detailsItem.id}`
+              : `/fa/technical-words.html`;
+          break;
+        case 1050: // صفحه مراکز خدمات خودرو
+          destinationPath =
+            detailsItem.typeUrl === "item"
+              ? `/autoservice/${detailsItem.id}`
+              : `/autoservices/${detailsItem.id}`;
+          break;
+        case 1052: // صفحه معرفی موتور سیکلت
+          destinationPath =
+            detailsItem.typeUrl === "item"
+              ? `/motorcycle/${detailsItem.id}`
+              : detailsItem.parentId
+                ? `/motorcycles/${detailsItem.id}`
+                : `/fa/reviews/${detailsItem.id}`;
+          break;
 
-    if (destinationPath) {
-      const rewriteUrl = new URL(destinationPath, request.url);
-    
-    // اگر پارامترهای query وجود دارند، به مسیر جدید اضافه کن
-    if (url.search) {
-      rewriteUrl.search = url.search;
-    }
- // انجام بازنویسی
-    return NextResponse.rewrite(rewriteUrl, {
-      request: {
-        headers: requestHeaders,
-      },
-    });
-    }
+        default:
+          // اگر نوع مشخص نبود، از slug استفاده کن
+          destinationPath = ``;
+          break;
+      }
 
-    
-   
+      // ساخت URL جدید برای بازنویسی
+
+      if (destinationPath) {
+        const rewriteUrl = new URL(destinationPath, request.url);
+
+        // اگر پارامترهای query وجود دارند، به مسیر جدید اضافه کن
+        if (url.search) {
+          rewriteUrl.search = url.search;
+        }
+        // انجام بازنویسی
+        return NextResponse.rewrite(rewriteUrl, {
+          request: {
+            headers: requestHeaders,
+          },
+        });
+      }
     } catch (error: any) {
       const status = error.response?.status || error.status || 500;
 
@@ -267,7 +318,6 @@ export async function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
-
 
 export const config = {
   matcher: [

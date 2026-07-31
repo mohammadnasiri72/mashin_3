@@ -23,7 +23,7 @@ const MapContainer = dynamic(() => import("@/app/components/MapContainer"), {
   loading: () => (
     <div className="w-full h-96 flex items-center justify-center bg-gray-100 rounded-lg">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ce1a2a] mx-auto mb-4"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ce1a2a] mx-auto mb-4!"></div>
         <p className="text-gray-600">در حال بارگذاری نقشه...</p>
       </div>
     </div>
@@ -148,12 +148,12 @@ function ContactUsForm({
   return (
     <div className="py-8">
       {/* هدر اطلاعات تماس */}
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-8 border-r-4 border-[#ce1a2a]">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+      <div className="bg-white rounded-lg shadow-lg p-6 mb-8! border-r-4 border-[#ce1a2a]">
+        <h1 className="text-3xl font-bold text-gray-800 mb-6! text-center">
           تماس با ما
         </h1>
 
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <div className="grid md:grid-cols-2 gap-6 mb-8!">
           <div className="flex items-center space-x-3 space-x-reverse gap-2">
             <div className="bg-[#ce1a2a] p-3 rounded-full w-10 h-10 flex justify-center items-center">
               <PhoneOutlined className="text-white! text-xl" />
@@ -381,7 +381,7 @@ function ContactUsForm({
           {map ? (
             <div>
               <div
-                className="w-full rounded-lg overflow-hidden border border-gray-200"
+                className="w-full rounded-lg overflow-hidden border border-gray-200 body-contact-us"
                 dangerouslySetInnerHTML={{ __html: map }}
               />
             </div>
@@ -396,7 +396,7 @@ function ContactUsForm({
           )}
 
           <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-            <h3 className="font-semibold text-gray-700 mb-2">آدرس:</h3>
+            <h3 className="font-semibold text-gray-700 mb-2!">آدرس:</h3>
             <p className="text-gray-600">{address}</p>
           </div>
         </Card>

@@ -84,7 +84,7 @@ export default function ErrorContent({
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <div className="max-w-lg w-full text-center">
           {/* Error Code */}
-          <div className="mb-8 relative">
+          <div className="mb-8! relative">
             <div className="text-9xl font-black text-gray-200 opacity-60 absolute -top-10 left-1/2 transform -translate-x-1/2">
               {errorInfo.status}
             </div>
@@ -101,8 +101,8 @@ export default function ErrorContent({
           </div>
 
           {/* Message */}
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-800 mb-4">
+          <div className="mb-8!">
+            <h1 className="text-2xl font-bold text-gray-800 mb-4!">
               {errorInfo.status === 404 ? "صفحه یافت نشد" : "مشکلی پیش آمد!"}
             </h1>
             <p className="text-gray-600 text-lg leading-relaxed">

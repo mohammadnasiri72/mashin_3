@@ -115,19 +115,21 @@ async function pageTipView() {
 
   return (
     <>
-      <JsonLd schemas={schemas} />
-      <EducationView
-        education={education}
-        popularEducations={popularEducations.filter(
-          (e) => e.id !== education.id,
-        )}
-        relatedEducations={relatedEducations.filter(
-          (e) => e.id !== education.id,
-        )}
-        id={id}
-        comments={comments}
-        banner={banner}
-      />
+      <div data-id={id}>
+        <JsonLd schemas={schemas} />
+        <EducationView
+          education={education}
+          popularEducations={popularEducations.filter(
+            (e) => e.id !== education.id,
+          )}
+          relatedEducations={relatedEducations.filter(
+            (e) => e.id !== education.id,
+          )}
+          id={id}
+          comments={comments}
+          banner={banner}
+        />
+      </div>
     </>
   );
 }

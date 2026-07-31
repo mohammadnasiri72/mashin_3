@@ -78,8 +78,8 @@ const EducationCar = ({
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4">
         {/* هدر صفحه */}
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+        <div className="mb-8! text-center">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4!">
             <span className="text-[#ce1a2a]">آموزش و نکات فنی</span>
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
@@ -99,7 +99,7 @@ const EducationCar = ({
           >
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               {/* تب‌های آموزشی - با Swiper */}
-              <div className="mb-6 relative">
+              <div className="mb-6! relative">
                 <Swiper
                   ref={swiperRef}
                   modules={[FreeMode]}
@@ -202,7 +202,7 @@ const EducationCar = ({
                             <div className="flex flex-wrap items-center gap-4 text-xs text-gray-700 mt-2">
                               <div className="flex items-center gap-1">
                                 <FaCalendar />
-                                <span>{formatPersianDate(item.created)}</span>
+                                <span>{formatPersianDate(item.modified ? item.modified : item.created)}</span>
                               </div>
 
                               <div className="flex items-center gap-1">
@@ -232,8 +232,8 @@ const EducationCar = ({
                   ))
                 ) : (
                   <div className="text-center py-12">
-                    <div className="text-gray-400 text-6xl mb-4">📚</div>
-                    <h3 className="text-xl font-bold text-gray-600 mb-2">
+                    <div className="text-gray-400 text-6xl mb-4!">📚</div>
+                    <h3 className="text-xl font-bold text-gray-600 mb-2!">
                       آموزشی یافت نشد
                     </h3>
                     <p className="text-gray-500">

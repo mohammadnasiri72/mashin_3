@@ -103,18 +103,20 @@ async function pageAutoservicesDetails() {
     } catch (error) {
       console.error("Error recording visit:", error);
     }
- const schemas = detailsAuto?.seoInfo?.schemas || [];
+    const schemas = detailsAuto?.seoInfo?.schemas || [];
     return (
       <>
-      <JsonLd schemas={schemas} />
-        <div className="flex flex-wrap bg-gray-50">
-          <MainBoxAutoService
-            detailsAuto={detailsAuto}
-            comments={comments}
-            id={id}
-            banner={banner}
-            pollData={pollData}
-          />
+        <div data-id={id}>
+          <JsonLd schemas={schemas} />
+          <div className="flex flex-wrap bg-gray-50">
+            <MainBoxAutoService
+              detailsAuto={detailsAuto}
+              comments={comments}
+              id={id}
+              banner={banner}
+              pollData={pollData}
+            />
+          </div>
         </div>
       </>
     );

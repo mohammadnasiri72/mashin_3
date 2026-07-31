@@ -48,7 +48,7 @@ async function FeaturesSection({
           </h2>
 
           <div
-            className="text_area text-gray-700 leading-8 text-justify space-y-4 mt-3"
+            className="text_area text-gray-700 leading-8 text-justify space-y-4 mt-3 body-summary-car"
             dangerouslySetInnerHTML={createMarkup(summary ? summary : "")}
           />
         </summary>
@@ -85,7 +85,7 @@ async function FeaturesSection({
             {advantages?.propertyValue &&
               createMarkup(advantages.propertyValue) && (
                 <div className="bg-green-50 rounded-xl p-6">
-                  <div className="advg_title advg_plus flex items-center text-green-700 text-lg font-bold mb-4">
+                  <div className="advg_title advg_plus flex items-center text-green-700 text-lg font-bold mb-4!">
                     <FaSquarePlus className="ml-2 text-green-600" />
                     مزایا
                   </div>
@@ -96,7 +96,7 @@ async function FeaturesSection({
                     >
                       <span className="text-green-500 ml-2 mt-1">•</span>
                       <div
-                        className="text-gray-700 leading-8 text-justify"
+                        className="text-gray-700 leading-8 text-justify advantages-car"
                         dangerouslySetInnerHTML={createMarkup(
                           advantages.propertyValue,
                         )}
@@ -110,7 +110,7 @@ async function FeaturesSection({
             {disadvantages?.propertyValue &&
               createMarkup(disadvantages.propertyValue) && (
                 <div className="bg-red-50 rounded-xl p-6">
-                  <div className="advg_title advg_minus flex items-center text-red-700 text-lg font-bold mb-4">
+                  <div className="advg_title advg_minus flex items-center text-red-700 text-lg font-bold mb-4!">
                     <FaSquareMinus className="ml-2 text-red-600" />
                     معایب
                   </div>
@@ -121,7 +121,7 @@ async function FeaturesSection({
                     >
                       <span className="text-red-500 ml-2 mt-1">•</span>
                       <div
-                        className="text-gray-700 leading-8 text-justify"
+                        className="text-gray-700 leading-8 text-justify disadvantages-car"
                         dangerouslySetInnerHTML={createMarkup(
                           disadvantages.propertyValue,
                         )}

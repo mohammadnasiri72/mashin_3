@@ -36,8 +36,7 @@ function SearchBoxHeaderMobile() {
 
   const handleSearch = useCallback(
     async (searchTerm: string) => {
-      // فقط اگر حداقل 3 کاراکتر داشت جستجو کن
-      if (searchTerm.trim().length < 3) {
+      if (searchTerm.trim().length < 2) {
         setSearchResults([]);
         setGroupedResults({});
         setIsLoading(false);
@@ -81,14 +80,12 @@ function SearchBoxHeaderMobile() {
       clearTimeout(searchTimeout.current);
     }
 
-    // فقط اگر حداقل 3 کاراکتر داشت جستجو کن
-    if (term.trim().length >= 3) {
+    if (term.trim().length >= 2) {
       setIsLoading(true);
       searchTimeout.current = setTimeout(() => {
         handleSearch(term);
       }, 500);
     } else {
-      // اگر کمتر از 3 کاراکتر است، نتایج را پاک کن
       setSearchResults([]);
       setGroupedResults({});
       setIsLoading(false);
@@ -118,9 +115,8 @@ function SearchBoxHeaderMobile() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setTerm(value);
-    
-    // فقط اگر حداقل 3 کاراکتر داشت نتایج را نشان بده
-    if (value.trim().length >= 3 && isModalOpen) {
+
+    if (value.trim().length >= 2 && isModalOpen) {
       setShowResults(true);
     } else if (isModalOpen) {
       setShowResults(false);
@@ -135,8 +131,7 @@ function SearchBoxHeaderMobile() {
 
   const handleInputFocus = () => {
     setIsModalOpen(true);
-    // فقط اگر حداقل 3 کاراکتر داشت نتایج را نشان بده
-    if (term.trim().length >= 3) {
+    if (term.trim().length >= 2) {
       setShowResults(true);
     }
   };
@@ -164,13 +159,11 @@ function SearchBoxHeaderMobile() {
             placeholder="جستجو"
             required
           />
-         
-          
         </div>
 
         {/* Results Dropdown for Mobile */}
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 bg-white">
+          <div className="fixed inset-0 z-50 bg-[#1a1a1a]">
             {/* Header */}
             <div className="bg-[#d1182b] p-4 flex items-center justify-between">
               <div className="flex items-center flex-1">
@@ -185,9 +178,9 @@ function SearchBoxHeaderMobile() {
                   autoFocus
                   required
                 />
-                
               </div>
-              <button aria-label="بستن"
+              <button
+                aria-label="بستن"
                 onClick={handleCloseModal}
                 className="text-white! text-lg font-bold mr-2"
               >
@@ -203,33 +196,33 @@ function SearchBoxHeaderMobile() {
                 </div>
               )}
 
-              {/* نمایش پیام وقتی کمتر از 3 کاراکتر است */}
-              {term.trim().length > 0 && term.trim().length < 3 && !isLoading && (
-                <div className="p-8 text-center text-gray-500 text-sm">
-                  برای جستجو، حداقل 3 کاراکتر وارد کنید
+              {/* نمایش پیام وقتی کمتر از 2 کاراکتر است */}
+              {term.trim().length > 0 && term.trim().length < 2 && !isLoading && (
+                <div className="p-8 text-center text-neutral-400! text-sm">
+                  برای جستجو، حداقل 2 کاراکتر وارد کنید
                 </div>
               )}
 
               {!error && isLoading && (
                 <div className="p-4 text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#d1182b] mx-auto"></div>
-                  <p className="text-sm text-gray-500 mt-4">در حال جستجو...</p>
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-600 mx-auto"></div>
+                  <p className="text-sm text-neutral-400! mt-4">در حال جستجو...</p>
                 </div>
               )}
 
               {!error &&
                 !isLoading &&
                 searchResults.length === 0 &&
-                term.trim().length >= 3 && (
-                  <div className="p-8 text-center text-gray-500 text-sm">
+                term.trim().length >= 2 && (
+                  <div className="p-8 text-center text-neutral-400! text-sm">
                     نتیجه‌ای یافت نشد
                   </div>
                 )}
 
               {!error && !isLoading && searchResults.length > 0 && (
                 <div className="pb-4">
-                  <div className="px-4 py-3 border-b border-gray-200">
-                    <p className="text-sm font-medium text-gray-600">
+                  <div className="px-4 py-3 border-b border-neutral-800/60">
+                    <p className="text-sm font-medium text-neutral-300!">
                       {searchResults.length} نتیجه یافت شد
                     </p>
                   </div>
@@ -240,54 +233,53 @@ function SearchBoxHeaderMobile() {
                         <div
                           key={type}
                           className={
-                            index > 0 ? "border-t border-gray-200" : ""
+                            index > 0 ? "border-t border-neutral-800/60" : ""
                           }
                         >
                           {/* Type Header */}
                           <div
-                            className={`px-4 py-3 bg-gray-50 border-[#d1182b] ${
+                            className={`px-4 py-3 bg-[#222] border-red-600 ${
                               index > 0 ? "border-t-4" : ""
                             }`}
                           >
                             <div className="flex justify-between items-center">
-                              <h3 className="text-lg font-bold text-gray-800">
+                              <h3 className="text-lg font-bold text-white!">
                                 {type}
                               </h3>
-                              <span className="text-xs text-gray-600 bg-gray-200 px-2 py-1 rounded-full">
+                              <span className="text-xs text-neutral-400! bg-[#2a2a2a] px-2 py-1 rounded-full">
                                 {items.length}
                               </span>
                             </div>
                           </div>
 
                           {/* Items List */}
-                          <div className="divide-y divide-gray-100">
+                          <div className="divide-y divide-neutral-800/60">
                             {items.map((item) => (
                               <Link
                                 key={item.id}
                                 href={item.url}
                                 onClick={handleResultClick}
-                                className="flex items-center gap-3 p-4 active:bg-gray-50 transition-colors duration-150"
+                                className="flex items-center gap-3 p-4 active:bg-[#2a2a2a] transition-colors duration-150"
                               >
-                                <div className="shrink-0 w-14 h-14 bg-white rounded-lg overflow-hidden border border-gray-200">
+                                <div className="shrink-0 w-14 h-14 bg-[#2a2a2a] rounded-lg overflow-hidden border border-neutral-700/60">
                                   {item.image ? (
                                     <div className="relative w-full h-full">
                                       <img
                                         src={mainDomain + item.image}
                                         alt={item.title}
                                         className="object-contain w-full h-full"
-                                      
                                       />
                                     </div>
                                   ) : (
-                                    <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                                      <IoSearch className="text-gray-400" />
+                                    <div className="w-full h-full flex items-center justify-center bg-[#2a2a2a]">
+                                      <IoSearch className="text-neutral-500!" />
                                     </div>
                                   )}
                                 </div>
 
                                 <div className="flex-1 min-w-0">
-                                  <h3 className="text-sm font-medium text-gray-800 line-clamp-2">
-                                    {item.title}
+                                  <h3 className="text-sm font-medium text-neutral-300! line-clamp-2 group-hover:text-red-500 transition-colors">
+                                   {item.title}
                                   </h3>
                                 </div>
                               </Link>
@@ -297,8 +289,6 @@ function SearchBoxHeaderMobile() {
                       )
                     )}
                   </div>
-
-                 
                 </div>
               )}
             </div>

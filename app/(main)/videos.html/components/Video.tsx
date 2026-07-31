@@ -43,13 +43,13 @@ function Video({
 
   return (
     <>
-      <div className="flex flex-wrap lg:flex-nowrap gap-6 relative mx-auto px-4">
+      <div className="flex flex-wrap lg:flex-nowrap gap-6 relative  py-5">
         {/* محتوای اصلی */}
         <div
           ref={mainBoxRef}
           className={`
-            lg:w-3/4 w-full transition-all duration-300
-            ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            lg:w-3/4 w-full transition-all duration-300 
+            ${!isMainLonger ? "lg:sticky lg:top-20 lg:self-start" : ""}
           `}
         >
           <BoxVideo videos={videos} titleCat={titleCat} />
@@ -60,7 +60,7 @@ function Video({
           ref={sidebarRef}
           className={`
             lg:w-1/4 w-full transition-all duration-300
-            ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            ${isMainLonger ? "lg:sticky lg:top-20 lg:self-start" : ""}
           `}
         >
           <SidebarVideo popularVideos={popularVideos} banner={banner} />
@@ -76,15 +76,15 @@ function Video({
         /* استایل‌های sticky */
         .lg\\:sticky {
           position: sticky;
-          bottom: 0;
-          align-self: flex-end;
+          top: 80px;
+          align-self: flex-start;
         }
 
         /* غیرفعال کردن sticky در موبایل */
         @media (max-width: 1023px) {
           .lg\\:sticky {
             position: relative !important;
-            bottom: auto !important;
+            top: auto !important;
             align-self: auto !important;
           }
         }

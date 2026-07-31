@@ -324,7 +324,7 @@ export default function MyCommentsPage() {
                         {/* خط عمودی برای سلسله مراتب */}
                         <div className="absolute right-2 top-0 bottom-0 w-0.5 bg-gray-200"></div>
                         <div className="relative">
-                          <div className="flex items-center gap-2 mb-1">
+                          <div className="flex items-center gap-2 mb-1!">
                             <span className="text-xs font-medium text-gray-600">
                               {reply.commentName || reply.name}
                             </span>
@@ -367,7 +367,7 @@ export default function MyCommentsPage() {
         {/* حالت خالی */}
         {comments.length === 0 && (
           <div className="bg-white rounded-xl shadow-sm p-8 text-center">
-            <HiOutlineChat className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <HiOutlineChat className="w-12 h-12 text-gray-300 mx-auto mb-3!" />
             <p className="text-gray-500 text-sm">هنوز نظری ثبت نکرده‌اید</p>
           </div>
         )}

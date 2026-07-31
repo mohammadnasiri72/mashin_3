@@ -4,7 +4,7 @@ const TechnicalSection = ({ detailsMotorcycle }: { detailsMotorcycle: ItemsId })
   );
   return (
     <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-      <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
+      <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
         <strong className="text-red-600">فنی </strong>
         موتورسیکلت {detailsMotorcycle.sourceName} {detailsMotorcycle.title}
       </h3>

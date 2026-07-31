@@ -29,7 +29,7 @@ const FeaturesSectionMotor = ({
         {/* Advantages Column */}
         {advantages.length > 0 && (
           <div className="bg-green-50 rounded-xl p-6">
-            <div className="advg_title advg_plus flex items-center text-green-700 text-lg font-bold mb-4">
+            <div className="advg_title advg_plus flex items-center text-green-700 text-lg font-bold mb-4!">
               <FaSquarePlus className="ml-2 text-green-600" />
               مزایا
             </div>
@@ -41,7 +41,7 @@ const FeaturesSectionMotor = ({
                 >
                   <span className="text-green-500 ml-2 mt-1">•</span>
                   <div
-                    className="text-gray-700 leading-8 text-justify"
+                    className="text-gray-700 leading-8 text-justify advantage-motor"
                     dangerouslySetInnerHTML={createMarkup(advantage.value)}
                   />
                 </li>
@@ -53,7 +53,7 @@ const FeaturesSectionMotor = ({
         {/* Disadvantages Column */}
         {disadvantages.length > 0 && (
           <div className="bg-red-50 rounded-xl p-6">
-            <div className="advg_title advg_minus flex items-center text-red-700 text-lg font-bold mb-4">
+            <div className="advg_title advg_minus flex items-center text-red-700 text-lg font-bold mb-4!">
               <FaSquareMinus className="ml-2 text-red-600" />
               معایب
             </div>
@@ -65,7 +65,7 @@ const FeaturesSectionMotor = ({
                 >
                   <span className="text-red-500 ml-2 mt-1">•</span>
                   <div
-                    className="text-gray-700 leading-8 text-justify"
+                    className="text-gray-700 leading-8 text-justify disadvantage-motor"
                     dangerouslySetInnerHTML={createMarkup(disadvantage.value)}
                   />
                 </li>

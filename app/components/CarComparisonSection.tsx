@@ -143,7 +143,7 @@ const CarComparisonSection = ({
 
         {/* بخش انتخاب خودروها */}
         <div className="sm:px-0 px-5">
-          <div className="w-full md:w-10/12 bg-[#ce1a2a] px-6 pt-6 pb-[350px] mx-auto rounded-2xl mb-8">
+          <div className="w-full md:w-10/12 bg-[#ce1a2a] px-6 pt-6 pb-[350px] mx-auto rounded-2xl mb-8!">
             <div className="flex flex-col lg:flex-row gap-6">
               {/* خودرو اول - کد قبلی همونطور هست */}
               <div className="w-full lg:w-2/5">

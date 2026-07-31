@@ -81,7 +81,7 @@ function RelatedComparisons({
                 </Link>
 
                 <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>{formatPersianDate(compare.created)}</span>
+                  <span>{formatPersianDate(compare.modified ? compare.modified : compare.created)}</span>
                 </div>
               </div>
             </div>

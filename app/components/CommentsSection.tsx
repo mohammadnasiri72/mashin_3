@@ -16,7 +16,6 @@ import { FaReply, FaThumbsDown, FaThumbsUp } from "react-icons/fa6";
 import { MdClose } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
-
 const { TextArea } = Input;
 
 // انواع TypeScript
@@ -150,17 +149,19 @@ const CommentItem: React.FC<CommentItemProps> = ({
           borderRight: depth > 0 ? "2px solid #fed7d7" : "none",
         }}
       >
-        <div className="cm_tp flex gap-3 items-center mb-3">
+        <div className="cm_tp flex gap-3 items-center mb-3!">
           <div className="author_name font-bold text-gray-800">
             {comment.fullName}
           </div>
           <div className="text-xs font-semibold relative pr-3">
-            {formatPersianDate(comment.created)}
+            {formatPersianDate(
+              comment.modified ? comment.modified : comment.created,
+            )}
             <span className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1.5 h-1.5 bg-purple-200 rounded-full"></span>
           </div>
         </div>
 
-        <div className="text-justify text-gray-700 leading-7 mb-3">
+        <div className="text-justify text-gray-700 leading-7 mb-3!">
           {comment.body}
         </div>
 
@@ -549,13 +550,13 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       if (root.children && root.children.length > 0) {
         root.children.sort(
           (a, b) =>
-            new Date(b.created).getTime() - new Date(a.created).getTime(),
+            new Date(b.modified?b.modified:b.created).getTime() - new Date(a.modified?a.modified:a.created).getTime(),
         );
       }
     });
 
     return roots.sort(
-      (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime(),
+      (a, b) => new Date(b.modified?b.modified:b.created).getTime() - new Date(a.modified?a.modified:a.created).getTime(),
     );
   }, [allComments]);
 
@@ -584,7 +585,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
   return (
     <>
       <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-        <h3 className="dt_title text-xl font-bold text-gray-900 mb-4">
+        <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
           <strong className="text-red-600">نظرات </strong>
           درمورد {details.sourceName} {details.title}
           <span className="text-sm font-normal text-gray-500 mr-2">
@@ -596,7 +597,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
           {/* فرم ثبت نظر اصلی */}
           <div className="lg:col-span-4 ">
             <div className="contactForm_wrap bg-gray-50 rounded-xl p-6 comment-form sticky">
-              <div className="title_sec mb-4">
+              <div className="title_sec mb-4!">
                 <h3 className="text-lg font-bold text-gray-900">دیدگاه</h3>
                 <p className="text-gray-600 mt-2">
                   شما هم درباره این کالا دیدگاه ثبت کنید
