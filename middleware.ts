@@ -156,6 +156,14 @@ export async function middleware(request: NextRequest) {
         headers: requestHeaders,
       },
     });
+  } else if (pathname.startsWith("/car2")) {
+     const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
   } else {
     try {
       const currentUrl = decodeURIComponent(pathname);

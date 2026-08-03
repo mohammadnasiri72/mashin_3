@@ -31,7 +31,7 @@ const AOSProvider = ({ children, userCookie }: AOSProviderProps) => {
   }, [userCookie]);
 
   return (
-    <div className="max-w-500 mx-auto">{children}</div>
+    <div className="max-w-[1440px] mx-auto">{children}</div>
   );
 };
 
