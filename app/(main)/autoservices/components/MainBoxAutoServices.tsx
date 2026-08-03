@@ -318,7 +318,14 @@ function MainBoxAutoServices({
 
   return (
     <>
-      <div className="flex flex-wrap lg:flex-nowrap gap-6 relative mx-auto bg-[#f4f4f4] pt-3">
+    <div className="min-h-screen bg-[#f4f4f4] py-8">
+
+      <div className="mx-auto px-4">
+        <div className="flex flex-col lg:flex-row gap-6 relative items-start">
+
+
+
+
         {/* محتوای اصلی */}
         <div
           ref={mainBoxRef}
@@ -327,7 +334,6 @@ function MainBoxAutoServices({
             ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
           `}
         >
-         
           <div className="min-h-screen ">
             <div className="p-4">
               {/* نمایش اطلاعات صفحه */}
@@ -345,15 +351,15 @@ function MainBoxAutoServices({
                   {toPersianNumbers(totalItems)} نمایندگی
                 </span>
               </div>
- {/* هدر */}
-          <div className="text-center mb-4!">
-            <h1 className="text-2xl font-bold text-[#ce1a2a]!">{title}</h1>
-            {summary && (
-              <p className="text-gray-600 max-w-2xl mx-auto text-justify pt-2">
-                {htmlToPlainText(summary)}
-              </p>
-            )}
-          </div>
+              {/* هدر */}
+              <div className="text-center mb-4!">
+                <h1 className="text-2xl font-bold text-[#ce1a2a]!">{title}</h1>
+                {summary && (
+                  <p className="text-gray-600 max-w-2xl mx-auto text-justify pt-2">
+                    {htmlToPlainText(summary)}
+                  </p>
+                )}
+              </div>
               {/* فیلترها */}
               <div className="bg-white rounded-xl shadow-sm p-6 mb-8!">
                 <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end justify-between">
@@ -704,6 +710,7 @@ function MainBoxAutoServices({
             lastCars={lastCars}
           />
         </aside>
+        </div>
       </div>
 
       <style jsx global>{`
@@ -732,6 +739,7 @@ function MainBoxAutoServices({
           }
         }
       `}</style>
+    </div>
     </>
   );
 }

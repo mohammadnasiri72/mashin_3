@@ -33,13 +33,15 @@ const CarBrands = ({
   }, [carBrands, term]);
 
   return (
-    <div className="min-h-screen bg-[#f4f4f4] py-2">
-      <div className="mx-auto p-4 bg-white!">
+    <div className="min-h-screen bg-[#f4f4f4] py-8">
+      <div className="mx-auto px-4 ">
        
 
-        <div className="flex flex-col lg:flex-row gap-6 relative items-start">
+        <div className="flex flex-col lg:flex-row gap-6 relative items-start ">
           {/* محتوای اصلی - sticky از بالا */}
           <div className="lg:w-3/4 w-full lg:sticky lg:top-20 lg:self-start">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+
            {/* هدر صفحه */}
         <div className="mb-8!">
           <h1 className="text-3xl font-bold text-red-600! text-center mb-4!">
@@ -111,6 +113,7 @@ const CarBrands = ({
                 </p>
               </div>
             )}
+          </div>
           </div>
 
           {/* سایدبار - sticky از بالا */}

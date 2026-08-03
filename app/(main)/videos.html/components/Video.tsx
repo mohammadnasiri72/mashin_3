@@ -43,8 +43,10 @@ function Video({
 
   return (
     <>
-      
-      <div className="flex flex-wrap lg:flex-nowrap gap-6 py-2 relative bg-[#f4f4f4]!">
+      <div className="min-h-screen bg-[#f4f4f4] py-8">
+      <div className="mx-auto px-4">
+
+      <div className="flex flex-col lg:flex-row gap-6 relative items-start">
         {/* محتوای اصلی */}
         <div
           ref={mainBoxRef}
@@ -66,6 +68,8 @@ function Video({
         >
           <SidebarVideo popularVideos={popularVideos} banner={banner} />
         </aside>
+      </div>
+      </div>
       </div>
 
       <style jsx global>{`

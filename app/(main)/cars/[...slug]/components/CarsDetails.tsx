@@ -263,7 +263,6 @@ const CarsDetails = ({ carView, carDetails, banner }: CarsDetailsProps) => {
     );
   }, [groupedCarsArray, searchTerm]);
 
-
   // ✅ هندلر جستجو
   const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -275,121 +274,123 @@ const CarsDetails = ({ carView, carDetails, banner }: CarsDetailsProps) => {
   }, [carView]);
 
   return (
-    <div className="min-h-screen bg-[#f4f4f4] py-2">
-      <div className="mx-auto p-4 bg-white">
+    <div className="min-h-screen bg-[#f4f4f4] py-8">
+      <div className="mx-auto px-4">
         <div className="flex flex-col lg:flex-row gap-6 relative items-start">
           {/* محتوای اصلی - sticky از بالا */}
           <div className="lg:w-3/4 w-full lg:sticky lg:top-20 lg:self-start">
-           
-
-            {/* عنوان */}
-            <div className="flex items-center justify-between mb-4!">
-              <div className="flex items-center">
-                
-                <h2 className="text-2xl font-bold text-gray-900">
-                  مدل‌های{" "}
-                  <span className="text-red-600">{ filteredGroups.length===1&& carDetails.parentTitle} {carDetails.title}</span>
-                </h2>
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+              {/* عنوان */}
+              <div className="flex items-center justify-between mb-4!">
+                <div className="flex items-center">
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    مدل‌های{" "}
+                    <span className="text-red-600">
+                      {filteredGroups.length === 1 && carDetails.parentTitle}{" "}
+                      {carDetails.title}
+                    </span>
+                  </h2>
+                </div>
+                <span className="text-gray-700 text-sm">
+                  {toPersianNumbers(totalModels)} مدل
+                </span>
               </div>
-              <span className="text-gray-700 text-sm">
-                {toPersianNumbers(totalModels)} مدل
-              </span>
-            </div>
 
-            {/* خلاصه */}
-            {carDetails.summary && htmlToPlainText(carDetails.summary) && (
-              <ShowSummary text={htmlToPlainText(carDetails.summary)} />
-            )}
- {/* جستجو */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6!">
-              <div className="relative">
-                <input
-                  onChange={handleSearch}
-                  value={searchTerm}
-                  type="text"
-                  placeholder={`جستجو در مدل‌های ${carDetails.title}...`}
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-xs placeholder:text-gray-400"
-                />
-                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
+              {/* خلاصه */}
+              {carDetails.summary && htmlToPlainText(carDetails.summary) && (
+                <ShowSummary text={htmlToPlainText(carDetails.summary)} />
+              )}
+              {/* جستجو */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6!">
+                <div className="relative">
+                  <input
+                    onChange={handleSearch}
+                    value={searchTerm}
+                    type="text"
+                    placeholder={`جستجو در مدل‌های ${carDetails.title}...`}
+                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-xs placeholder:text-gray-400"
+                  />
+                  <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
+                </div>
               </div>
-            </div>
-            {/* گرید */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-              {filteredGroups.length > 1 &&
-                filteredGroups.map((group) => {
-                  // اگر یک آیتم بیشتر داشت، از CarGroupCard استفاده کن
-                  if (group.cars.length > 1) {
+              {/* گرید */}
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+                {filteredGroups.length > 1 &&
+                  filteredGroups.map((group) => {
+                    // اگر یک آیتم بیشتر داشت، از CarGroupCard استفاده کن
+                    if (group.cars.length > 1) {
+                      return (
+                        <CarGroupCard
+                          key={group.key}
+                          groupKey={group.key}
+                          cars={group.sortedCars}
+                          mainDomain={mainDomain}
+                        />
+                      );
+                    }
+                    // وگرنه از CarCard معمولی
                     return (
-                      <CarGroupCard
+                      <CarCard
                         key={group.key}
-                        groupKey={group.key}
-                        cars={group.sortedCars}
+                        car={group.cars[0]}
                         mainDomain={mainDomain}
                       />
                     );
-                  }
-                  // وگرنه از CarCard معمولی
-                  return (
-                    <CarCard
-                      key={group.key}
-                      car={group.cars[0]}
-                      mainDomain={mainDomain}
-                    />
-                  );
-                })}
-              {filteredGroups.length === 1 &&
-                filteredGroups.map((group) => {
-                  // اگر یک آیتم بیشتر داشت، از CarGroupCard استفاده کن
-                  if (group.cars.length > 1) {
+                  })}
+                {filteredGroups.length === 1 &&
+                  filteredGroups.map((group) => {
+                    // اگر یک آیتم بیشتر داشت، از CarGroupCard استفاده کن
+                    if (group.cars.length > 1) {
+                      return (
+                        // <CarGroupCard
+                        //   key={group.key}
+                        //   groupKey={group.key}
+                        //   cars={group.sortedCars}
+                        //   mainDomain={mainDomain}
+                        // />
+                        <>
+                          {group.cars.map((e) => {
+                            return (
+                              <CarCard2
+                                key={e.id}
+                                car={e}
+                                mainDomain={mainDomain}
+                              />
+                            );
+                          })}
+                        </>
+                      );
+                    }
+                    // وگرنه از CarCard معمولی
                     return (
-                      // <CarGroupCard
-                      //   key={group.key}
-                      //   groupKey={group.key}
-                      //   cars={group.sortedCars}
-                      //   mainDomain={mainDomain}
-                      // />
-                      <>
-                        {group.cars.map((e) => {
-                          return (
-                            <CarCard2
-                              key={e.id}
-                              car={e}
-                              mainDomain={mainDomain}
-                            />
-                          );
-                        })}
-                      </>
+                      <CarCard
+                        key={group.key}
+                        car={group.cars[0]}
+                        mainDomain={mainDomain}
+                      />
                     );
-                  }
-                  // وگرنه از CarCard معمولی
-                  return (
-                    <CarCard
-                      key={group.key}
-                      car={group.cars[0]}
-                      mainDomain={mainDomain}
-                    />
-                  );
-                })}
+                  })}
+              </div>
+
+              {/* Empty state */}
+              {filteredGroups.length === 0 && (
+                <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
+                  <FaCar className="text-gray-400 text-4xl mx-auto mb-4!" />
+                  <h3 className="text-xl font-bold text-gray-900 mb-2!">
+                    مدلی یافت نشد
+                  </h3>
+                  <p className="text-gray-600">
+                    در حال حاضر مدلی برای برند {carDetails.title} ثبت نشده است.
+                  </p>
+                </div>
+              )}
             </div>
 
-            {/* Empty state */}
-            {filteredGroups.length === 0 && (
-              <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
-                <FaCar className="text-gray-400 text-4xl mx-auto mb-4!" />
-                <h3 className="text-xl font-bold text-gray-900 mb-2!">
-                  مدلی یافت نشد
-                </h3>
-                <p className="text-gray-600">
-                  در حال حاضر مدلی برای برند {carDetails.title} ثبت نشده است.
-                </p>
-              </div>
-            )}
           </div>
-
-          {/* سایدبار - sticky از بالا */}
-          <aside className="lg:w-1/4 w-full lg:sticky lg:top-20 lg:self-start">
-            <SideBarCars banner={banner} />
-          </aside>
+            {/* سایدبار - sticky از بالا */}
+            <aside className="lg:w-1/4 w-full lg:sticky lg:top-20 lg:self-start">
+              <SideBarCars banner={banner} />
+            </aside>
         </div>
       </div>
 

@@ -233,9 +233,9 @@ function CardDic({
 
   return (
     <>
-      <div className="min-h-screen bg-[#f4f4f4]!">
-        <div className="p-4 mx-auto">
-          <div className="flex flex-col lg:flex-row gap-4 relative">
+      <div className="min-h-screen bg-[#f4f4f4] py-8">
+        <div className="mx-auto px-4">
+          <div className="flex flex-col lg:flex-row gap-6 relative items-start">
             {/* محتوای اصلی - 3/4 صفحه */}
             <div
               ref={mainBoxRef}

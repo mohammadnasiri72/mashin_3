@@ -222,71 +222,77 @@ function Podcast({
 
   return (
     <>
-      <div className="flex flex-wrap lg:flex-nowrap relative mx-auto py-2 bg-[#f4f4f4] gap-2">
-        {/* محتوای اصلی */}
-        <div
-          ref={mainBoxRef}
-          className={`
+      <div className="min-h-screen bg-[#f4f4f4] py-8">
+        <div className="mx-auto px-4">
+          <div className="flex flex-col lg:flex-row gap-6 relative items-start">
+            {/* محتوای اصلی */}
+            <div
+              ref={mainBoxRef}
+              className={`
             lg:w-3/4 w-full transition-all duration-300
             ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
           `}
-        >
-          <div className="bg-white rounded-2xl px-4 shadow-lg border border-gray-100">
-            {/* نمایش اطلاعات صفحه */}
-            <div className="flex items-center justify-between flex-wrap gap-2 p-2">
-              <div className="flex items-center gap-3 flex-wrap">
-                <span className="text-sm text-gray-500">
-                  صفحه {toPersianNumbers(currentPage)} از{" "}
-                  {toPersianNumbers(totalPages)}
-                </span>
-                {error && <span className="text-xs text-red-500">{error}</span>}
+            >
+              <div className="bg-white rounded-2xl px-4 shadow-lg border border-gray-100">
+                {/* نمایش اطلاعات صفحه */}
+                <div className="flex items-center justify-between flex-wrap gap-2 p-2">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className="text-sm text-gray-500">
+                      صفحه {toPersianNumbers(currentPage)} از{" "}
+                      {toPersianNumbers(totalPages)}
+                    </span>
+                    {error && (
+                      <span className="text-xs text-red-500">{error}</span>
+                    )}
+                  </div>
+                  <span className="text-sm text-gray-500">
+                    {toPersianNumbers(totalItems)} پادکست
+                  </span>
+                </div>
+                {/* هدر صفحه */}
+                <div className="mb-4! text-center">
+                  <h2 className="whitespace-nowrap text-[#ce1a2a]! text-xl">
+                    {titleCategory
+                      ? `پادکست های ${titleCategory}`
+                      : " پادکست های بررسی خودرو"}
+                  </h2>
+                </div>
+                <BoxCatPodcasts podcastsCat={podcastsCat} />
+                {/* کامپوننت BoxPodcasts با props اضافی */}
+                <BoxPodcasts
+                  podcasts={podcasts}
+                  titleCategory={titleCategory}
+                  hasMore={hasMore}
+                  loading={loading}
+                  loaderRef={loaderRef}
+                  isManualPage={isManualPage}
+                  showPagination={showPagination}
+                />
+
+                {/* پیجینیشن */}
+                {totalPages > 1 && (
+                  <CustomPagination
+                    total={totalItems}
+                    pageSize={15}
+                    currentPage={currentPage}
+                    showPagination={showPagination}
+                  />
+                )}
               </div>
-              <span className="text-sm text-gray-500">
-                {toPersianNumbers(totalItems)} پادکست
-              </span>
             </div>
-            {/* هدر صفحه */}
-            <div className="mb-4! text-center">
-              <h2 className="whitespace-nowrap text-[#ce1a2a]! text-xl">
-                {titleCategory
-                  ? `پادکست های ${titleCategory}`
-                  : " پادکست های بررسی خودرو"}
-              </h2>
-            </div>
-            <BoxCatPodcasts podcastsCat={podcastsCat} />
-            {/* کامپوننت BoxPodcasts با props اضافی */}
-            <BoxPodcasts
-              podcasts={podcasts}
-              titleCategory={titleCategory}
-              hasMore={hasMore}
-              loading={loading}
-              loaderRef={loaderRef}
-              isManualPage={isManualPage}
-              showPagination={showPagination}
-            />
 
-            {/* پیجینیشن */}
-            {totalPages > 1 && (
-              <CustomPagination
-                total={totalItems}
-                pageSize={15}
-                currentPage={currentPage}
-                showPagination={showPagination}
-              />
-            )}
-          </div>
-        </div>
-
-        {/* سایدبار */}
-        <aside
-          ref={sidebarRef}
-          className={`
+            {/* سایدبار */}
+            <aside
+              ref={sidebarRef}
+              className={`
             lg:w-1/4 w-full transition-all duration-300
             ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
           `}
-        >
-          <SidebarPodcasts popularNews={popularNews} banner={banner} />
-        </aside>
+            >
+              <SidebarPodcasts popularNews={popularNews} banner={banner} />
+            </aside>
+          </div>
+        </div>
       </div>
 
       <style jsx global>{`

@@ -14,9 +14,7 @@ function SidebarAutoServices({
 }) {
   return (
     <>
-      <section className="bg-[#f4f4f4]">
-        <div className="mx-auto pl-4 lg:pr-2 pr-4">
-          <div className="space-y-6">
+      <div className="space-y-6">
             {/* جدیدترین خودروها */}
             <SideBarListItems
               itemsList={lastCars}
@@ -35,8 +33,6 @@ function SidebarAutoServices({
             {/* آمار بازار */}
             <MarketStats />
           </div>
-        </div>
-      </section>
     </>
   );
 }
