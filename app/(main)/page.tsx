@@ -170,13 +170,13 @@ export default async function Home() {
     ItemsCategory[],
   ] = await Promise.all([
     getItem({ TypeId: 6, langCode: "fa" }),
-    getItem({ TypeId: 5, langCode: "fa", PageIndex: 1, PageSize: 7 ,FullData: true,}),
+    getItem({ TypeId: 5, langCode: "fa", PageIndex: 1, PageSize: 6 ,FullData: true,}),
     getItem({
       TypeId: 5,
       langCode: "fa",
       CategoryIdArray: "6323",
       PageIndex: 1,
-      PageSize: 7,
+      PageSize: 1,
     }),
    
     getItem({
