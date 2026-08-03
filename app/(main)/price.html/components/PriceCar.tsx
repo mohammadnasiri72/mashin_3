@@ -331,18 +331,7 @@ const MobilePriceCard = ({ item }: { item: Prices }) => {
               }}
             >
               {item.price1 ? item.price1.toLocaleString("fa-IR") : "---"}
-              <Typography
-                component="span"
-                variant="caption"
-                sx={{
-                  mr: 0.5,
-                  color: "#6b7280",
-                  fontWeight: 400,
-                  fontSize: "0.6rem",
-                }}
-              >
-                تومان
-              </Typography>
+              
             </Typography>
           </Box>
 
@@ -377,18 +366,7 @@ const MobilePriceCard = ({ item }: { item: Prices }) => {
               }}
             >
               {item.price2 ? item.price2.toLocaleString("fa-IR") : "---"}
-              <Typography
-                component="span"
-                variant="caption"
-                sx={{
-                  mr: 0.5,
-                  color: "#6b7280",
-                  fontWeight: 400,
-                  fontSize: "0.6rem",
-                }}
-              >
-                تومان
-              </Typography>
+             
             </Typography>
           </Box>
 
@@ -657,9 +635,7 @@ const DesktopPriceTable = ({
                     itemScope
                     itemType="https://schema.org/Offer"
                   >
-                    <span itemProp="priceCurrency" content="IRR">
-                      تومان
-                    </span>
+                    
                     <span itemProp="price" content={String(item.price1)}>
                       {item.price1 ? item.price1.toLocaleString("fa-IR") : "---"}
                     </span>
@@ -681,9 +657,7 @@ const DesktopPriceTable = ({
                     itemScope
                     itemType="https://schema.org/Offer"
                   >
-                    <span itemProp="priceCurrency" content="IRR">
-                      تومان
-                    </span>
+                   
                     <span itemProp="price" content={String(item.price2)}>
                       {item.price2 ? item.price2.toLocaleString("fa-IR") : "---"}
                     </span>

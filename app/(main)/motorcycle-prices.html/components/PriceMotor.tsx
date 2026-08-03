@@ -142,7 +142,6 @@ const CustomTableSortLabel = ({
 }) => {
   const [hover, setHover] = useState(false);
 
-  // تعیین متن Tooltip بر اساس وضعیت فعلی
   const getTooltipText = () => {
     if (!active || direction === undefined) {
       return "مرتب‌سازی صعودی";
@@ -153,7 +152,6 @@ const CustomTableSortLabel = ({
     return "حذف مرتب‌سازی";
   };
 
-  // تعیین آیکون مناسب
   const getIcon = () => {
     if (!active || direction === undefined) {
       return <MdSwapVert style={{ fontSize: 18, opacity: 0.5 }} />;
@@ -227,8 +225,6 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 // Mobile Price Card Component
 const MobilePriceCard = ({ item }: { item: Prices }) => {
-  const theme = useTheme();
-
   return (
     <StyledCard>
       <CardContent sx={{ p: 1.5 }}>
@@ -405,7 +401,7 @@ const MobilePriceCard = ({ item }: { item: Prices }) => {
   );
 };
 
-// Desktop Table Component
+// Desktop Table Component با عرض ثابت ستون‌ها + داده‌های ساختاریافته
 const DesktopPriceTable = ({
   items,
   brandName,
@@ -413,11 +409,9 @@ const DesktopPriceTable = ({
   items: Prices[];
   brandName: string;
 }) => {
-  const theme = useTheme();
   const [order, setOrder] = useState<Order>(undefined);
   const [orderBy, setOrderBy] = useState<keyof Prices>("title");
 
-  // تابع مدیریت مرتب‌سازی
   const handleSort = (property: keyof Prices) => {
     const isAsc = orderBy === property && order === "asc";
     const isDesc = orderBy === property && order === "desc";
@@ -432,7 +426,6 @@ const DesktopPriceTable = ({
     setOrderBy(property);
   };
 
-  // مرتب‌سازی داده‌ها
   const sortedItems = useMemo(() => {
     if (!order) return items;
     const comparator = getComparator(order, orderBy);
@@ -473,8 +466,29 @@ const DesktopPriceTable = ({
         />
       </BrandHeader>
 
-      <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 0 }}>
-        <Table size="small">
+      <TableContainer
+        component={Paper}
+        elevation={0}
+        sx={{
+          borderRadius: 0,
+          overflowX: "auto",
+        }}
+      >
+        <Table
+          size="small"
+          sx={{
+            tableLayout: "fixed",
+            width: "100%",
+            minWidth: "600px",
+          }}
+        >
+          {/* تنظیم عرض دقیق ستون‌ها با colgroup */}
+          <colgroup>
+            <col style={{ width: "38%" }} />
+            <col style={{ width: "32%" }} />
+            <col style={{ width: "30%" }} />
+          </colgroup>
+
           <TableHead>
             <TableRow sx={{ backgroundColor: "#f8fafc" }}>
               <TableCell
@@ -483,6 +497,7 @@ const DesktopPriceTable = ({
                   fontWeight: 600,
                   fontSize: 14,
                   py: 1.5,
+                  px: 1,
                 }}
               >
                 <CustomTableSortLabel
@@ -499,6 +514,7 @@ const DesktopPriceTable = ({
                   fontWeight: 600,
                   fontSize: 14,
                   py: 1.5,
+                  px: 1,
                 }}
               >
                 <CustomTableSortLabel
@@ -515,6 +531,7 @@ const DesktopPriceTable = ({
                   fontWeight: 600,
                   fontSize: 14,
                   py: 1.5,
+                  px: 1,
                 }}
               >
                 <CustomTableSortLabel
@@ -531,6 +548,8 @@ const DesktopPriceTable = ({
             {sortedItems.map((item) => (
               <TableRow
                 key={item.id}
+                itemScope
+                itemType="https://schema.org/Product"
                 sx={{
                   "&:hover": {
                     backgroundColor: PRIMARY_LIGHT,
@@ -540,26 +559,44 @@ const DesktopPriceTable = ({
                   },
                 }}
               >
+                {/* ستون مدل موتورسیکلت */}
                 <TableCell
                   align="center"
                   sx={{
                     fontSize: 14,
                     fontWeight: 500,
+                    px: 1,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  {item.title}
+                  <span itemProp="name">{item.title}</span>
                 </TableCell>
+
+                {/* ستون قیمت */}
                 <TableCell
                   align="center"
                   sx={{
                     fontSize: 16,
                     fontWeight: "bold",
                     color: "#374151",
+                    px: 1,
                   }}
                 >
-                  {item.price2 ? item.price2.toLocaleString("fa-IR") : "---"}
+                  <span
+                    itemProp="offers"
+                    itemScope
+                    itemType="https://schema.org/Offer"
+                  >
+                    <span itemProp="price" content={String(item.price2)}>
+                      {item.price2 ? item.price2.toLocaleString("fa-IR") : "---"}
+                    </span>
+                  </span>
                 </TableCell>
-                <TableCell align="center">
+
+                {/* ستون تغییر قیمت */}
+                <TableCell align="center" sx={{ px: 1 }}>
                   <Box
                     sx={{
                       display: "inline-flex",
@@ -580,9 +617,11 @@ const DesktopPriceTable = ({
                     ) : item.change < 0 ? (
                       <FaCaretDown style={{ fontSize: 20 }} />
                     ) : null}
-                    {item.change !== 0
-                      ? Math.abs(item.change).toLocaleString("fa-IR")
-                      : "---"}
+                    <span itemProp="priceChange">
+                      {item.change !== 0
+                        ? Math.abs(item.change).toLocaleString("fa-IR")
+                        : "---"}
+                    </span>
                   </Box>
                 </TableCell>
               </TableRow>
@@ -636,20 +675,15 @@ function PriceMotor({
     setSelectedCategory(0);
   }, [type]);
 
-  // const sortedBrands = useMemo(() => {
-  //   return [...brands].sort((a, b) => a.title.localeCompare(b.title, "fa"));
-  // }, [brands]);
   const sortedBrands = useMemo(() => {
     return [...brands].sort((a, b) => {
-      // اولویت اول: priority (اگر وجود نداشت 0 در نظر گرفته می‌شود)
       const priorityA = a.priority ?? 0;
       const priorityB = b.priority ?? 0;
 
       if (priorityA !== priorityB) {
-        return priorityA - priorityB; // مرتب‌سازی صعودی بر اساس priority
+        return priorityA - priorityB;
       }
 
-      // اگر priority مساوی بود، بر اساس حروف الفبا
       return a.title.localeCompare(b.title, "fa");
     });
   }, [brands]);
@@ -906,7 +940,7 @@ function PriceMotor({
                 const priorityB = brandB?.priority ?? 0;
 
                 if (priorityA !== priorityB) {
-                  return priorityB - priorityA; // نزولی (اعداد بزرگتر اولویت بالاتر)
+                  return priorityB - priorityA;
                 }
 
                 const nameA = brandA?.title ?? "";
@@ -917,7 +951,6 @@ function PriceMotor({
                 const brandName = getBrandNameById(parseInt(brandId));
                 return isMobile ? (
                   <Box key={brandId} sx={{ mb: 3 }}>
-                    {/* هدر برند با ارتفاع کمتر */}
                     <Box
                       sx={{
                         display: "flex",
