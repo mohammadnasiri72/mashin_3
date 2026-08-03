@@ -9,6 +9,7 @@ import {
   MessageOutlined,
   PhoneOutlined,
   SendOutlined,
+  CheckCircleOutlined,
 } from "@ant-design/icons";
 import { Button, Card, Input } from "antd";
 import dynamic from "next/dynamic";
@@ -19,7 +20,7 @@ import { MdMail } from "react-icons/md";
 import { useSelector } from "react-redux";
 
 const MapContainer = dynamic(() => import("@/app/components/MapContainer"), {
-  ssr: false, // غیرفعال کردن SSR برای این کامپوننت
+  ssr: false,
   loading: () => (
     <div className="w-full h-96 flex items-center justify-center bg-gray-100 rounded-lg">
       <div className="text-center">
@@ -71,11 +72,11 @@ function ContactUsForm({
     },
   ];
 
-
   const phoneRegex = /^09[0|1|2|3|9][0-9]{8}$/;
   const patternEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   const [loadingForm, setLoadingForm] = useState<boolean>(false);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
   const [formData, setFormData] = useState<{
     langCode: string;
@@ -135,6 +136,8 @@ function ContactUsForm({
         icon: "success",
         title: "پیام با موفقیت ارسال شد",
       });
+
+      setIsSubmitted(true);
     } catch (error: any) {
       Toast.fire({
         icon: "error",
@@ -143,6 +146,23 @@ function ContactUsForm({
     } finally {
       setLoadingForm(false);
     }
+  };
+
+  const handleResetForm = () => {
+    setIsSubmitted(false);
+    setFormData({
+      langCode: "fa",
+      nameFamily: "",
+      email: "",
+      tel: "",
+      message: "",
+    });
+    setFormErrors({
+      nameFamily: false,
+      tel: false,
+      email: false,
+      message: false,
+    });
   };
 
   return (
@@ -169,7 +189,7 @@ function ContactUsForm({
               <MessageOutlined className="text-white! text-xl" />
             </div>
             <div>
-              <div className="flex items-center">
+              <div className="flex items-center flex-wrap gap-1">
                 <h2 className="font-semibold text-gray-700 pl-1">
                   پیام در شبکه‌های اجتماعی
                 </h2>
@@ -198,174 +218,197 @@ function ContactUsForm({
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">
-        {/* فرم تماس */}
+        {/* فرم تماس یا پیغام موفقیت */}
         <Card
           title={
             <div className="flex items-center space-x-2 space-x-reverse gap-2">
               <div className="bg-[#ce1a2a] p-3 rounded-full w-8 h-8 flex justify-center items-center">
-                <SendOutlined className="text-white!" />
+                {isSubmitted ? (
+                  <CheckCircleOutlined className="text-white!" />
+                ) : (
+                  <SendOutlined className="text-white!" />
+                )}
               </div>
-              <span className="text-gray-800">فرم ارتباط با ما</span>
+              <span className="text-gray-800">
+                {isSubmitted ? "پیام با موفقیت ارسال شد" : "فرم ارتباط با ما"}
+              </span>
             </div>
           }
           className="shadow-lg border-t-4 border-t-[#ce1a2a]"
         >
-          <div className="flex flex-col gap-5">
-            <div className="flex flex-col">
-              <div className="flex items-center gap-0.5">
-                <span className="text-red-600">*</span>
-                <span>نام</span>
+          {isSubmitted ? (
+            // صفحه موفقیت ساده
+            <div className="flex flex-col items-center justify-center py-20 px-4">
+              <div className="bg-green-100 rounded-full p-4 mb-6">
+                <CheckCircleOutlined className="text-5xl text-green-600" />
               </div>
-              <Input
-                value={formData.nameFamily}
-                onChange={(e) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    nameFamily: e.target.value,
-                  }));
-                  setFormErrors((prev) => ({
-                    ...prev,
-                    nameFamily: false,
-                  }));
-                }}
-                prefix={<FaUser className="text-gray-400 ml-2" />}
-                placeholder="نام خود را وارد کنید"
-                size="large"
-                className={`rounded-lg ${
-                  formErrors.nameFamily ? "border-red-500!" : "border-gray-300!"
-                }`}
-              />
-              {formErrors.nameFamily && (
-                <div className="text-red-600 text-xs">
-                  لطفاً نام خود را وارد کنید
+              <h3 className="text-2xl font-bold text-gray-800 mb-3 text-center">
+                پیام شما با موفقیت ارسال شد!
+              </h3>
+              <p className="text-gray-600 text-center text-base">
+                پیام شما دریافت شد و در اسرع وقت بررسی خواهد شد.
+              </p>
+            </div>
+          ) : (
+            // فرم
+            <div className="flex flex-col gap-5">
+              <div className="flex flex-col">
+                <div className="flex items-center gap-0.5">
+                  <span className="text-red-600">*</span>
+                  <span>نام</span>
                 </div>
-              )}
-            </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-0.5">
-                <span className="text-red-600">*</span>
-                <span>موبایل</span>
+                <Input
+                  value={formData.nameFamily}
+                  onChange={(e) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      nameFamily: e.target.value,
+                    }));
+                    setFormErrors((prev) => ({
+                      ...prev,
+                      nameFamily: false,
+                    }));
+                  }}
+                  prefix={<FaUser className="text-gray-400 ml-2" />}
+                  placeholder="نام خود را وارد کنید"
+                  size="large"
+                  className={`rounded-lg ${
+                    formErrors.nameFamily ? "border-red-500!" : "border-gray-300!"
+                  }`}
+                />
+                {formErrors.nameFamily && (
+                  <div className="text-red-600 text-xs">
+                    لطفاً نام خود را وارد کنید
+                  </div>
+                )}
               </div>
-
-              <Input
-                value={formData.tel}
-                onChange={(e) => {
-                  const value = toEnglishNumber(e.target.value).replace(
-                    /\D/g,
-                    "",
-                  );
-                  setFormData((prev) => ({
-                    ...prev,
-                    tel: value,
-                  }));
-                  setFormErrors((prev) => ({
-                    ...prev,
-                    tel: false,
-                  }));
-                }}
-                prefix={<FaMobile className="text-gray-400 ml-2" />}
-                placeholder="موبایل خود را وارد کنید"
-                size="large"
-                className={`rounded-lg ${
-                  formErrors.tel ? "border-red-500!" : "border-gray-300!"
-                }`}
-              />
-
-              {formErrors.tel && (
-                <>
-                  {formData.tel ? (
-                    <div className="text-red-600 text-xs">
-                      لطفاً موبایل خود را به درستی وارد کنید
-                    </div>
-                  ) : (
-                    <div className="text-red-600 text-xs">
-                      لطفاً موبایل خود را وارد کنید
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-
-            <div className="flex flex-col">
-              <div className="flex items-center gap-0.5">
-                <span>ایمیل (اختیاری)</span>
-              </div>
-
-              <Input
-                value={formData.email}
-                onChange={(e) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    email: e.target.value,
-                  }));
-                  setFormErrors((prev) => ({
-                    ...prev,
-                    email: false,
-                  }));
-                }}
-                prefix={<MdMail className="text-gray-400 ml-2" />}
-                placeholder="ایمیل خود را وارد کنید"
-                size="large"
-                className={`rounded-lg ${
-                  formErrors.email ? "border-red-500!" : "border-gray-300!"
-                }`}
-              />
-
-              {formErrors.email && (
-                <div className="text-red-600 text-xs">
-                  لطفاً ایمیل خود را به درستی وارد کنید
+              <div className="flex flex-col">
+                <div className="flex items-center gap-0.5">
+                  <span className="text-red-600">*</span>
+                  <span>موبایل</span>
                 </div>
-              )}
-            </div>
 
-            <div className="flex flex-col">
-              <div className="flex items-center gap-0.5">
-                <span className="text-red-600">*</span>
-                <span>متن پیام</span>
+                <Input
+                  value={formData.tel}
+                  onChange={(e) => {
+                    const value = toEnglishNumber(e.target.value).replace(
+                      /\D/g,
+                      "",
+                    );
+                    setFormData((prev) => ({
+                      ...prev,
+                      tel: value,
+                    }));
+                    setFormErrors((prev) => ({
+                      ...prev,
+                      tel: false,
+                    }));
+                  }}
+                  prefix={<FaMobile className="text-gray-400 ml-2" />}
+                  placeholder="موبایل خود را وارد کنید"
+                  size="large"
+                  className={`rounded-lg ${
+                    formErrors.tel ? "border-red-500!" : "border-gray-300!"
+                  }`}
+                />
+
+                {formErrors.tel && (
+                  <>
+                    {formData.tel ? (
+                      <div className="text-red-600 text-xs">
+                        لطفاً موبایل خود را به درستی وارد کنید
+                      </div>
+                    ) : (
+                      <div className="text-red-600 text-xs">
+                        لطفاً موبایل خود را وارد کنید
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
-              <TextArea
-                rows={6}
-                value={formData.message}
-                onChange={(e) => {
-                  setFormData((prev) => ({
-                    ...prev,
-                    message: e.target.value,
-                  }));
-                  setFormErrors((prev) => ({
-                    ...prev,
-                    message: false,
-                  }));
-                }}
-                placeholder="متن پیام خود را اینجا بنویسید..."
-                size="large"
-                className={`rounded-lg ${
-                  formErrors.message ? "border-red-500!" : "border-gray-300!"
-                }`}
-              />
-              {formErrors.message && (
-                <div className="text-red-600 text-xs">
-                  متن پیام نمیتواند خالی باشد
-                </div>
-              )}
-            </div>
 
-            <Button
-              aria-label="ارسال پیام"
-              onClick={handleSubmit}
-              type="primary"
-              htmlType="submit"
-              size="large"
-              className="w-full rounded-lg hover:scale-105 transition-transform"
-              style={{
-                backgroundColor: "#ce1a2a",
-                borderColor: "#ce1a2a",
-                height: "48px",
-              }}
-            >
-              {loadingForm ? "در حال ارسال..." : "ارسال پیام"}
-            </Button>
-          </div>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-0.5">
+                  <span>ایمیل (اختیاری)</span>
+                </div>
+
+                <Input
+                  value={formData.email}
+                  onChange={(e) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }));
+                    setFormErrors((prev) => ({
+                      ...prev,
+                      email: false,
+                    }));
+                  }}
+                  prefix={<MdMail className="text-gray-400 ml-2" />}
+                  placeholder="ایمیل خود را وارد کنید"
+                  size="large"
+                  className={`rounded-lg ${
+                    formErrors.email ? "border-red-500!" : "border-gray-300!"
+                  }`}
+                />
+
+                {formErrors.email && (
+                  <div className="text-red-600 text-xs">
+                    لطفاً ایمیل خود را به درستی وارد کنید
+                  </div>
+                )}
+              </div>
+
+              <div className="flex flex-col">
+                <div className="flex items-center gap-0.5">
+                  <span className="text-red-600">*</span>
+                  <span>متن پیام</span>
+                </div>
+                <TextArea
+                  rows={6}
+                  value={formData.message}
+                  onChange={(e) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      message: e.target.value,
+                    }));
+                    setFormErrors((prev) => ({
+                      ...prev,
+                      message: false,
+                    }));
+                  }}
+                  placeholder="متن پیام خود را اینجا بنویسید..."
+                  size="large"
+                  className={`rounded-lg ${
+                    formErrors.message ? "border-red-500!" : "border-gray-300!"
+                  }`}
+                />
+                {formErrors.message && (
+                  <div className="text-red-600 text-xs">
+                    متن پیام نمیتواند خالی باشد
+                  </div>
+                )}
+              </div>
+
+              <Button
+                aria-label="ارسال پیام"
+                onClick={handleSubmit}
+                type="primary"
+                htmlType="submit"
+                size="large"
+                className="w-full rounded-lg hover:scale-105 transition-transform"
+                style={{
+                  backgroundColor: "#ce1a2a",
+                  borderColor: "#ce1a2a",
+                  height: "48px",
+                }}
+              >
+                {loadingForm ? "در حال ارسال..." : "ارسال پیام"}
+              </Button>
+            </div>
+          )}
         </Card>
+
         {/* نقشه */}
         <Card
           title={

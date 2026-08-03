@@ -2,15 +2,18 @@ import { usePathname, useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Pagination } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { toPersianNumbers } from "@/utils/func";
 
 const CustomPagination = ({
   total,
   pageSize = 15,
   currentPage = 1,
+  showPagination=true
 }: {
   total: number;
   pageSize?: number;
   currentPage?: number;
+  showPagination?:boolean
 }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -50,15 +53,15 @@ const CustomPagination = ({
           className={`
             ant-pagination-item-link
             inline-flex items-center justify-center
-            min-w-[32px] h-[32px] px-2
+            min-w-8 h-8 px-2
             rounded-lg border border-gray-200
             text-gray-600 bg-white
             transition-all duration-300
             hover:border-red-600 hover:text-red-600
-            ${isActive ? '!bg-red-600 !border-red-600 !text-white hover:!text-white' : ''}
+            ${isActive ? 'bg-red-600! border-red-600! text-white! hover:text-white!' : ''}
           `}
         >
-          {page}
+          {toPersianNumbers(page)}
         </Link>
       );
     }
@@ -77,7 +80,7 @@ const CustomPagination = ({
           }}
           className={`
             inline-flex items-center justify-center
-            w-[32px] h-[32px]
+            w-8 h-8
             rounded-lg border border-gray-200
             bg-white
             transition-all duration-300
@@ -106,7 +109,7 @@ const CustomPagination = ({
           }}
           className={`
             inline-flex items-center justify-center
-            w-[32px] h-[32px]
+            w-8 h-8
             rounded-lg border border-gray-200
             bg-white
             transition-all duration-300
@@ -133,7 +136,7 @@ const CustomPagination = ({
           }}
           className="
             inline-flex items-center justify-center
-            w-[32px] h-[32px]
+            w-8 h-8
             rounded-lg  border-gray-200
             bg-white
             text-gray-500!
@@ -158,7 +161,7 @@ const CustomPagination = ({
           }}
           className="
             inline-flex items-center justify-center
-            w-[32px] h-[32px]
+            w-8 h-8
             rounded-lg border-gray-200
             bg-white!
             text-gray-500!
@@ -175,7 +178,7 @@ const CustomPagination = ({
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-3 px-2 py-4 bg-white rounded-lg shadow-sm">
+    <div className={`flex flex-col md:flex-row items-center justify-between gap-4 mt-3 px-2 py-4 bg-white rounded-lg shadow-sm ${showPagination ? '':'opacity-0 invisible'}`}>
       {/* اطلاعات صفحه */}
       <div className="text-sm text-gray-600">
         نمایش{" "}

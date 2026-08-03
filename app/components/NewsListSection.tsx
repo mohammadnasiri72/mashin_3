@@ -14,7 +14,7 @@ const NewsListSection = ({ news }: { news: Items[] }) => {
             <Link href={"/fa/news/اخبار-خودرو.html"}>
               <h2
                 id="news-list-title"
-                className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]"
+                className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 sm:text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]"
               >
                 لیست اخبار
               </h2>
@@ -52,7 +52,7 @@ const NewsListSection = ({ news }: { news: Items[] }) => {
                   <div className="flex-1">
                     <div className="flex flex-col justify-between items-start w-full h-full">
                       <div>
-                        <h3 className="font-bold! text-[#222]! mb-2! line-clamp-2 text-lg group-hover:text-white! duration-300">
+                        <h3 className="font-bold! text-[#222]! mb-2! line-clamp-2 sm:text-lg group-hover:text-white! duration-300">
                           {item.title}
                         </h3>
                         {(item.summary || item.body) && (

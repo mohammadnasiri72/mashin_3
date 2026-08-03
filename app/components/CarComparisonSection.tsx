@@ -137,13 +137,13 @@ const CarComparisonSection = ({
     <section className="py-3" aria-label="مقایسه خودرو">
       <div className="mx-auto">
         {/* عنوان اصلی */}
-        <h3 className="text-center text-xl text-[#292929]! font-bold! mb-4!">
+        <h3 className="text-center sm:text-xl text-[#292929]! font-bold! mb-4!">
           مقایسه خودروهای بازار
         </h3>
 
         {/* بخش انتخاب خودروها */}
         <div className="sm:px-0 px-5">
-          <div className="w-full md:w-10/12 bg-[#ce1a2a] px-6 pt-6 pb-[350px] mx-auto rounded-2xl mb-8!">
+          <div className="w-full md:w-10/12 bg-[#ce1a2a] px-6 pt-6 pb-87.5 mx-auto rounded-2xl mb-8!">
             <div className="flex flex-col lg:flex-row gap-6">
               {/* خودرو اول - کد قبلی همونطور هست */}
               <div className="w-full lg:w-2/5">

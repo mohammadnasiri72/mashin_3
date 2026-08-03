@@ -22,9 +22,7 @@ export async function generateMetadata() {
       ? dataPage.seoInfo?.seoKeywords
       : dataPage.seoKeywords;
     const metadataBase = new URL(mainDomainOld);
-    const seoUrl = dataPage?.seoUrl
-      ? `${mainDomainOld}${dataPage?.seoUrl}`
-      : dataPage?.url
+   const seoUrl = dataPage?.url
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
@@ -59,13 +57,13 @@ async function pagePodcast({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const searchParam = await searchParams;
-  const page = Number(searchParam.page);
+  const page = Number(searchParam.page) || 1;
   const term = String(searchParam.term);
 
   const podcasts: Items[] = await getItem({
     TypeId: 1047,
     langCode: "fa",
-    PageIndex: page || 1,
+     PageIndex: page,
     ...(term && term !== "undefined" && { Term: term }),
     PageSize: 15,
   });
@@ -100,7 +98,7 @@ async function pagePodcast({
   return (
     <>
       {podcastDetails && (
-        <div className="mb-3!">
+        <div className="">
           <BreadcrumbCategory
             breadcrumb={podcastDetails.breadcrumb}
             title={podcastDetails.title}

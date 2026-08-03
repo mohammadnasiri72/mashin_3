@@ -420,7 +420,7 @@ const MobilePriceCard = ({ item }: { item: Prices }) => {
                 gap: 0.5,
                 color:
                   item.change > 0
-                    ? "#16a34a"
+                    ? "rgb(5, 58, 0)"
                     : item.change < 0
                       ? "#dc2626"
                       : "#9ca3af",
@@ -450,7 +450,7 @@ const MobilePriceCard = ({ item }: { item: Prices }) => {
   );
 };
 
-// Desktop Table Component با دو ستون قیمت
+// Desktop Table Component با دو ستون قیمت و عرض ثابت + داده‌های ساختاریافته
 const DesktopPriceTable = ({
   items,
   brandName,
@@ -500,7 +500,7 @@ const DesktopPriceTable = ({
           >
             <FaCar style={{ color: PRIMARY_COLOR, fontSize: 16 }} />
           </Box>
-          <Typography variant="h6" fontWeight="bold">
+          <Typography variant="body1" fontWeight="bold">
             {brandName}
           </Typography>
         </Box>
@@ -516,8 +516,30 @@ const DesktopPriceTable = ({
         />
       </BrandHeader>
 
-      <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 0 }}>
-        <Table size="small">
+      <TableContainer
+        component={Paper}
+        elevation={0}
+        sx={{
+          borderRadius: 0,
+          overflowX: "auto",
+        }}
+      >
+        <Table
+          size="small"
+          sx={{
+            tableLayout: "fixed",
+            width: "100%",
+            minWidth: "700px",
+          }}
+        >
+          {/* تنظیم عرض دقیق ستون‌ها با colgroup */}
+          <colgroup>
+            <col style={{ width: "35%" }} />
+            <col style={{ width: "22%" }} />
+            <col style={{ width: "22%" }} />
+            <col style={{ width: "21%" }} />
+          </colgroup>
+
           <TableHead>
             <TableRow sx={{ backgroundColor: "#f8fafc" }}>
               <TableCell
@@ -526,6 +548,7 @@ const DesktopPriceTable = ({
                   fontWeight: 600,
                   fontSize: 14,
                   py: 1.5,
+                  px: 1,
                 }}
               >
                 <CustomTableSortLabel
@@ -542,6 +565,7 @@ const DesktopPriceTable = ({
                   fontWeight: 600,
                   fontSize: 14,
                   py: 1.5,
+                  px: 1,
                 }}
               >
                 <CustomTableSortLabel
@@ -558,6 +582,7 @@ const DesktopPriceTable = ({
                   fontWeight: 600,
                   fontSize: 14,
                   py: 1.5,
+                  px: 1,
                 }}
               >
                 <CustomTableSortLabel
@@ -574,6 +599,7 @@ const DesktopPriceTable = ({
                   fontWeight: 600,
                   fontSize: 14,
                   py: 1.5,
+                  px: 1,
                 }}
               >
                 <CustomTableSortLabel
@@ -590,6 +616,8 @@ const DesktopPriceTable = ({
             {sortedItems.map((item) => (
               <TableRow
                 key={item.id}
+                itemScope
+                itemType="https://schema.org/Product"
                 sx={{
                   "&:hover": {
                     backgroundColor: PRIMARY_LIGHT,
@@ -599,36 +627,71 @@ const DesktopPriceTable = ({
                   },
                 }}
               >
+                {/* ستون مدل خودرو */}
                 <TableCell
                   align="center"
                   sx={{
                     fontSize: 14,
                     fontWeight: 500,
+                    px: 1,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  {item.title}
+                  <span itemProp="name">{item.title}</span>
                 </TableCell>
+
+                {/* ستون قیمت بازار */}
                 <TableCell
                   align="center"
                   sx={{
                     fontSize: 16,
                     fontWeight: "bold",
                     color: "#374151",
+                    px: 1,
                   }}
                 >
-                  {item.price1 ? item.price1.toLocaleString("fa-IR") : "---"}
+                  <span
+                    itemProp="offers"
+                    itemScope
+                    itemType="https://schema.org/Offer"
+                  >
+                    <span itemProp="priceCurrency" content="IRR">
+                      تومان
+                    </span>
+                    <span itemProp="price" content={String(item.price1)}>
+                      {item.price1 ? item.price1.toLocaleString("fa-IR") : "---"}
+                    </span>
+                  </span>
                 </TableCell>
+
+                {/* ستون قیمت نمایندگی */}
                 <TableCell
                   align="center"
                   sx={{
                     fontSize: 16,
                     fontWeight: "bold",
                     color: "#374151",
+                    px: 1,
                   }}
                 >
-                  {item.price2 ? item.price2.toLocaleString("fa-IR") : "---"}
+                  <span
+                    itemProp="offers"
+                    itemScope
+                    itemType="https://schema.org/Offer"
+                  >
+                    <span itemProp="priceCurrency" content="IRR">
+                      تومان
+                    </span>
+                    <span itemProp="price" content={String(item.price2)}>
+                      {item.price2 ? item.price2.toLocaleString("fa-IR") : "---"}
+                    </span>
+                  </span>
                 </TableCell>
-                <TableCell align="center">
+
+                {/* ستون تغییر قیمت */}
+                <TableCell align="center" sx={{ px: 1 }}>
                   <Box
                     sx={{
                       display: "inline-flex",
@@ -636,7 +699,7 @@ const DesktopPriceTable = ({
                       gap: 0.5,
                       color:
                         item.change > 0
-                          ? "#16a34a"
+                          ? "rgb(5, 58, 0)"
                           : item.change < 0
                             ? "#dc2626"
                             : "#9ca3af",
@@ -649,9 +712,11 @@ const DesktopPriceTable = ({
                     ) : item.change < 0 ? (
                       <FaCaretDown style={{ fontSize: 20 }} />
                     ) : null}
-                    {item.change !== 0
-                      ? Math.abs(item.change).toLocaleString("fa-IR")
-                      : "---"}
+                    <span itemProp="priceChange">
+                      {item.change !== 0
+                        ? Math.abs(item.change).toLocaleString("fa-IR")
+                        : "---"}
+                    </span>
                   </Box>
                 </TableCell>
               </TableRow>
@@ -720,15 +785,13 @@ function PriceCar({
 
   const sortedBrands = useMemo(() => {
     return [...brands].sort((a, b) => {
-      // اولویت اول: priority (اگر وجود نداشت 0 در نظر گرفته می‌شود)
       const priorityA = a.priority ?? 0;
       const priorityB = b.priority ?? 0;
 
       if (priorityA !== priorityB) {
-        return priorityA - priorityB; // مرتب‌سازی صعودی بر اساس priority
+        return priorityA - priorityB;
       }
 
-      // اگر priority مساوی بود، بر اساس حروف الفبا
       return a.title.localeCompare(b.title, "fa");
     });
   }, [brands]);
@@ -983,7 +1046,7 @@ function PriceCar({
                 const priorityB = brandB?.priority ?? 0;
 
                 if (priorityA !== priorityB) {
-                  return priorityB - priorityA; // نزولی (اعداد بزرگتر اولویت بالاتر)
+                  return priorityB - priorityA;
                 }
 
                 const nameA = brandA?.title ?? "";

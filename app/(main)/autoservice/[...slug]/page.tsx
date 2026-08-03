@@ -30,9 +30,7 @@ export async function generateMetadata() {
 
     const metadataBase = new URL(mainDomainOld);
 
-    const seoUrl = dataPage?.seoUrl
-      ? `${mainDomainOld}${dataPage?.seoUrl}`
-      : dataPage?.url
+   const seoUrl = dataPage?.url
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
 

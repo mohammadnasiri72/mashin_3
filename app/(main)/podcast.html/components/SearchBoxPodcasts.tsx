@@ -2,7 +2,7 @@
 
 import { Button, Input, Space } from "antd";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 
 function SearchBoxPodcasts() {
@@ -11,9 +11,18 @@ function SearchBoxPodcasts() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
+  const termSearchparams = searchParams.get("term");
+  useEffect(() => {
+    if (termSearchparams) {
+      setTerm(termSearchparams);
+    }
+  }, [termSearchparams]);
+
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("term", term.toString());
+    // حذف page از پارامترها برای شروع از صفحه اول
+    params.delete("page");
     router.push(`${pathname}?${params.toString()}`, {
       scroll: false,
     });
@@ -29,7 +38,7 @@ function SearchBoxPodcasts() {
           onChange={(e) => {
             setTerm(e.target.value);
           }}
-          onPressEnter={handleSearch} // اضافه کردن این خط
+          onPressEnter={handleSearch}
         />
         <Button
           aria-label="جستجو"

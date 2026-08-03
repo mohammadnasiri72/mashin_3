@@ -2,13 +2,13 @@
 
 import CustomPagination from "@/app/components/CustomPagination";
 import { getCategory } from "@/services/Category/Category";
-import { createpublishCode, toPersianNumbers } from "@/utils/func";
+import { toPersianNumbers } from "@/utils/func";
 import { mainDomain } from "@/utils/mainDomain";
 import { Button } from "@mui/material";
 import { Select } from "antd";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { FaCar } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
 import SideBarSearchCars from "./SideBarSearchCars";
@@ -18,7 +18,7 @@ const { Option } = Select;
 function SearchCarsDetails({
   carBrands,
   carDetails,
-  carView,
+  carView: initialCarView,
   banner,
   segmentCars,
   initialtype,
@@ -52,8 +52,26 @@ function SearchCarsDetails({
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  // State برای infinite scroll
+  const [carView, setCarView] = useState<Items[]>(initialCarView || []);
+  const [currentPage, setCurrentPage] = useState<number>(
+    Number(searchParams.get("page")) || 1,
+  );
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [totalItems, setTotalItems] = useState<number>(
+    initialCarView?.[0]?.total || 0,
+  );
+  const [showPagination, setShowPagination] = useState<boolean>(false);
+  const [isManualPage, setIsManualPage] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const loaderRef = useRef<HTMLDivElement>(null);
+
+  const pageFromUrl = Number(searchParams.get("page")) || 1;
+  const MAX_INFINITE_PAGES = 10;
+
   // ✅ استفاده از useMemo برای بهینه‌سازی
-  const memoizedCarView = useMemo(() => carView, [carView]);
   const memoizedCarBrands = useMemo(() => carBrands, [carBrands]);
   const memoizedCarDetails = useMemo(() => carDetails, [carDetails]);
 
@@ -78,6 +96,163 @@ function SearchCarsDetails({
     }
   }, []);
 
+  // بررسی اینکه آیا کاربر دستی صفحه رو وارد کرده
+  useEffect(() => {
+    const hasPageParam = searchParams.has("page");
+    if (hasPageParam) {
+      setIsManualPage(true);
+      setShowPagination(true);
+      setHasMore(false);
+    } else {
+      setIsManualPage(false);
+      setShowPagination(false);
+      setHasMore(true);
+    }
+    setError(null);
+  }, [pageFromUrl, searchParams]);
+
+  // تنظیم مجدد داده‌ها
+  useEffect(() => {
+    setCarView(initialCarView || []);
+    setCurrentPage(pageFromUrl);
+    setTotalItems(initialCarView?.[0]?.total || 0);
+    setError(null);
+
+    if (pageFromUrl > 1) {
+      setShowPagination(true);
+      setHasMore(false);
+      setIsManualPage(true);
+    } else {
+      setShowPagination(false);
+      setHasMore(true);
+      setIsManualPage(false);
+    }
+  }, [initialCarView, pageFromUrl]);
+
+  // تابع بارگذاری صفحه بعد
+  const loadMore = useCallback(async () => {
+    if (loading || !hasMore || isManualPage) return;
+
+    const nextPage = currentPage + 1;
+    const pageSize = 20;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    if (nextPage > MAX_INFINITE_PAGES || nextPage >= totalPages) {
+      setHasMore(false);
+      setShowPagination(true);
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      const params = new URLSearchParams({
+        TypeId: "1042",
+        langCode: "fa",
+        PageIndex: nextPage.toString(),
+        PageSize: pageSize.toString(),
+        OrderBy: orderBy ? orderBy.toString() : "1",
+      });
+
+      if (modelId) {
+        params.append("CategoryIdArray", String(modelId));
+      } else if (brandId) {
+        params.append("CategoryIdArray", String(brandId));
+      }
+
+      if (typeId) {
+        params.append("FilterProps", `23166=${typeId}`);
+      }
+
+      const response = await fetch(`/api/search-cars?${params.toString()}`);
+
+      if (!response.ok) {
+        throw new Error(`خطا در دریافت داده: ${response.status}`);
+      }
+
+      const result = await response.json();
+
+      if (
+        result &&
+        result.data &&
+        Array.isArray(result.data) &&
+        result.data.length > 0
+      ) {
+        const existingIds = new Set(carView.map((item: Items) => item.id));
+        const newItems = result.data.filter(
+          (item: Items) => !existingIds.has(item.id),
+        );
+
+        if (newItems.length > 0) {
+          setCarView((prev) => [...prev, ...newItems]);
+          setCurrentPage(nextPage);
+        }
+
+        if (result.data.length < pageSize || nextPage >= totalPages) {
+          setHasMore(false);
+          if (totalPages > MAX_INFINITE_PAGES) {
+            setShowPagination(true);
+          }
+        }
+      } else {
+        setHasMore(false);
+        if (totalPages > MAX_INFINITE_PAGES) {
+          setShowPagination(true);
+        }
+      }
+    } catch (err) {
+      console.error("Error loading more cars:", err);
+      setError("خطا در بارگذاری خودروها. لطفاً مجدداً تلاش کنید.");
+      setHasMore(false);
+      setShowPagination(true);
+    } finally {
+      setLoading(false);
+    }
+  }, [
+    currentPage,
+    hasMore,
+    loading,
+    brandId,
+    modelId,
+    typeId,
+    orderBy,
+    totalItems,
+    isManualPage,
+    carView,
+  ]);
+
+  // تنظیم Intersection Observer
+  useEffect(() => {
+    if (isManualPage || showPagination || !hasMore || loading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loading && !isManualPage) {
+          loadMore();
+        }
+      },
+      {
+        root: null,
+        rootMargin: "0px 0px 100px 0px",
+        threshold: 0.1,
+      },
+    );
+
+    const currentLoader = loaderRef.current;
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [loadMore, hasMore, loading, isManualPage, showPagination]);
+
+  const totalPages = Math.ceil(totalItems / 20);
+
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (brandId) params.append("brandId", String(brandId));
@@ -96,12 +271,47 @@ function SearchCarsDetails({
 
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
-      <div className="mx-auto px-4">
+      <div className="mx-auto px-4 ">
         <div className="flex flex-col lg:flex-row gap-6 relative items-start">
           {/* محتوای اصلی - sticky از بالا */}
-          <div className="lg:w-3/4 w-full lg:sticky lg:top-20 lg:self-start">
+          <div className="lg:w-3/4 w-full px-3 lg:sticky lg:top-20 lg:self-start bg-white rounded-2xl shadow-sm border border-gray-100">
+            {/* نمایش اطلاعات صفحه */}
+            <div className="flex items-center justify-between pt-2 flex-wrap gap-2">
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-sm text-gray-500">
+                  صفحه {toPersianNumbers(currentPage)} از{" "}
+                  {toPersianNumbers(totalPages)}
+                </span>
+                {error && <span className="text-xs text-red-500">{error}</span>}
+              </div>
+              <span className="text-sm text-gray-500">
+                {toPersianNumbers(totalItems)} مدل
+              </span>
+            </div>
+            {/* هدر صفحه */}
+            <div className="mb-4! text-center ">
+              <div className="flex items-center ">
+                {memoizedCarDetails.length > 0 ? (
+                  <h2 className="text-2xl font-bold text-gray-900 w-full">
+                    مدل‌های{" "}
+                    <span className="text-red-600">
+                      {memoizedCarDetails[0].title}
+                    </span>{" "}
+                    <span className="text-red-600">{typeCarTitle}</span>{" "}
+                  </h2>
+                ):(
+                  <h2 className="text-2xl font-bold text-gray-900 w-full">
+                    <span className="text-red-600">
+                      همه برند های خودرو {typeCarTitle}
+                    </span>
+                  </h2>
+                )}
+                
+              </div>
+            </div>
+
             {/* جستجو در مدل‌های این برند */}
-            <div className="bg-white rounded-2xl py-6 shadow-sm border border-gray-100 mb-6! flex justify-center">
+            <div className="rounded-2xl py-6 shadow-sm border border-gray-100 mb-6! flex justify-center">
               <div className="flex items-center flex-wrap sm:px-4 px-1 w-full">
                 <div className="lg:w-1/5 sm:w-1/3 w-full px-1 mt-3 sm:mt-0">
                   <Select
@@ -227,47 +437,18 @@ function SearchCarsDetails({
                     <span>
                       <IoSearch />
                     </span>
-                    <span className="pr-2 whitespace-nowrap">
-                      جستجو خودرو
-                    </span>
+                    <span className="pr-2 whitespace-nowrap">جستجو خودرو</span>
                   </Button>
                 </div>
               </div>
             </div>
 
-            {/* عنوان بخش مدل‌ها */}
-            <div className="flex items-center justify-between mb-6!">
-              <div className="flex items-center">
-               
-                {memoizedCarDetails.length > 0 && (
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    مدل‌های{" "}
-                    <span className="text-red-600">
-                      {memoizedCarDetails[0].title}
-                    </span>{" "}
-                    <span className="text-red-600">{typeCarTitle}</span>{" "}
-                  </h2>
-                )}
-                {memoizedCarDetails.length === 0 && (
-                  <h2 className="text-2xl font-bold text-gray-900">
-                    <span className="text-red-600">
-                      همه برند های خودرو {typeCarTitle}
-                    </span>
-                  </h2>
-                )}
-              </div>
-              <span className="text-gray-700 text-sm">
-                {memoizedCarView.length > 0 ? toPersianNumbers(memoizedCarView[0].total) : 0}{" "}
-                مدل
-              </span>
-            </div>
-
             {/* گرید مدل‌های خودرو */}
-            {memoizedCarView.length > 0 ? (
+            {carView.length > 0 ? (
               <>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                  {memoizedCarView.map((car) => (
-                    <div key={car.id} className="group block">
+                  {carView.map((car, index) => (
+                    <div key={`${car.id}-${index}`} className="group block">
                       <div className="bg-white rounded-2xl overflow-hidden pb-2 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
                         {/* تصویر خودرو */}
                         <div className="w-full h-40 overflow-hidden rounded-lg mb-4! bg-gray-50 flex items-center justify-center relative">
@@ -281,11 +462,11 @@ function SearchCarsDetails({
                         </div>
 
                         <div className="sm:hidden flex flex-col gap-1 py-4 duration-300">
-                          {memoizedCarView
+                          {carView
                             .filter((c) => c.categoryId === car.id)
                             .map((ca) => (
                               <Link
-                                href={ca.url}
+                                href={ca.url || "#"}
                                 key={ca.id}
                                 className="bg-[#ce1a2a] rounded-lg px-2 py-1 text-white! hover:bg-red-800 duration-300"
                               >
@@ -302,8 +483,8 @@ function SearchCarsDetails({
                         <div className="flex-1">
                           <Link
                             href={
-                              memoizedCarView.filter((c) => c.categoryId === car.id)[0]
-                                ?.url || ""
+                              carView.filter((c) => c.categoryId === car.id)[0]
+                                ?.url || "#"
                             }
                             onClick={(e) => {
                               e.preventDefault();
@@ -319,15 +500,38 @@ function SearchCarsDetails({
                   ))}
                 </div>
 
-                {/* صفحه بندی */}
-                <CustomPagination
-                  total={memoizedCarView[0].total}
-                  pageSize={20}
-                  currentPage={Number(searchParams.get("page")) || 1}
-                />
+                {/* عنصر observer */}
+                {!isManualPage && !showPagination && hasMore && (
+                  <div
+                    ref={loaderRef}
+                    className="flex justify-center items-center py-8"
+                  >
+                    {loading ? (
+                      <div className="flex items-center gap-3">
+                        <div className="w-6 h-6 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                        <span className="text-gray-600 text-sm">
+                          در حال بارگذاری...
+                        </span>
+                      </div>
+                    ) : (
+                      <span className="text-gray-400 text-sm">
+                        برای بارگذاری بیشتر اسکرول کنید
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* پیجینیشن */}
+                {totalPages > 1 && (
+                  <CustomPagination
+                    total={totalItems}
+                    pageSize={20}
+                    currentPage={currentPage}
+                    showPagination={showPagination}
+                  />
+                )}
               </>
             ) : (
-              /* ✅ حالت خالی */
               <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
                 <FaCar className="text-gray-400 text-4xl mx-auto mb-4!" />
                 <h3 className="text-xl font-bold text-gray-900 mb-2!">
@@ -340,7 +544,7 @@ function SearchCarsDetails({
             )}
           </div>
 
-          {/* سایدبار - sticky از بالا */}
+          {/* سایدبار */}
           <aside
             aria-label="فیلترها و بنرهای جانبی"
             className="lg:w-1/4 w-full lg:sticky lg:top-20 lg:self-start"
@@ -350,7 +554,6 @@ function SearchCarsDetails({
         </div>
       </div>
 
-      {/* استایل‌های سفارشی */}
       <style jsx global>{`
         .container {
           max-width: 1200px;

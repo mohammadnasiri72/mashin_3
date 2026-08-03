@@ -24,9 +24,7 @@ export async function generateMetadata() {
       ? dataPage.seoInfo?.seoKeywords
       : dataPage.seoKeywords;
     const metadataBase = new URL(mainDomainOld);
-    const seoUrl = dataPage?.seoUrl
-      ? `${mainDomainOld}${dataPage?.seoUrl}`
-      : dataPage?.url
+  const seoUrl = dataPage?.url
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
@@ -63,7 +61,6 @@ async function pageAutoService({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-
   const autoServiceCat: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
 
 if (!autoServiceCat) {
@@ -71,14 +68,14 @@ if (!autoServiceCat) {
   }
 
   const searchParam = await searchParams;
-  const page = Number(searchParam.page);
   const provinceId = Number(searchParam.provinceid);
+  const page = Number(searchParam.page) || 1;
   const id = String(autoServiceCat.id);
 
   const AutoServiceData: Items[] = await getItem({
     TypeId: 1050,
     langCode: "fa",
-    PageIndex: page || 1,
+   PageIndex: page,
     ...(provinceId && { FilterProps: `23207=${provinceId}` }),
     PageSize: 15,
     OrderBy: 8,

@@ -13,7 +13,7 @@ function SidebarPodcasts({
 }) {
   return (
     <>
-      <section className="px-2">
+      <section className="">
         <div className="mx-auto">
           <div className="space-y-6">
             {/* محبوب‌ترین اخبار */}

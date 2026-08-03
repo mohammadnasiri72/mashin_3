@@ -48,12 +48,12 @@ function CreativeCategoriesSection({
   };
 
   return (
-    <section className="mb-20 md:px-6">
-      <div className="">
+    <section className="md:px-6 mt-5">
+      <div className="select-none!">
         <div className="flex sm:flex-row flex-col justify-between items-center mb-4!">
           <div className="sm:w-auto w-full px-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
-            <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
-              مراکز خدمات خودرو
+            <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 sm:text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
+             مراکز و نمایندگی های خدمات خودرو
             </h3>
           </div>
 
@@ -66,13 +66,76 @@ function CreativeCategoriesSection({
           </Link>
         </div>
       </div>
-      <div className="space-y-8">
+      <div className="space-y-8 ">
         {/* Main Flex Container */}
-        <div className="flex flex-col lg:flex-row-reverse gap-6 relative ">
+        <div className="flex flex-col lg:flex-row gap-6 relative select-none! py-2">
+            {/* Sidebar - Premium Cars Grid (30% عرض) - با z-index بالا */}
+          <div className="w-full lg:w-[30%] relative z-10 ">
+            <div className="bg-linear-to-br from-gray-50/80 to-white rounded-2xl p-5 border border-gray-100/50 shadow-lg backdrop-blur-sm h-full relative z-20">
+              <div className="flex items-center gap-2.5 mb-5">
+                <div className="p-2.5 bg-[#ce1a2a]/10 rounded-xl">
+                  <MdOutlineElectricCar className="text-[#ce1a2a] text-xl" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-gray-800">
+                    برندهای برتر
+                  </h4>
+                </div>
+              </div>
+
+              {remainingCars.length > 0 && (
+                <Swiper
+                  modules={[Autoplay]}
+                  spaceBetween={12}
+                  slidesPerView={1}
+                  autoplay={{
+                    delay: 3000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                  }}
+                  loop={remainingCars.length > 4}
+                  className="sidebar-swiper"
+                >
+                  {Array.from({
+                    length: Math.ceil(remainingCars.length / 4),
+                  }).map((_, pageIndex) => (
+                    <SwiperSlide key={pageIndex}>
+                      <div className="grid grid-cols-2 gap-3">
+                        {remainingCars
+                          .slice(pageIndex * 4, pageIndex * 4 + 4)
+                          .map((car) => (
+                            <Link
+                              key={car.id}
+                              href={car.url}
+                              className="group/item relative overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100/50 hover:border-[#ce1a2a]/30"
+                            >
+                              <div className="flex items-center justify-center p-3 bg-white">
+                                <img
+                                  src={mainDomain + car.image}
+                                  alt={car.title}
+                                  className="w-32 h-32 object-contain group-hover/item:scale-110 transition-transform duration-700"
+                                  loading="lazy"
+                                />
+                              </div>
+                              <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity duration-500" />
+                              <div className="absolute bottom-0 left-0 right-0 p-2.5 transform translate-y-full group-hover/item:translate-y-0 transition-transform duration-500">
+                                <h4 className="text-white! font-bold text-center text-[11px] leading-tight line-clamp-2 drop-shadow-lg">
+                                  {car.title}
+                                </h4>
+                              </div>
+                            </Link>
+                          ))}
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              )}
+            </div>
+          </div>
           {/* Main Content - Swiper (70% عرض) */}
           <div className="w-full lg:w-[70%] relative z-0 overflow-hidden! ">
             {brandsAuto?.length > 0 && (
-              <div className="relative group h-full">
+              <div className="relative group h-full ">
                 <div className="relative h-full">
                   <Swiper
                     modules={[Autoplay]}
@@ -90,13 +153,12 @@ function CreativeCategoriesSection({
                       1024: { slidesPerView: 2 },
                       1280: { slidesPerView: 3 },
                     }}
-                    className="brands-swiper h-full "
+                    className="brands-swiper h-full m-0! p-0!"
                   >
                     {brandsAuto.map((brand) => {
                       const propertyItem = propertyItems.find(
                         (e) => e.id === brand.id,
                       );
-                      console.log(brand);
 
                       const loc = propertyItem?.properties.find(
                         (e) => e.propertyKey === "p1050_serviceaddress",
@@ -123,19 +185,15 @@ function CreativeCategoriesSection({
                             )
                         : [];
 
-                        console.log(tel);
-                        
-
                       return (
-                        <SwiperSlide key={brand.id} className="h-full!">
+                        <SwiperSlide key={brand.id} className="h-full! ">
                           <div className="p-0 h-full ">
                             <Card
-                              className="group/card relative overflow-hidden rounded-2xl border-0 shadow-sm hover:shadow-lg transition-all duration-500 bg-white hover:-translate-y-1 h-full flex flex-col"
+                              className="group/card relative overflow-hidden rounded-2xl! border-0 shadow-sm hover:shadow-lg transition-all duration-500 bg-white -translate-y-1 hover:-translate-y-1 h-full flex flex-col"
                               styles={{
                                 body: { padding: 0, height: "100%" },
                               }}
                             >
-                              
                               {/* Image Container */}
                               <Link href={brand.url} className="block shrink-0">
                                 <div className="relative h-44 overflow-hidden bg-white!">
@@ -144,7 +202,7 @@ function CreativeCategoriesSection({
                                     alt={brand.title}
                                     className="w-full h-full object-contain p-3 group-hover/card:scale-110 transition-transform duration-700 ease-out"
                                   />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent" />
+                                  <div className="absolute inset-0 bg-linear-to-t from-black/5 via-transparent to-transparent" />
                                 </div>
                               </Link>
 
@@ -195,7 +253,9 @@ function CreativeCategoriesSection({
                                       }`}
                                     >
                                       {tel
-                                        ? toPersianNumbers(tel.replace(/\r\n/g, " - "))
+                                        ? toPersianNumbers(
+                                            tel.replace(/\r\n/g, " - "),
+                                          )
                                         : "ثبت نشده"}
                                     </span>
                                   </div>
@@ -203,24 +263,22 @@ function CreativeCategoriesSection({
 
                                 {/* Action Buttons */}
                                 <div className="flex gap-2 mt-auto pt-2 ">
-                           
-
-                            {Latitude && Longitude && (
-                             <div className="absolute bottom-2 w-full! px-4">
-                               <Link
-                                href={`https://www.google.com/maps/dir/?api=1&destination=${Latitude},${Longitude}`}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  handleNavigation(Latitude, Longitude);
-                                }}
-                                className="flex-1  bg-gray-100! font-bold! cursor-pointer text-[#ce1a2a]! py-2 px-3 rounded-lg hover:bg-[#ce1a2a]! hover:text-white! duration-300 flex items-center justify-center text-sm"
-                              >
-                                <FaMapMarkerAlt className="ml-2 text-xs" />
-                                مسیریابی
-                              </Link>
-                             </div>
-                            )}
-                          </div>
+                                  {Latitude && Longitude && (
+                                    <div className="absolute bottom-2 w-full! px-4">
+                                      <Link
+                                        href={`https://www.google.com/maps/dir/?api=1&destination=${Latitude},${Longitude}`}
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          handleNavigation(Latitude, Longitude);
+                                        }}
+                                        className="flex-1  bg-gray-100! font-bold! cursor-pointer text-[#ce1a2a]! py-2 px-3 rounded-lg hover:bg-[#ce1a2a]! hover:text-white! duration-300 flex items-center justify-center text-sm"
+                                      >
+                                        <FaMapMarkerAlt className="ml-2 text-xs" />
+                                        مسیریابی
+                                      </Link>
+                                    </div>
+                                  )}
+                                </div>
                               </div>
                             </Card>
                           </div>
@@ -233,69 +291,7 @@ function CreativeCategoriesSection({
             )}
           </div>
 
-          {/* Sidebar - Premium Cars Grid (30% عرض) - با z-index بالا */}
-        <div className="w-full lg:w-[30%] relative z-10 px-3 pb-6 pt-3">
-  <div className="bg-gradient-to-br from-gray-50/80 to-white rounded-2xl p-5 border border-gray-100/50 shadow-lg backdrop-blur-sm h-full relative z-20">
-    <div className="flex items-center gap-2.5 mb-5">
-      <div className="p-2.5 bg-[#ce1a2a]/10 rounded-xl">
-        <MdOutlineElectricCar className="text-[#ce1a2a] text-xl" />
-      </div>
-      <div>
-        <h4 className="text-sm font-bold text-gray-800">
-          برندهای برتر
-        </h4>
-      </div>
-    </div>
-
-    {remainingCars.length > 0 && (
-      <Swiper
-        modules={[Autoplay]}
-        spaceBetween={12}
-        slidesPerView={1}
-        autoplay={{
-          delay: 3000,
-          disableOnInteraction: false,
-          pauseOnMouseEnter: true,
-        }}
-        loop={remainingCars.length > 4}
-        className="sidebar-swiper"
-      >
-        {Array.from({
-          length: Math.ceil(remainingCars.length / 4),
-        }).map((_, pageIndex) => (
-          <SwiperSlide key={pageIndex}>
-            <div className="grid grid-cols-2 gap-3">
-              {remainingCars
-                .slice(pageIndex * 4, pageIndex * 4 + 4)
-                .map((car) => (
-                  <Link
-                    key={car.id}
-                    href={car.url}
-                    className="group/item relative overflow-hidden rounded-xl bg-white shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100/50 hover:border-[#ce1a2a]/30"
-                  >
-                    <div className="flex items-center justify-center p-3 bg-white">
-                      <img
-                        src={mainDomain + car.image}
-                        alt={car.title}
-                        className="w-32 h-32 object-contain group-hover/item:scale-110 transition-transform duration-700"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover/item:opacity-100 transition-opacity duration-500" />
-                    <div className="absolute bottom-0 left-0 right-0 p-2.5 transform translate-y-full group-hover/item:translate-y-0 transition-transform duration-500">
-                      <h4 className="text-white font-bold text-center text-[11px] leading-tight line-clamp-2 drop-shadow-lg">
-                        {car.title}
-                      </h4>
-                    </div>
-                  </Link>
-                ))}
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    )}
-  </div>
-</div>
+        
         </div>
       </div>
 

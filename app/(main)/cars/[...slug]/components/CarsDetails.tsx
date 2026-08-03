@@ -275,27 +275,14 @@ const CarsDetails = ({ carView, carDetails, banner }: CarsDetailsProps) => {
   }, [carView]);
 
   return (
-    <div className="min-h-screen bg-[#f4f4f4] py-8">
-      <div className="mx-auto px-4">
+    <div className="min-h-screen bg-[#f4f4f4] py-2">
+      <div className="mx-auto p-4 bg-white">
         <div className="flex flex-col lg:flex-row gap-6 relative items-start">
           {/* محتوای اصلی - sticky از بالا */}
           <div className="lg:w-3/4 w-full lg:sticky lg:top-20 lg:self-start">
-            {/* جستجو */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6!">
-              <div className="relative">
-                <input
-                  onChange={handleSearch}
-                  value={searchTerm}
-                  type="text"
-                  placeholder={`جستجو در مدل‌های ${carDetails.title}...`}
-                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-xs placeholder:text-gray-400"
-                />
-                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
-              </div>
-            </div>
+           
 
             {/* عنوان */}
-            
             <div className="flex items-center justify-between mb-4!">
               <div className="flex items-center">
                 
@@ -313,7 +300,19 @@ const CarsDetails = ({ carView, carDetails, banner }: CarsDetailsProps) => {
             {carDetails.summary && htmlToPlainText(carDetails.summary) && (
               <ShowSummary text={htmlToPlainText(carDetails.summary)} />
             )}
-
+ {/* جستجو */}
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-6!">
+              <div className="relative">
+                <input
+                  onChange={handleSearch}
+                  value={searchTerm}
+                  type="text"
+                  placeholder={`جستجو در مدل‌های ${carDetails.title}...`}
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent placeholder:text-xs placeholder:text-gray-400"
+                />
+                <FaSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
+              </div>
+            </div>
             {/* گرید */}
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
               {filteredGroups.length > 1 &&

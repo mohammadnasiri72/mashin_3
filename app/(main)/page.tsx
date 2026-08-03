@@ -26,7 +26,9 @@ export const revalidate = 60;
 // ✅ تابع generateMetadata - اینجا تمام متادیتاها تنظیم می‌شود
 export async function generateMetadata() {
   const dataPage: ItemsId | null = await getItemByUrl("/");
-  const seoUrl = `${mainDomainOld}${dataPage?.seoUrl}`;
+const seoUrl = dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
 
   if (dataPage && dataPage.title) {
     // استخراج و پردازش seoHeadTags
@@ -138,7 +140,6 @@ export default async function Home() {
     slider,
     news,
     newsCar,
-    linkSelected,
     saleNews,
     compare,
     bestChoices,
@@ -164,27 +165,20 @@ export default async function Home() {
     Items[],
     Items[],
     Items[],
-    Items[],
     ItemsCategory[],
     ItemsCategory[],
     ItemsCategory[],
   ] = await Promise.all([
     getItem({ TypeId: 6, langCode: "fa" }),
-    getItem({ TypeId: 5, langCode: "fa", PageIndex: 1, PageSize: 6 ,FullData: true,}),
+    getItem({ TypeId: 5, langCode: "fa", PageIndex: 1, PageSize: 7 ,FullData: true,}),
     getItem({
       TypeId: 5,
       langCode: "fa",
       CategoryIdArray: "6323",
       PageIndex: 1,
-      PageSize: 5,
+      PageSize: 7,
     }),
-    getItem({
-      TypeId: 6,
-      langCode: "fa",
-      CategoryIdArray: "10",
-      PageIndex: 1,
-      PageSize: 5,
-    }),
+   
     getItem({
       TypeId: 5,
       langCode: "fa",
@@ -264,7 +258,7 @@ export default async function Home() {
         {/* Hero Slider */}
        {slider.length > 0 && <HeroSlider
         slider={slider}
-        latestNews={news}
+        latestNews={newsCar}
         latestComparisons={compare}
         latestPresales={saleNews}
       />}

@@ -1,3 +1,4 @@
+import CustomPagination from "@/app/components/CustomPagination";
 import { formatPersianDate, toPersianNumbers } from "@/utils/func";
 import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
@@ -11,69 +12,103 @@ import {
 } from "react-icons/fa";
 import { MdOutlinePodcasts } from "react-icons/md";
 import AudioPlayer from "./AudioPlayer";
-import PaginationPodcasts from "./PaginationPodcasts";
 import SearchBoxPodcasts from "./SearchBoxPodcasts";
 
 function BoxPodcasts({
   podcasts,
   titleCategory,
+  hasMore,
+  loading,
+  loaderRef,
+  isManualPage,
+  showPagination,
 }: {
   podcasts: Items[];
   titleCategory: string;
+  hasMore: boolean;
+  loading: boolean;
+  loaderRef: React.RefObject<HTMLDivElement | null>;
+  isManualPage: boolean;
+  showPagination: boolean;
 }) {
   return (
     <>
       <div className="mt-3">
         {/* Videos List */}
-        <div className="space-y-6 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex md:flex-nowrap flex-wrap items-center gap-2">
-            <h2 className="whitespace-nowrap text-[#ce1a2a]! text-xl">
+        <div className="space-y-6 ">
+          <div className="flex md:flex-nowrap flex-wrap items-center gap-2 py-3">
+            {/* <h2 className="whitespace-nowrap text-[#ce1a2a]! text-xl">
               {titleCategory
                 ? `پادکست های ${titleCategory}`
                 : " پادکست های بررسی خودرو"}
-            </h2>
+            </h2> */}
             <SearchBoxPodcasts />
           </div>
           {podcasts.length > 0 ? (
-            podcasts.map((podcast) => (
-              <div
-                key={podcast.id}
-                className="group bg-gray-50 rounded-xl hover:bg-white border-2 border-gray-200 hover:border-[#ce1a2a]/40 transition-all duration-300 hover:shadow-lg"
-              >
-                <div className="flex md:items-stretch items-center justify-center gap-4 p-5 md:flex-row flex-col">
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="relative group/icon shrink-0 sm:w-72 w-full sm:h-56 rounded-xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300">
-                      <img
-                        src={mainDomain + podcast.image}
-                        alt={podcast.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    </div>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <div className="flex items-center sm:gap-2 gap-1 bg-white sm:px-3 px-2 sm:py-2 py-1 rounded-xl border border-gray-200 shadow-sm">
-                        <FaCalendar className="text-[#ce1a2a] text-xs!" />
-                        <span className="font-medium text-gray-700 text-xs">
-                          {formatPersianDate(podcast.modified ? podcast.modified: podcast.created)}
-                        </span>
+            <>
+              {podcasts.map((podcast, index) => (
+                <div
+                  key={`${podcast.id}-${index}`}
+                  className="group bg-gray-50 rounded-xl hover:bg-white border-2 border-gray-200 hover:border-[#ce1a2a]/40 transition-all duration-300 hover:shadow-lg"
+                >
+                  <div className="flex md:items-stretch items-center justify-center gap-4 p-5 md:flex-row flex-col">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="relative group/icon shrink-0 sm:w-72 w-full sm:h-56 rounded-xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300">
+                        <img
+                          src={mainDomain + podcast.image}
+                          alt={podcast.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
                       </div>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex items-center sm:gap-2 gap-1 bg-white sm:px-3 px-2 sm:py-2 py-1 rounded-xl border border-gray-200 shadow-sm">
+                          <FaCalendar className="text-[#ce1a2a] text-xs!" />
+                          <span className="font-medium text-gray-700 text-xs">
+                            {formatPersianDate(podcast.modified ? podcast.modified: podcast.created)}
+                          </span>
+                        </div>
 
-                      {/* Views */}
-                      <div className="flex items-center sm:gap-2 gap-1 bg-white sm:px-3 px-2 sm:py-2 py-1 rounded-xl border border-gray-200 shadow-sm">
-                        <FaEye className=" text-[#ce1a2a] text-xs!" />
-                        <span className="font-medium text-gray-700 text-xs">
-                          {toPersianNumbers(podcast.visit)} بازدید
-                        </span>
+                        {/* Views */}
+                        <div className="flex items-center sm:gap-2 gap-1 bg-white sm:px-3 px-2 sm:py-2 py-1 rounded-xl border border-gray-200 shadow-sm">
+                          <FaEye className=" text-[#ce1a2a] text-xs!" />
+                          <span className="font-medium text-gray-700 text-xs">
+                            {toPersianNumbers(podcast.visit)} بازدید
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  {/* Content Container - Larger */}
-                  <div className="flex-1 min-w-0 flex flex-col justify-between py-1 w-full">
-                    <AudioPlayer podcast={podcast} />
+                    {/* Content Container - Larger */}
+                    <div className="flex-1 min-w-0 flex flex-col justify-between py-1 w-full">
+                      <AudioPlayer podcast={podcast} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              ))}
+
+              {/* عنصر observer برای تشخیص اسکرول - فقط در حالت اسکرول */}
+              {!isManualPage && !showPagination && hasMore && (
+                <div
+                  ref={loaderRef}
+                  className="flex justify-center items-center py-8"
+                >
+                  {loading ? (
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                      <span className="text-gray-600 text-sm">
+                        در حال بارگذاری...
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-gray-400 text-sm">
+                      برای بارگذاری بیشتر اسکرول کنید
+                    </span>
+                  )}
+                </div>
+              )}
+
+             
+            </>
           ) : (
             <div className="flex flex-col items-center justify-center py-16 px-4 bg-linear-to-b from-gray-50 to-white rounded-xl border-2 border-dashed border-gray-200">
               {/* آیکون‌های متحرک */}
@@ -129,7 +164,6 @@ function BoxPodcasts({
             </div>
           )}
         </div>
-        <PaginationPodcasts podcasts={podcasts} />
       </div>
     </>
   );

@@ -84,7 +84,7 @@ export default function HeroSection({
                       <div className="absolute bottom-0 right-0 left-0 p-0 md:p-10 z-10">
                         <div className="max-w-2xl">
                           <div className="bg-black/20 backdrop-blur-sm px-4 md:p-6 rounded-2xl border border-white/10 inline-block">
-                            <h2 className="text-white! text-lg md:text-2xl lg:text-4xl font-bold mb-0! leading-tight line-clamp-2 drop-shadow-lg">
+                            <h2 className="text-white! text-lg md:text-xl lg:text-2xl font-bold mb-0! leading-tight line-clamp-2 drop-shadow-lg">
                               {htmlToPlainText(slide.title)}
                             </h2>
                           </div>

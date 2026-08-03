@@ -40,11 +40,9 @@ export async function generateMetadata({
         : `مدل های ${dataPage.title} ${typeCarTitle ? typeCarTitle : ""}`;
       const keywords = dataPage?.seoKeywords;
       const metadataBase = new URL(mainDomainOld);
-      const seoUrl = dataPage?.seoUrl
-        ? `${mainDomainOld}${dataPage?.seoUrl}`
-        : dataPage?.url
-          ? `${mainDomainOld}${dataPage?.url}`
-          : `${mainDomainOld}`;
+     const seoUrl = dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
       const seoHeadTags = dataPage?.headTags;
 
       return {
@@ -94,10 +92,10 @@ async function pageSearchCars({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   const searchParam = await searchParams;
+  const page = Number(searchParam.page) || 1;
   const brandId = Number(searchParam.brandId);
   const modelId = Number(searchParam.modelId);
   const typeId = Number(searchParam.typeId);
-  const page = Number(searchParam.page) || 1;
   const orderby = Number(searchParam.orderby);
 
   const carBrands: ItemsCategory[] = await getCategory({

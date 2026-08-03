@@ -109,9 +109,9 @@ const Footer = ({
                 className="footer-column col-span-12 lg:col-span-5 ft-lists-wrap"
                 aria-label="دسترسی سریع"
               >
-                <h2 className="text-white! text-[16px] font-bold! mb-4! sm:text-start text-center">
+                <div className="text-white! text-[16px] font-bold! mb-4! sm:text-start text-center">
                   {footerMenu?.title || "دسترسی سریع"}
-                </h2>
+                </div>
 
                 <div className="grid grid-cols-3 sm:grid-cols-3 gap-4">
                   {/* Column 1 */}
@@ -166,9 +166,9 @@ const Footer = ({
 
               {/* Footer Column - Social Media (Desktop) */}
               <div className="footer-column col-span-12 md:col-span-4 lg:col-span-2">
-                <h4 className="text-white! text-[16px] font-bold! mb-4! sm:text-start text-center">
+                <div className="text-white! text-[16px] font-bold! mb-4! sm:text-start text-center">
                   شبکه های اجتماعی
-                </h4>
+                </div>
 
                 <div>
                   <ul className="social-medias grid grid-cols-2 gap-2">

@@ -71,10 +71,10 @@ const CarSpecsSection = ({
             </div>
 
             <div className="sm:mt-0 lg:mt-32 mt-32 text-center lg:text-center w-full">
-              <h2 id="car-specs-title" className="text-gray-900 text-lg">
+              <h2 id="car-specs-title" className="text-gray-900 sm:text-lg text-sm">
                 ماشین
                 <br />
-                <strong className="text-2xl font-bold">
+                <strong className="sm:text-2xl text-lg font-bold">
                   و <span className="text-red-600">مشخصات فنی</span> خودرو
                 </strong>
               </h2>
@@ -190,7 +190,7 @@ const CarSpecsSection = ({
                           </Link>
                           <div className="absolute -bottom-8 right-2">
                             <div className="pr-3">
-                              <h3 className="text-black! font-bold! inline-block relative text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 after:bg-[#ce1a2a55]">
+                              <h3 className="text-black! font-bold! inline-block relative sm:text-xl z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 after:bg-[#ce1a2a55]">
                                {car.sourceName} {car.title}
                               </h3>
                             </div>

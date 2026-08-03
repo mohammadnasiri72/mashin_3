@@ -22,9 +22,7 @@ export async function generateMetadata() {
       ? dataPage.seoInfo?.seoKeywords
       : dataPage.seoKeywords;
     const metadataBase = new URL(mainDomainOld);
-    const seoUrl = dataPage?.seoUrl
-      ? `${mainDomainOld}${dataPage?.seoUrl}`
-      : dataPage?.url
+   const seoUrl = dataPage?.url
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
@@ -65,14 +63,13 @@ async function pageTechnicalWords({
   const dataPage: ItemsId | ItemsCategoryId | null =
     await getItemByUrl(decodedPathname);
 
-  const page = Number(searchParam.page);
   const term = String(searchParam.term);
-
+const page = Number(searchParam.page) || 1;
   const dic: Items[] = await getItem({
     TypeId: 1046,
     langCode: "fa",
     ...(term && term !== "undefined" && { Term: term }),
-    PageIndex: page && !isNaN(page) ? page : 1,
+     PageIndex: page,
     PageSize: 20,
   });
 

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaPlay } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
-import type { Swiper as SwiperType } from 'swiper';
+import type { Swiper as SwiperType } from "swiper";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import OptimizedImage from "./OptimizedImage";
@@ -21,13 +21,13 @@ const VideoBannerSection = ({ video }: { video: Items[] }) => {
   // گرفتن عرض صفحه
   useEffect(() => {
     setWindowWidth(window.innerWidth);
-    
+
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // تعیین تعداد اسکلتون براساس عرض صفحه
@@ -60,7 +60,7 @@ const VideoBannerSection = ({ video }: { video: Items[] }) => {
       <div className="mx-auto px-4">
         <div className="flex sm:flex-row flex-col justify-between items-center mb-4!">
           <div className="sm:w-auto w-full px-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
-            <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
+            <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 sm:text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
               فیلم های تست و بررسی خودرو
             </h3>
           </div>
@@ -81,20 +81,23 @@ const VideoBannerSection = ({ video }: { video: Items[] }) => {
             <>
               {/* اسکلتون - فقط وقتی showSkeleton=true نمایش بده */}
               {showSkeleton && (
-                <div 
+                <div
                   className="grid gap-4"
                   style={{
-                    gridTemplateColumns: `repeat(${skeletonCount}, minmax(0, 1fr))`
+                    gridTemplateColumns: `repeat(${skeletonCount}, minmax(0, 1fr))`,
                   }}
                 >
                   {Array.from({ length: skeletonCount }).map((_, index) => (
-                    <div key={index} className="h-80 bg-gray-200 rounded-2xl animate-pulse"></div>
+                    <div
+                      key={index}
+                      className="h-80 bg-gray-200 rounded-2xl animate-pulse"
+                    ></div>
                   ))}
                 </div>
               )}
 
               {/* اسلایدر اصلی - با کلاس شرطی برای مخفی شدن در زمان نمایش اسکلتون */}
-              <div className={showSkeleton ? 'hidden' : 'block'}>
+              <div className={showSkeleton ? "hidden" : "block"}>
                 <Swiper
                   modules={[Autoplay]}
                   spaceBetween={16}
@@ -149,9 +152,12 @@ const VideoBannerSection = ({ video }: { video: Items[] }) => {
                           </div>
                         </Link>
                         <div className="absolute bottom-0 right-0 left-0 z-20">
-                          <div className="titleBox pink_Highlight pr-3 pb-3">
-                            <h3 className="text-white! font-bold! inline-block relative lg:text-2xl text-lg z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 after:bg-[#ce1a2a] line-clamp-1">
-                              {v.title}
+                          <div className="relative p-4">
+                            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/60 to-transparent"></div>
+                            <h3 className="relative text-white! font-bold! text-base lg:text-lg line-clamp-2 drop-shadow-lg">
+                              <span className="inline-block border-r-4 border-[#ce1a2a] pr-3 pl-2">
+                                {v.title}
+                              </span>
                             </h3>
                           </div>
                         </div>

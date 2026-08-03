@@ -21,6 +21,8 @@ function SearchBoxBestChoice() {
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("term", term.toString());
+    // حذف page از پارامترها برای شروع از صفحه اول
+    params.delete("page");
     router.push(`${pathname}?${params.toString()}`, {
       scroll: false,
     });
@@ -36,7 +38,7 @@ function SearchBoxBestChoice() {
           onChange={(e) => {
             setTerm(e.target.value);
           }}
-          onPressEnter={handleSearch} // اضافه کردن این خط
+          onPressEnter={handleSearch}
         />
         <Button
           aria-label="جستجو"

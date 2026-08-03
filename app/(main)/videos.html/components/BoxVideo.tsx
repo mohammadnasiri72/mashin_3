@@ -4,16 +4,37 @@ import Link from "next/link";
 import { FaCalendar, FaEye, FaPlay, FaVideo } from "react-icons/fa";
 import PaginationVideo from "./PaginationVideo";
 import SearchBoxVideo from "./SearchBoxVideo";
+import { useSearchParams } from "next/navigation";
 
 function BoxVideo({ videos, titleCat }: { videos: Items[]; titleCat: string }) {
+  const searchParams = useSearchParams();
   return (
-    <div className="">
+    <div className="bg-[#f4f4f4]!">
+      {/* هدر */}
+
       {/* Videos List */}
-      <div className="space-y-6 bg-white rounded-2xl p-3 shadow-lg border border-gray-100">
-        <div className="flex sm:flex-nowrap flex-wrap items-center gap-2">
-          <h2 className="whitespace-nowrap text-[#ce1a2a]! text-xl">
+      <div className=" bg-white! rounded-2xl p-3 shadow-lg border border-gray-100">
+       
+       
+        {/* نمایش اطلاعات صفحه */}
+        <div className="flex items-center justify-between flex-wrap gap-2 pt-2">
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="text-sm text-gray-500">
+              صفحه {toPersianNumbers(Number(searchParams.get("page")) || 1)} از{" "}
+              {toPersianNumbers(Math.ceil(videos[0].total / 12))}
+            </span>
+          </div>
+          <span className="text-sm text-gray-500">
+            {toPersianNumbers(videos[0].total)} ویدئو
+          </span>
+        </div>
+         {/* هدر صفحه */}
+        <div className="mb-4! text-center">
+          <h2 className="text-3xl font-bold mb-4! text-[#ce1a2a]!">
             {titleCat ? titleCat : " فیلم های تست و بررسی خودرو"}
           </h2>
+        </div>
+        <div className="flex sm:flex-nowrap flex-wrap items-center gap-2">
           <SearchBoxVideo />
         </div>
 

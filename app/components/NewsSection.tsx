@@ -85,7 +85,7 @@ export default function NewsSection({
           >
             <div className="mb-2! p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
               <Link href={`/fa/news/${saleNews[0]?.categoryId || "6593"}/شرایط-فروش-و-پیش-فروش-خودرو.html`}>
-                <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
+                <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 sm:text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
                   شرایط فروش و پیش فروش
                 </h3>
               </Link>
@@ -147,7 +147,7 @@ export default function NewsSection({
                             <span className="text-[#ce1a2a] group-hover:text-white! text-[8px] animate-pulse mt-1 shrink-0">
                               <FaCircle />
                             </span>
-                            <span>{sale.title}</span>
+                            <span className="line-clamp-1">{sale.title}</span>
                           </Link>
                         </div>
                       </SwiperSlide>

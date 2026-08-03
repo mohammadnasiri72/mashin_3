@@ -77,7 +77,6 @@ const CarBrandPricesSection = ({
   const fetchPrice = async (type: string, brandId: number) => {
     setLoadingPrices(true);
     if (type==='motor') {
-      console.log(brandId);
       
        try {
       const price: Price = await getPriceMotor({
@@ -128,23 +127,23 @@ const CarBrandPricesSection = ({
   }, []);
 
   return (
-    <section className="mb-5! mt-20 overflow-hidden" aria-label="قیمت خودرو">
+    <section className="mb-5! overflow-hidden" aria-label="قیمت خودرو">
       <div className="mx-auto px-4">
         {/* هدر بخش */}
-        <div className="flex flex-col sm:flex-row sm:justify-between justify-center items-center sm:mb-0! mb-10! gap-4 h-14">
+        <div className="flex flex-col sm:flex-row sm:justify-between justify-center items-center sm:mb-0! mb-10! gap-4">
           <div className="mb-2! sm:w-auto w-full p-3 sm:bg-transparent bg-[#f6eced] rounded-xl flex sm:justify-start justify-center items-center">
-            <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db]">
-              قیمت روز خودرو
+            <h3 className="pb-0! mb-0! text-[#292929]! font-bold! inline-block relative pl-2.5 sm:text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ffd6db] text-center">
+              قیمت روز خودرو و موتورسیکلت
             </h3>
           </div>
 
           {/* تب‌ها */}
-          <div className="flex gap-4">
+          <div className="flex sm:gap-4 gap-1">
             <button
               aria-label="خودرو داخلی"
-              className={`px-4 py-2 font-medium cursor-pointer whitespace-nowrap ${
+              className={`p-1 font-medium cursor-pointer whitespace-nowrap ${
                 type === "motor"
-                  ? "text-[#ce1a2a]! font-extrabold! text-[20px]!"
+                  ? "text-[#ce1a2a]! font-extrabold! sm:text-[20px]!"
                   : "text-gray-600 text-sm"
               } transition-all duration-200`}
               onClick={() => {
@@ -156,9 +155,9 @@ const CarBrandPricesSection = ({
             </button>
             <button
               aria-label="خودرو وارداتی"
-              className={`px-4 py-2 text-gray-600 font-medium text-sm cursor-pointer whitespace-nowrap ${
+              className={`p-1 text-gray-600 font-medium text-sm cursor-pointer whitespace-nowrap ${
                 type === "import"
-                  ? "text-[#ce1a2a]! font-extrabold! text-[20px]!"
+                  ? "text-[#ce1a2a]! font-extrabold! sm:text-[20px]!"
                   : "text-gray-600 text-sm"
               } transition-all duration-200`}
               onClick={() => {
@@ -170,9 +169,9 @@ const CarBrandPricesSection = ({
             </button>
             <button
               aria-label="خودرو داخلی"
-              className={`px-4 py-2 font-medium cursor-pointer whitespace-nowrap ${
+              className={`p-1 font-medium cursor-pointer whitespace-nowrap ${
                 type === "internal"
-                  ? "text-[#ce1a2a]! font-extrabold! text-[20px]!"
+                  ? "text-[#ce1a2a]! font-extrabold! sm:text-[20px]!"
                   : "text-gray-600 text-sm"
               } transition-all duration-200`}
               onClick={() => {

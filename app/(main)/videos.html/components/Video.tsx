@@ -43,7 +43,8 @@ function Video({
 
   return (
     <>
-      <div className="flex flex-wrap lg:flex-nowrap gap-6 relative  py-5">
+      
+      <div className="flex flex-wrap lg:flex-nowrap gap-6 py-2 relative bg-[#f4f4f4]!">
         {/* محتوای اصلی */}
         <div
           ref={mainBoxRef}

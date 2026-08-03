@@ -23,11 +23,9 @@ export async function generateMetadata() {
       ? dataPage.seoInfo?.seoKeywords
       : dataPage.seoKeywords;
     const metadataBase = new URL(mainDomainOld);
-    const seoUrl = dataPage?.seoUrl
-      ? `${mainDomainOld}${dataPage?.seoUrl}`
-      : dataPage?.url
-        ? `${mainDomainOld}${dataPage?.url}`
-        : `${mainDomainOld}`;
+    const seoUrl = dataPage?.url
+      ? `${mainDomainOld}${dataPage?.url}`
+      : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
 
     return {
@@ -65,28 +63,31 @@ async function pageEducationTips({
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
   const educationDetails: ItemsId | ItemsCategoryId | null =
     await getItemByUrl(decodedPathname);
+  
   if (!educationDetails) {
     return notFound();
   }
+  
+  const searchParam = await searchParams;
+  const page = Number(searchParam.page) || 1;
+  
   const id =
     educationDetails.typeUrl === "item" ? 0 : Number(educationDetails.id);
-
-  const searchParam = await searchParams;
-  const page = Number(searchParam.page);
 
   const education: Items[] = await getItem({
     TypeId: 3,
     langCode: "fa",
     ...(String(id) !== "NaN" && id > 0 && { CategoryIdArray: String(id) }),
-    PageIndex: page || 1,
+    PageIndex: page, // استفاده از page از URL
     PageSize: 20,
     FullData: true,
   });
+  
   const educationPopular: Items[] = await getItem({
     TypeId: 3,
     langCode: "fa",
     ...(String(id) !== "NaN" && id > 0 && { CategoryIdArray: String(id) }),
-    PageIndex: page || 1,
+    PageIndex: 1,
     PageSize: 10,
     OrderBy: 8,
   });

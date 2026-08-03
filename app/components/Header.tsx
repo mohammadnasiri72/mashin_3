@@ -18,6 +18,7 @@ import ProfileDropdown from "./ProfileDropdown";
 import RegisterLink from "./RegisterLink";
 import SearchBoxHeader from "./SearchBoxHeader";
 import SearchBoxHeaderMobile from "./SearchBoxHeaderMobile";
+import { usePathname } from "next/navigation";
 
 // تابع تبدیل LastMenuItem به MenuItem با ساختار سلسله‌مراتبی
 const convertApiMenuToHierarchical = (apiItems: MenuItem[]): LastMenuItem[] => {
@@ -66,6 +67,8 @@ export default function Header({
   const menuItems = convertApiMenuToHierarchical(
     menu.find((m) => m.menuKey === "primary")?.menuItems || [],
   );
+
+  const pathName = usePathname();
 
   const logoSrc: string | undefined = setting.find(
     (e) => e.propertyKey === "site_logo",
@@ -121,7 +124,7 @@ export default function Header({
                     key={childIndex}
                     href={child.url}
                     onClick={onClose}
-                    className="block py-3 px-4 text-neutral-300! hover:text-red-500 rounded-lg text-sm"
+                    className="block py-3 px-4 text-white! hover:text-red-500 rounded-lg text-sm"
                   >
                     {child.title}
                   </Link>
@@ -154,7 +157,7 @@ export default function Header({
           <img
             src={mainDomain + logoSrc}
             alt={logoTitle}
-            className="max-w-32"
+            className="w-28! h-5! max-w-28! min-w-28!"
             loading="eager"
             fetchPriority="high"
           />
@@ -182,7 +185,7 @@ export default function Header({
 
   return (
     <div
-      className={`sticky-header z-10001! border-b! border-white/40!  ${isSticky ? "sticky-active" : ""}`}
+      className={`sticky-header z-10001! border-b! border-[#555]  ${isSticky ? "sticky-active" : ""}`}
     >
       <header
         className={`header-main bg-[#1a1a1a] duration-300 shadow-lg border-b! border-neutral-800/60! ${
@@ -192,12 +195,12 @@ export default function Header({
         <div className="max-w-500 mx-auto px-4 py-3 h-16 flex flex-col justify-center">
           <div className="flex items-center w-full">
             <div className="flex w-full items-center">
-              <div className="w-auto flex items-center lg:pr-4">
-                <Link href="/">
+              <div className="w-auto flex items-center lg:pr-4 ">
+                <Link href="/" className="border border-gray-700 p-2 rounded-lg hover:bg-[#ce1a2a] duration-300">
                   <img
                     src={mainDomain + logoSrc}
                     alt={logoTitle}
-                    className="max-w-28!"
+                    className="w-28! h-5! max-w-28! min-w-28!"
                     loading="eager"
                     fetchPriority="high"
                   />
@@ -210,35 +213,39 @@ export default function Header({
                   aria-label="منوی اصلی"
                 >
                   {menuItems.length > 0 &&
-                    menuItems.map((item, index) => (
-                      <div key={index} className="relative group">
-                        <Link
-                          href={item.url}
-                          className="flex items-center text-[13px] whitespace-nowrap font-medium text-white! hover:bg-[#ce1a2a] hover:text-white! rounded-lg px-2 py-2 duration-300 transition-all"
-                        >
-                          {item.title}
-                          {item.children && (
-                            <IoChevronDown className="mr-1 text-xs transition-transform duration-300 group-hover:rotate-180" />
-                          )}
-                        </Link>
+                    menuItems.map((item, index) => {
+                      const isActive =
+                        item.url === decodeURIComponent(pathName);
+                      return (
+                        <div key={index} className="relative group">
+                          <Link
+                            href={item.url}
+                            className={`flex items-center text-[14px] whitespace-nowrap font-medium text-white! hover:bg-[#ce1a2a]  rounded-lg px-2 py-2 duration-300 transition-all ${isActive ? "bg-[#ce1a2a]" : ""}`}
+                          >
+                            {item.title}
+                            {item.children && (
+                              <IoChevronDown className="mr-1 text-xs transition-transform duration-300 group-hover:rotate-180" />
+                            )}
+                          </Link>
 
-                        {item.children && (
-                          <div className="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
-                            <div className="bg-[#1a1a1a] rounded-lg shadow-lg border! border-neutral-800/60! min-w-57.5 py-2">
-                              {item.children.map((child, childIndex) => (
-                                <Link
-                                  key={childIndex}
-                                  href={child.url}
-                                  className="block px-4 py-3 text-sm text-neutral-300! hover:text-white! hover:bg-[#ce1a2a]! transition-all duration-200 border-b! border-neutral-800/60! last:border-b-0"
-                                >
-                                  {child.title}
-                                </Link>
-                              ))}
+                          {item.children && (
+                            <div className="absolute right-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-50">
+                              <div className="bg-[#1a1a1a] rounded-lg shadow-lg border! border-neutral-800/60! min-w-57.5 py-2">
+                                {item.children.map((child, childIndex) => (
+                                  <Link
+                                    key={childIndex}
+                                    href={child.url}
+                                    className="block px-4 py-3 text-sm text-white! hover:text-white! hover:bg-[#ce1a2a]! transition-all duration-200 border-b! border-neutral-800/60! last:border-b-0"
+                                  >
+                                    {child.title}
+                                  </Link>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                          )}
+                        </div>
+                      );
+                    })}
                   {menuItems.length === 0 && (
                     <div className="flex items-center gap-5 px-5">
                       <div className=" bg-neutral-800 animate-pulse rounded h-5 w-20" />
@@ -268,11 +275,11 @@ export default function Header({
                         <button
                           aria-label="ورود"
                           onClick={() => setOpen(true)}
-                          className="font-bold cursor-pointer whitespace-nowrap text-white! text-[13px] px-5 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_5px_1px_rgba(206,26,42)]"
+                          className="font-bold cursor-pointer whitespace-nowrap text-white! sm:text-[13px] text-xs sm:px-5 px-2 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_5px_1px_rgba(206,26,42)]"
                         >
                           <div className="flex items-center">
-                            <MdLogin className="text-lg text-white!" />
-                            <span className="lg:hidden text-white!">ورود</span>
+                            <MdLogin className="sm:text-lg text-white!" />
+                            <span className="lg:hidden text-white! text-xs">ورود</span>
                           </div>
                         </button>
                       </Tooltip>

@@ -11,6 +11,7 @@ function SearchBoxDic() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const termSearchparams = searchParams.get("term");
+  
   useEffect(() => {
     if (termSearchparams) {
       setTerm(termSearchparams);
@@ -20,6 +21,8 @@ function SearchBoxDic() {
   const handleSearch = () => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("term", term.toString());
+    // حذف page از پارامترها برای شروع از صفحه اول
+    params.delete("page");
     router.push(`${pathname}?${params.toString()}`, {
       scroll: false,
     });
@@ -35,7 +38,7 @@ function SearchBoxDic() {
           onChange={(e) => {
             setTerm(e.target.value);
           }}
-          onPressEnter={handleSearch} // اضافه کردن این خط
+          onPressEnter={handleSearch}
         />
         <Button
           aria-label="جستجو"

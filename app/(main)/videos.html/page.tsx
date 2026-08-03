@@ -24,9 +24,7 @@ export async function generateMetadata() {
       ? dataPage.seoInfo?.seoKeywords
       : dataPage.seoKeywords;
     const metadataBase = new URL(mainDomainOld);
-    const seoUrl = dataPage?.seoUrl
-      ? `${mainDomainOld}${dataPage?.seoUrl}`
-      : dataPage?.url
+   const seoUrl = dataPage?.url
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
@@ -101,14 +99,14 @@ async function pageVideo({
   return (
     <>
       {videoCat && (
-        <div className="mb-4!">
+        <div className="">
           <BreadcrumbCategory
             breadcrumb={videoCat.breadcrumb}
             title={videoCat.title}
           />
         </div>
       )}
-      <div className="bg-[#f4f4f4]">
+      <div className="bg-[#f4f4f4]!">
         <Video
           popularVideos={popularVideos}
           videos={videos}

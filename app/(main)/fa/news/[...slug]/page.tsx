@@ -23,9 +23,7 @@ export async function generateMetadata() {
       ? dataPage.seoInfo?.seoKeywords
       : dataPage.seoKeywords;
     const metadataBase = new URL(mainDomainOld);
-    const seoUrl = dataPage?.seoUrl
-      ? `${mainDomainOld}${dataPage?.seoUrl}`
-      : dataPage?.url
+   const seoUrl = dataPage?.url
         ? `${mainDomainOld}${dataPage?.url}`
         : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
@@ -69,22 +67,24 @@ async function pageNewsDetails({
   }
 
   const searchParam = await searchParams;
-  const page = Number(searchParam.page);
-  const id = newsDetails.typeUrl ==='item' ? 0: Number(newsDetails.id)
+  const page = Number(searchParam.page) || 1;
 
+  const id = newsDetails.typeUrl === 'item' ? 0 : Number(newsDetails.id);
+
+  // دریافت داده‌ها بر اساس صفحه درخواستی
   const news: Items[] = id
     ? await getItem({
         TypeId: 5,
         langCode: "fa",
         CategoryIdArray: String(id),
-        PageIndex: page || 1,
+        PageIndex: page,
         PageSize: 20,
         FullData: true,
       })
     : await getItem({
         TypeId: 5,
         langCode: "fa",
-        PageIndex: page || 1,
+        PageIndex: page,
         PageSize: 20,
         FullData: true,
       });
@@ -136,7 +136,6 @@ async function pageNewsDetails({
       });
     });
   }
-  
 
   if (news.length > 0) {
     return (
@@ -160,7 +159,8 @@ async function pageNewsDetails({
         )}
       </>
     );
-  } 
+  }
 }
 
 export default pageNewsDetails;
+

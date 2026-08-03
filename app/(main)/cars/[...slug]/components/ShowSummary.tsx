@@ -50,7 +50,7 @@ const ShowSummary: React.FC<ExpandableTextProps> = ({
     <div className="mb-6!">
       <div
         ref={textRef}
-        className="text-gray-800 leading-relaxed whitespace-pre-line overflow-hidden transition-all duration-500 ease-in-out"
+        className="text-gray-800 text-justify leading-relaxed whitespace-pre-line overflow-hidden transition-all duration-500 ease-in-out"
         style={{
           maxHeight: currentHeight,
           // حذف اسکرول داخلی

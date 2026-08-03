@@ -14,23 +14,26 @@ function SidebarAutoServices({
 }) {
   return (
     <>
-      <section className="py-8 bg-[#f4f4f4]">
+      <section className="bg-[#f4f4f4]">
         <div className="mx-auto pl-4 lg:pr-2 pr-4">
           <div className="space-y-6">
-            {/* بنرهای سایدبار */}
-            <SideBarBanner banner={banner} />
-
-            {/* آمار بازار */}
-            <MarketStats />
-
+            {/* جدیدترین خودروها */}
+            <SideBarListItems
+              itemsList={lastCars}
+              title={"جدیدترین خودروها"}
+              type={"car"}
+            />
             {/* جدیدترین اخبار */}
             <SideBarListItems
               itemsList={lastNews}
               title={"جدیدترین اخبار خودرو"}
             />
 
-            {/* جدیدترین خودروها */}
-            <SideBarListItems itemsList={lastCars} title={"جدیدترین خودروها"} type={"car"}/>
+            {/* بنرهای سایدبار */}
+            <SideBarBanner banner={banner} />
+
+            {/* آمار بازار */}
+            <MarketStats />
           </div>
         </div>
       </section>
