@@ -374,7 +374,7 @@ const EducationCar = ({
                               </Link>
 
                               <div className="text-gray-600 leading-relaxed text-justify mb-3! line-clamp-2">
-                                {htmlToPlainText(item.body)}
+                                {htmlToPlainText(item.summary || item.body)}
                               </div>
 
                               {/* متا اطلاعات */}

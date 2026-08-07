@@ -207,13 +207,10 @@ const CarNews = ({
   return (
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4">
-       
-
         <div className="flex flex-col lg:flex-row gap-6 relative items-start">
           <div className="lg:w-3/4 w-full lg:sticky lg:top-20 lg:self-start">
-            
             <div className="bg-white rounded-2xl sm:px-6 px-2 shadow-sm border border-gray-100 overflow-hidden">
-          {/* نمایش اطلاعات صفحه */}
+              {/* نمایش اطلاعات صفحه */}
               <div className="flex items-center justify-between flex-wrap gap-2 py-2">
                 <div className="flex items-center gap-3 flex-wrap">
                   <span className="text-sm text-gray-500">
@@ -229,20 +226,19 @@ const CarNews = ({
                   {toPersianNumbers(totalItems)} خبر
                 </span>
               </div>
-           {/* هدر */}
-        <div className="text-center mb-8!">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4!">
-            <span className="text-red-600">
-              {newsDetails?.title || "اخبار خودرو"}
-            </span>
-          </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            {newsDetails?.summary
-              ? htmlToPlainText(newsDetails.summary)
-              : "آخرین اخبار و تحلیل‌های بازار خودرو ایران"}
-          </p>
-        </div>
-             
+              {/* هدر */}
+              <div className="text-center mb-8!">
+                <h1 className="text-3xl font-bold text-gray-900 mb-4!">
+                  <span className="text-red-600">
+                    {newsDetails?.title || "اخبار خودرو"}
+                  </span>
+                </h1>
+                <p className="text-gray-600 max-w-2xl mx-auto">
+                  {newsDetails?.summary
+                    ? htmlToPlainText(newsDetails.summary)
+                    : "آخرین اخبار و تحلیل‌های بازار خودرو ایران"}
+                </p>
+              </div>
 
               {/* تب‌ها */}
               <div className="relative">
@@ -320,9 +316,9 @@ const CarNews = ({
                                 {news.title}
                               </h2>
                             </Link>
-                            {news.body && (
+                            {(news.summary || news.body) && (
                               <div className="text-gray-600 mb-3! leading-relaxed text-justify line-clamp-3 text-sm">
-                                {htmlToPlainText(news.body)}
+                                {htmlToPlainText(news.summary || news.body)}
                               </div>
                             )}
 
