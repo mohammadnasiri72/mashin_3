@@ -49,7 +49,6 @@ export default function RatingProsCons({
   detailsCar: ItemsId;
   pollData: PollData;
 }) {
-  console.log(pollData);
 
   // دریافت مزایا و معایب از دیتا
   const advantagesData = detailsCar.properties.find(

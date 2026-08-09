@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
+import { mainDomain } from "@/utils/mainDomain";
 import { useMemo, useState } from "react";
 import { BiChevronLeft } from "react-icons/bi";
 import { CompetitorCar, CompetitorRow, PricePoint, PriceRange } from "./types";
-import { mainDomain } from "@/utils/mainDomain";
 
 interface PriceAndComparisonProps {
   ranges: PriceRange[];
@@ -79,7 +78,7 @@ export default function PriceAndComparison({
   rows,
   onViewFullComparison,
   onCompareOne,
-  detailsCarcompetitor
+  detailsCarcompetitor,
 }: {
   ranges: PriceRange[];
   dataByRange: Record<string, PricePoint[]>;
@@ -88,10 +87,9 @@ export default function PriceAndComparison({
   rows: CompetitorRow[];
   onViewFullComparison?: () => void;
   onCompareOne?: (competitorId: string) => void;
-  detailsCarcompetitor:ItemsId[]
+  detailsCarcompetitor: ItemsId[];
 }) {
-    console.log(detailsCarcompetitor);
-    
+
   const [activeRange, setActiveRange] = useState(
     defaultRangeId ?? ranges[0]?.id,
   );
@@ -133,13 +131,13 @@ export default function PriceAndComparison({
                         <div className="flex flex-col items-center gap-2">
                           <div className="relative h-12 w-20">
                             <img
-                              src={mainDomain +car.image}
+                              src={mainDomain + car.image}
                               alt={car.title}
                               className="object-contain"
                             />
                           </div>
                           <span className="text-xs font-bold text-slate-800">
-                           {car.sourceName} {car.title}
+                            {car.sourceName} {car.title}
                           </span>
                         </div>
                       </th>
@@ -165,7 +163,6 @@ export default function PriceAndComparison({
                       ))}
                     </tr>
                   ))}
-                
                 </tbody>
               </table>
             </div>
@@ -178,7 +175,7 @@ export default function PriceAndComparison({
               <h2 className="text-base font-extrabold text-slate-900">
                 نمودار قیمت
               </h2>
- <button
+              <button
                 onClick={onViewFullComparison}
                 className="flex items-center gap-0.5 text-sm font-semibold text-red-600 hover:text-red-700 cursor-pointer"
               >
@@ -203,8 +200,6 @@ export default function PriceAndComparison({
                   );
                 })}
               </div>
-
-             
             </div>
 
             <MiniLineChart data={data} />

@@ -267,7 +267,7 @@ function MainBoxBestChoices({
 
                               {/* خلاصه */}
                               <div className="text-gray-600 mb-3! leading-relaxed text-justify line-clamp-6">
-                                {htmlToPlainText(bestChoice.body)}
+                                {bestChoice.summary ?  htmlToPlainText(bestChoice.summary):htmlToPlainText(bestChoice.body)}
                               </div>
 
                               <div className="flex items-center justify-between mt-2">

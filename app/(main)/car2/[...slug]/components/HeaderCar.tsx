@@ -1,6 +1,4 @@
-import { mainDomain, mainDomainOld } from '@/utils/mainDomain'
 import Link from 'next/link'
-import React from 'react'
 
 function HeaderCar({detailsCar}:{detailsCar:ItemsId}) {
   return (

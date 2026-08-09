@@ -287,7 +287,7 @@ const WhichCars = ({
 
                               {/* خلاصه مقایسه */}
                               <div className="text-gray-600 mb-3! leading-relaxed text-justify line-clamp-6">
-                                {htmlToPlainText(comparison.body)}
+                                {htmlToPlainText(comparison.summary || comparison.body)}
                               </div>
 
                               {/* متا اطلاعات */}

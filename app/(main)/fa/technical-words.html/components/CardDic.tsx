@@ -326,7 +326,7 @@ function CardDic({
                                   {d.title}
                                 </h2>
                                 <p className="text-gray-600 leading-relaxed">
-                                  {htmlToPlainText(d.body)}
+                                  {htmlToPlainText(d.summary || d.body)}
                                 </p>
                               </div>
                               <FaArrowLeft className="text-gray-400 group-hover:text-red-500 group-hover:-translate-x-1 transition-all" />

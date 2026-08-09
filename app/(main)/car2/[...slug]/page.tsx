@@ -99,7 +99,6 @@ async function page({
       }),
     ]);
 
-  // console.log(detailsCarcompetitor);
 
   const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
 
