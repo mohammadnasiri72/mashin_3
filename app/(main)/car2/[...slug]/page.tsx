@@ -14,14 +14,14 @@ import {
   CompetitorRow,
   PricePoint,
   PriceRange,
-  SimilarCarItem,
 } from "./components/types";
 
+import CommentsSection from "@/app/components/CommentsSection";
 import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
 import PriceAndComparison from "./components/PriceAndComparison";
 import RelatedItems from "./components/RelatedItems";
-import CommentsSection from "@/app/components/CommentsSection";
+import ReviewSection from "./components/ReviewSection";
 
 async function page({
   params,
@@ -111,19 +111,21 @@ async function page({
     PageSize: 10,
   });
 
-   const relatedVideo = await getItem({
-            TypeId: 1028,
-            langCode: "fa",
-            Term: searchTerm,
-            PageIndex: 1,
-            PageSize: 6,
-          });
+  const relatedVideo = await getItem({
+    TypeId: 1028,
+    langCode: "fa",
+    Term: searchTerm,
+    PageIndex: 1,
+    PageSize: 6,
+  });
 
-           const idsCompares = detailsCar.properties.find(
-          (e) => e.propertyKey === "p1042_vidrelatedcompare",
-        )?.propertyValue;
+  const idsCompares = detailsCar.properties.find(
+    (e) => e.propertyKey === "p1042_vidrelatedcompare",
+  )?.propertyValue;
 
-const relatedCompare:ItemsId[] = idsCompares ?  await getItemByIds(idsCompares) : [];
+  const relatedCompare: ItemsId[] = idsCompares
+    ? await getItemByIds(idsCompares)
+    : [];
 
   const priceRanges: PriceRange[] = [
     { id: "1m", label: "1 ماه" },
@@ -201,22 +203,23 @@ const relatedCompare:ItemsId[] = idsCompares ?  await getItemByIds(idsCompares) 
     { label: "حجم صندوق عقب (لیتر)", values: ["480", "475", "337", "450"] },
   ];
 
- 
-
   return (
     <>
       <HeroSection detailsCar={detailsCar} pollData={pollData} />
       <SectionTabs />
 
       {/* هر بخش با id مخصوص برای اسکرول */}
-      <section id="expert-review" className="scroll-mt-20">
-        {/* <ExpertReview detailsCar={detailsCar} /> */}
-        <div className="h-screen">expert-review</div>
-      </section>
 
       <section id="specifications" className="scroll-mt-20">
-        <CarDimensions detailsCar={detailsCar} />
+        <CarDimensions
+          detailsCar={detailsCar}
+          vehicle={"car"}
+          Attachment={Attachment.filter((e) => e.tabId === 4)}
+        />
         <RatingProsCons detailsCar={detailsCar} pollData={pollData} />
+      </section>
+      <section id="expert-review" className="scroll-mt-20">
+        <ReviewSection detailsCar={detailsCar} vehicle="car" />
       </section>
 
       <section id="images" className="scroll-mt-20">
@@ -232,16 +235,19 @@ const relatedCompare:ItemsId[] = idsCompares ?  await getItemByIds(idsCompares) 
       </section>
 
       <section id="news" className="scroll-mt-20">
-        <RelatedItems relatedItems={relatedNews} title={'اخبار مرتبط'}/>
+        <RelatedItems relatedItems={relatedNews} title={"اخبار مرتبط"} />
       </section>
 
       <section id="videos" className="scroll-mt-20">
-         <RelatedItems relatedItems={relatedVideo} title={'ویدئوهای مرتبط'}/>
+        <RelatedItems relatedItems={relatedVideo} title={"ویدئوهای مرتبط"} />
       </section>
 
       <section id="comparisons" className="scroll-mt-20">
         {/* <ComparisonsSection /> */}
-        <RelatedItems relatedItems={relatedCompare} title={'مقایسه‌های مرتبط'}/>
+        <RelatedItems
+          relatedItems={relatedCompare}
+          title={"مقایسه‌های مرتبط"}
+        />
       </section>
 
       <section id="reviews" className="scroll-mt-20">

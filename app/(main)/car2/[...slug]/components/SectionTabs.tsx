@@ -12,8 +12,8 @@ import {
 } from "react-icons/fa";
 
 const tabs = [
-  { id: "expert-review", label: "نقد کارشناسی", icon: FaSearch },
   { id: "specifications", label: "مشخصات فنی", icon: FaCog },
+  { id: "expert-review", label: "نقد کارشناسی", icon: FaSearch },
   { id: "images", label: "گالری تصاویر", icon: FaImages },
   { id: "news", label: "اخبار مرتبط", icon: FaNewspaper },
   { id: "videos", label: "ویدئوهای مرتبط", icon: FaVideo },

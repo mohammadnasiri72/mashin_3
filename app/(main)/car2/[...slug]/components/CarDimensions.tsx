@@ -1,13 +1,18 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { FaChevronDown, FaChevronUp, FaCar } from "react-icons/fa";
-import { mainDomain } from "@/utils/mainDomain";
+import { createMarkup } from "@/utils/func";
+import { useEffect, useRef, useState } from "react";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import VideoPlayerCar from "./VideoPlayerCar";
 
 export default function CarDimensions({
   detailsCar,
+  vehicle,
+  Attachment,
 }: {
   detailsCar: ItemsId;
+  vehicle: string;
+  Attachment: ItemsAttachment[];
 }) {
   const [showAll, setShowAll] = useState(false);
   const [height, setHeight] = useState(0);
@@ -20,14 +25,19 @@ export default function CarDimensions({
   // Get first 12 items for initial display
   const initialSpecs = specifications.slice(0, 12);
   const remainingSpecs = specifications.slice(12);
-  
+
   // Split initial specs into two columns (6 items each)
   const leftColumnSpecs = initialSpecs.slice(0, 6);
   const rightColumnSpecs = initialSpecs.slice(6, 12);
 
   // Split remaining specs into two columns
-  const remainingLeftSpecs = remainingSpecs.slice(0, Math.ceil(remainingSpecs.length / 2));
-  const remainingRightSpecs = remainingSpecs.slice(Math.ceil(remainingSpecs.length / 2));
+  const remainingLeftSpecs = remainingSpecs.slice(
+    0,
+    Math.ceil(remainingSpecs.length / 2),
+  );
+  const remainingRightSpecs = remainingSpecs.slice(
+    Math.ceil(remainingSpecs.length / 2),
+  );
 
   useEffect(() => {
     if (contentRef.current) {
@@ -54,16 +64,38 @@ export default function CarDimensions({
 
   // ترکیب ستون‌های اولیه
   const initialRows = combineColumns(leftColumnSpecs, rightColumnSpecs);
-  
+
   // ترکیب ستون‌های باقی‌مانده
   const remainingRows = combineColumns(remainingLeftSpecs, remainingRightSpecs);
 
+  const summary =
+    vehicle === "car"
+      ? detailsCar.properties.find((e) => e.propertyKey === "p1042_genral")
+          ?.propertyValue
+      : detailsCar.properties.find((e) => e.propertyKey === "p1052_genral")
+          ?.propertyValue;
+
   return (
     <section dir="rtl" className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6">
+      {summary && (
+        <div className="mb-6!">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6!">
+            <span className="px-1">بررسی </span>
+            <strong className="text-red-700">
+              {detailsCar.sourceName} {detailsCar.title}
+            </strong>
+          </h2>
+
+          <div
+            className="text_area text-gray-700 leading-8 text-justify space-y-4 mt-3 body-summary-car"
+            dangerouslySetInnerHTML={createMarkup(summary ? summary : "")}
+          />
+          {Attachment.length > 0 && <VideoPlayerCar Attachment={Attachment} />}
+        </div>
+      )}
       <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-extrabold text-slate-900">مشخصات فنی</h2>
-             
-            </div>
+        <h2 className="text-lg font-extrabold text-slate-900">مشخصات فنی</h2>
+      </div>
       <div className="rounded-2xl border border-slate-200/60 bg-white shadow-lg shadow-slate-200/50 overflow-hidden">
         {/* Main content with image and specs */}
         <div className="flex flex-col lg:flex-row-reverse items-start">
@@ -71,7 +103,7 @@ export default function CarDimensions({
           <div className="lg:w-[20%] w-full bg-white p-4 lg:p-6 flex items-center justify-center border-b lg:border-b-0 lg:border-l border-slate-200/60">
             <div className="relative w-full max-w-30 lg:max-w-none aspect-square">
               <img
-                src={'/images/1.png'}
+                src={"/images/1.png"}
                 alt={`${detailsCar.sourceName} ${detailsCar.title}`}
                 className="w-full h-full object-contain rounded-lg"
               />
@@ -88,36 +120,44 @@ export default function CarDimensions({
                   <div
                     className={`
                       flex items-center justify-between py-3 px-2
-                      ${rowIndex % 2 === 0 ? 'bg-slate-50/50' : 'bg-white'}
-                      ${rowIndex !== initialRows.length - 1 ? 'border-b border-slate-100' : ''}
+                      ${rowIndex % 2 === 0 ? "bg-slate-50/50" : "bg-white"}
+                      ${rowIndex !== initialRows.length - 1 ? "border-b border-slate-100" : ""}
                       transition-colors duration-200
                       h-full
                     `}
                   >
                     {row.left ? (
                       <>
-                        <span className="text-sm text-slate-600 whitespace-nowrap">{row.left.title}</span>
-                        <span className="text-sm font-semibold text-slate-900 text-left">{row.left.value}</span>
+                        <span className="text-sm text-slate-600 whitespace-nowrap">
+                          {row.left.title}
+                        </span>
+                        <span className="text-sm font-semibold text-slate-900 text-left">
+                          {row.left.value}
+                        </span>
                       </>
                     ) : (
                       <span className="text-sm text-slate-400">-</span>
                     )}
                   </div>
-                  
+
                   {/* Right column */}
                   <div
                     className={`
                       flex items-center justify-between py-3 px-2
-                      ${rowIndex % 2 === 0 ? 'bg-slate-50/50' : 'bg-white'}
-                      ${rowIndex !== initialRows.length - 1 ? 'border-b border-slate-100' : ''}
+                      ${rowIndex % 2 === 0 ? "bg-slate-50/50" : "bg-white"}
+                      ${rowIndex !== initialRows.length - 1 ? "border-b border-slate-100" : ""}
                       transition-colors duration-200
                       h-full
                     `}
                   >
                     {row.right ? (
                       <>
-                        <span className="text-sm text-slate-600 whitespace-nowrap">{row.right.title}</span>
-                        <span className="text-sm font-semibold text-slate-900 text-left">{row.right.value}</span>
+                        <span className="text-sm text-slate-600 whitespace-nowrap">
+                          {row.right.title}
+                        </span>
+                        <span className="text-sm font-semibold text-slate-900 text-left">
+                          {row.right.value}
+                        </span>
                       </>
                     ) : (
                       <span className="text-sm text-slate-400">-</span>
@@ -145,39 +185,51 @@ export default function CarDimensions({
                             <div
                               className={`
                                 flex items-center justify-between py-3 px-2
-                                ${globalIdx % 2 === 0 ? 'bg-slate-50/50' : 'bg-white'}
-                                ${rowIndex !== remainingRows.length - 1 ? 'border-b border-slate-100' : ''}
+                                ${globalIdx % 2 === 0 ? "bg-slate-50/50" : "bg-white"}
+                                ${rowIndex !== remainingRows.length - 1 ? "border-b border-slate-100" : ""}
                                 transition-colors duration-200
                                 h-full
                               `}
                             >
                               {row.left ? (
                                 <>
-                                  <span className="text-sm text-slate-600 whitespace-nowrap">{row.left.title}</span>
-                                  <span className="text-sm font-semibold text-slate-900 text-left">{row.left.value}</span>
+                                  <span className="text-sm text-slate-600 whitespace-nowrap">
+                                    {row.left.title}
+                                  </span>
+                                  <span className="text-sm font-semibold text-slate-900 text-left">
+                                    {row.left.value}
+                                  </span>
                                 </>
                               ) : (
-                                <span className="text-sm text-slate-400">-</span>
+                                <span className="text-sm text-slate-400">
+                                  -
+                                </span>
                               )}
                             </div>
-                            
+
                             {/* Right column - remaining */}
                             <div
                               className={`
                                 flex items-center justify-between py-3 px-2
-                                ${globalIdx % 2 === 0 ? 'bg-slate-50/50' : 'bg-white'}
-                                ${rowIndex !== remainingRows.length - 1 ? 'border-b border-slate-100' : ''}
+                                ${globalIdx % 2 === 0 ? "bg-slate-50/50" : "bg-white"}
+                                ${rowIndex !== remainingRows.length - 1 ? "border-b border-slate-100" : ""}
                                 transition-colors duration-200
                                 h-full
                               `}
                             >
                               {row.right ? (
                                 <>
-                                  <span className="text-sm text-slate-600 whitespace-nowrap">{row.right.title}</span>
-                                  <span className="text-sm font-semibold text-slate-900 text-left">{row.right.value}</span>
+                                  <span className="text-sm text-slate-600 whitespace-nowrap">
+                                    {row.right.title}
+                                  </span>
+                                  <span className="text-sm font-semibold text-slate-900 text-left">
+                                    {row.right.value}
+                                  </span>
                                 </>
                               ) : (
-                                <span className="text-sm text-slate-400">-</span>
+                                <span className="text-sm text-slate-400">
+                                  -
+                                </span>
                               )}
                             </div>
                           </div>
@@ -194,7 +246,7 @@ export default function CarDimensions({
                     className="inline-flex cursor-pointer items-center gap-2 text-sm font-semibold text-red-600 hover:text-red-700 transition-colors group"
                   >
                     <span>
-                      {showAll ? 'بستن مشخصات' : `مشاهده مشخصات کامل`}
+                      {showAll ? "بستن مشخصات" : `مشاهده مشخصات کامل`}
                     </span>
                     {showAll ? (
                       <FaChevronUp className="text-xs group-hover:-translate-y-0.5 transition-transform" />
