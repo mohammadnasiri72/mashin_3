@@ -164,6 +164,14 @@ export async function middleware(request: NextRequest) {
           headers: requestHeaders,
         },
       });
+  }else if (pathname.startsWith("/fa/tag/") || pathname.startsWith("/tag/")) {
+     const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+        request: {
+          headers: requestHeaders,
+        },
+      });
   } else {
     try {
       const currentUrl = decodeURIComponent(pathname);

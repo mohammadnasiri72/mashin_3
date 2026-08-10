@@ -120,6 +120,7 @@ const page = Number(searchParam.page) || 1;
         tabConfig={tabs}
         dic={dic}
         banner={banner}
+        curentPage={page}
       />
     </>
   );

@@ -19,17 +19,19 @@ const WhichCars = ({
   popularComparisons,
   banner,
   whichCarsCat,
+  curentPage
 }: {
   whichCars: Items[];
   popularComparisons: Items[];
   banner: Items[];
   whichCarsCat: ItemsId | null;
+  curentPage:number
 }) => {
   const searchParams = useSearchParams();
 
   // State برای infinite scroll
   const [whichCars, setWhichCars] = useState<Items[]>(initialWhichCars || []);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(curentPage);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [totalItems, setTotalItems] = useState<number>(

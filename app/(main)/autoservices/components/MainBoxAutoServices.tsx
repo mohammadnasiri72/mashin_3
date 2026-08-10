@@ -23,6 +23,7 @@ function MainBoxAutoServices({
   lastNews,
   lastCars,
   provinces,
+  curentPage
 }: {
   AutoServiceData: Items[];
   brands: ItemsCategory[];
@@ -34,6 +35,7 @@ function MainBoxAutoServices({
   lastNews: Items[];
   lastCars: Items[];
   provinces: Items[];
+  curentPage:number
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -50,7 +52,7 @@ function MainBoxAutoServices({
   const [propertyItems, setPropertyItems] = useState<ItemsId[]>(
     initialPropertyItems || [],
   );
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(curentPage);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [totalItems, setTotalItems] = useState<number>(

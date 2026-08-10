@@ -22,6 +22,7 @@ function MainBoxBestChoices({
   popularBestChoices,
   lastNews,
   lastCars,
+  curentPage
 }: {
   title: string;
   summary: string | null;
@@ -30,13 +31,14 @@ function MainBoxBestChoices({
   popularBestChoices: Items[];
   lastNews: Items[];
   lastCars: Items[];
+  curentPage:number
 }) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   // State برای infinite scroll
   const [bestChoices, setBestChoices] = useState<Items[]>(initialBestChoices || []);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(curentPage);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [totalItems, setTotalItems] = useState<number>(

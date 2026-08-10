@@ -119,6 +119,7 @@ async function pageBestChoices({
           popularBestChoices={popularBestChoices}
           lastNews={lastNews}
           lastCars={lastCars}
+          curentPage={page}
         />
       )}
     </>

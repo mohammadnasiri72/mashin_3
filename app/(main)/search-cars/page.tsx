@@ -160,6 +160,7 @@ async function pageSearchCars({
         initialBrandId={brandId}
         initialModelId={modelId}
         initialOrderby={orderby}
+        curentPage={page}
       />
     </>
   );

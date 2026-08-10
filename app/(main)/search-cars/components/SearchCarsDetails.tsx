@@ -25,6 +25,7 @@ function SearchCarsDetails({
   initialBrandId,
   initialModelId,
   initialOrderby,
+  curentPage,
 }: {
   carBrands: ItemsCategory[];
   carDetails: ItemsCategoryId[];
@@ -35,6 +36,7 @@ function SearchCarsDetails({
   initialBrandId: number;
   initialModelId: number;
   initialOrderby: number;
+  curentPage: number;
 }) {
   const [models, setModels] = useState<ItemsCategory[]>([]);
   const [brandId, setBrandId] = useState<number>(
@@ -54,9 +56,7 @@ function SearchCarsDetails({
 
   // State برای infinite scroll
   const [carView, setCarView] = useState<Items[]>(initialCarView || []);
-  const [currentPage, setCurrentPage] = useState<number>(
-    Number(searchParams.get("page")) || 1,
-  );
+  const [currentPage, setCurrentPage] = useState<number>(curentPage);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [totalItems, setTotalItems] = useState<number>(
@@ -299,14 +299,13 @@ function SearchCarsDetails({
                     </span>{" "}
                     <span className="text-red-600">{typeCarTitle}</span>{" "}
                   </h2>
-                ):(
+                ) : (
                   <h2 className="text-2xl font-bold text-gray-900 w-full">
                     <span className="text-red-600">
                       همه برند های خودرو {typeCarTitle}
                     </span>
                   </h2>
                 )}
-                
               </div>
             </div>
 

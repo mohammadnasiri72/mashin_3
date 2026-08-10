@@ -101,6 +101,7 @@ async function pageWhichCars({
         popularComparisons={popularComparisons}
         banner={banner}
         whichCarsCat={whichCarsCat}
+        curentPage={page}
       />
     </>
   );

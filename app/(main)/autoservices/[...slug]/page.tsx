@@ -150,6 +150,7 @@ async function pageAutoServiceDetails({
         provinces={[...provinces].sort((a, b) =>
           a.title.localeCompare(b.title, "fa"),
         )}
+        curentPage={page}
       />
     </>
   );

@@ -115,6 +115,7 @@ async function pagePodcastDainamic({
         banner={banner}
         popularNews={popularNews}
         titleCategory={podcastsCa.title ? podcastsCa.title : ""}
+        curentPage={page}
       />
     </>
   );

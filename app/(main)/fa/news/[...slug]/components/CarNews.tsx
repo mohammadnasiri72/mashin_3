@@ -25,6 +25,7 @@ const CarNews = ({
   banner,
   newsDetails,
   tabConfig,
+  curentPage
 }: {
   id: number;
   newsData: Items[];
@@ -33,11 +34,12 @@ const CarNews = ({
   banner: Items[];
   newsDetails: ItemsCategoryId | ItemsId;
   tabConfig: { key: number; href: string; label: string }[];
+  curentPage:number
 }) => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [isDragging, setIsDragging] = useState(false);
   const [newsData, setNewsData] = useState<Items[]>(initialNewsData || []);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(curentPage);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [totalItems, setTotalItems] = useState<number>(

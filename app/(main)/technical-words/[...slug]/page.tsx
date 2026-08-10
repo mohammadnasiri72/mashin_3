@@ -131,6 +131,7 @@ const id =
           tabConfig={tabs}
           dic={dic}
           banner={banner}
+          curentPage={page}
         />
     </>
   );

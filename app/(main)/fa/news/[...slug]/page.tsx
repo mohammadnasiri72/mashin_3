@@ -155,6 +155,7 @@ async function pageNewsDetails({
             banner={banner}
             newsDetails={newsDetails}
             tabConfig={tabs}
+            curentPage={page}
           />
         )}
       </>

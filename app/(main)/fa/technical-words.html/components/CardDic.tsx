@@ -15,12 +15,14 @@ function CardDic({
   tabConfig,
   dic: initialDic,
   banner,
+  curentPage
 }: {
   title: string;
   summary: string;
   tabConfig: { key: number; href: string; label: string }[];
   dic: Items[];
   banner: Items[];
+  curentPage:number
 }) {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [isMainLonger, setIsMainLonger] = useState(true);
@@ -32,7 +34,7 @@ function CardDic({
 
   // State برای infinite scroll
   const [dic, setDic] = useState<Items[]>(initialDic || []);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(curentPage);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [totalItems, setTotalItems] = useState<number>(

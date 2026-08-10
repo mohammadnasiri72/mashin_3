@@ -24,12 +24,14 @@ const EducationCar = ({
   educationCat,
   id,
   banner,
+  curentPage
 }: {
   education: Items[];
   educationPopular: Items[];
   educationCat: ItemsCategory[];
   id: number;
   banner: Items[];
+  curentPage:number
 }) => {
   const searchParams = useSearchParams();
   const [isMainLonger, setIsMainLonger] = useState(true);
@@ -37,7 +39,7 @@ const EducationCar = ({
 
   // State برای infinite scroll
   const [education, setEducation] = useState<Items[]>(initialEducation || []);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(curentPage);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [totalItems, setTotalItems] = useState<number>(

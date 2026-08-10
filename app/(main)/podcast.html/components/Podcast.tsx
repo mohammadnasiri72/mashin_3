@@ -14,19 +14,21 @@ function Podcast({
   banner,
   popularNews,
   titleCategory,
+  curentPage
 }: {
   podcasts: Items[];
   podcastsCat: ItemsCategory[];
   banner: Items[];
   popularNews: Items[];
   titleCategory: string;
+  curentPage:number
 }) {
   const [isMainLonger, setIsMainLonger] = useState(true);
   const searchParams = useSearchParams();
 
   // State برای infinite scroll
   const [podcasts, setPodcasts] = useState<Items[]>(initialPodcasts || []);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(curentPage);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [totalItems, setTotalItems] = useState<number>(

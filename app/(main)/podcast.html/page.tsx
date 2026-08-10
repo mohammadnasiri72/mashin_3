@@ -111,6 +111,7 @@ async function pagePodcast({
         banner={banner}
         popularNews={popularNews}
         titleCategory=""
+        curentPage={page}
       />
     </>
   );

@@ -120,6 +120,7 @@ async function pageEducationTips({
         educationCat={educationCat}
         id={String(id) !== "NaN" ? id : 0}
         banner={banner}
+        curentPage={page}
       />
     </>
   );
