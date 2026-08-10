@@ -88,7 +88,7 @@ export async function middleware(request: NextRequest) {
         { status: 301 },
       );
     }
-     // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
+    // اگر ریدایرکتی نبود، آدرس رو ذخیره کن
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-pathname", pathname + url.search);
     return NextResponse.next({
@@ -157,21 +157,21 @@ export async function middleware(request: NextRequest) {
       },
     });
   } else if (pathname.startsWith("/car2")) {
-     const requestHeaders = new Headers(request.headers);
+    const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-pathname", pathname + url.search);
     return NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      });
-  }else if (pathname.startsWith("/fa/tag/") || pathname.startsWith("/tag/")) {
-     const requestHeaders = new Headers(request.headers);
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } else if (pathname.startsWith("/fa/tag/") || pathname.startsWith("/tag/")) {
+    const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-pathname", pathname + url.search);
     return NextResponse.next({
-        request: {
-          headers: requestHeaders,
-        },
-      });
+      request: {
+        headers: requestHeaders,
+      },
+    });
   } else {
     try {
       const currentUrl = decodeURIComponent(pathname);
@@ -331,8 +331,6 @@ export async function middleware(request: NextRequest) {
       },
     });
   }
-
-  return NextResponse.next();
 }
 
 export const config = {
