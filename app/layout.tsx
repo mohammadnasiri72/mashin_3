@@ -88,6 +88,7 @@ export default async function RootLayout({
         <link rel="apple-touch-icon" href="/images/logo.png" />
         <link rel="preload" href="/style/style.css" as="style" />
         <link rel="stylesheet" href="/style/style.css" />
+        <link rel="stylesheet" href="https://admin.mashin3.com/css/front.css" />
         <meta name="theme-color" content="#1890ff" />
       </head>
       <body>

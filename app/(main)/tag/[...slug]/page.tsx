@@ -14,8 +14,8 @@ export async function generateMetadata({
     .slice(0, decodeURIComponent(param.slug[0]).indexOf("."))
     .replaceAll("-", " ");
   return {
-    title: term ? term : "کلید واژه‌ها | ماشین3",
-    description: "جستجوی کلید واژه‌ها",
+    title: term ? `اخبار و مطالب مرتبط با ${term} | ماشین 3` : "کلید واژه‌ها | ماشین3",
+    description: term ? `اخبار و مطالب مرتبط با ${term} | ماشین 3` : "کلید واژه‌ها | ماشین3",
   };
 }
 

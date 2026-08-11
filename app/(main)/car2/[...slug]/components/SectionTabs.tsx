@@ -10,14 +10,16 @@ import {
   FaChartBar,
   FaCommentDots,
 } from "react-icons/fa";
+import { MdCompare } from "react-icons/md";
 
 const tabs = [
   { id: "specifications", label: "مشخصات فنی", icon: FaCog },
   { id: "expert-review", label: "نقد کارشناسی", icon: FaSearch },
   { id: "images", label: "گالری تصاویر", icon: FaImages },
+  { id: "priceAndComparison", label: "رقبا و نمودار", icon: FaChartBar },
   { id: "news", label: "اخبار مرتبط", icon: FaNewspaper },
   { id: "videos", label: "ویدئوهای مرتبط", icon: FaVideo },
-  { id: "comparisons", label: "مقایسه‌های مرتبط", icon: FaChartBar },
+  { id: "comparisons", label: "مقایسه‌های مرتبط", icon: MdCompare },
   { id: "reviews", label: "نظرات", icon: FaCommentDots },
 ];
 
@@ -85,7 +87,7 @@ export default function SectionTabs() {
         bg-slate-900
         border-b border-white/5
         transition-shadow duration-300
-        ${isScrolled ? "shadow-2xl shadow-black/50" : ""}
+        ${isScrolled ? "" : ""}
       `}
     >
       <div className="relative mx-auto flex max-w-7xl items-center px-4 md:px-6">
@@ -112,8 +114,8 @@ export default function SectionTabs() {
                   bg-transparent
                   ${
                     isActive
-                      ? "text-white"
-                      : "text-slate-400 hover:text-slate-200"
+                      ? "text-white!"
+                      : "text-white!"
                   }
                   group
                 `}
@@ -122,7 +124,7 @@ export default function SectionTabs() {
                   className={`
                     text-2xl
                     transition-all duration-300
-                    ${isActive ? "text-[#ce1a2a]" : "text-slate-300 group-hover:text-slate-300"}
+                    ${isActive ? "text-[#ce1a2a]" : "text-white!"}
                   `}
                 />
 
@@ -130,7 +132,7 @@ export default function SectionTabs() {
                   className={`
                   text-xs font-medium
                   transition-all duration-300
-                  ${isActive ? "text-[#ce1a2a]" : "text-slate-300 group-hover:text-white!"}
+                  ${isActive ? "text-white!" : "text-white! group-hover:text-white!"}
                 `}
                 >
                   {tab.label}

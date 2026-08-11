@@ -164,7 +164,16 @@ export async function middleware(request: NextRequest) {
         headers: requestHeaders,
       },
     });
-  } else if (pathname.startsWith("/fa/tag/") || pathname.startsWith("/tag/")) {
+  } else if (pathname.match(/^\/fa\/tag\//i) || pathname.match(/^\/tag\//i)) {
+    const decodedPath = decodeURIComponent(pathname);
+    const lowerCasePath = decodedPath.toLowerCase();
+
+    if (decodedPath !== lowerCasePath) {
+      const newUrl = new URL(request.url);
+        newUrl.pathname = lowerCasePath;
+        return NextResponse.redirect(newUrl, { status: 301 });
+    }
+
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-pathname", pathname + url.search);
     return NextResponse.next({

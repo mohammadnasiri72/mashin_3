@@ -114,7 +114,7 @@ export default function ImageGallery({
               className={[
                 "shrink-0 rounded-full px-4 py-1.5 text-xs font-semibold transition-colors cursor-pointer",
                 isActive
-                  ? "bg-[#ce1a2a] text-white"
+                  ? "bg-[#ce1a2a] text-white!"
                   : "bg-slate-100 text-slate-600 hover:bg-slate-200",
               ].join(" ")}
             >
@@ -125,7 +125,7 @@ export default function ImageGallery({
       </div>
 
       {/* Simple Slider */}
-      <div className=" rounded-2xl border border-slate-100 bg-white p-3 shadow-sm relative">
+      <div className=" rounded-2xl border border-slate-100 bg-white! p-3 shadow-sm relative">
         <Swiper
           modules={[Navigation]}
           navigation={{
@@ -167,13 +167,13 @@ export default function ImageGallery({
         {/* Navigation buttons */}
         <button
           aria-label="تصویر قبلی"
-          className="gallery-prev border border-black/10 absolute right-0 translate-x-1/2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md hover:bg-white cursor-pointer"
+          className="gallery-prev border border-black/10 absolute right-0 translate-x-1/2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90! text-slate-700 shadow-md hover:bg-white cursor-pointer"
         >
           <BiChevronRight className="text-xl" />
         </button>
         <button
           aria-label="تصویر بعدی"
-          className="gallery-next absolute border border-black/10 left-0 -translate-x-1/2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md hover:bg-white cursor-pointer"
+          className="gallery-next absolute border border-black/10 left-0 -translate-x-1/2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90! text-slate-700 shadow-md hover:bg-white! cursor-pointer"
         >
           <BiChevronLeft className="text-xl" />
         </button>

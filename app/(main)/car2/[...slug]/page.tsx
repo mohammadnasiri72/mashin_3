@@ -99,8 +99,7 @@ async function page({
       }),
     ]);
 
-
-  const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
+  const searchTerm = detailsCar.sourceName ;
 
   const relatedNews = await getItem({
     TypeId: 5,
@@ -115,7 +114,7 @@ async function page({
     langCode: "fa",
     Term: searchTerm,
     PageIndex: 1,
-    PageSize: 6,
+    PageSize: 10,
   });
 
   const idsCompares = detailsCar.properties.find(
@@ -208,51 +207,91 @@ async function page({
       <SectionTabs />
 
       {/* هر بخش با id مخصوص برای اسکرول */}
+      <div className="px-3">
+        <section
+          id="specifications"
+          className="scroll-mt-20 bg-white rounded-2xl mt-5 shadow-sm border border-gray-100"
+        >
+          <CarDimensions
+            detailsCar={detailsCar}
+            vehicle={"car"}
+            Attachment={Attachment.filter((e) => e.tabId === 4)}
+          />
+          <RatingProsCons detailsCar={detailsCar} pollData={pollData} />
+        </section>
+        <section
+          id="expert-review"
+          className="scroll-mt-20 bg-white rounded-2xl mt-5 shadow-sm border border-gray-100"
+        >
+          <ReviewSection detailsCar={detailsCar} vehicle="car" />
+        </section>
 
-      <section id="specifications" className="scroll-mt-20">
-        <CarDimensions
-          detailsCar={detailsCar}
-          vehicle={"car"}
-          Attachment={Attachment.filter((e) => e.tabId === 4)}
-        />
-        <RatingProsCons detailsCar={detailsCar} pollData={pollData} />
-      </section>
-      <section id="expert-review" className="scroll-mt-20">
-        <ReviewSection detailsCar={detailsCar} vehicle="car" />
-      </section>
+        <section
+          id="images"
+          className="scroll-mt-20 bg-white rounded-2xl mt-5 shadow-sm border border-gray-100"
+        >
+          <ImageGallery Attachment={Attachment} />
+         
+        </section>
+        <section
+          id="priceAndComparison"
+          className="scroll-mt-20 bg-white rounded-2xl mt-5 shadow-sm border border-gray-100"
+        >
+          <PriceAndComparison
+            ranges={priceRanges}
+            dataByRange={priceDataByRange}
+            defaultRangeId="3m"
+            competitors={competitors}
+            rows={comparisonRows}
+            detailsCarcompetitor={detailsCarcompetitor.slice(0, 4)}
+          />
+        </section>
 
-      <section id="images" className="scroll-mt-20">
-        <ImageGallery Attachment={Attachment} />
-        <PriceAndComparison
-          ranges={priceRanges}
-          dataByRange={priceDataByRange}
-          defaultRangeId="3m"
-          competitors={competitors}
-          rows={comparisonRows}
-          detailsCarcompetitor={detailsCarcompetitor.slice(0, 4)}
-        />
-      </section>
+        <section
+          id="news"
+          className="scroll-mt-20 bg-white rounded-2xl mt-5 shadow-sm border border-gray-100"
+        >
+          <RelatedItems
+            relatedItems={relatedNews}
+            title={"اخبار مرتبط"}
+            linkAll={"/fa/news/اخبار-خودرو.html"}
+            sliderId="news-slider"
+          />
+        </section>
 
-      <section id="news" className="scroll-mt-20">
-        <RelatedItems relatedItems={relatedNews} title={"اخبار مرتبط"} />
-      </section>
+        <section
+          id="videos"
+          className="scroll-mt-20 bg-white rounded-2xl mt-5 shadow-sm border border-gray-100"
+        >
+          <RelatedItems
+            relatedItems={relatedVideo}
+            title={"ویدئوهای مرتبط"}
+            linkAll={"/videos.html"}
+            sliderId="videos-slider"
+          />
+        </section>
 
-      <section id="videos" className="scroll-mt-20">
-        <RelatedItems relatedItems={relatedVideo} title={"ویدئوهای مرتبط"} />
-      </section>
+        <section
+          id="comparisons"
+          className="scroll-mt-20 bg-white rounded-2xl mt-5 shadow-sm border border-gray-100"
+        >
+          {/* <ComparisonsSection /> */}
+          <RelatedItems
+            relatedItems={relatedCompare}
+            title={"مقایسه‌های مرتبط"}
+            linkAll={"/whichcars.html"}
+            sliderId="compare-slider"
+          />
+        </section>
 
-      <section id="comparisons" className="scroll-mt-20">
-        {/* <ComparisonsSection /> */}
-        <RelatedItems
-          relatedItems={relatedCompare}
-          title={"مقایسه‌های مرتبط"}
-        />
-      </section>
-
-      <section id="reviews" className="scroll-mt-20">
-        {/* <ReviewsSection comments={comments} /> */}
-        <CommentsSection details={detailsCar} comments={comments} id={id} />
-      </section>
+        <section
+          id="reviews"
+          className="scroll-mt-20 bg-white rounded-2xl mt-5 shadow-sm border border-gray-100"
+        >
+          {/* <ReviewsSection comments={comments} /> */}
+          <CommentsSection details={detailsCar} comments={comments} id={id} />
+        </section>
+      </div>
     </>
   );
 }

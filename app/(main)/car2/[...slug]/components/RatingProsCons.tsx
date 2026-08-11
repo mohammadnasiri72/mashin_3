@@ -1,9 +1,12 @@
 "use client";
 
 import { createMarkup } from "@/utils/func";
+import { useState } from "react";
 import { HiThumbDown, HiThumbUp } from "react-icons/hi";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { MdCheckroom } from "react-icons/md";
+import { FaStar } from "react-icons/fa";
+import PollModal from "./PollModal";
 
 function ScoreDonut({ score }: { score: number }) {
   const percent = Math.max(0, Math.min(100, (score / 10) * 100));
@@ -44,11 +47,13 @@ function ScoreDonut({ score }: { score: number }) {
 
 export default function RatingProsCons({
   detailsCar,
-  pollData,
+  pollData: initialPollData,
 }: {
   detailsCar: ItemsId;
   pollData: PollData;
 }) {
+  const [pollData, setPollData] = useState<PollData>(initialPollData);
+  const [isPollModalOpen, setIsPollModalOpen] = useState(false);
 
   // دریافت مزایا و معایب از دیتا
   const advantagesData = detailsCar.properties.find(
@@ -63,32 +68,30 @@ export default function RatingProsCons({
   const extractTextFromHTML = (html: string) => {
     if (!html) return [];
 
-    // حذف تگ‌های HTML و استخراج متن
     const text = html.replace(/<[^>]*>/g, "").trim();
-
-    // جدا کردن موارد با استفاده از ویرگول، نقطه یا خط تیره
     const items = text
       .split(/[،،.\n-]/)
       .filter((item) => item.trim().length > 0);
     return items.map((item) => item.trim());
   };
 
-  // استخراج معایب از دیتا
   const disadvantages = disadvantagesData?.propertyValue
     ? extractTextFromHTML(disadvantagesData.propertyValue)
     : null;
 
-  // استخراج مزایا از دیتا
   const advantages = advantagesData?.propertyValue
     ? extractTextFromHTML(advantagesData.propertyValue)
     : null;
+
+  const handlePollUpdate = (newPollData: PollData) => {
+    setPollData(newPollData);
+  };
 
   return (
     <section dir="rtl" className="mx-auto w-full max-w-7xl px-4 pb-8 md:px-6">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {/* Cons - با آیکون پس‌زمینه */}
         <div className="relative rounded-2xl border border-slate-100 bg-white p-5 shadow-sm overflow-hidden">
-          {/* آیکون پس‌زمینه */}
           <div className="absolute bottom-2 left-2 opacity-5">
             <HiThumbDown className="text-[120px] text-red-600" />
           </div>
@@ -101,7 +104,6 @@ export default function RatingProsCons({
               <h3 className="text-sm font-bold text-slate-900">معایب</h3>
             </div>
 
-            {/* نمایش با استفاده از dangerouslySetInnerHTML اگر HTML داریم */}
             {disadvantagesData?.value ? (
               <ul
                 className="flex flex-col gap-3 list-disc pr-5"
@@ -126,7 +128,6 @@ export default function RatingProsCons({
 
         {/* Pros - با آیکون پس‌زمینه */}
         <div className="relative rounded-2xl border border-slate-100 bg-white p-5 shadow-sm overflow-hidden">
-          {/* آیکون پس‌زمینه */}
           <div className="absolute bottom-2 left-2 opacity-5">
             <HiThumbUp className="text-[120px] text-emerald-600" />
           </div>
@@ -139,7 +140,6 @@ export default function RatingProsCons({
               <h3 className="text-sm font-bold text-slate-900">مزایا</h3>
             </div>
 
-            {/* نمایش با استفاده از dangerouslySetInnerHTML اگر HTML داریم */}
             {advantagesData?.value ? (
               <ul
                 className="flex flex-col gap-3 list-disc pr-5"
@@ -164,9 +164,20 @@ export default function RatingProsCons({
 
         {/* Score + breakdown */}
         <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
-          <h3 className="mb-4 text-sm font-bold text-slate-900">
-            شاخص‌های کیفیت
-          </h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-sm font-bold text-slate-900">
+              نتایج نظرسنجی
+            </h3>
+            <button
+              aria-label="ثبت امتیاز"
+              onClick={() => setIsPollModalOpen(true)}
+              className="flex items-center gap-1.5 bg-[#ce1a2a] hover:bg-red-700 text-white! px-3 py-1.5 rounded-lg text-xs font-bold transition-colors duration-300 cursor-pointer"
+            >
+              <FaStar className="text-[10px]" />
+              ثبت امتیاز
+            </button>
+          </div>
+          
           <div className="flex items-center gap-5">
             <ScoreDonut score={pollData.pollScore} />
             <div className="flex flex-1 flex-col gap-2.5">
@@ -187,6 +198,15 @@ export default function RatingProsCons({
           </div>
         </div>
       </div>
+
+      {/* Poll Modal */}
+      <PollModal
+        open={isPollModalOpen}
+        onClose={() => setIsPollModalOpen(false)}
+        detailsCar={detailsCar}
+        onPollUpdate={handlePollUpdate}
+        pollData={pollData}
+      />
     </section>
   );
 }

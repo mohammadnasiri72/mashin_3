@@ -13,6 +13,7 @@ html {
   scroll-behavior: smooth;
 }
 
+
 body {
   direction: rtl !important;
   font-family: var(--font-ravi), sans-serif;

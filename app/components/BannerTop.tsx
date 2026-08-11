@@ -7,7 +7,7 @@ function BannerTop({ banner }: { banner: Items[] }) {
     <div className="bannerTop_wrap py-4">
       <div className="mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {banner.map((ban, index) => (
+          {banner.map((ban) => (
             <figure
               key={ban.id}
               className="banner_box rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow m-0 relative aspect-10/2"
@@ -22,8 +22,8 @@ function BannerTop({ banner }: { banner: Items[] }) {
                   alt={ban.title}
                   className="object-cover rounded-2xl transition-transform hover:scale-105"
                   sizes="(max-width: 768px) 100vw, 50vw"
-                  priority={true}
-                  loading={"eager"}
+                  priority={false}
+                  loading={"lazy"}
                 />
               </Link>
               <figcaption className="sr-only">{ban.title}</figcaption>
