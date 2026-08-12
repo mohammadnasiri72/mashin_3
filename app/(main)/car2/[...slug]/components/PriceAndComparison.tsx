@@ -92,7 +92,7 @@ export default function PriceAndComparison({
     : 0;
 
   return (
-    <section dir="rtl" className="mx-auto w-full max-w-7xl px-4 pb-8 md:px-6 py-8">
+    <section dir="rtl" className="mx-auto w-full">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Comparison Table - 2/3 عرض */}
         <div className="lg:col-span-2 w-full">

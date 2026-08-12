@@ -7,8 +7,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 
+import { formatPersianDate, toPersianNumbers } from "@/utils/func";
 import { mainDomain } from "@/utils/mainDomain";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
+import { FaCalendar, FaEye } from "react-icons/fa";
 
 export default function RelatedItems({
   relatedItems,
@@ -57,29 +59,35 @@ export default function RelatedItems({
           }}
           className="w-full"
         >
-          {relatedItems.map((news) => (
-            <SwiperSlide key={news.id}>
-              <Link href={news.url} className="block group py-1">
+          {relatedItems.map((item) => (
+            <SwiperSlide key={item.id}>
+              <Link href={item.url} className="block group py-1">
                 <div className="flex flex-col overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:shadow-md hover:border-[#ce1a2a]">
-                  <div className="relative aspect-4/3 w-full bg-slate-50 overflow-hidden">
+                  <div className="relative aspect-4/3 w-full overflow-hidden">
                     <img
-                      src={mainDomain + news.image}
-                      alt={news.title}
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      src={mainDomain + item.image}
+                      alt={item.title}
+                      className="object-cover h-full group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute top-2 right-2 bg-[#ce1a2a] text-white text-[10px] px-2 py-0.5 rounded-full">
-                      {news.categoryTitle}
-                    </div>
+                   
                   </div>
                   <div className="flex flex-col gap-1 p-3">
-                    <h3 className="text-sm font-bold text-slate-900 line-clamp-2 h-10 group-hover:text-[#ce1a2a] transition-colors">
-                      {news.title}
+                    <h3 className="text-sm font-bold text-slate-900 line-clamp-2 h-10 group-hover:text-[#ce1a2a]! transition-colors">
+                      {item.title}
                     </h3>
-                    <div className="flex items-center justify-between text-xs text-slate-400">
-                      <span>
-                        {new Date(news.modified).toLocaleDateString("fa-IR")}
-                      </span>
-                      <span>بازدید: {news.visit}</span>
+                    <div className="flex items-center justify-between text-xs text-gray-700">
+                      <div className="flex items-center gap-1">
+                        <FaCalendar />
+                        <span>
+                          {formatPersianDate(
+                            item.modified ? item.modified : item.created,
+                          )}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <FaEye className="w-3 h-3" />
+                        <span>{toPersianNumbers(item.visit)} بازدید</span>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -125,7 +125,7 @@ export default function ImageGallery({
       </div>
 
       {/* Simple Slider */}
-      <div className=" rounded-2xl border border-slate-100 bg-white! p-3 shadow-sm relative">
+      <div className="rounded-2xl border border-slate-100 bg-white! p-3 shadow-sm relative">
         <Swiper
           modules={[Navigation]}
           navigation={{
@@ -145,18 +145,18 @@ export default function ImageGallery({
           className="w-full"
         >
           {filteredImages.map((img) => (
-            <SwiperSlide key={img.id}>
+            <SwiperSlide key={img.id} className="h-auto">
               <a
                 href={mainDomain + img.fileUrl}
                 data-fancybox="gallery"
                 data-caption={img.title || "تصویر"}
-                className="block"
+                className="block h-full"
               >
-                <div className="relative w-full rounded-xl overflow-hidden border-2 border-transparent hover:border-[#ce1a2a] transition-all duration-300 cursor-pointer">
+                <div className="relative w-full aspect-square rounded-xl overflow-hidden border-2 border-transparent hover:border-[#ce1a2a] transition-all duration-300 cursor-pointer bg-slate-100">
                   <img
                     src={mainDomain + img.fileUrl}
                     alt={img.title || "تصویر"}
-                    className="object-cover hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
               </a>

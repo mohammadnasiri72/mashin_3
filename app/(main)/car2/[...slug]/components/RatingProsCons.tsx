@@ -15,7 +15,7 @@ function ScoreDonut({ score }: { score: number }) {
   const dashOffset = circumference * (1 - percent / 100);
 
   return (
-    <div className="relative flex h-32 w-32 items-center justify-center">
+    <div className="relative flex h-32 sm:w-32 items-center justify-center w-full">
       <svg viewBox="0 0 100 100" className="h-full w-full -rotate-90">
         <circle
           cx="50"
@@ -178,9 +178,9 @@ export default function RatingProsCons({
             </button>
           </div>
           
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center gap-5">
             <ScoreDonut score={pollData.pollScore} />
-            <div className="flex flex-1 flex-col gap-2.5">
+            <div className="flex sm:flex-1 flex-col gap-2.5 w-full">
               {pollData.pollDetails.map((item) => (
                 <div key={item.questionId} className="flex flex-col gap-1">
                   <span className="text-[11px] text-slate-500">

@@ -76,10 +76,10 @@ export default function CarDimensions({
           ?.propertyValue;
 
   return (
-    <section dir="rtl" className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6">
+    <section dir="rtl" className="mx-auto w-full px-4 py-8 md:px-6">
       {summary && (
         <div className="mb-6!">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6!">
+          <h2 className="text-2xl font-bold text-gray-900">
             <span className="px-1">بررسی </span>
             <strong className="text-red-700">
               {detailsCar.sourceName} {detailsCar.title}
@@ -87,7 +87,7 @@ export default function CarDimensions({
           </h2>
 
           <div
-            className="text_area text-gray-700 leading-8 text-justify space-y-4 mt-3 body-summary-car"
+            className="text_area text-gray-700 leading-8 text-justify space-y-4 mt-1 body-summary-car"
             dangerouslySetInnerHTML={createMarkup(summary ? summary : "")}
           />
           {Attachment.length > 0 && <VideoPlayerCar Attachment={Attachment} />}
@@ -119,7 +119,7 @@ export default function CarDimensions({
                   {/* Left column */}
                   <div
                     className={`
-                      flex items-center justify-between py-3 px-2
+                      flex items-start justify-between py-3 px-2
                       ${rowIndex % 2 === 0 ? "bg-slate-50/50" : "bg-white"}
                       ${rowIndex !== initialRows.length - 1 ? "border-b border-slate-100" : ""}
                       transition-colors duration-200
@@ -127,14 +127,14 @@ export default function CarDimensions({
                     `}
                   >
                     {row.left ? (
-                      <>
-                        <span className="text-sm text-slate-600 whitespace-nowrap">
+                      <div className="flex flex-wrap justify-between w-full items-center gap-3">
+                        <span className="text-sm text-slate-600 text-justify ">
                           {row.left.title}
                         </span>
-                        <span className="text-sm font-semibold text-slate-900 text-left">
+                        <span className="text-sm font-semibold text-slate-900 text-justify">
                           {row.left.value}
                         </span>
-                      </>
+                      </div>
                     ) : (
                       <span className="text-sm text-slate-400">-</span>
                     )}
@@ -143,7 +143,7 @@ export default function CarDimensions({
                   {/* Right column */}
                   <div
                     className={`
-                      flex items-center justify-between py-3 px-2
+                      flex items-start justify-between py-3 px-2
                       ${rowIndex % 2 === 0 ? "bg-slate-50/50" : "bg-white"}
                       ${rowIndex !== initialRows.length - 1 ? "border-b border-slate-100" : ""}
                       transition-colors duration-200
@@ -151,14 +151,14 @@ export default function CarDimensions({
                     `}
                   >
                     {row.right ? (
-                      <>
-                        <span className="text-sm text-slate-600 whitespace-nowrap">
+                      <div className="flex flex-wrap justify-between w-full items-center gap-3">
+                        <span className="text-sm text-slate-600 text-justify">
                           {row.right.title}
                         </span>
-                        <span className="text-sm font-semibold text-slate-900 text-left">
+                        <span className="text-sm font-semibold text-slate-900 text-justify">
                           {row.right.value}
                         </span>
-                      </>
+                      </div>
                     ) : (
                       <span className="text-sm text-slate-400">-</span>
                     )}
@@ -184,7 +184,7 @@ export default function CarDimensions({
                             {/* Left column - remaining */}
                             <div
                               className={`
-                                flex items-center justify-between py-3 px-2
+                                flex items-start justify-between py-3 px-2
                                 ${globalIdx % 2 === 0 ? "bg-slate-50/50" : "bg-white"}
                                 ${rowIndex !== remainingRows.length - 1 ? "border-b border-slate-100" : ""}
                                 transition-colors duration-200
@@ -192,14 +192,14 @@ export default function CarDimensions({
                               `}
                             >
                               {row.left ? (
-                                <>
-                                  <span className="text-sm text-slate-600 whitespace-nowrap">
+                                <div className="flex flex-wrap justify-between w-full items-center gap-3">
+                                  <span className="text-sm text-slate-600 text-justify">
                                     {row.left.title}
                                   </span>
-                                  <span className="text-sm font-semibold text-slate-900 text-left">
+                                  <span className="text-sm font-semibold text-slate-900 text-justify">
                                     {row.left.value}
                                   </span>
-                                </>
+                                </div>
                               ) : (
                                 <span className="text-sm text-slate-400">
                                   -
@@ -210,7 +210,7 @@ export default function CarDimensions({
                             {/* Right column - remaining */}
                             <div
                               className={`
-                                flex items-center justify-between py-3 px-2
+                                flex items-start justify-between py-3 px-2
                                 ${globalIdx % 2 === 0 ? "bg-slate-50/50" : "bg-white"}
                                 ${rowIndex !== remainingRows.length - 1 ? "border-b border-slate-100" : ""}
                                 transition-colors duration-200
@@ -218,14 +218,14 @@ export default function CarDimensions({
                               `}
                             >
                               {row.right ? (
-                                <>
-                                  <span className="text-sm text-slate-600 whitespace-nowrap">
+                                <div className="flex flex-wrap justify-between w-full items-center gap-3">
+                                  <span className="text-sm text-slate-600 text-justify">
                                     {row.right.title}
                                   </span>
-                                  <span className="text-sm font-semibold text-slate-900 text-left">
+                                  <span className="text-sm font-semibold text-slate-900 text-justify">
                                     {row.right.value}
                                   </span>
-                                </>
+                                </div>
                               ) : (
                                 <span className="text-sm text-slate-400">
                                   -

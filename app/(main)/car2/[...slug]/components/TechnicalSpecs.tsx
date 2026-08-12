@@ -1,24 +1,23 @@
 "use client";
 
-import React from "react";
-import { QuickSpecItem } from "./types";
 import { FaHome } from "react-icons/fa";
+import { QuickSpecItem } from "./types";
 
 interface TechnicalSpecsProps {
   items: QuickSpecItem[];
   onViewAll?: () => void;
 }
 
-/**
- * "مشخصات فنی" section — a heading row with a "view all" link,
- * followed by a responsive grid of icon + label + value cards.
- */
 export default function TechnicalSpecs({
   items,
   onViewAll,
 }: TechnicalSpecsProps) {
   return (
-    <section id="technical-specs" dir="rtl" className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6">
+    <section
+      id="technical-specs"
+      dir="rtl"
+      className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6"
+    >
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-extrabold text-slate-900">مشخصات فنی</h2>
         <button

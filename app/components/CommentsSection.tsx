@@ -596,7 +596,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
           {/* فرم ثبت نظر اصلی */}
           <div className="lg:col-span-4 ">
-            <div className="contactForm_wrap bg-gray-50 rounded-xl p-6 comment-form sticky">
+            <div className="contactForm_wrap bg-gray-50 rounded-xl p-6 comment-form sticky top-38!">
               <div className="title_sec mb-4!">
                 <h3 className="text-lg font-bold text-gray-900">دیدگاه</h3>
                 <p className="text-gray-600 mt-2">

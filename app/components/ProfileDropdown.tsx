@@ -99,7 +99,7 @@ export default function ProfileDropdown() {
         }}
         className="cursor-pointer flex justify-center items-center gap-2"
       >
-        <span dir="ltr" className="line-clamp-1 select-none">
+        <span dir="ltr" className="line-clamp-1 select-none text-white!">
           {user.displayName ? user.displayName : ''}
         </span>
         <Avatar size="default" icon={<UserOutlined />} />
