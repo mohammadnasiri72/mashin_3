@@ -112,7 +112,6 @@ export default function PollModal({
     caseId: detailsCar.id,
     pollScoreDto: [],
   });
-  const [openLogin, setOpenLogin] = useState(false);
 
   const user = useSelector((state: RootState) => state.user.user);
 
@@ -160,12 +159,6 @@ export default function PollModal({
   };
 
   const handleSubmitRating = async () => {
-    // اگر کاربر لاگین نبود، مودال لاگین را باز کن
-    if (!user.token) {
-      setOpenLogin(true);
-      return;
-    }
-
     setIsSubmitting(true);
     try {
       await PostPollSave(pollSaveData, user.token);
@@ -371,8 +364,7 @@ export default function PollModal({
         </StyledDialogContent>
       </StyledDialog>
 
-      {/* Modal Login */}
-      <ModalLogin open={openLogin} setOpen={setOpenLogin} />
+     
 
       {/* افزودن انیمیشن spin به استایل‌های گلوبال */}
       <style jsx global>{`

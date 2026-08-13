@@ -28,7 +28,7 @@ export default function RelatedItems({
   const nextClass = `${sliderId}-next`;
 
   return (
-    <section dir="rtl" className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6">
+    <section dir="rtl" className="mx-auto w-full p-4">
       <div className="mb-4 flex items-center justify-between">
         <h2 className="text-lg font-extrabold text-slate-900">{title}</h2>
         <Link

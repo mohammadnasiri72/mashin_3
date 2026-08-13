@@ -1,11 +1,14 @@
 "use client";
 
+import ModalLogin from "@/app/components/ModalLogin";
+import { RootState } from "@/redux/store";
 import { createMarkup } from "@/utils/func";
 import { useState } from "react";
+import { FaStar } from "react-icons/fa";
 import { HiThumbDown, HiThumbUp } from "react-icons/hi";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { MdCheckroom } from "react-icons/md";
-import { FaStar } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import PollModal from "./PollModal";
 
 function ScoreDonut({ score }: { score: number }) {
@@ -86,9 +89,12 @@ export default function RatingProsCons({
   const handlePollUpdate = (newPollData: PollData) => {
     setPollData(newPollData);
   };
+  const user = useSelector((state: RootState) => state.user.user);
+
+  const [openLogin, setOpenLogin] = useState(false);
 
   return (
-    <section dir="rtl" className="mx-auto w-full max-w-7xl px-4 pb-8 md:px-6">
+    <section dir="rtl" className="mx-auto w-full p-4">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {/* Cons - با آیکون پس‌زمینه */}
         <div className="relative rounded-2xl border border-slate-100 bg-white p-5 shadow-sm overflow-hidden">
@@ -165,19 +171,23 @@ export default function RatingProsCons({
         {/* Score + breakdown */}
         <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold text-slate-900">
-              نتایج نظرسنجی
-            </h3>
+            <h3 className="text-sm font-bold text-slate-900">نتایج نظرسنجی</h3>
             <button
               aria-label="ثبت امتیاز"
-              onClick={() => setIsPollModalOpen(true)}
+              onClick={() => {
+                if (!user.token) {
+                  setOpenLogin(true);
+                  return;
+                }
+                setIsPollModalOpen(true);
+              }}
               className="flex items-center gap-1.5 bg-[#ce1a2a] hover:bg-red-700 text-white! px-3 py-1.5 rounded-lg text-xs font-bold transition-colors duration-300 cursor-pointer"
             >
               <FaStar className="text-[10px]" />
               ثبت امتیاز
             </button>
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-5">
             <ScoreDonut score={pollData.pollScore} />
             <div className="flex sm:flex-1 flex-col gap-2.5 w-full">
@@ -207,6 +217,8 @@ export default function RatingProsCons({
         onPollUpdate={handlePollUpdate}
         pollData={pollData}
       />
+      {/* Modal Login */}
+      <ModalLogin open={openLogin} setOpen={setOpenLogin} />
     </section>
   );
 }

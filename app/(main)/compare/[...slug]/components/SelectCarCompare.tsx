@@ -54,10 +54,10 @@ function SelectCarCompare({
   return (
     <>
       <div
-        className={`lg:w-1/3 w-1/2 flex-col gap-2 px-3 ${
-          dataCompare.length === 2
+        className={`lg:w-1/4 w-1/2 flex-col gap-2 px-3 ${
+          dataCompare.length === 3
             ? "lg:flex! hidden"
-            : dataCompare.length === 1 || dataCompare.length === 0
+            : dataCompare.length === 2 || dataCompare.length === 1 || dataCompare.length === 0
               ? "flex"
               : "hidden"
         }`}

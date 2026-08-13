@@ -27,6 +27,9 @@ const Breadcrumb = ({
       className="flex items-center gap-1 text-sm overflow-x-auto scrollbar-hide"
       dir="rtl"
     >
+      <Link href={"/"} className="text-white/90! hover:text-white! duration-300 whitespace-nowrap!">
+        صفحه اصلی <span className="text-white/40! mx-1 select-none">/</span>
+      </Link>
       {items.map((item, index) => (
         <div key={index} className="flex items-center shrink-0">
           {index > 0 && (
@@ -99,7 +102,9 @@ export default function HeroSection({
       {/* Background image - full width */}
       <div className="absolute inset-0">
         <img
-          src={bannerSrc? mainDomain + bannerSrc :  mainDomain + detailsCar.image}
+          src={
+            bannerSrc ? mainDomain + bannerSrc : mainDomain + detailsCar.image
+          }
           alt={`${detailsCar.sourceName} ${detailsCar.title}`}
           className="object-cover object-center w-full h-full bg-no-repeat"
         />
@@ -118,7 +123,6 @@ export default function HeroSection({
           </div>
         )}
 
-
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 h-110 md:flex-row md:items-center md:justify-between px-4">
           {/* Right: floating price + quick spec card */}
           <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/20 p-4 shadow-2xl backdrop-blur-md md:mb-2">
@@ -131,12 +135,10 @@ export default function HeroSection({
                     </span>
                     <span className="text-white! flex flex-col items-start">
                       <span className="text-lg font-bold">قیمت بازار</span>
-                      <span className="text-[11px]">(تومان)</span>
+                      <span className="text-[11px]">(ملیون تومان)</span>
                     </span>
                   </span>
-                  <span className="text-white! text-lg font-bold">
-                    ۲۲,۰۰۰,۰۰۰
-                  </span>
+                  <span className="text-white! text-lg font-bold">4,560</span>
                 </span>
               </li>
 
@@ -241,7 +243,6 @@ export default function HeroSection({
           </div>
         )}
 
-      
         {/* عنوان و ریتینگ */}
         <div className=" text-center">
           <h1 className="text-2xl font-extrabold text-white! drop-shadow-lg">
@@ -264,7 +265,7 @@ export default function HeroSection({
             </div>
           </div>
         </div>
-         {/* دکمه‌های اکشن */}
+        {/* دکمه‌های اکشن */}
         <div className="flex items-center justify-center gap-2 mt-4">
           <Link
             href={`/compare/${detailsCar.id}`}
@@ -287,7 +288,11 @@ export default function HeroSection({
                 className={`text-sm ${isLiked ? "text-[#ce1a2a] fill-[#ce1a2a]" : ""}`}
               />
             )}
-            {isLoading ? "..." : isLiked ? "افزودن به علاقه‌مندی‌ها" : "حذف از علاقه‌مندی‌ها"}
+            {isLoading
+              ? "..."
+              : isLiked
+                ? "افزودن به علاقه‌مندی‌ها"
+                : "حذف از علاقه‌مندی‌ها"}
           </button>
         </div>
         {/* کارت قیمت + مشخصات */}
@@ -300,10 +305,12 @@ export default function HeroSection({
               </div>
               <div>
                 <span className="text-sm font-bold text-white">قیمت بازار</span>
-                <span className="text-[10px] text-white/60 block">(تومان)</span>
+                <span className="text-[10px] text-white/60 block">
+                  (ملیون تومان)
+                </span>
               </div>
             </div>
-            <span className="text-base font-bold text-white">۲۲,۰۰۰,۰۰۰</span>
+            <span className="text-base font-bold text-white">4,560</span>
           </div>
 
           {/* مشخصات فنی به صورت اسکرول افقی */}
@@ -336,11 +343,7 @@ export default function HeroSection({
                 ))}
             </div>
           </div>
-
-         
         </div>
-
-       
       </div>
 
       {/* Modal Login */}

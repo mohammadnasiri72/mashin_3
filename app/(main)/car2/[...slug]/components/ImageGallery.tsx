@@ -90,9 +90,9 @@ export default function ImageGallery({
     <section
       id="gallery"
       dir="rtl"
-      className="mx-auto w-full max-w-7xl px-4 pb-8 md:px-6 py-8"
+      className="mx-auto w-full p-4"
     >
-      <div className="mb-4 flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <h2 className="text-lg font-extrabold text-slate-900">گالری تصاویر</h2>
       </div>
 

@@ -5,7 +5,7 @@ const ReviewSection = ({ detailsCar , vehicle}: { detailsCar: ItemsId ,vehicle:s
     (e) => e.propertyKey === "p1042_naghd",
   );
   return (
-    <section dir="rtl" className="mx-auto w-full max-w-7xl px-4 py-8 md:px-6">
+    <section dir="rtl" className="mx-auto w-full p-4">
  <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
         <strong className="text-red-600">نقد </strong>
         کارشناسی {vehicle==='motor'? 'موتور':  'ماشین'} {detailsCar.sourceName} {detailsCar.title}

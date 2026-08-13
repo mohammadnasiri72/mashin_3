@@ -596,7 +596,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
           {/* فرم ثبت نظر اصلی */}
           <div className="lg:col-span-4 ">
-            <div className="contactForm_wrap bg-gray-50 rounded-xl p-6 comment-form sticky top-38!">
+            <div className="contactForm_wrap bg-gray-50 rounded-xl px-6 py-4 comment-form sticky top-36!">
               <div className="title_sec mb-4!">
                 <h3 className="text-lg font-bold text-gray-900">دیدگاه</h3>
                 <p className="text-gray-600 mt-2">
@@ -608,6 +608,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                 {!user.token && (
                   <Form.Item
                     name="name"
+                    style={{ marginBottom: 8 }}
                     label="نام و نام خانوادگی"
                     rules={[
                       {
@@ -623,6 +624,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                 {!user.token && (
                   <Form.Item
                     name="email"
+                    style={{ marginBottom: 8 }}
                     label="ایمیل"
                     rules={[
                       {
@@ -632,13 +634,14 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                       { type: "email", message: "ایمیل معتبر نیست" },
                     ]}
                   >
-                    <Input placeholder="مثلا hiva@gmail.com" size="large" />
+                    <Input placeholder="مثلا example@gmail.com" size="large" />
                   </Form.Item>
                 )}
 
                 <Form.Item
                   name="body"
                   label="ثبت دیدگاه"
+                  style={{ marginBottom: 8 }}
                   rules={[
                     { required: true, message: "لطفا دیدگاه خود را وارد کنید" },
                   ]}
@@ -662,7 +665,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
                   </Button>
                 </Form.Item>
 
-                <p className="text-xs text-gray-500 text-center mt-4">
+                <p className="text-xs text-gray-500 text-center">
                   ثبت دیدگاه به معنی موافقت با{" "}
                   <a
                     href="/rules-regulations"
@@ -859,7 +862,6 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       <style jsx global>{`
         .comment-form.sticky {
           position: sticky !important;
-          top: 100px !important;
           left: 0;
           right: 0;
           z-index: 999;

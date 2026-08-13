@@ -21,6 +21,8 @@ function CompareClient({
   dataCompare: ItemsId[];
   ids: string;
 }) {
+  console.log(dataCompare);
+  
   // Initialize Fancybox
   useEffect(() => {
     Fancybox.bind("[data-fancybox='main-gallery']", {
@@ -114,7 +116,7 @@ function CompareClient({
             dataCompare.map((car, index) => (
               <div
                 key={car.id}
-                className={`lg:w-1/3 w-1/2 ${
+                className={`lg:w-1/4 w-1/2 ${
                   index > 1 ? "md:block! hidden" : ""
                 }`}
               >
@@ -161,7 +163,7 @@ function CompareClient({
                 </div>
               </div>
             ))}
-          {dataCompare.length < 3 && (
+          {dataCompare.length < 4 && (
             <SelectCarCompare
               dataCompare={dataCompare}
               brandsCar={brandsCar}
@@ -184,7 +186,7 @@ function CompareClient({
                   {item.values.map((val: string[], index: number) => (
                     <div
                       key={index}
-                      className={`lg:w-1/3 w-1/2 ${
+                      className={`lg:w-1/4 w-1/2 ${
                         index > 1 ? "md:block! hidden" : ""
                       }
                       `}
@@ -203,13 +205,13 @@ function CompareClient({
             {dataCompare.length > 0 &&
               dataCompare.map((car, index) => {
                 const advantages = car.properties.filter(
-                  (e) => e.propertyId === 22639,
+                  (e) => e.propertyKey === 'p1042_design',
                 );
 
                 return (
                   <div
                     key={car.id}
-                    className={`lg:w-1/3 w-1/2 ${
+                    className={`lg:w-1/4 w-1/2 ${
                       index > 1 ? "md:block! hidden" : ""
                     }`}
                   >
@@ -248,12 +250,12 @@ function CompareClient({
             {dataCompare.length > 0 &&
               dataCompare.map((car, index) => {
                 const disadvantages = car.properties.filter(
-                  (e) => e.propertyId === 22640,
+                  (e) => e.propertyKey === 'p1042_performance',
                 );
                 return (
                   <div
                     key={car.id}
-                    className={`lg:w-1/3 w-1/2 ${
+                    className={`lg:w-1/4 w-1/2 ${
                       index > 1 ? "md:block! hidden" : ""
                     }`}
                   >

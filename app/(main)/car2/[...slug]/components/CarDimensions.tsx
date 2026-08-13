@@ -76,11 +76,11 @@ export default function CarDimensions({
           ?.propertyValue;
 
   return (
-    <section dir="rtl" className="mx-auto w-full px-4 py-8 md:px-6">
+    <section dir="rtl" className="mx-auto w-full p-4 ">
       {summary && (
         <div className="mb-6!">
           <h2 className="text-2xl font-bold text-gray-900">
-            <span className="px-1">بررسی </span>
+            <span className="pl-1">بررسی </span>
             <strong className="text-red-700">
               {detailsCar.sourceName} {detailsCar.title}
             </strong>

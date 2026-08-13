@@ -16,12 +16,12 @@ export async function middleware(request: NextRequest) {
       const dataCompare: ItemsId[] = await getItemByIds(ids);
       const idsRes = dataCompare.map((item) => item.id).join(",");
 
-      if (ids.split(",").length > 3) {
-        ids.split(",").slice(0, 3).join(",");
+      if (ids.split(",").length > 4) {
+        ids.split(",").slice(0, 4).join(",");
         if (dataCompare[0].itemTypeId === 1042) {
           return NextResponse.redirect(
             new URL(
-              `/compare/${ids.split(",").slice(0, 3).join(",")}` + "?type=car",
+              `/compare/${ids.split(",").slice(0, 4).join(",")}` + "?type=car",
               request.url,
             ),
             {
@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
         } else {
           return NextResponse.redirect(
             new URL(
-              `/compare/${ids.split(",").slice(0, 3).join(",")}` +
+              `/compare/${ids.split(",").slice(0, 4).join(",")}` +
                 "?type=motor",
               request.url,
             ),
@@ -62,7 +62,7 @@ export async function middleware(request: NextRequest) {
       if (dataCompare[0].itemTypeId === 1052 && type !== "motor") {
         return NextResponse.redirect(
           new URL(
-            `/compare/${ids.split(",").slice(0, 3).join(",")}` + `?type=motor`,
+            `/compare/${ids.split(",").slice(0, 4).join(",")}` + `?type=motor`,
             request.url,
           ),
           {
@@ -73,7 +73,7 @@ export async function middleware(request: NextRequest) {
       if (dataCompare[0].itemTypeId === 1042 && type !== "car") {
         return NextResponse.redirect(
           new URL(
-            `/compare/${ids.split(",").slice(0, 3).join(",")}` + `?type=car`,
+            `/compare/${ids.split(",").slice(0, 4).join(",")}` + `?type=car`,
             request.url,
           ),
           {
