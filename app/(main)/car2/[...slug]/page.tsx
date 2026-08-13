@@ -205,7 +205,7 @@ async function page({
 
   const hasBrandModels = carsModel && carsModel.length > 1;
   const hasSpecificModels = carsModel2 && carsModel2.length > 1;
-  const isShowModelShowcase = (hasBrandModels || hasSpecificModels)
+  const isShowModelShowcase = hasBrandModels || hasSpecificModels;
 
   return (
     <>
@@ -241,7 +241,10 @@ async function page({
           id="images"
           className="scroll-mt-20 bg-white rounded-2xl mt-5 shadow-sm border border-gray-100"
         >
-          <ImageGallery Attachment={Attachment} />
+          <ImageGallery
+            Attachment={Attachment}
+            title={detailsCar.title + detailsCar.sourceName}
+          />
         </section>
         {isShowModelShowcase && (
           <section

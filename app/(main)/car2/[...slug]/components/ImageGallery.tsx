@@ -14,8 +14,10 @@ import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 export default function ImageGallery({
   Attachment,
+  title,
 }: {
   Attachment: ItemsAttachment[];
+  title: string;
 }) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
 
@@ -87,11 +89,7 @@ export default function ImageGallery({
   }, []);
 
   return (
-    <section
-      id="gallery"
-      dir="rtl"
-      className="mx-auto w-full p-4"
-    >
+    <section id="gallery" dir="rtl" className="mx-auto w-full p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-extrabold text-slate-900">گالری تصاویر</h2>
       </div>
@@ -149,13 +147,13 @@ export default function ImageGallery({
               <a
                 href={mainDomain + img.fileUrl}
                 data-fancybox="gallery"
-                data-caption={img.title || "تصویر"}
+                data-caption={img.title || title || "تصویر"}
                 className="block h-full"
               >
                 <div className="relative w-full aspect-square rounded-xl overflow-hidden border-2 border-transparent hover:border-[#ce1a2a] transition-all duration-300 cursor-pointer bg-slate-100">
                   <img
                     src={mainDomain + img.fileUrl}
-                    alt={img.title || "تصویر"}
+                    alt={img.title || title || "تصویر"}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
