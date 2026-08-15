@@ -67,7 +67,7 @@ export default function RelatedItems({
                     <img
                       src={mainDomain + item.image}
                       alt={item.title}
-                      className="object-cover h-full group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover! w-full h-full group-hover:scale-105 transition-transform duration-300"
                     />
                    
                   </div>

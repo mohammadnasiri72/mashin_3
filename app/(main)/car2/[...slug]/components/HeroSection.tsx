@@ -138,7 +138,7 @@ export default function HeroSection({
                       <span className="text-[11px]">(ملیون تومان)</span>
                     </span>
                   </span>
-                  <span className="text-white! text-lg font-bold">4,560</span>
+                  <span className="text-white! text-lg font-bold">{detailsCar.amount.toLocaleString() || 'در حال بروزرسانی'}</span>
                 </span>
               </li>
 
@@ -310,7 +310,7 @@ export default function HeroSection({
                 </span>
               </div>
             </div>
-            <span className="text-base font-bold text-white">4,560</span>
+            <span className="text-base font-bold text-white">{detailsCar.amount.toLocaleString() || 'در حال بروزرسانی'}</span>
           </div>
 
           {/* مشخصات فنی به صورت اسکرول افقی */}

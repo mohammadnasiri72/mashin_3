@@ -33,6 +33,8 @@ async function page({
   const id = Number(param.slug[0]);
   const detailsCar: ItemsId = await getItemId(id);
 
+  
+
   const [Attachment, comments, pollData] = await Promise.all([
     getAttachment(id),
     getComment({
@@ -65,7 +67,7 @@ async function page({
   const categoryId = String(detailsCar.categoryId);
   const brandName = detailsCar.sourceName || "خودرو";
   const specificName = detailsCar.title || "";
-  const [detailsCarcompetitor, carsModel, carsModel2, lastNews, lastVideos] =
+  const [detailsCarcompetitor, carsModel, carsModel2] =
     await Promise.all([
       competitorIds ? getItemByIds(competitorIds) : Promise.resolve([]),
       sourceLink
@@ -87,18 +89,7 @@ async function page({
             FullData: true,
           })
         : Promise.resolve([]),
-      getItem({
-        TypeId: 5,
-        langCode: "fa",
-        PageIndex: 1,
-        PageSize: 5,
-      }),
-      getItem({
-        TypeId: 1028,
-        langCode: "fa",
-        PageIndex: 1,
-        PageSize: 5,
-      }),
+    
     ]);
 
   const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
@@ -172,40 +163,15 @@ async function page({
     ],
   };
 
-  const competitors: CompetitorCar[] = [
-    { id: "swm-g01", name: "SWM G01", image: "/images/swm-g01/thumb.png" },
-    {
-      id: "haval-jolion",
-      name: "هاوال جولیون",
-      image: "/images/competitors/haval-jolion.png",
-    },
-    {
-      id: "jac-js4",
-      name: "جک جوان",
-      image: "/images/competitors/jac-js4.png",
-    },
-    { id: "kmc-x5", name: "KMC X5", image: "/images/competitors/kmc-x5.png" },
-  ];
+ 
 
-  const comparisonRows: CompetitorRow[] = [
-    {
-      label: "قیمت بازار (تومان)",
-      values: [
-        "1,865,000,000",
-        "2,120,000,000",
-        "1,950,000,000",
-        "1,780,000,000",
-      ],
-    },
-    { label: "قدرت (اسب بخار)", values: ["155", "147", "143", "230"] },
-    { label: "شتاب 0-100 (ثانیه)", values: ["11.5", "11.8", "12.1", "10.8"] },
-    { label: "مصرف ترکیبی (لیتر)", values: ["7.8", "7.5", "7.3", "7.6"] },
-    { label: "حجم صندوق عقب (لیتر)", values: ["480", "475", "337", "450"] },
-  ];
+ 
 
   const hasBrandModels = carsModel && carsModel.length > 1;
   const hasSpecificModels = carsModel2 && carsModel2.length > 1;
   const isShowModelShowcase = hasBrandModels || hasSpecificModels;
+
+  
 
   return (
     <>
@@ -276,8 +242,6 @@ async function page({
             ranges={priceRanges}
             dataByRange={priceDataByRange}
             defaultRangeId="3m"
-            competitors={competitors}
-            rows={comparisonRows}
             detailsCarcompetitor={detailsCarcompetitor.slice(0, 4)}
           />
         </section>

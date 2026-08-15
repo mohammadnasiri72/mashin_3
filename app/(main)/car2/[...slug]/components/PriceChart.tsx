@@ -242,28 +242,28 @@ export default function PriceChart({
           <span className="text-xs text-slate-400">کمترین قیمت</span>
           <span className="text-sm font-bold text-slate-900">
             {formatToman(min)}{" "}
+          </span>
             <span className="text-xs font-normal text-slate-400">
               تومان
             </span>
-          </span>
         </div>
         <div className="flex flex-col gap-0.5 rounded-lg bg-red-50 py-1">
           <span className="text-xs text-red-500">میانگین قیمت</span>
           <span className="text-sm font-bold text-red-600">
             {formatToman(avg)}{" "}
+          </span>
             <span className="text-xs font-normal text-red-400">
               تومان
             </span>
-          </span>
         </div>
         <div className="flex flex-col gap-0.5">
           <span className="text-xs text-slate-400">بیشترین قیمت</span>
           <span className="text-sm font-bold text-slate-900">
             {formatToman(max)}{" "}
+          </span>
             <span className="text-xs font-normal text-slate-400">
               تومان
             </span>
-          </span>
         </div>
       </div>
     </div>

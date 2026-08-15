@@ -151,7 +151,7 @@ const CommentItem: React.FC<CommentItemProps> = ({
       >
         <div className="cm_tp flex gap-3 items-center mb-3!">
           <div className="author_name font-bold text-gray-800">
-            {comment.fullName}
+            {comment.commentName}
           </div>
           <div className="text-xs font-semibold relative pr-3">
             {formatPersianDate(

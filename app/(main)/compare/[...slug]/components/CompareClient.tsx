@@ -21,7 +21,6 @@ function CompareClient({
   dataCompare: ItemsId[];
   ids: string;
 }) {
-  console.log(dataCompare);
   
   // Initialize Fancybox
   useEffect(() => {

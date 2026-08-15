@@ -9,9 +9,6 @@ interface PriceAndComparisonProps {
   ranges: PriceRange[];
   dataByRange: Record<string, PricePoint[]>;
   defaultRangeId?: string;
-  competitors: CompetitorCar[];
-  rows: CompetitorRow[];
-  onCompareOne?: (competitorId: string) => void;
   detailsCarcompetitor: ItemsId[];
 }
 
@@ -19,7 +16,6 @@ export default function PriceAndComparison({
   ranges,
   dataByRange,
   defaultRangeId,
-  rows,
   detailsCarcompetitor,
 }: PriceAndComparisonProps) {
   return (
@@ -29,7 +25,6 @@ export default function PriceAndComparison({
         <div className="lg:col-span-2 w-full">
           <ComparisonTable
             competitors={detailsCarcompetitor}
-            rows={rows}
           />
         </div>
 
