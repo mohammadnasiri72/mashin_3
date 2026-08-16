@@ -48,8 +48,12 @@ export default function SectionTabs({
 
   const [active, setActive] = useState(tabs[0]?.id);
   const tabsRef = useRef<HTMLDivElement>(null);
+  const [isClient, setIsClient] = useState(false);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // بررسی وضعیت اسکرول برای نمایش فلش‌ها
   const checkScroll = () => {
@@ -59,61 +63,38 @@ export default function SectionTabs({
     }
   };
 
-  // تشخیص تب فعال بر اساس موقعیت اسکرول
-  const updateActiveTab = () => {
-    const sections = tabs.map((tab) => document.getElementById(tab.id));
-    const scrollPosition = window.scrollY + 250;
-
-    let activeTab = tabs[0]?.id;
-
-    for (let i = sections.length - 1; i >= 0; i--) {
-      const section = sections[i];
-      if (section) {
-        const offsetTop = section.offsetTop;
-        if (scrollPosition >= offsetTop) {
-          activeTab = tabs[i]?.id;
-          break;
-        }
-      }
-    }
-
-    setActive(activeTab);
-  };
-
   useEffect(() => {
-    // یکبار در ابتدا تنظیمات رو انجام بده
-    const init = () => {
-      setIsInitialized(true);
-      
-      // بعد از رندر کامل، موقعیت‌ها رو چک کن
-      requestAnimationFrame(() => {
-        updateActiveTab();
-        checkScroll();
-      });
-    };
-
-    // اگر DOM آماده باشه، مستقیم اجرا کن
-    if (document.readyState === "complete") {
-      init();
-    } else {
-      window.addEventListener("load", init);
-      return () => window.removeEventListener("load", init);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isInitialized) return;
+    if (!isClient) return;
 
     const handleScroll = () => {
-      updateActiveTab();
+      // تشخیص تب فعال بر اساس موقعیت اسکرول
+      const sections = tabs.map((tab) => document.getElementById(tab.id));
+      const scrollPosition = window.scrollY + 250;
+
+      let activeTab = tabs[0]?.id;
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = sections[i];
+        if (section) {
+          const offsetTop = section.offsetTop;
+          if (scrollPosition >= offsetTop) {
+            activeTab = tabs[i]?.id;
+            break;
+          }
+        }
+      }
+
+      setActive(activeTab);
     };
 
     window.addEventListener("scroll", handleScroll);
+    setTimeout(handleScroll, 100);
 
-    // چک کردن اسکرول تب‌ها
+    // بررسی اسکرول تب‌ها
     const currentTabsRef = tabsRef.current;
     if (currentTabsRef) {
       currentTabsRef.addEventListener("scroll", checkScroll);
+      setTimeout(checkScroll, 200);
     }
 
     return () => {
@@ -122,7 +103,7 @@ export default function SectionTabs({
         currentTabsRef.removeEventListener("scroll", checkScroll);
       }
     };
-  }, [isInitialized, tabs]);
+  }, [isClient]);
 
   const handleClick = (id: string) => {
     setActive(id);
@@ -156,7 +137,7 @@ export default function SectionTabs({
     <nav
       dir="rtl"
       className={`
-        sticky! lg:top-16! top-29 z-1000 w-full 
+        sticky lg:top-16 top-29 z-1000 w-full 
         bg-slate-900
         border-b border-white/5
         transition-shadow duration-300
@@ -234,8 +215,8 @@ export default function SectionTabs({
         </div>
 
         {/* گرادیانت‌های کناری برای محو شدن */}
-        <div className="absolute right-0 top-0 h-full w-8 md:w-12 bg-gradient-to-l from-slate-900 to-transparent pointer-events-none md:hidden" />
-        <div className="absolute left-0 top-0 h-full w-8 md:w-12 bg-gradient-to-r from-slate-900 to-transparent pointer-events-none md:hidden" />
+        <div className="absolute right-0 top-0 h-full w-8 md:w-12 bg-linear-to-l from-slate-900 to-transparent pointer-events-none md:hidden" />
+        <div className="absolute left-0 top-0 h-full w-8 md:w-12 bg-linear-to-r from-slate-900 to-transparent pointer-events-none md:hidden" />
       </div>
     </nav>
   );

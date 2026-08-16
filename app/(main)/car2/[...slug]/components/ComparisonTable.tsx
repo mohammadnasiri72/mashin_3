@@ -9,11 +9,9 @@ import {
   Card,
   CardContent,
   Grid,
-  Paper,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow,
   Typography,
@@ -22,15 +20,9 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiChevronLeft } from "react-icons/bi";
-import {
-  FaCar,
-  FaGasPump,
-  FaGavel,
-  FaShieldAlt,
-  FaTachometerAlt,
-} from "react-icons/fa";
+import { FaCar } from "react-icons/fa";
 
 interface ComparisonTableProps {
   competitors: ItemsId[];
@@ -68,35 +60,36 @@ const CarCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-// آیکون‌های مختلف برای مشخصات فنی
-const getPropertyIcon = (propertyKey: string, title: string) => {
-  const iconMap: Record<string, any> = {
-    engine: <FaGasPump size={16} />,
-    speed: <FaTachometerAlt size={16} />,
-    power: <FaCar size={16} />,
-    gear: <FaGavel size={16} />,
-    security: <FaShieldAlt size={16} />,
-  };
-
-  // اگر کلید در مپ نبود، بر اساس عنوان تشخیص بده
-  if (title.includes("سرعت") || title.includes("شتاب"))
-    return <FaTachometerAlt size={16} />;
-  if (title.includes("موتور") || title.includes("گیربکس"))
-    return <FaCar size={16} />;
-  if (title.includes("مصرف") || title.includes("سوخت"))
-    return <FaGasPump size={16} />;
-  if (title.includes("ایمنی") || title.includes("امنیت"))
-    return <FaShieldAlt size={16} />;
-
-  return iconMap[propertyKey] || <FaCar size={16} />;
-};
-
 export default function ComparisonTable({ competitors }: ComparisonTableProps) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const [isMobile, setIsMobile] = useState(false);
+  const [isClient, setIsClient] = useState(false);
   const [selectedCarIndex, setSelectedCarIndex] = useState<number>(0);
 
-  // جایگزین if (competitors.length === 0) return null;
+  // تشخیص موبایل در کلاینت
+  useEffect(() => {
+    setIsClient(true);
+    const mediaQuery = window.matchMedia(theme.breakpoints.down("md").replace("@media ", ""));
+    setIsMobile(mediaQuery.matches);
+
+    const handler = (e: MediaQueryListEvent) => {
+      setIsMobile(e.matches);
+    };
+
+    mediaQuery.addEventListener("change", handler);
+    return () => mediaQuery.removeEventListener("change", handler);
+  }, [theme.breakpoints]);
+
+  // اگر کامپوننت در سمت سرور هست یا هنوز هیدریت نشده، یک placeholder نمایش بده
+  if (!isClient) {
+    return (
+      <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm h-full min-h-[400px]">
+        <Box display="flex" alignItems="center" justifyContent="center" height="100%" minHeight="300px">
+          <Typography color="text.secondary">در حال بارگذاری...</Typography>
+        </Box>
+      </div>
+    );
+  }
 
   if (competitors.length === 0) {
     return (
@@ -470,13 +463,10 @@ export default function ComparisonTable({ competitors }: ComparisonTableProps) {
         p={0}
         mb={0}
       >
-      
         <h2 className="text-xl font-bold text-gray-900">
-            <span className="pl-1">مقایسه با </span>
-            <strong className="text-red-700">
-             رقبا
-            </strong>
-          </h2>
+          <span className="pl-1">مقایسه با </span>
+          <strong className="text-red-700">رقبا</strong>
+        </h2>
         <Button
           component={Link}
           href={`/compare/${idsString}`}
