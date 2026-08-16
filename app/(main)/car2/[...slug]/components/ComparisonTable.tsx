@@ -98,41 +98,47 @@ export default function ComparisonTable({ competitors }: ComparisonTableProps) {
 
   // جایگزین if (competitors.length === 0) return null;
 
-if (competitors.length === 0) {
-  return (
-    <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm h-full">
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        height="100%"
-        minHeight="300px"
-        gap={2}
-      >
+  if (competitors.length === 0) {
+    return (
+      <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm h-full">
         <Box
-          sx={{
-            width: 80,
-            height: 80,
-            borderRadius: "50%",
-            backgroundColor: theme.palette.grey[100],
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          height="100%"
+          minHeight="300px"
+          gap={2}
         >
-          <FaCar size={40} color={theme.palette.grey[400]} />
+          <Box
+            sx={{
+              width: 80,
+              height: 80,
+              borderRadius: "50%",
+              backgroundColor: theme.palette.grey[100],
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <FaCar size={40} color={theme.palette.grey[400]} />
+          </Box>
+          <Typography variant="h6" fontWeight="bold" color="text.secondary">
+            خودروی رقیبی یافت نشد
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            align="center"
+            maxWidth="300px"
+          >
+            برای این خودرو هنوز رقبایی تعریف نشده است. به زودی این بخش تکمیل
+            خواهد شد.
+          </Typography>
         </Box>
-        <Typography variant="h6" fontWeight="bold" color="text.secondary">
-          خودروی رقیبی یافت نشد
-        </Typography>
-        <Typography variant="body2" color="text.secondary" align="center" maxWidth="300px">
-          برای این خودرو هنوز رقبایی تعریف نشده است. به زودی این بخش تکمیل خواهد شد.
-        </Typography>
-      </Box>
-    </div>
-  );
-}
+      </div>
+    );
+  }
 
   const idsString = competitors.map((item) => item.id).join(",");
 
@@ -167,32 +173,36 @@ if (competitors.length === 0) {
           <TableCell width={120} />
           {competitors.map((car) => (
             <TableCell key={car.id} align="center">
-              <Box
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                gap={1}
-              >
-                <Typography
-                  variant="caption"
-                  fontWeight="bold"
-                  sx={{ fontSize: "18px" }}
+              <Link href={car.url || "#"} className="group">
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  gap={1}
                 >
-                  {car.sourceName} {car.title}
-                </Typography>
-                <Avatar
-                  variant="rounded"
-                  src={mainDomain + car.image}
-                  alt={`${car.sourceName} ${car.title}`}
-                  sx={{
-                    width: 80,
-                    height: 60,
-                    borderRadius: "8px",
-                    objectFit: "contain",
-                  }}
-                  imgProps={{ style: { objectFit: "contain" } }}
-                />
-              </Box>
+                  <Typography
+                    variant="caption"
+                    fontWeight="bold"
+                    sx={{ fontSize: "18px" }}
+                    className="group-hover:text-[#ce1a2a] duration-300"
+                  >
+                    {car.sourceName} {car.title}
+                  </Typography>
+                  <Avatar
+                    variant="rounded"
+                    src={mainDomain + car.image}
+                    alt={`${car.sourceName} ${car.title}`}
+                    sx={{
+                      width: 80,
+                      height: 60,
+                      borderRadius: "8px",
+                      objectFit: "contain",
+                    }}
+                    imgProps={{ style: { objectFit: "contain" } }}
+                    className="group-hover:scale-105 duration-300"
+                  />
+                </Box>
+              </Link>
             </TableCell>
           ))}
         </TableRow>
@@ -211,6 +221,7 @@ if (competitors.length === 0) {
               </Typography>
             </Box>
           </TableCell>
+
           {competitors.map((car) => {
             return (
               <TableCell key={car.id} align="center">
@@ -220,6 +231,34 @@ if (competitors.length === 0) {
                   sx={{ fontSize: "14px" }}
                 >
                   {car.amount.toLocaleString()}
+                </Typography>
+              </TableCell>
+            );
+          })}
+        </StyledTableRow>
+        <StyledTableRow>
+          <TableCell>
+            <Box display="flex" alignItems="start" gap={1}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                fontWeight="medium"
+                sx={{ whiteSpace: "nowrap" }}
+              >
+                سال تولید
+              </Typography>
+            </Box>
+          </TableCell>
+
+          {competitors.map((car) => {
+            return (
+              <TableCell key={car.id} align="center">
+                <Typography
+                  variant="body2"
+                  fontWeight="bold"
+                  sx={{ fontSize: "14px" }}
+                >
+                  {car.publishCode}
                 </Typography>
               </TableCell>
             );
@@ -315,6 +354,56 @@ if (competitors.length === 0) {
         <Card variant="outlined" sx={{ borderRadius: "16px" }}>
           <CardContent>
             <Box display="flex" flexDirection="column" gap={0.5}>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                py={1.5}
+                px={1}
+                sx={{
+                  borderBottom: `1px solid ${theme.palette.divider}`,
+                  backgroundColor: theme.palette.grey[50],
+                  borderRadius: "8px",
+                }}
+              >
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    fontWeight="medium"
+                  >
+                    قیمت بازار(میلیون تومان)
+                  </Typography>
+                </Box>
+                <Typography variant="body2" fontWeight="bold">
+                  {competitors[selectedCarIndex].amount.toLocaleString()}
+                </Typography>
+              </Box>
+              <Box
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                py={1.5}
+                px={1}
+                sx={{
+                  borderBottom: `1px solid ${theme.palette.divider}`,
+                  borderRadius: "8px",
+                }}
+              >
+                <Box display="flex" alignItems="center" gap={1}>
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    fontWeight="medium"
+                  >
+                    سال تولید
+                  </Typography>
+                </Box>
+                <Typography variant="body2" fontWeight="bold">
+                  {competitors[selectedCarIndex].publishCode}
+                </Typography>
+              </Box>
+
               {properties.map((prop, idx) => (
                 <Box
                   key={prop.title}
@@ -334,7 +423,6 @@ if (competitors.length === 0) {
                   }}
                 >
                   <Box display="flex" alignItems="center" gap={1}>
-                    {getPropertyIcon("", prop.title)}
                     <Typography
                       variant="caption"
                       color="text.secondary"
@@ -355,7 +443,7 @@ if (competitors.length === 0) {
         {/* دکمه مشاهده مقایسه کامل */}
         <Button
           component={Link}
-          href={`/compare/${idsString}`}
+          href={competitors[selectedCarIndex].url}
           fullWidth
           variant="contained"
           color="error"
@@ -366,7 +454,7 @@ if (competitors.length === 0) {
             fontWeight: 600,
           }}
         >
-          مشاهده مقایسه کامل
+          مشاهده جزئیات کامل
         </Button>
       </Box>
     );
@@ -382,9 +470,13 @@ if (competitors.length === 0) {
         p={0}
         mb={0}
       >
-        <Typography variant="h6" fontWeight="bold">
-          مقایسه با رقبا
-        </Typography>
+      
+        <h2 className="text-xl font-bold text-gray-900">
+            <span className="pl-1">مقایسه با </span>
+            <strong className="text-red-700">
+             رقبا
+            </strong>
+          </h2>
         <Button
           component={Link}
           href={`/compare/${idsString}`}

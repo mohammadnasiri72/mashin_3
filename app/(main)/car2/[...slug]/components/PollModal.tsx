@@ -1,7 +1,6 @@
 // components/PollModal.tsx
 "use client";
 
-import ModalLogin from "@/app/components/ModalLogin";
 import { RootState } from "@/redux/store";
 import { PostPollSave } from "@/services/Poll/PollSave";
 import { getPollId } from "@/services/Poll/pollId";
@@ -13,7 +12,6 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
-  LinearProgress,
   Typography,
   useMediaQuery,
   useTheme,
@@ -35,14 +33,24 @@ interface PollModalProps {
 const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-paper": {
     borderRadius: "16px",
-    padding: "24px",
+    padding: "20px 16px",
     maxWidth: "700px",
-    width: "100%",
+    width: "95%",
+    margin: "0px",
     [theme.breakpoints.down("sm")]: {
-      padding: "16px",
-      margin: "16px",
+      padding: "16px 12px",
+      margin: "4px",
+      borderRadius: "12px",
     },
   },
+  "& .MuiDialog-container": {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  "& .MuiBackdrop-root": {
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+  },
+  zIndex: 9999,
 }));
 
 const StyledDialogTitle = styled(DialogTitle)({
@@ -59,40 +67,110 @@ const StyledDialogContent = styled(DialogContent)({
   padding: 0,
 });
 
-const ScoreButton = styled(Button, {
-  shouldForwardProp: (prop) => prop !== "isSelected",
-})<{ isSelected?: boolean }>(({ isSelected }) => ({
-  minWidth: "32px",
-  width: "32px",
-  height: "32px",
-  borderRadius: "50%",
-  fontSize: "0.875rem",
-  fontWeight: 700,
-  padding: 0,
-  backgroundColor: isSelected ? "#ce1a2a" : "#f1f5f9",
-  color: isSelected ? "#ffffff" : "#9ca3af",
-  "&:hover": {
-    backgroundColor: isSelected ? "#b01625" : "#e2e8f0",
+// دکمه ترکیبی (عدد + نوار)
+const ScoreButtonWrapper = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<{ isActive?: boolean }>(({ isActive }) => ({
+  flex: 1,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "3px",
+  cursor: "pointer",
+  transition: "all 0.2s ease",
+  position: "relative",
+  minWidth: 0,
+  "&:active": {
+    transform: "scale(0.95)",
   },
 }));
 
-const ProgressBar = styled(Box)({
+// عدد گرد با حاشیه - سایز واکنش‌گرا
+const NumberCircle = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<{ isActive?: boolean }>(({ isActive, theme }) => ({
+  width: "28px",
+  height: "28px",
+  borderRadius: "50%",
   display: "flex",
-  gap: "4px",
-  marginTop: "4px",
-});
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "0.75rem",
+  fontWeight: 700,
+  border: isActive ? "2px solid #ce1a2a" : "2px solid #d1d5db",
+  backgroundColor: isActive ? "#ce1a2a" : "transparent",
+  color: isActive ? "#ffffff" : "#9ca3af",
+  transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+  boxShadow: isActive ? "0 4px 12px rgba(206, 26, 42, 0.3)" : "none",
+  position: "relative",
+  zIndex: 1,
+  flexShrink: 0,
+  // هاور فقط روی عدد
+  "&:hover": {
+    borderColor: isActive ? "#ce1a2a" : "#ce1a2a",
+    color: isActive ? "#ffffff" : "#ce1a2a",
+    backgroundColor: isActive ? "#ce1a2a" : "#fef2f2",
+    transform: "scale(1.1)",
+  },
+  [theme.breakpoints.down("sm")]: {
+    width: "20px",
+    height: "20px",
+    fontSize: "0.6rem",
+    borderWidth: "1.5px",
+  },
+  [theme.breakpoints.down("xs")]: {
+    width: "16px",
+    height: "16px",
+    fontSize: "0.5rem",
+    borderWidth: "1px",
+  },
+}));
 
 const ProgressSegment = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "isFilled",
-})<{ isFilled?: boolean }>(({ isFilled }) => ({
-  flex: 1,
-  height: "8px",
-  borderRadius: "4px",
-  backgroundColor: isFilled ? "#ce1a2a" : "#e2e8f0",
-  cursor: "pointer",
-  transition: "background-color 0.2s ease",
+  shouldForwardProp: (prop) => prop !== "isActive",
+})<{ isActive?: boolean }>(({ isActive, theme }) => ({
+  width: "100%",
+  height: "6px",
+  borderRadius: "3px",
+  backgroundColor: isActive ? "#ce1a2a" : "#e2e8f0",
+  transition: "all 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+  boxShadow: isActive ? "0 2px 8px rgba(206, 26, 42, 0.2)" : "none",
   "&:hover": {
-    opacity: 0.8,
+    backgroundColor: isActive ? "#ce1a2a" : "#cbd5e1",
+    transform: "scaleY(1.3)",
+  },
+  [theme.breakpoints.down("sm")]: {
+    height: "4px",
+    borderRadius: "2px",
+  },
+}));
+
+const ProgressBarContainer = styled(Box)(({ theme }) => ({
+  display: "flex",
+  gap: "3px",
+  width: "100%",
+  padding: "0 1px",
+  [theme.breakpoints.down("sm")]: {
+    gap: "2px",
+  },
+}));
+
+// کانتینر اعداد و نوار با هم
+const ScoreGroup = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+  gap: "2px",
+  width: "100%",
+});
+
+// ردیف اعداد با فاصله کم‌تر
+const NumbersRow = styled(Box)(({ theme }) => ({
+  display: "flex",
+  gap: "3px",
+  justifyContent: "space-between",
+  padding: "0 1px",
+  [theme.breakpoints.down("sm")]: {
+    gap: "1px",
   },
 }));
 
@@ -207,9 +285,14 @@ export default function PollModal({
         TransitionProps={{
           onEnter: () => handleModalOpen(),
         }}
+        style={{ zIndex: 999999999 }}
       >
         <StyledDialogTitle>
-          <Box display="flex" alignItems="center" justifyContent="space-between">
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+          >
             <Box display="flex" alignItems="center" gap={1}>
               <FaStar style={{ color: "#ce1a2a", fontSize: "20px" }} />
               <Typography variant="h6" fontWeight={700} color="#1e293b">
@@ -225,66 +308,86 @@ export default function PollModal({
         <StyledDialogContent>
           <Box py={1}>
             <Box display="flex" flexDirection="column" gap={4}>
-              {pollData.pollDetails.map((question) => (
-                <Box key={question.questionId}>
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="center"
-                    mb={1}
-                  >
-                    <Typography variant="body2" fontWeight={500} color="#374151">
-                      {question.questionTitle}
-                    </Typography>
-                    <Typography variant="body2" fontWeight={700} color="#ce1a2a">
-                      {userRatings[question.questionId] > 0
-                        ? toPersianNumbers(userRatings[question.questionId])
-                        : "۰"}
-                      /۱۰
-                    </Typography>
-                  </Box>
+              {pollData.pollDetails.map((question) => {
+                const currentRating = userRatings[question.questionId] || 0;
 
-                  <Box
-                    display="flex"
-                    flexDirection={isMobile ? "column" : "row"}
-                    alignItems={isMobile ? "flex-start" : "center"}
-                    gap={1}
-                  >
-                    <Box display="flex" gap={0.5} flexWrap="wrap">
-                      {[...Array(10)].map((_, index) => {
-                        const score = index + 1;
-                        return (
-                          <ScoreButton
-                            key={score}
-                            isSelected={score <= userRatings[question.questionId]}
-                            onClick={() =>
-                              handleRatingClick(question.questionId, score)
-                            }
-                            size="small"
-                          >
-                            {toPersianNumbers(score)}
-                          </ScoreButton>
-                        );
-                      })}
+                return (
+                  <Box key={question.questionId}>
+                    <Box
+                      display="flex"
+                      justifyContent="space-between"
+                      alignItems="center"
+                      mb={1}
+                    >
+                      <Typography
+                        variant="body2"
+                        fontWeight={500}
+                        color="#374151"
+                      >
+                        {question.questionTitle}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        fontWeight={700}
+                        color="#ce1a2a"
+                      >
+                        {toPersianNumbers(currentRating)}/۱۰
+                      </Typography>
                     </Box>
-                  </Box>
 
-                  <ProgressBar>
-                    {[...Array(10)].map((_, i) => {
-                      const score = i + 1;
-                      return (
-                        <ProgressSegment
-                          key={i}
-                          isFilled={i < userRatings[question.questionId]}
-                          onClick={() =>
-                            handleRatingClick(question.questionId, score)
-                          }
-                        />
-                      );
-                    })}
-                  </ProgressBar>
-                </Box>
-              ))}
+                    {/* دکمه‌های ترکیبی (عدد + نوار) */}
+                    <ScoreGroup>
+                      {/* ردیف اعداد گرد */}
+                      <NumbersRow>
+                        {[...Array(10)].map((_, index) => {
+                          const score = index + 1;
+                          const isActive = score <= currentRating;
+                          return (
+                            <ScoreButtonWrapper
+                              key={score}
+                              isActive={isActive}
+                              onClick={() =>
+                                handleRatingClick(question.questionId, score)
+                              }
+                              className="score-button"
+                            >
+                              <NumberCircle
+                                isActive={isActive}
+                                className="number-label"
+                              >
+                                {toPersianNumbers(score)}
+                              </NumberCircle>
+                            </ScoreButtonWrapper>
+                          );
+                        })}
+                      </NumbersRow>
+
+                      {/* نوار پیشرفت */}
+                      <ProgressBarContainer>
+                        {[...Array(10)].map((_, index) => {
+                          const score = index + 1;
+                          const isActive = index < currentRating;
+                          return (
+                            <Box
+                              key={index}
+                              flex={1}
+                              onClick={() =>
+                                handleRatingClick(question.questionId, score)
+                              }
+                              style={{ cursor: "pointer" }}
+                            >
+                              <ProgressSegment
+                                isActive={isActive}
+                                className="progress-segment"
+                              />
+                            </Box>
+                          );
+                        })}
+                      </ProgressBarContainer>
+                    </ScoreGroup>
+                  </Box>
+                );
+              })}
 
               <Box pt={2} borderTop="1px solid #e5e7eb">
                 <Box display="flex" gap={2}>
@@ -363,8 +466,6 @@ export default function PollModal({
           </Box>
         </StyledDialogContent>
       </StyledDialog>
-
-     
 
       {/* افزودن انیمیشن spin به استایل‌های گلوبال */}
       <style jsx global>{`

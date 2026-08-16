@@ -205,9 +205,15 @@ export default function PriceChart({
   return (
     <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm h-full">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-base font-extrabold text-slate-900">
+        {/* <h2 className="text-base font-extrabold text-slate-900">
           نمودار قیمت
-        </h2>
+        </h2> */}
+         <h2 className="text-xl font-bold text-gray-900">
+            <span className="pl-1">نمودار</span>
+            <strong className="text-red-700">
+             قیمت
+            </strong>
+          </h2>
         <button
         //   onClick={onViewDetails}
           className="flex items-center gap-0.5 text-sm font-semibold text-red-600 hover:text-red-700 cursor-pointer"

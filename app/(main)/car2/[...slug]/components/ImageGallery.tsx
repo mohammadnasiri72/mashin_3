@@ -91,7 +91,12 @@ export default function ImageGallery({
   return (
     <section id="gallery" dir="rtl" className="mx-auto w-full p-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-extrabold text-slate-900">گالری تصاویر</h2>
+         <h2 className="text-2xl font-bold text-gray-900">
+            <span className="pl-1">گالری </span>
+            <strong className="text-red-700">
+             تصاویر
+            </strong>
+          </h2>
       </div>
 
       {/* Category filter */}
@@ -150,7 +155,7 @@ export default function ImageGallery({
                 data-caption={img.title || title || "تصویر"}
                 className="block h-full"
               >
-                <div className="relative w-full aspect-square rounded-xl overflow-hidden border-2 border-transparent hover:border-[#ce1a2a] transition-all duration-300 cursor-pointer bg-slate-100">
+                <div className="relative w-full aspect-3/2 rounded-xl overflow-hidden border-2 border-transparent hover:border-[#ce1a2a] transition-all duration-300 cursor-pointer bg-slate-100">
                   <img
                     src={mainDomain + img.fileUrl}
                     alt={img.title || title || "تصویر"}

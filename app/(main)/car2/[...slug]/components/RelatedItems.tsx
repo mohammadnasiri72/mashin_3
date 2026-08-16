@@ -30,7 +30,14 @@ export default function RelatedItems({
   return (
     <section dir="rtl" className="mx-auto w-full p-4">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-extrabold text-slate-900">{title}</h2>
+        {/* <h2 className="text-lg font-extrabold text-slate-900">{title}</h2> */}
+         <h2 className="text-2xl font-bold text-gray-900">
+            
+            <strong className="text-red-700">
+             {title}
+            </strong>
+            <span className="pl-1"> مرتبط</span>
+          </h2>
         <Link
           href={linkAll || "#"}
           className="flex items-center gap-0.5 text-sm font-medium text-[#ce1a2a]! hover:text-red-700! transition-colors"

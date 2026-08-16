@@ -188,7 +188,7 @@ export default function Header({
       className={`sticky-header z-10001! border-b! border-[#555]  ${isSticky ? "sticky-active" : ""}`}
     >
       <header
-        className={`header-main bg-[#1a1a1a] duration-300 shadow-lg border-b! border-neutral-800/60! ${
+        className={`header-main mx-auto! bg-[#1a1a1a] duration-300 shadow-lg border-b! border-neutral-800/60! ${
           isSticky ? "sticky" : ""
         }`}
       >
@@ -335,6 +335,7 @@ export default function Header({
           z-index: 1000;
           animation: slideDown 0.3s ease;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+          max-width: 1440px
         }
 
         .sticky-active::before {

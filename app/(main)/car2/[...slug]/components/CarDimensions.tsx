@@ -4,6 +4,7 @@ import { createMarkup } from "@/utils/func";
 import { useEffect, useRef, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import VideoPlayerCar from "./VideoPlayerCar";
+import { mainDomain } from "@/utils/mainDomain";
 
 export default function CarDimensions({
   detailsCar,
@@ -103,7 +104,7 @@ export default function CarDimensions({
           <div className="lg:w-[20%] w-full bg-white p-4 lg:p-6 flex items-center justify-center border-b lg:border-b-0 lg:border-l border-slate-200/60">
             <div className="relative w-full max-w-30 lg:max-w-none aspect-square">
               <img
-                src={"/images/1.png"}
+                src={mainDomain + detailsCar.image}
                 alt={`${detailsCar.sourceName} ${detailsCar.title}`}
                 className="w-full h-full object-contain rounded-lg"
               />

@@ -56,6 +56,8 @@ export default function HeroSection({
   detailsCar: ItemsId;
   pollData: PollData;
 }) {
+  console.log(detailsCar);
+  
   const bannerSrc = detailsCar.properties.find(
     (e) => e.propertyKey === "p1042_banner",
   )?.propertyValue;

@@ -46,7 +46,7 @@ export default function ModelShowcase({
                 href={brandHref || "#"}
                 className="flex items-center gap-0.5 text-sm font-medium text-[#ce1a2a]! hover:text-red-700! transition-colors"
               >
-                مشاهده همه
+              همه مدل‌های {brandName}
                 <BiChevronLeft fontSize="small" />
               </Link>
             </div>
@@ -129,7 +129,7 @@ export default function ModelShowcase({
                 href={specificHref || "#"}
                 className="flex items-center gap-0.5 text-sm font-medium text-[#ce1a2a]! hover:text-red-700! transition-colors"
               >
-                مشاهده همه
+                 همه مدل‌های {brandName} {specificName}
                 <BiChevronLeft fontSize="small" />
               </Link>
             </div>

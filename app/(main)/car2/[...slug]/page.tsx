@@ -184,10 +184,10 @@ async function page({
       />
 
       {/* هر بخش با id مخصوص برای اسکرول */}
-      <div className="px-3">
+      <div className="bg-[#f4f4f4] pt-5">
         <section
           id="specifications"
-          className="scroll-mt-20 bg-white rounded-2xl mt-5 shadow-sm border border-gray-100"
+          className="scroll-mt-20 bg-white rounded-2xl shadow-sm border border-gray-100"
         >
           <CarDimensions
             detailsCar={detailsCar}
@@ -215,7 +215,7 @@ async function page({
         {isShowModelShowcase && (
           <section
             id="models"
-            className="scroll-mt-20 bg-white rounded-2xl mt-5"
+            className="scroll-mt-20 bg-[#f4f4f4] rounded-2xl mt-5"
           >
             <ModelShowcase
               brandModels={carsModel}
@@ -236,7 +236,7 @@ async function page({
         )}
         <section
           id="priceAndComparison"
-          className="scroll-mt-20 bg-white rounded-2xl mt-5 "
+          className="scroll-mt-20 bg-[#f4f4f4] rounded-2xl mt-5 "
         >
           <PriceAndComparison
             ranges={priceRanges}
@@ -253,7 +253,7 @@ async function page({
           >
             <RelatedItems
               relatedItems={relatedNews}
-              title={"اخبار مرتبط"}
+              title={"اخبار "}
               linkAll={"/fa/news/اخبار-خودرو.html"}
               sliderId="news-slider"
             />
@@ -267,7 +267,7 @@ async function page({
           >
             <RelatedItems
               relatedItems={relatedVideo}
-              title={"ویدئوهای مرتبط"}
+              title={"ویدئوهای "}
               linkAll={"/videos.html"}
               sliderId="videos-slider"
             />
@@ -282,7 +282,7 @@ async function page({
             {/* <ComparisonsSection /> */}
             <RelatedItems
               relatedItems={relatedCompare}
-              title={"مقایسه‌های مرتبط"}
+              title={"مقایسه‌های "}
               linkAll={"/whichcars.html"}
               sliderId="compare-slider"
             />
