@@ -27,7 +27,10 @@ const Breadcrumb = ({
       className="flex items-center gap-1 text-sm overflow-x-auto scrollbar-hide"
       dir="rtl"
     >
-      <Link href={"/"} className="text-white/90! hover:text-white! duration-300 whitespace-nowrap!">
+      <Link
+        href={"/"}
+        className="text-white/90! hover:text-white! duration-300 whitespace-nowrap!"
+      >
         صفحه اصلی <span className="text-white/40! mx-1 select-none">/</span>
       </Link>
       {items.map((item, index) => (
@@ -56,8 +59,6 @@ export default function HeroSection({
   detailsCar: ItemsId;
   pollData: PollData;
 }) {
-  console.log(detailsCar);
-  
   const bannerSrc = detailsCar.properties.find(
     (e) => e.propertyKey === "p1042_banner",
   )?.propertyValue;
@@ -140,7 +141,9 @@ export default function HeroSection({
                       <span className="text-[11px]">(ملیون تومان)</span>
                     </span>
                   </span>
-                  <span className="text-white! text-lg font-bold">{detailsCar.amount.toLocaleString() || 'در حال بروزرسانی'}</span>
+                  <span className="text-white! text-lg font-bold">
+                    {detailsCar.amount.toLocaleString() || "در حال بروزرسانی"}
+                  </span>
                 </span>
               </li>
 
@@ -176,12 +179,17 @@ export default function HeroSection({
           <div className="flex max-w-xl flex-col items-start justify-between gap-4 h-full py-10">
             <div className="flex items-start flex-col gap-5">
               <div className="flex flex-col items-start">
-                <h1 className="text-3xl font-extrabold text-white! md:text-4xl">
-                  {detailsCar.sourceName} {detailsCar.title}
+                <h1 className="text-5xl! font-extrabold text-white! md:text-4xl">
+                  {detailsCar.itemKey}
                 </h1>
-                <span className="text-white!">
-                  {createpublishCode(detailsCar.publishCode)}
-                </span>
+                <div className="flex items-center gap-3 ">
+                  <span className="text-white! font-bold text-lg">
+                    {detailsCar.sourceName} {detailsCar.title}
+                  </span>
+                  <span className="text-white! text-xs">
+                    {createpublishCode(detailsCar.publishCode)}
+                  </span>
+                </div>
               </div>
 
               <div className="flex items-center flex-col gap-2">
@@ -247,13 +255,17 @@ export default function HeroSection({
 
         {/* عنوان و ریتینگ */}
         <div className=" text-center">
-          <h1 className="text-2xl font-extrabold text-white! drop-shadow-lg">
-            {detailsCar.sourceName} {detailsCar.title}
+          <h1 className="text-3xl font-extrabold text-white! drop-shadow-lg">
+            {detailsCar.itemKey}
           </h1>
-          <span className="text-xs text-white/70 block mt-1">
-            {createpublishCode(detailsCar.publishCode)}
-          </span>
-
+          <div className="flex gap-3 items-center justify-center">
+            <span className="text-white/70 block mt-1 font-bold">
+              {detailsCar.sourceName} {detailsCar.title}
+            </span>
+            <span className="text-xs text-white/70 block mt-1">
+              {createpublishCode(detailsCar.publishCode)}
+            </span>
+          </div>
           <div className="flex items-center justify-center gap-3 mt-3">
             <div className="flex items-center gap-0.5 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1">
               <span className="text-xs text-white/60">10 /</span>
@@ -312,7 +324,9 @@ export default function HeroSection({
                 </span>
               </div>
             </div>
-            <span className="text-base font-bold text-white">{detailsCar.amount.toLocaleString() || 'در حال بروزرسانی'}</span>
+            <span className="text-base font-bold text-white">
+              {detailsCar.amount.toLocaleString() || "در حال بروزرسانی"}
+            </span>
           </div>
 
           {/* مشخصات فنی به صورت اسکرول افقی */}
