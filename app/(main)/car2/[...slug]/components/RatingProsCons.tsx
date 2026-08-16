@@ -2,7 +2,7 @@
 
 import ModalLogin from "@/app/components/ModalLogin";
 import { RootState } from "@/redux/store";
-import { createMarkup } from "@/utils/func";
+import { createMarkup, toPersianNumbers } from "@/utils/func";
 import { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { HiThumbDown, HiThumbUp } from "react-icons/hi";
@@ -57,6 +57,7 @@ export default function RatingProsCons({
 }) {
   const [pollData, setPollData] = useState<PollData>(initialPollData);
   const [isPollModalOpen, setIsPollModalOpen] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
 
   // دریافت مزایا و معایب از دیتا
   const advantagesData = detailsCar.properties.find(
@@ -190,20 +191,72 @@ export default function RatingProsCons({
 
           <div className="flex flex-wrap items-center gap-5">
             <ScoreDonut score={pollData.pollScore} />
-            <div className="flex sm:flex-1 flex-col gap-2.5 w-full">
-              {pollData.pollDetails.map((item) => (
-                <div key={item.questionId} className="flex flex-col gap-1">
-                  <span className="text-[11px] text-slate-500">
-                    {item.questionTitle}
-                  </span>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-100">
-                    <div
-                      className="h-full rounded-full bg-red-600"
-                      style={{ width: `${(item.avgScore / 10) * 100}%` }}
-                    />
+            <div className="flex sm:flex-1 flex-col gap-3 w-full">
+              {pollData.pollDetails.map((item, index) => {
+                const percentage = (item.avgScore / 10) * 100;
+                const isHovered = hoveredItem === index;
+
+                return (
+                  <div
+                    key={item.questionId}
+                    className="flex flex-col gap-1 group relative"
+                    onMouseEnter={() => setHoveredItem(index)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                  >
+                    <div className="flex justify-between items-center">
+                      <span className="text-[11px] text-slate-500">
+                        {item.questionTitle}
+                      </span>
+                    </div>
+
+                    {/* کانتینر نوار با فضای خالی برای تولتیپ */}
+                    <div className="relative">
+                      {/* Tooltip بالای نوار */}
+                      {isHovered && (
+                        <div className="absolute -top-full left-1/2 -translate-y-1/2  z-10 animate-tooltip-pop">
+                          <div className="bg-slate-800 text-white! px-4 py-2 rounded-xl shadow-2xl border border-white/10 backdrop-blur-sm relative whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[10px] text-white">
+                                {item.questionTitle}
+                              </span>
+                              <span className="text-sm font-bold text-[#ce1a2a]">
+                                {toPersianNumbers(item.avgScore.toFixed(1))}
+                              </span>
+                              <span className="text-[10px] text-white">از 10</span>
+                            </div>
+                            {/* فلش تولتیپ */}
+                            <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-800 rotate-45 border-r border-b border-white/10" />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* نوار پیشرفت */}
+                      <div className="relative h-5 w-full overflow-hidden rounded-lg bg-slate-100 shadow-inner cursor-pointer">
+                        {/* نوار پر شده */}
+                        <div
+                          className="h-full rounded-lg bg-linear-to-r from-red-500 to-[#ce1a2a] transition-all duration-700 ease-out relative flex items-center justify-end px-3"
+                          style={{ 
+                            width: `${percentage}%`,
+                            minWidth: percentage > 0 ? '30px' : '0'
+                          }}
+                        >
+                          {/* نمایش مقدار داخل نوار */}
+                          <span className="text-[11px] font-bold text-white drop-shadow-sm">
+                            {toPersianNumbers(item.avgScore.toFixed(1))}
+                          </span>
+                        </div>
+
+                        {/* پس‌زمینه خالی با نمایش مقدار برای زمانی که نوار کمه */}
+                        {percentage < 15 && (
+                          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-bold text-slate-400">
+                            {toPersianNumbers(item.avgScore.toFixed(1))}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -219,6 +272,26 @@ export default function RatingProsCons({
       />
       {/* Modal Login */}
       <ModalLogin open={openLogin} setOpen={setOpenLogin} />
+
+      {/* استایل‌های انیمیشن */}
+      <style jsx global>{`
+        @keyframes tooltipPop {
+          0% {
+            opacity: 0;
+            transform: translateX(-50%) scale(0.8) translateY(8px);
+          }
+          60% {
+            transform: translateX(-50%) scale(1.05) translateY(-2px);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(-50%) scale(1) translateY(0);
+          }
+        }
+        .animate-tooltip-pop {
+          animation: tooltipPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+      `}</style>
     </section>
   );
 }
