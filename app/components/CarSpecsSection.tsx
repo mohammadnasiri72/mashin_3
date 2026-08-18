@@ -65,7 +65,7 @@ const CarSpecsSection = ({
                   width={160}
                   height={160}
                   className="w-52 lg:w-40 h-auto"
-                  priority
+                  loading="lazy"
                 />
               </div>
             </div>

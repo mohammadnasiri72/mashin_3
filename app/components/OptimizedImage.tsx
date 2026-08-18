@@ -10,6 +10,7 @@ interface OptimizedImageProps {
   sizes?: string;
   priority?: boolean;
   loading?: "lazy" | "eager";
+  fetchPriority?: "high" | "low" | "auto";
   onLoad?: () => void;
   onError?: () => void;
 }
@@ -26,6 +27,7 @@ export default function OptimizedImage({
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
   priority = false,
   loading,
+  fetchPriority,
   onLoad,
   onError,
 }: OptimizedImageProps) {
@@ -41,7 +43,8 @@ export default function OptimizedImage({
       className={className}
       sizes={sizes}
       priority={priority}
-      loading={loading}
+      loading={priority ? undefined : loading}
+      fetchPriority={fetchPriority}
       onLoad={onLoad}
       onError={onError}
       quality={60}

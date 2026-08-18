@@ -1,23 +1,25 @@
-import { getCategory } from "@/services/Category/Category";
-import { getItem } from "@/services/Item/Item";
-import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
-import { getPriceCar } from "@/services/Price/PriceCar";
-import { getPriceCarBrands } from "@/services/Price/PriceCarBrands";
-import { getPropertyIds } from "@/services/Property/propertyIds";
 import { decodeHtmlServer } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
-import CarBrandPricesSection from "../components/CarBrandPricesSection";
-import CarComparisonSection from "../components/CarComparisonSection";
-import CarFinderSection from "../components/CarFinderSection";
-import CarSpecsSection from "../components/CarSpecsSection";
-import CarTypes from "../components/CarTypes";
-import CreativeCategoriesSection from "../components/CreativeCategoriesSection";
-import EducationSection from "../components/EducationSection";
-import HeroSlider from "../components/HeroSlider";
-import MotorcycleBrandsSection from "../components/MotorcycleBrandsSection";
-import NewsSection from "../components/NewsSection";
-import VideoBannerSection from "../components/VideoBannerSection";
+import { Suspense } from "react";
+import {
+  HeroFallback,
+  NewsFallback,
+  SectionFallback,
+} from "./home/fallbacks";
+import {
+  HomeAutoServices,
+  HomeCarFinder,
+  HomeCarSpecs,
+  HomeCarTypes,
+  HomeComparison,
+  HomeEducation,
+  HomeHero,
+  HomeMotorBrands,
+  HomeNews,
+  HomePrices,
+  HomeVideo,
+} from "./home/HomeSections";
 
 export const revalidate = 60;
 
@@ -134,163 +136,53 @@ function extractCustomMetaTags(htmlString: string): Record<string, string> {
   return tags;
 }
 
-export default async function Home() {
-  const [
-    slider,
-    news,
-    newsCar,
-    saleNews,
-    compare,
-    segmentCars,
-    video,
-    carSpecs,
-    whichCars,
-    education,
-    brandMotor,
-    brandsCar,
-    brandsAuto,
-  ]: [
-    Items[],
-    Items[],
-    Items[],
-    Items[],
-    Items[],
-    Items[],
-    Items[],
-    Items[],
-    Items[],
-    Items[],
-    ItemsCategory[],
-    ItemsCategory[],
-    ItemsCategory[],
-  ] = await Promise.all([
-    getItem({ TypeId: 6, langCode: "fa" }),
-    getItem({
-      TypeId: 5,
-      langCode: "fa",
-      PageIndex: 1,
-      PageSize: 6,
-      FullData: true,
-    }),
-    getItem({
-      TypeId: 5,
-      langCode: "fa",
-      CategoryIdArray: "6323",
-      PageIndex: 1,
-      PageSize: 1,
-    }),
-
-    getItem({
-      TypeId: 5,
-      langCode: "fa",
-      CategoryIdArray: "6593",
-      PageIndex: 1,
-      PageSize: 10,
-    }),
-    getItem({ TypeId: 1045, langCode: "fa", PageIndex: 1, PageSize: 2 }),
-    getItem({ TypeId: 1048, langCode: "fa" }),
-    getItem({ TypeId: 1028, langCode: "fa", PageIndex: 1, PageSize: 10 }),
-    getItem({
-      TypeId: 1042,
-      langCode: "fa",
-      IsHome: 1,
-      PageIndex: 1,
-      PageSize: 12,
-    }),
-    getItem({ TypeId: 1045, langCode: "fa", PageIndex: 1, PageSize: 10 }),
-    getItem({ TypeId: 3, langCode: "fa", PageIndex: 1, PageSize: 4 }),
-    getCategory({
-      TypeId: 1052,
-      LangCode: "fa",
-      ParentIdArray: 6059,
-      PageIndex: 1,
-      PageSize: 200,
-    }),
-    getCategory({
-      TypeId: 1042,
-      LangCode: "fa",
-      ParentIdArray: 6058,
-      PageIndex: 1,
-      PageSize: 200,
-    }),
-    getCategory({ TypeId: 1050, LangCode: "fa", PageIndex: 1, PageSize: 12 }),
-  ]);
-
-  let Properties: properties[] = [];
-  if (carSpecs.length > 0) {
-    Properties = await getPropertyIds(
-      carSpecs.map((item) => item.id).join(","),
-    );
-  }
-
-  const brands: BrandsPrice = await getPriceCarBrands("internal");
-  const prices: Price = await getPriceCar({
-    Type: "internal",
-    BrandId: brands.brands[0].id,
-  });
-
-  const AutoServiceData: Items[] = await getItem({
-    TypeId: 1050,
-    langCode: "fa",
-    PageIndex: 1,
-    PageSize: 15,
-    OrderBy: 13,
-  });
-
-  const ids = AutoServiceData.map((item) => item.id).join(",");
-  let propertyItems: ItemsId[] = [];
-  if (ids) {
-    propertyItems = await getItemByIds(ids);
-  }
-
+export default function Home() {
   return (
     <div className="page-wrapper min-h-screen bg-[#f4f4f4]">
       <div className="content-box ">
-        {/* Hero Slider */}
-        {slider.length > 0 && (
-          <HeroSlider
-            slider={slider}
-            latestNews={newsCar}
-            latestComparisons={compare}
-            latestPresales={saleNews}
-          />
-        )}
+        <Suspense fallback={<HeroFallback />}>
+          <HomeHero />
+        </Suspense>
 
-        {/* News */}
-        <NewsSection news={news} saleNews={saleNews} />
+        <Suspense fallback={<NewsFallback />}>
+          <HomeNews />
+        </Suspense>
 
-        {/* Car Types */}
-        <CarTypes segmentCars={segmentCars} />
+        <Suspense fallback={<SectionFallback minHeight="min-h-44" />}>
+          <HomeCarTypes />
+        </Suspense>
 
-        {/* Video Banner Section */}
-        <VideoBannerSection video={video} />
+        <Suspense fallback={<SectionFallback minHeight="min-h-72" />}>
+          <HomeVideo />
+        </Suspense>
 
+        <Suspense fallback={<SectionFallback minHeight="min-h-96" />}>
+          <HomeCarSpecs />
+        </Suspense>
 
-        {/* Car Specs Section */}
-        <CarSpecsSection carSpecs={carSpecs} Properties={Properties} />
+        <Suspense fallback={<SectionFallback minHeight="min-h-96" />}>
+          <HomeComparison />
+        </Suspense>
 
-        {/* Car Comparison Section */}
-        <CarComparisonSection brandsCar={brandsCar} whichCars={whichCars} />
+        <Suspense fallback={<SectionFallback minHeight="min-h-96" />}>
+          <HomePrices />
+        </Suspense>
 
-        {/* Car BrandPrices Section */}
-        <CarBrandPricesSection
-          initialBrands={brands.brands}
-          initialPrices={prices.prices}
-        />
+        <Suspense fallback={<SectionFallback minHeight="min-h-96" />}>
+          <HomeAutoServices />
+        </Suspense>
 
-        {/* Brands AutoServices & education */}
-        <CreativeCategoriesSection
-          brandsAuto={AutoServiceData}
-          carView={brandsAuto}
-          propertyItems={propertyItems}
-        />
-        <EducationSection education={education} />
+        <Suspense fallback={<SectionFallback minHeight="min-h-72" />}>
+          <HomeEducation />
+        </Suspense>
 
-        {/* Motorcycle Brands Section */}
-        <MotorcycleBrandsSection brands={brandMotor} />
+        <Suspense fallback={<SectionFallback minHeight="min-h-72" />}>
+          <HomeMotorBrands />
+        </Suspense>
 
-        {/* Car Finder Section */}
-        <CarFinderSection brands={brandsCar} segmentCars={segmentCars} />
+        <Suspense fallback={<SectionFallback minHeight="min-h-64" />}>
+          <HomeCarFinder />
+        </Suspense>
       </div>
     </div>
   );

@@ -18,16 +18,22 @@ export default async function RootLayout({
     const pathname = headersList.get("x-pathname");
     const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
   
-    const menu: MenuGroup[] = await getMenu({ langCode: "fa", menuKey: "" });
-    const setting: SettingType[] = await getSetting();
-    const Social: Items[] = await getItem({ TypeId: 8, langCode: "fa" , FullData: true,});
-    
-    const banner: Items[] = await getItem({
-      TypeId: 1051,
-      langCode: "fa",
-      CategoryIdArray: "6390",
-       FullData: true,
-    });
+    const [menu, setting, Social, banner]: [
+      MenuGroup[],
+      SettingType[],
+      Items[],
+      Items[],
+    ] = await Promise.all([
+      getMenu({ langCode: "fa", menuKey: "" }),
+      getSetting(),
+      getItem({ TypeId: 8, langCode: "fa", FullData: true }),
+      getItem({
+        TypeId: 1051,
+        langCode: "fa",
+        CategoryIdArray: "6390",
+        FullData: true,
+      }),
+    ]);
     
   
     return (

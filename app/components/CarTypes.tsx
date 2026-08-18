@@ -44,6 +44,8 @@ export default function CarTypes({ segmentCars }: { segmentCars: Items[] }) {
                           src={mainDomain + car.image}
                           alt={car.title}
                           className="mx-auto object-contain w-36"
+                          loading="lazy"
+                          decoding="async"
                         />
                       </div>
                     </div>

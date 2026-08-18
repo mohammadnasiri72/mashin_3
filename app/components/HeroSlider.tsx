@@ -66,7 +66,7 @@ export default function HeroSection({
               loop={true}
               className="h-full w-full"
             >
-              {slider.map((slide) => (
+              {slider.map((slide, index) => (
                 <SwiperSlide key={slide.id}>
                   <Link target="_blank" href={slide.sourceLink || "#"}>
                     <div className="relative w-full h-full ">
@@ -74,8 +74,10 @@ export default function HeroSection({
                         src={mainDomain + slide.image}
                         alt={slide.summary || slide.title}
                         className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        priority
+                        sizes="(max-width: 1024px) 100vw, 75vw"
+                        priority={index === 0}
+                        fetchPriority={index === 0 ? "high" : "low"}
+                        loading={index === 0 ? "eager" : "lazy"}
                       />
 
                       {/* لایه گرادینت برای خوانایی بهتر */}

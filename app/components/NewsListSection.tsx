@@ -5,6 +5,8 @@ import { FaCalendar, FaComments } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
 
 const NewsListSection = ({ news }: { news: Items[] }) => {
+  console.log(news);
+  
   return (
     <section className="" aria-labelledby="news-list-title">
       <div className="mx-auto px-4">
