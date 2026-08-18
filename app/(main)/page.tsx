@@ -1,55 +1,53 @@
 import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
+import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { getPriceCar } from "@/services/Price/PriceCar";
 import { getPriceCarBrands } from "@/services/Price/PriceCarBrands";
 import { getPropertyIds } from "@/services/Property/propertyIds";
+import { decodeHtmlServer } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
 import CarBrandPricesSection from "../components/CarBrandPricesSection";
 import CarComparisonSection from "../components/CarComparisonSection";
 import CarFinderSection from "../components/CarFinderSection";
 import CarSpecsSection from "../components/CarSpecsSection";
 import CarTypes from "../components/CarTypes";
-import ComparisonSection from "../components/ComparisonSection";
 import CreativeCategoriesSection from "../components/CreativeCategoriesSection";
+import EducationSection from "../components/EducationSection";
 import HeroSlider from "../components/HeroSlider";
 import MotorcycleBrandsSection from "../components/MotorcycleBrandsSection";
-import NewsListSection from "../components/NewsListSection";
 import NewsSection from "../components/NewsSection";
 import VideoBannerSection from "../components/VideoBannerSection";
-import { decodeHtmlServer } from "@/utils/func";
-import EducationSection from "../components/EducationSection";
-import { getItemByIds } from "@/services/Item/ItemByIds";
 
 export const revalidate = 60;
 
 // ✅ تابع generateMetadata - اینجا تمام متادیتاها تنظیم می‌شود
 export async function generateMetadata() {
   const dataPage: ItemsId | null = await getItemByUrl("/");
-const seoUrl = dataPage?.url
-        ? `${mainDomainOld}${dataPage?.url}`
-        : `${mainDomainOld}`;
+  const seoUrl = dataPage?.url
+    ? `${mainDomainOld}${dataPage?.url}`
+    : `${mainDomainOld}`;
 
   if (dataPage && dataPage.title) {
     // استخراج و پردازش seoHeadTags
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags || "";
-    
+
     // تگ‌های سفارشی را به صورت یک آبجکت برای other استخراج می‌کنیم
     const customTags = extractCustomMetaTags(seoHeadTags);
 
     return {
       title: decodeHtmlServer(
-        `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title}`
+        `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title}`,
       ),
       description: decodeHtmlServer(
         dataPage.seoInfo?.seoDescription
           ? dataPage.seoInfo?.seoDescription
-          : dataPage.title
+          : dataPage.title,
       ),
       keywords: decodeHtmlServer(
         dataPage.seoInfo?.seoKeywords
           ? dataPage.seoInfo?.seoKeywords
-          : dataPage.seoKeywords
+          : dataPage.seoKeywords,
       ),
       metadataBase: new URL(mainDomainOld),
       alternates: {
@@ -57,48 +55,49 @@ const seoUrl = dataPage?.url
       },
       openGraph: {
         title: decodeHtmlServer(
-          `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title}`
+          `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title}`,
         ),
         description: decodeHtmlServer(
           dataPage.seoInfo?.seoDescription
             ? dataPage.seoInfo?.seoDescription
-            : dataPage.title
+            : dataPage.title,
         ),
         // اضافه کردن تصویر اگر وجود دارد
         images: dataPage?.image ? [dataPage.image] : [],
-        type: 'website',
-        locale: 'fa_IR',
-        siteName: 'ماشین سه',
+        type: "website",
+        locale: "fa_IR",
+        siteName: "ماشین سه",
       },
       twitter: {
-        card: 'summary_large_image',
+        card: "summary_large_image",
         title: decodeHtmlServer(
-          `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title}`
+          `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title}`,
         ),
         description: decodeHtmlServer(
           dataPage.seoInfo?.seoDescription
             ? dataPage.seoInfo?.seoDescription
-            : dataPage.title
+            : dataPage.title,
         ),
         images: dataPage?.image ? [dataPage.image] : [],
       },
       // ✅ تگ‌های سفارشی و متاهای اضافی
       other: {
-        'copyright': 'activeidea.net',
-        'author': 'ایده پویا',
-        'document-type': 'Public',
-        'document-rating': 'General',
-        'classification': 'Consumer',
-        'rating': 'ماشین',
-        'resource-type': 'document',
-        'og:locale': 'fa_IR',
-        'og:type': 'ماشین',
+        copyright: "activeidea.net",
+        author: "ایده پویا",
+        "document-type": "Public",
+        "document-rating": "General",
+        classification: "Consumer",
+        rating: "ماشین",
+        "resource-type": "document",
+        "og:locale": "fa_IR",
+        "og:type": "ماشین",
         ...customTags, // اضافه کردن تگ‌های سفارشی از seoHeadTags
       },
     };
   } else {
     return {
-      title: "ماشین 3 - بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
+      title:
+        "ماشین 3 - بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
       description: "بانک اطلاعات خودرو ، بررسی خودرو ، سایت تخصصی خودرو ماشین",
     };
   }
@@ -107,31 +106,31 @@ const seoUrl = dataPage?.url
 // ✅ تابع کمکی برای استخراج تگ‌های سفارشی از seoHeadTags
 function extractCustomMetaTags(htmlString: string): Record<string, string> {
   if (!htmlString) return {};
-  
+
   const tags: Record<string, string> = {};
-  
+
   // استخراج تگ‌های meta با استفاده از regex
   const metaRegex = /<meta\s+([^>]*?)>/gi;
   const matches = htmlString.matchAll(metaRegex);
-  
+
   for (const match of matches) {
     const attrs = match[1];
-    
+
     // استخراج name و content
     const nameMatch = attrs.match(/name=["']([^"']*)["']/i);
     const contentMatch = attrs.match(/content=["']([^"']*)["']/i);
-    
+
     if (nameMatch && contentMatch) {
       const name = nameMatch[1];
       const content = contentMatch[1];
-      
+
       // فقط تگ‌هایی که در Metadata API پشتیبانی می‌شوند را اضافه کن
-      if (!['title', 'description', 'keywords', 'robots'].includes(name)) {
+      if (!["title", "description", "keywords", "robots"].includes(name)) {
         tags[name] = content;
       }
     }
   }
-  
+
   return tags;
 }
 
@@ -142,11 +141,9 @@ export default async function Home() {
     newsCar,
     saleNews,
     compare,
-    bestChoices,
     segmentCars,
     video,
     carSpecs,
-    carView,
     whichCars,
     education,
     brandMotor,
@@ -163,14 +160,18 @@ export default async function Home() {
     Items[],
     Items[],
     Items[],
-    Items[],
-    Items[],
     ItemsCategory[],
     ItemsCategory[],
     ItemsCategory[],
   ] = await Promise.all([
     getItem({ TypeId: 6, langCode: "fa" }),
-    getItem({ TypeId: 5, langCode: "fa", PageIndex: 1, PageSize: 6 ,FullData: true,}),
+    getItem({
+      TypeId: 5,
+      langCode: "fa",
+      PageIndex: 1,
+      PageSize: 6,
+      FullData: true,
+    }),
     getItem({
       TypeId: 5,
       langCode: "fa",
@@ -178,7 +179,7 @@ export default async function Home() {
       PageIndex: 1,
       PageSize: 1,
     }),
-   
+
     getItem({
       TypeId: 5,
       langCode: "fa",
@@ -187,20 +188,12 @@ export default async function Home() {
       PageSize: 10,
     }),
     getItem({ TypeId: 1045, langCode: "fa", PageIndex: 1, PageSize: 2 }),
-    getItem({ TypeId: 1043, langCode: "fa", PageIndex: 1, PageSize: 10 }),
     getItem({ TypeId: 1048, langCode: "fa" }),
     getItem({ TypeId: 1028, langCode: "fa", PageIndex: 1, PageSize: 10 }),
     getItem({
       TypeId: 1042,
       langCode: "fa",
       IsHome: 1,
-      PageIndex: 1,
-      PageSize: 12,
-    }),
-    getItem({
-      TypeId: 1042,
-      langCode: "fa",
-      OrderBy: 8,
       PageIndex: 1,
       PageSize: 12,
     }),
@@ -223,12 +216,10 @@ export default async function Home() {
     getCategory({ TypeId: 1050, LangCode: "fa", PageIndex: 1, PageSize: 12 }),
   ]);
 
-  
-
   let Properties: properties[] = [];
   if (carSpecs.length > 0) {
     Properties = await getPropertyIds(
-      carSpecs.map((item) => item.id).join(",")
+      carSpecs.map((item) => item.id).join(","),
     );
   }
 
@@ -238,40 +229,35 @@ export default async function Home() {
     BrandId: brands.brands[0].id,
   });
 
- const AutoServiceData: Items[] = await getItem({
+  const AutoServiceData: Items[] = await getItem({
     TypeId: 1050,
     langCode: "fa",
-    PageIndex:  1,
+    PageIndex: 1,
     PageSize: 15,
-     OrderBy: 13,
+    OrderBy: 13,
   });
 
-   const ids = AutoServiceData.map((item) => item.id).join(",");
-    let propertyItems: ItemsId[] = [];
-    if (ids) {
-      propertyItems = await getItemByIds(ids);
-    }
+  const ids = AutoServiceData.map((item) => item.id).join(",");
+  let propertyItems: ItemsId[] = [];
+  if (ids) {
+    propertyItems = await getItemByIds(ids);
+  }
 
   return (
     <div className="page-wrapper min-h-screen bg-[#f4f4f4]">
       <div className="content-box ">
         {/* Hero Slider */}
-       {slider.length > 0 && <HeroSlider
-        slider={slider}
-        latestNews={newsCar}
-        latestComparisons={compare}
-        latestPresales={saleNews}
-      />}
+        {slider.length > 0 && (
+          <HeroSlider
+            slider={slider}
+            latestNews={newsCar}
+            latestComparisons={compare}
+            latestPresales={saleNews}
+          />
+        )}
 
         {/* News */}
         <NewsSection news={news} saleNews={saleNews} />
-        
-        {/* compare & bestChoices & instaLink */}
-        {/* <ComparisonSection
-          news={linkSelected}
-          compare={compare}
-          bestChoices={bestChoices}
-        /> */}
 
         {/* Car Types */}
         <CarTypes segmentCars={segmentCars} />
@@ -279,8 +265,6 @@ export default async function Home() {
         {/* Video Banner Section */}
         <VideoBannerSection video={video} />
 
-        {/* News List Section */}
-        {/* <NewsListSection news={news} /> */}
 
         {/* Car Specs Section */}
         <CarSpecsSection carSpecs={carSpecs} Properties={Properties} />
@@ -293,14 +277,14 @@ export default async function Home() {
           initialBrands={brands.brands}
           initialPrices={prices.prices}
         />
-        
+
         {/* Brands AutoServices & education */}
         <CreativeCategoriesSection
           brandsAuto={AutoServiceData}
           carView={brandsAuto}
           propertyItems={propertyItems}
         />
-        <EducationSection education={education}/>
+        <EducationSection education={education} />
 
         {/* Motorcycle Brands Section */}
         <MotorcycleBrandsSection brands={brandMotor} />

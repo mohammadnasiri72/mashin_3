@@ -184,7 +184,7 @@ async function page({
       />
 
       {/* هر بخش با id مخصوص برای اسکرول */}
-      <div className="bg-[#f4f4f4] pt-5">
+      <div className="bg-[#f4f4f4] pt-5 px-3">
         <section
           id="specifications"
           className="scroll-mt-20 bg-white rounded-2xl shadow-sm border border-gray-100"

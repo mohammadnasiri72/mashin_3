@@ -126,9 +126,9 @@ export default function HeroSection({
           </div>
         )}
 
-        <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 h-110 md:flex-row md:items-center md:justify-between px-4">
+        <div className="mx-auto flex w-full flex-col gap-8 h-110 md:flex-row md:items-center md:justify-between px-4">
           {/* Right: floating price + quick spec card */}
-          <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/20 p-4 shadow-2xl backdrop-blur-md md:mb-2">
+          <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-slate-900/20 px-4 pt-4 pb-2 shadow-2xl backdrop-blur-md md:mb-2">
             <ul className="grid grid-cols-1">
               <li className="flex items-center gap-2 pb-2">
                 <span className="flex justify-between w-full items-center">
@@ -163,10 +163,10 @@ export default function HeroSection({
                       />
                     </span>
                     <span className="flex justify-between items-center w-full leading-tight">
-                      <span className="text-sm font-bold text-white!">
+                      <span className="text-xs font-bold text-white!">
                         {spec.title}
                       </span>
-                      <span className="text-sm font-semibold text-white!">
+                      <span className="text-xs font-semibold text-white!">
                         {spec.value}
                       </span>
                     </span>
@@ -176,9 +176,9 @@ export default function HeroSection({
           </div>
 
           {/* Left: title, tags, rating, actions */}
-          <div className="flex max-w-xl flex-col items-start justify-between gap-4 h-full py-10">
+          <div className="flex max-w-xl flex-col items-center justify-between gap-4 h-full py-10">
             <div className="flex items-start flex-col gap-5">
-              <div className="flex flex-col items-start">
+              <div className="flex flex-col items-center">
                 <h1 className="text-5xl! font-extrabold text-white! md:text-4xl">
                   {detailsCar.itemKey}
                 </h1>
