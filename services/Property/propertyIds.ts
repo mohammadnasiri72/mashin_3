@@ -2,7 +2,7 @@ import { baseUrl } from "@/utils/mainDomain";
 
 export const getPropertyIds = async (ids: string): Promise<properties[]> => {
   try {
-    const url = new URL(`${baseUrl}api/Property/value/item/${ids}`);
+    const url = new URL(`${baseUrl}api/Property/value/item/${ids}/?onlyTechProperty=true`);
 
    
     const response = await fetch(url, {

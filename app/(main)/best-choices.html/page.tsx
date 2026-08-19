@@ -65,7 +65,7 @@ async function pageBestChoices({
    PageIndex: page,
     ...(term && term !== "undefined" && { Term: term }),
     PageSize: 15,
-    FullData:true,
+    FullData:false,
   });
   const popularBestChoices: Items[] = await getItem({
     TypeId: 1043,
@@ -78,7 +78,7 @@ async function pageBestChoices({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
-    FullData: true,
+    FullData: false,
   });
 
   const headersList = await headers();

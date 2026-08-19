@@ -12,7 +12,9 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
+// @ts-ignoreimport
 import "swiper/css";
+// @ts-ignoreimport
 import "swiper/css/free-mode";
 import { FreeMode } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -137,7 +139,7 @@ const EducationCar = ({
         langCode: "fa",
         PageIndex: nextPage.toString(),
         PageSize: pageSize.toString(),
-        FullData: "true",
+        FullData: "false",
       });
 
       if (id > 0) {

@@ -1,4 +1,5 @@
 import "@ant-design/v5-patch-for-react-19";
+// @ts-ignoreimport
 import "./globals.css";
 import LayoutClient from "./LayoutClient";
 import localFont from "next/font/local";

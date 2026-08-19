@@ -29,6 +29,15 @@ export const getHomeNewsCar = cache(() =>
     PageSize: 1,
   }),
 );
+export const getHomeNewsCarOut = cache(() =>
+  getItem({
+    TypeId: 5,
+    langCode: "fa",
+    CategoryIdArray: "8997",
+    PageIndex: 1,
+    PageSize: 1,
+  }),
+);
 
 export const getHomeSaleNews = cache(() =>
   getItem({
@@ -101,11 +110,13 @@ export const getHomeAutoServiceData = cache(() =>
 );
 
 export const getHomeCarSpecProperties = cache(async () => {
-  const carSpecs = await getHomeCarSpecs();
+  const carSpecs = await getHomeCarSpecs();  
   if (carSpecs.length === 0) return { carSpecs, Properties: [] as properties[] };
   const Properties = await getPropertyIds(
     carSpecs.map((item) => item.id).join(","),
   );
+  
+  
   return { carSpecs, Properties };
 });
 

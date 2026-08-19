@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import { FaMapMarkerAlt } from "react-icons/fa";
 import L from "leaflet";
+import { useEffect, useRef } from "react";
+// @ts-ignoreimport
 import "leaflet/dist/leaflet.css";
 
 // تعریف تایپ برای props
@@ -29,16 +29,16 @@ const createCustomIcon = () => {
     iconSize: [48, 48],
     iconAnchor: [24, 48],
     popupAnchor: [0, -48],
-    className: "custom-marker"
+    className: "custom-marker",
   });
 };
 
-function MapContainer({ 
-  latitude, 
-  longitude, 
-  zoom = 13, 
+function MapContainer({
+  latitude,
+  longitude,
+  zoom = 13,
   markerText = "موقعیت نمایندگی",
-  className = ""
+  className = "",
 }: MapContainerProps) {
   const mapRef = useRef<MapRefType>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -48,19 +48,23 @@ function MapContainer({
     if (!mapRef.current || mapInstanceRef.current) return;
 
     // مقداردهی اولیه نقشه
-    mapInstanceRef.current = L.map(mapRef.current).setView([latitude, longitude], zoom);
+    mapInstanceRef.current = L.map(mapRef.current).setView(
+      [latitude, longitude],
+      zoom,
+    );
 
     // اضافه کردن tile layer (نقشه پایه)
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19,
     }).addTo(mapInstanceRef.current);
 
     // اضافه کردن marker با آیکون سفارشی
     const customIcon = createCustomIcon();
-    markerRef.current = L.marker([latitude, longitude], { icon: customIcon })
-      .addTo(mapInstanceRef.current!)
-      .bindPopup(`<div class="text-right p-2">
+    markerRef.current = L.marker([latitude, longitude], {
+      icon: customIcon,
+    }).addTo(mapInstanceRef.current!).bindPopup(`<div class="text-right p-2">
         <strong class="block text-lg">${markerText}</strong>
         <span class="block text-sm text-gray-600">عرض جغرافیایی: ${latitude.toFixed(6)}</span>
         <span class="block text-sm text-gray-600">طول جغرافیایی: ${longitude.toFixed(6)}</span>
@@ -85,10 +89,8 @@ function MapContainer({
 
   return (
     <div className={`flex flex-col items-center ${className}`}>
-      
-
       {/* کانتینر نقشه */}
-      <div 
+      <div
         ref={mapRef}
         className="w-full h-[500px] rounded-xl shadow-lg border border-gray-300 overflow-hidden"
       />
@@ -99,17 +101,17 @@ function MapContainer({
           background: transparent;
           border: none;
         }
-        
+
         .leaflet-popup-content {
           margin: 13px 19px;
         }
-        
+
         .leaflet-popup-content-wrapper {
           border-radius: 12px;
           text-align: right;
           direction: rtl;
         }
-        
+
         .leaflet-control-attribution {
           font-size: 9px;
         }

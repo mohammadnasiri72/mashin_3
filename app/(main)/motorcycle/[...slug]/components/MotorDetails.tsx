@@ -1,5 +1,5 @@
 "use client";
-
+// @ts-ignoreimport
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
@@ -7,10 +7,13 @@ import type { Swiper as SwiperType } from "swiper";
 import { FreeMode, Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper styles
+// @ts-ignoreimport
 import "swiper/css";
+// @ts-ignoreimport
 import "swiper/css/free-mode";
+// @ts-ignoreimport
 import "swiper/css/navigation";
+// @ts-ignoreimport
 import "swiper/css/thumbs";
 
 // Fancybox

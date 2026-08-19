@@ -1,3 +1,4 @@
+// CarComparisonSection.tsx
 "use client";
 
 import { getItem } from "@/services/Item/Item";
@@ -7,6 +8,7 @@ import { Select } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+// @ts-ignoreimport
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -20,7 +22,8 @@ const CarComparisonSection = ({
 }: {
   brandsCar: ItemsCategory[];
   whichCars: Items[];
-}) => {
+}) => {  
+  const [isMounted, setIsMounted] = useState(false);
   const [firstCarBrand, setFirstCarBrand] = useState<number>(0);
   const [firstModelsCarList, setFirstModelsCarList] = useState<Items[]>([]);
   const [firstCarModel, setFirstCarModel] = useState<number>(0);
@@ -34,10 +37,27 @@ const CarComparisonSection = ({
   const swiperRef = useRef<any>(null);
   const router = useRouter();
 
-  // تعداد کل تصاویر
+  // ✅ فقط در کلاینت mount شود
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // گرفتن عرض صفحه فقط در کلاینت
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setWindowWidth(window.innerWidth);
+
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, []);
+
   const totalImages = whichCars.length;
 
-  // تعیین تعداد ستون براساس عرض صفحه
   const getColumnsCount = () => {
     if (windowWidth >= 1280) return 4;
     if (windowWidth >= 1024) return 3;
@@ -45,19 +65,6 @@ const CarComparisonSection = ({
     return 1;
   };
 
-  // گرفتن عرض صفحه
-  useEffect(() => {
-    setWindowWidth(window.innerWidth);
-
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // بعد از لود همه تصاویر
   useEffect(() => {
     if (loadedCount === totalImages && totalImages > 0) {
       setTimeout(() => {
@@ -69,7 +76,6 @@ const CarComparisonSection = ({
     }
   }, [loadedCount, totalImages]);
 
-  // تایمر fallback
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowSkeleton(false);
@@ -103,7 +109,9 @@ const CarComparisonSection = ({
         PageSize: 200,
       });
       setFirstModelsCarList(modelsCarResponse);
-    } catch (err) {}
+    } catch (err) {
+      console.error('Error fetching models:', err);
+    }
   };
 
   const fetchModelCars2 = async () => {
@@ -116,7 +124,9 @@ const CarComparisonSection = ({
         PageSize: 200,
       });
       setSecModelsCarList(modelsCarResponse);
-    } catch (err) {}
+    } catch (err) {
+      console.error('Error fetching models:', err);
+    }
   };
 
   useEffect(() => {
@@ -133,24 +143,34 @@ const CarComparisonSection = ({
 
   const columnsCount = getColumnsCount();
 
+  // ✅ اگر هنوز mounted نشده، یک placeholder نشون بده
+  if (!isMounted) {
+    return (
+      <section className="py-3" aria-label="مقایسه خودرو">
+        <div className="mx-auto">
+          <h3 className="text-center sm:text-xl text-[#292929]! font-bold! mb-4!">
+            مقایسه خودروهای بازار
+          </h3>
+          <div className="h-96 bg-gray-100 animate-pulse rounded-2xl" />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="py-3" aria-label="مقایسه خودرو">
       <div className="mx-auto">
-        {/* عنوان اصلی */}
         <h3 className="text-center sm:text-xl text-[#292929]! font-bold! mb-4!">
           مقایسه خودروهای بازار
         </h3>
 
-        {/* بخش انتخاب خودروها */}
         <div className="sm:px-0 px-5">
           <div className="w-full md:w-10/12 bg-[#ce1a2a] px-6 pt-6 pb-87.5 mx-auto rounded-2xl mb-8!">
             <div className="flex flex-col lg:flex-row gap-6">
-              {/* خودرو اول - کد قبلی همونطور هست */}
               <div className="w-full lg:w-2/5">
                 <h4 className="text-white! text-sm font-medium pb-4 w-full">
                   خودرو اول
                 </h4>
-
                 <div className="grid sm:grid-cols-2 grid-cols-1 gap-8">
                   <Select
                     aria-label="select brand car1"
@@ -171,6 +191,7 @@ const CarComparisonSection = ({
                         .includes(input.toLowerCase());
                     }}
                   >
+                    <Option value={0}>همه برندها</Option>
                     {brandsCar.length > 0 &&
                       brandsCar.map((e) => (
                         <Option key={e.id} value={e.id}>
@@ -196,6 +217,7 @@ const CarComparisonSection = ({
                         .includes(input.toLowerCase());
                     }}
                   >
+                    <Option value={0}>همه مدل‌ها</Option>
                     {firstModelsCarList.length > 0 &&
                       firstModelsCarList.map((e) => (
                         <Option key={e.id} value={e.id}>
@@ -206,12 +228,10 @@ const CarComparisonSection = ({
                 </div>
               </div>
 
-              {/* خودرو دوم */}
               <div className="w-full lg:w-2/5">
                 <h4 className="text-white! text-sm font-medium pb-4 w-full">
                   خودرو دوم
                 </h4>
-
                 <div className="grid sm:grid-cols-2 grid-cols-1 gap-8">
                   <Select
                     aria-label="select brand car2"
@@ -232,6 +252,7 @@ const CarComparisonSection = ({
                         .includes(input.toLowerCase());
                     }}
                   >
+                    <Option value={0}>همه برندها</Option>
                     {brandsCar.length > 0 &&
                       brandsCar.map((e) => (
                         <Option key={e.id} value={e.id}>
@@ -257,6 +278,7 @@ const CarComparisonSection = ({
                         .includes(input.toLowerCase());
                     }}
                   >
+                    <Option value={0}>همه مدل‌ها</Option>
                     {secModelsCarList.length > 0 &&
                       secModelsCarList.map((e) => (
                         <Option key={e.id} value={e.id}>
@@ -267,15 +289,19 @@ const CarComparisonSection = ({
                 </div>
               </div>
 
-              {/* دکمه مقایسه */}
               <div className="w-full lg:w-1/6">
                 <h4 className="text-white! invisible opacity-0 cursor-default select-none text-sm font-medium pb-4 w-full">
                   مقایسه
                 </h4>
-                <button
+                <button 
+                  disabled={!firstCarModel && !secCarModel}
                   aria-label="مقایسه"
                   onClick={handleCompare}
-                  className="w-full bg-white cursor-pointer button-wave-1 text-[#ce1a2a]! font-semibold py-3 rounded-xl transition-colors duration-300 relative overflow-hidden"
+                  className={`w-full font-semibold py-3 rounded-xl transition-colors duration-300 relative overflow-hidden ${
+                    (!firstCarModel && !secCarModel) 
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed opacity-70 shadow-none' 
+                      : 'cursor-pointer button-wave-1 text-[#ce1a2a]! bg-white'
+                  }`}
                 >
                   مقایسه
                 </button>
@@ -284,10 +310,8 @@ const CarComparisonSection = ({
           </div>
         </div>
 
-        {/* بخش اسلایدر */}
         <div className="max-h-[800px]">
           {showSkeleton ? (
-            /* اسکلتون ساده با تعداد ستون متغیر */
             <div
               className="grid gap-4 -mt-[350px]"
               style={{
@@ -307,25 +331,16 @@ const CarComparisonSection = ({
               ))}
             </div>
           ) : (
-            /* اسلایدر اصلی */
             <Swiper
               ref={swiperRef}
               modules={[Autoplay]}
               spaceBetween={16}
               slidesPerView={1}
               breakpoints={{
-                640: {
-                  slidesPerView: 1,
-                },
-                768: {
-                  slidesPerView: 2,
-                },
-                1024: {
-                  slidesPerView: 3,
-                },
-                1280: {
-                  slidesPerView: 4,
-                },
+                640: { slidesPerView: 1 },
+                768: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
+                1280: { slidesPerView: 4 },
               }}
               autoplay={{
                 delay: 4000,
@@ -357,7 +372,6 @@ const CarComparisonSection = ({
                         />
                       </div>
                     </Link>
-
                     <div className="p-4 text-center">
                       <h3 className="text-sm text-[#202020]! font-medium">
                         <Link
@@ -458,7 +472,7 @@ const CarComparisonSection = ({
           animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
-        .pt-\[75\%\] {
+        .pt-\\[75\\%\\] {
           padding-top: 75%;
         }
 

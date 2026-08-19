@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   const langCode = searchParams.get("langCode") || "fa";
   const PageIndex = Number(searchParams.get("PageIndex")) || 1;
   const PageSize = Number(searchParams.get("PageSize")) || 15;
-  const FullData = searchParams.get("FullData") === "true";
+  const FullData = searchParams.get("FullData") === "false";
   const Term = searchParams.get("Term") || undefined;
 
   try {

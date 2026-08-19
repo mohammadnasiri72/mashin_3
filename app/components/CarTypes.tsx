@@ -5,6 +5,7 @@ import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import { mainDomain } from "@/utils/mainDomain";
+// @ts-ignoreimport
 import "swiper/css";
 
 export default function CarTypes({ segmentCars }: { segmentCars: Items[] }) {

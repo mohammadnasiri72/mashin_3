@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const PageIndex = Number(searchParams.get("PageIndex")) || 1;
   const PageSize = Number(searchParams.get("PageSize")) || 20;
   const CategoryIdArray = searchParams.get("CategoryIdArray") || undefined;
-  const FullData = searchParams.get("FullData") === "true";
+  const FullData = searchParams.get("FullData") === "false";
   const OrderBy = searchParams.get("OrderBy") ? Number(searchParams.get("OrderBy")) : undefined;
 
   try {

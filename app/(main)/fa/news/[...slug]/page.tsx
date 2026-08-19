@@ -79,14 +79,14 @@ async function pageNewsDetails({
         CategoryIdArray: String(id),
         PageIndex: page,
         PageSize: 20,
-        FullData: true,
+        FullData: false,
       })
     : await getItem({
         TypeId: 5,
         langCode: "fa",
         PageIndex: page,
         PageSize: 20,
-        FullData: true,
+        FullData: false,
       });
 
   const popularNews: Items[] = await getItem({
@@ -108,7 +108,7 @@ async function pageNewsDetails({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
-    FullData: true,
+    FullData: false,
   });
 
   const newsCat: ItemsCategory[] = await getCategory({

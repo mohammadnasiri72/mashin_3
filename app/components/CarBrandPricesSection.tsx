@@ -1,111 +1,144 @@
+// app/components/CarBrandPricesSection.tsx
 "use client";
 
 import { getPriceCar } from "@/services/Price/PriceCar";
 import { getPriceCarBrands } from "@/services/Price/PriceCarBrands";
-import { formatPersianDate } from "@/utils/func";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { FaArrowLeftLong, FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
+import { useEffect, useState, useRef } from "react";
+import { FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
+// @ts-ignoreimport
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import { mainDomain } from "@/utils/mainDomain";
-import AOS from "aos";
 import { getPriceMotorBrands } from "@/services/Price/PriceMotorBrands";
 import { getPriceMotor } from "@/services/Price/PriceMotor";
 import { FaArrowDown, FaArrowUp, FaChevronLeft } from "react-icons/fa";
 import { MdOutlineCompareArrows } from "react-icons/md";
 
-const CarBrandPricesSection = ({
-  initialBrands,
-  initialPrices,
-}: {
-  initialBrands: PriceBrands[];
-  initialPrices: Prices[];
-}) => {
+// ✅ تایپ‌ها (اگه نیازه import کن)
+
+
+interface Prices {
+  id: number;
+  title: string;
+  brandTitle: string;
+  price1: number;
+  change: number;
+}
+
+interface BrandsPrice {
+  brands: PriceBrands[];
+}
+
+interface Price {
+  prices: Prices[];
+}
+
+const CarBrandPricesSection = () => {
   const [type, setType] = useState<string>("internal");
-  const [loadingBrands, setLoadingBrands] = useState<boolean>(false);
-  const [brands, setBrands] = useState<PriceBrands[]>(initialBrands);
-  const [loadingPrices, setLoadingPrices] = useState<boolean>(false);
-  const [prices, setPrices] = useState<Prices[]>(initialPrices);
-  const [activeBrand, setActiveBrand] = useState<number>(NaN);
+  const [loadingBrands, setLoadingBrands] = useState<boolean>(true);
+  const [brands, setBrands] = useState<PriceBrands[]>([]);
+  const [loadingPrices, setLoadingPrices] = useState<boolean>(true);
+  const [prices, setPrices] = useState<Prices[]>([]);
+  const [activeBrand, setActiveBrand] = useState<number>(0);
+  const [mounted, setMounted] = useState(false);
+  const [skeletonCount, setSkeletonCount] = useState(7);
 
-  
-
+  // ✅ فقط برای جلوگیری از Hydration Mismatch
   useEffect(() => {
-    if (!loadingPrices && prices.length > 0) {
-      // کمی تاخیر برای اطمینان از رندر شدن DOM
-      setTimeout(() => {
-        AOS.refresh();
-      }, 300);
-    }
-  }, [loadingPrices, prices]);
+    setMounted(true);
+  }, []);
+
+  // ✅ بارگذاری اولیه داده‌ها
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      setLoadingBrands(true);
+      setLoadingPrices(true);
+      
+      try {
+        // دریافت برندهای اولیه (internal)
+        const brandsData: BrandsPrice = await getPriceCarBrands("internal");
+        setBrands(brandsData.brands);
+        
+        if (brandsData.brands.length > 0) {
+          const firstBrandId = brandsData.brands[0].id;
+          setActiveBrand(firstBrandId);
+          
+          // دریافت قیمت‌های اولیه
+          const pricesData: Price = await getPriceCar({
+            Type: "internal",
+            BrandId: firstBrandId,
+          });
+          setPrices(pricesData.prices);
+        }
+      } catch (err) {
+        console.error('Error fetching initial data:', err);
+      } finally {
+        setLoadingBrands(false);
+        setLoadingPrices(false);
+      }
+    };
+
+    fetchInitialData();
+  }, []);
 
   const fetchBrands = async (type: string) => {
     setLoadingBrands(true);
     setLoadingPrices(true);
-    if (type==='motor') {
-       try {
-      const brands: BrandsPrice = await getPriceMotorBrands('all');
-      setBrands(brands.brands);
-      if (brands.brands.length > 0) {
-        fetchPrice(type, brands.brands[0].id);
-        setActiveBrand(brands.brands[0].id);
+    
+    try {
+      let brandsData: BrandsPrice;
+      
+      if (type === 'motor') {
+        brandsData = await getPriceMotorBrands('all');
+      } else {
+        brandsData = await getPriceCarBrands(type);
+      }
+      
+      setBrands(brandsData.brands);
+      
+      if (brandsData.brands.length > 0) {
+        const firstBrandId = brandsData.brands[0].id;
+        setActiveBrand(firstBrandId);
+        await fetchPrice(type, firstBrandId);
       }
     } catch (err) {
+      console.error('Error fetching brands:', err);
     } finally {
       setLoadingBrands(false);
     }
-    }else{
- try {
-      const brands: BrandsPrice = await getPriceCarBrands(type);
-      setBrands(brands.brands);
-      if (brands.brands.length > 0) {
-        fetchPrice(type, brands.brands[0].id);
-        setActiveBrand(brands.brands[0].id);
-      }
-    } catch (err) {
-    } finally {
-      setLoadingBrands(false);
-    }
-    }
-   
   };
 
   const fetchPrice = async (type: string, brandId: number) => {
     setLoadingPrices(true);
-    if (type==='motor') {
+    
+    try {
+      let pricesData: Price;
       
-       try {
-      const price: Price = await getPriceMotor({
-        Type: 'all',
-        BrandId: brandId,
-      });
+      if (type === 'motor') {
+        pricesData = await getPriceMotor({
+          Type: 'all',
+          BrandId: brandId,
+        });
+      } else {
+        pricesData = await getPriceCar({
+          Type: type,
+          BrandId: brandId,
+        });
+      }
       
-      setPrices(price.prices);
+      setPrices(pricesData.prices);
     } catch (err) {
+      console.error('Error fetching prices:', err);
     } finally {
       setLoadingPrices(false);
     }
-    }else{
- try {
-      const price: Price = await getPriceCar({
-        Type: type,
-        BrandId: brandId,
-      });
-      setPrices(price.prices);
-    } catch (err) {
-    } finally {
-      setLoadingPrices(false);
-    }
-    }
-   
   };
 
-  const [skeletonCount, setSkeletonCount] = useState(7);
-
+  // ✅ محاسبه تعداد اسکلتون بر اساس عرض صفحه
   useEffect(() => {
     const calculateCount = () => {
       const width = window.innerWidth;
@@ -120,11 +153,22 @@ const CarBrandPricesSection = ({
       setSkeletonCount(calculateCount());
     };
 
-    handleResize(); // مقدار اولیه
+    handleResize();
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // ✅ اگر هنوز mounted نشده، هیچ چیزی رندر نکن
+  if (!mounted) {
+    return (
+      <section className="mb-5! overflow-hidden" aria-label="قیمت خودرو">
+        <div className="mx-auto px-4">
+          <div className="h-96 bg-gray-100 animate-pulse rounded-2xl"></div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="mb-5! overflow-hidden" aria-label="قیمت خودرو">
@@ -140,7 +184,7 @@ const CarBrandPricesSection = ({
           {/* تب‌ها */}
           <div className="flex sm:gap-4 gap-1">
             <button
-              aria-label="خودرو داخلی"
+              aria-label="موتورسیکلت"
               className={`p-1 font-medium cursor-pointer whitespace-nowrap ${
                 type === "motor"
                   ? "text-[#ce1a2a]! font-extrabold! sm:text-[20px]!"
@@ -181,38 +225,27 @@ const CarBrandPricesSection = ({
             >
               خودرو داخلی
             </button>
-            
           </div>
         </div>
 
         {/* محتوای تب‌ها */}
         <div className="tab-content">
           {!loadingBrands && (
-            <div className="h-52 ">
-              {/* اسلایدر برندها */}
+            <div className="h-52">
               <Swiper
                 modules={[Autoplay]}
                 spaceBetween={16}
                 slidesPerView={2}
                 breakpoints={{
-                  640: {
-                    slidesPerView: 2,
-                  },
-                  768: {
-                    slidesPerView: 4,
-                  },
-                  1024: {
-                    slidesPerView: 6,
-                  },
-                  1280: {
-                    slidesPerView: 7,
-                  },
+                  640: { slidesPerView: 2 },
+                  768: { slidesPerView: 4 },
+                  1024: { slidesPerView: 6 },
+                  1280: { slidesPerView: 7 },
                 }}
                 autoplay={{
                   delay: 3000,
                   disableOnInteraction: false,
                 }}
-                // loop={true}
                 className="brands-swiper mb-8!"
                 dir="rtl"
               >
@@ -260,120 +293,111 @@ const CarBrandPricesSection = ({
                 <div
                   key={index}
                   className="w-full h-44 bg-gray-200 rounded-lg animate-pulse"
-                ></div>
+                />
               ))}
             </div>
           )}
 
-          {/* محتوای مرتبط با برند انتخاب شده */}
-         {/* محتوای قیمت‌ها - طرح جدید شبیه MarketStats */}
-{!loadingPrices && (
-  <div className="related-content">
-    <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-        {prices
-          .filter((e) => e.price1 > 0)
-          .slice(0, 12)
-          .map((item) => (
-            <div
-              key={item.id}
-              className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200 gap-2"
-              data-aos="custom-fade-down"
-            >
-              {/* سمت راست: آیکون + عنوان */}
-              <div className="flex items-center gap-2 flex-1 min-w-0">
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
-                  {item.change > 0 && (
-                    <FaArrowTrendUp className="text-emerald-600" />
-                  )}
-                  {item.change < 0 && (
-                    <FaArrowTrendDown className="text-red-600" />
-                  )}
-                  {(!item.change || item.change === 0) && (
-                    <MdOutlineCompareArrows className="text-gray-400" />
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-gray-900 text-xs truncate">
-                    {item.title}
-                  </h4>
-                  <p className="text-[10px] text-gray-500 truncate">
-                    {item.brandTitle}
-                  </p>
-                </div>
-              </div>
-
-              {/* سمت چپ: قیمت + تغییرات */}
-              <div className="text-left shrink-0">
-                {item.price1 > 0 ? (
-                  <>
-                    <div className="font-bold text-gray-900 text-xs whitespace-nowrap flex items-center gap-1 justify-end">
-                      {item.price1.toLocaleString()}
-                      <Image
-                        src="/images/icons/toman.png"
-                        alt="تومان"
-                        width={12}
-                        height={8}
-                        className="w-3 h-2 opacity-70"
-                      />
-                    </div>
-                    {item.change && item.change !== 0 && (
+          {/* ✅ قیمت‌ها */}
+          {!loadingPrices && (
+            <div className="related-content">
+              <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                  {prices
+                    .filter((e) => e.price1 > 0)
+                    .slice(0, 12)
+                    .map((item, index) => (
                       <div
-                        className={`flex items-center justify-end gap-0.5 text-[10px] ${
-                          item.change > 0 ? "text-green-600" : "text-red-600"
-                        }`}
+                        key={item.id}
+                        className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200 gap-2 fade-up-item"
+                        style={{ animationDelay: `${index * 50}ms` }}
                       >
-                        {item.change > 0 ? (
-                          <FaArrowUp className="w-2 h-2" />
-                        ) : (
-                          <FaArrowDown className="w-2 h-2" />
-                        )}
-                        <span className="whitespace-nowrap">
-                          {item.change.toLocaleString()}
-                        </span>
+                        {/* سمت راست: آیکون + عنوان */}
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+                            {item.change > 0 && (
+                              <FaArrowTrendUp className="text-emerald-600" />
+                            )}
+                            {item.change < 0 && (
+                              <FaArrowTrendDown className="text-red-600" />
+                            )}
+                            {(!item.change || item.change === 0) && (
+                              <MdOutlineCompareArrows className="text-gray-400" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-medium text-gray-900 text-xs truncate">
+                              {item.title}
+                            </h4>
+                            <p className="text-[10px] text-gray-500 truncate">
+                              {item.brandTitle}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* سمت چپ: قیمت + تغییرات */}
+                        <div className="text-left shrink-0">
+                          {item.price1 > 0 ? (
+                            <>
+                              <div className="font-bold text-gray-900 text-xs whitespace-nowrap flex items-center gap-1 justify-end">
+                                {item.price1.toLocaleString()}
+                                <Image
+                                  src="/images/icons/toman.png"
+                                  alt="تومان"
+                                  width={12}
+                                  height={8}
+                                  className="w-3 h-2 opacity-70"
+                                />
+                              </div>
+                              {item.change && item.change !== 0 && (
+                                <div
+                                  className={`flex items-center justify-end gap-0.5 text-[10px] ${
+                                    item.change > 0 ? "text-green-600" : "text-red-600"
+                                  }`}
+                                >
+                                  {item.change > 0 ? (
+                                    <FaArrowUp className="w-2 h-2" />
+                                  ) : (
+                                    <FaArrowDown className="w-2 h-2" />
+                                  )}
+                                  <span className="whitespace-nowrap">
+                                    {item.change.toLocaleString()}
+                                  </span>
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <span className="text-xs font-medium text-gray-400">---</span>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </>
-                ) : (
-                  <span className="text-xs font-medium text-gray-400">---</span>
+                    ))}
+                </div>
+
+                {/* دکمه مشاهده همه */}
+                {prices.filter((e) => e.price1 > 0).length > 8 && (
+                  <div className="flex justify-center">
+                    <Link
+                      href={type === 'motor' ? `/motorcycle-prices.html` : `/price.html?type=${type}`}
+                      className="w-auto inline-block mt-3 cursor-pointer py-2 px-3 border border-red-600 text-red-600 rounded-lg font-medium hover:bg-red-600 hover:text-white! transition-colors duration-300 text-sm"
+                    >
+                      <span className="flex items-center justify-center gap-1">
+                        <span>مشاهده همه</span>
+                        <FaChevronLeft className="w-3 h-3" />
+                      </span>
+                    </Link>
+                  </div>
                 )}
               </div>
             </div>
-          ))}
-      </div>
-
-      {/* دکمه مشاهده همه */}
-      {prices.filter((e) => e.price1 > 0).length > 8 && (
-       <div className="flex justify-center">
-         <Link
-          href={type === 'motor' ? `/motorcycle-prices.html` : `/price.html?type=${type}`}
-          className=" w-auto inline-block mt-3 cursor-pointer py-2 px-3 border border-red-600 text-red-600 rounded-lg font-medium hover:bg-red-600 hover:text-white! transition-colors duration-300 text-sm"
-        >
-        <span className="flex items-center justify-center gap-1"> <span>مشاهده همه</span>
-          <FaChevronLeft className="w-3 h-3" /></span>
-        </Link>
-       </div>
-      )}
-    </div>
-  </div>
-)}
-{loadingPrices && (
-  <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mt-4!">
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-      {[...Array(8)].map((_, index) => (
-        <div key={index} className="h-16 bg-gray-200 rounded-lg animate-pulse"></div>
-      ))}
-    </div>
-  </div>
-)}
-
+          )}
           {loadingPrices && (
-            <div className="flex flex-wrap">
-              {[...Array(10)].map((_, index) => (
-                <div key={index} className="md:w-1/2 w-full h-16 p-1 mt-3">
-                  <div className="w-full h-16 bg-gray-200 rounded-lg animate-pulse"></div>
-                </div>
-              ))}
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mt-4!">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {[...Array(8)].map((_, index) => (
+                  <div key={index} className="h-16 bg-gray-200 rounded-lg animate-pulse" />
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -395,15 +419,21 @@ const CarBrandPricesSection = ({
         .brand-box:hover {
           transform: translateY(-2px);
         }
-        [data-aos="custom-fade-down"] {
-          opacity: 0;
-          transform: translateY(-20px); /* حرکت کمتر از 120px به 20px */
-          transition-property: opacity, transform;
+
+        @keyframes fadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
-        [data-aos="custom-fade-down"].aos-animate {
-          opacity: 1;
-          transform: translateY(0);
+        .fade-up-item {
+          opacity: 0;
+          animation: fadeUp 0.6s ease forwards;
         }
       `}</style>
     </section>

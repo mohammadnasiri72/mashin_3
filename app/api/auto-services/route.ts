@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   const PageSize = Number(searchParams.get("PageSize")) || 15;
   const CategoryIdArray = searchParams.get("CategoryIdArray") || undefined;
   const FilterProps = searchParams.get("FilterProps") || undefined;
-  const FullData = searchParams.get("FullData") === "true";
+  const FullData = searchParams.get("FullData") === "false";
 
   try {
     const data = await getItem({

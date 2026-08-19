@@ -70,7 +70,7 @@ async function pageReviews() {
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
-    FullData: true,
+    FullData: false,
   });
 
   if (id === 6058) {

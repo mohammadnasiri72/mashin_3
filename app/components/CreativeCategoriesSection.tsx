@@ -8,7 +8,9 @@ import { FaClock, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import { HiOutlineBuildingStorefront } from "react-icons/hi2";
 import { MdOutlineElectricCar } from "react-icons/md";
+// @ts-ignoreimport
 import "swiper/css";
+// @ts-ignoreimport
 import "swiper/css/autoplay";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";

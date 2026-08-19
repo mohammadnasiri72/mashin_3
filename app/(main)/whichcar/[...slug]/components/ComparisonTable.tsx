@@ -3,6 +3,7 @@
 import { getAttachment } from "@/services/Attachment/Attachment";
 import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
+// @ts-ignoreimport
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { Card, Tooltip } from "antd";
 import Link from "next/link";

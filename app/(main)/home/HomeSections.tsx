@@ -26,13 +26,14 @@ import {
   getHomeVideos,
   getHomeWhichCars,
   getHomeAutoServices,
+  getHomeNewsCarOut,
 } from "./queries";
 
 export async function HomeHero() {
-  const [slider, newsCar, whichCars, saleNews] = await Promise.all([
+  const [slider, newsCar, newsCarOut, saleNews] = await Promise.all([
     getHomeSlider(),
     getHomeNewsCar(),
-    getHomeWhichCars(),
+    getHomeNewsCarOut(),
     getHomeSaleNews(),
   ]);
 
@@ -58,7 +59,7 @@ export async function HomeHero() {
       <HeroSlider
         slider={slider}
         latestNews={newsCar}
-        latestComparisons={whichCars.slice(0, 2)}
+        latestComparisons={newsCarOut}
         latestPresales={saleNews}
       />
     </>
@@ -103,8 +104,7 @@ export async function HomePrices() {
   const { brands, prices } = await getHomePrices();
   return (
     <LazyCarBrandPricesSection
-      initialBrands={brands.brands}
-      initialPrices={prices.prices}
+      
     />
   );
 }

@@ -87,7 +87,7 @@ async function pageVideo({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
-    FullData: true,
+    FullData: false,
   });
 
   const headersList = await headers();

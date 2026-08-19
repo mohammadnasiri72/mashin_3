@@ -11,7 +11,7 @@ import { Autoplay, Mousewheel } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import OptimizedImage from "./OptimizedImage";
 
-// Import Swiper styles
+// @ts-ignoreimport
 import "swiper/css";
 import NewsListSection from "./NewsListSection";
 

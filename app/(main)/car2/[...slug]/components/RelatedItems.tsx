@@ -3,8 +3,9 @@
 import Link from "next/link";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-
+// @ts-ignoreimport
 import "swiper/css";
+// @ts-ignoreimport
 import "swiper/css/navigation";
 
 import { formatPersianDate, toPersianNumbers } from "@/utils/func";

@@ -4,6 +4,7 @@ import { getAttachment } from "@/services/Attachment/Attachment";
 import { createMarkup, createpublishCode } from "@/utils/func";
 import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
+// @ts-ignoreimport
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { Card, Tooltip } from "antd";
 import Link from "next/link";
@@ -21,7 +22,7 @@ function CompareClient({
   dataCompare: ItemsId[];
   ids: string;
 }) {
-  
+
   // Initialize Fancybox
   useEffect(() => {
     Fancybox.bind("[data-fancybox='main-gallery']", {
@@ -68,22 +69,21 @@ function CompareClient({
   const router = useRouter();
 
   const mergePropertiesToArrayValues = (data: ItemsId[]) => {
-    const map = new Map();
+    const map = new Map<string, { title: string; values: string[] }>();
     const count = data.length;
 
     data.forEach((item, index) => {
-      item.properties
-        .filter((e) => e.isTechnicalProperty)
-        .forEach((prop) => {
-          if (!map.has(prop.title)) {
-            map.set(prop.title, {
-              title: prop.title,
-              values: Array(count).fill(null),
-            });
-          }
+      item.properties.forEach((prop) => {
+        if (!map.has(prop.title)) {
+          map.set(prop.title, {
+            title: prop.title,
+            values: Array(count).fill(""),
+          });
+        }
 
-          map.get(prop.title).values[index] = prop.value;
-        });
+        const entry = map.get(prop.title)!;
+        entry.values[index] = prop.propertyValue || "";
+      });
     });
 
     return Array.from(map.values());
@@ -109,7 +109,7 @@ function CompareClient({
 
   return (
     <>
-      <div className=" bg-[#f4f4f4] py-8 mx-auto px-4">
+      <div className="bg-[#f4f4f4] py-8 mx-auto px-4">
         <div className="flex h-full gap-2">
           {dataCompare.length > 0 &&
             dataCompare.map((car, index) => (
@@ -123,7 +123,7 @@ function CompareClient({
                   <Card
                     className="shadow-xl border-2 border-emerald-200 hover:shadow-2xl transition-all duration-300 h-full"
                     cover={
-                      <div className="relative m-0! p-2! bg-white ">
+                      <div className="relative m-0! p-2! bg-white">
                         <img
                           onClick={() => {
                             getAttachmentHandler(car.id);
@@ -149,7 +149,6 @@ function CompareClient({
                       </div>
                     }
                   >
-                    {/* هدر کارد */}
                     <div className="text-center">
                       <Link href={car.url}>
                         <h3 className="sm:text-xl text-sm font-bold text-[#ce1a2a]! sm:text-gray-700! sm:hover:text-[#ce1a2a]! duration-300">
@@ -170,33 +169,37 @@ function CompareClient({
             />
           )}
         </div>
+
         {/* لیست ویژگی‌ها */}
         <div className="">
           {dataCompareSorted.length > 0 &&
             dataCompareSorted.map((item) => (
               <div
                 key={item.title}
-                className="py-3 border-b border-dashed border-[#0005] "
+                className="py-3 border-b border-dashed border-[#0005]"
               >
                 <h3 className="sm:text-lg text-sm text-teal-800! mb-7!">
                   {item.title}
                 </h3>
                 <div className="flex gap-2">
-                  {item.values.map((val: string[], index: number) => (
+                  {item.values.map((val: string, index: number) => (
                     <div
                       key={index}
                       className={`lg:w-1/4 w-1/2 ${
                         index > 1 ? "md:block! hidden" : ""
-                      }
-                      `}
+                      }`}
                     >
-                      <p className="sm:text-sm text-xs px-5">{val}</p>
+                      <p
+                        className="sm:text-sm text-xs px-5"
+                        dangerouslySetInnerHTML={createMarkup(val)}
+                      />
                     </div>
                   ))}
                 </div>
               </div>
             ))}
         </div>
+
         {/* مزایا */}
         <div className="sm:px-3 py-3 border-b border-[#0002]">
           <h3 className="sm:text-lg text-sm text-green-600!">مزایا</h3>
@@ -204,7 +207,7 @@ function CompareClient({
             {dataCompare.length > 0 &&
               dataCompare.map((car, index) => {
                 const advantages = car.properties.filter(
-                  (e) => e.propertyKey === 'p1042_design',
+                  (e) => e.propertyKey === "p1042_design",
                 );
 
                 return (
@@ -216,7 +219,7 @@ function CompareClient({
                   >
                     {advantages && advantages.length > 0 && (
                       <div className="bg-green-50 rounded-xl px-4 py-2 mt-2 h-full">
-                        <ul className="flex flex-wrap ">
+                        <ul className="flex flex-wrap">
                           {advantages.map((advantage) => (
                             <li
                               key={advantage.id}
@@ -228,7 +231,7 @@ function CompareClient({
                               <div
                                 className="text-gray-600 text-justify sm:text-sm! text-xs! advantages-compare-car"
                                 dangerouslySetInnerHTML={createMarkup(
-                                  advantage.value,
+                                  advantage.propertyValue || "",
                                 )}
                               />
                             </li>
@@ -249,7 +252,7 @@ function CompareClient({
             {dataCompare.length > 0 &&
               dataCompare.map((car, index) => {
                 const disadvantages = car.properties.filter(
-                  (e) => e.propertyKey === 'p1042_performance',
+                  (e) => e.propertyKey === "p1042_performance",
                 );
                 return (
                   <div
@@ -270,7 +273,7 @@ function CompareClient({
                               <div
                                 className="text-gray-700 leading-8 text-justify sm:text-sm! text-xs! disadvantages-compare-car"
                                 dangerouslySetInnerHTML={createMarkup(
-                                  disadvantage.value,
+                                  disadvantage.propertyValue || "",
                                 )}
                               />
                             </li>

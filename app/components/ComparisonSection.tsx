@@ -9,7 +9,9 @@ import OptimizedImage from "./OptimizedImage";
 
 // Import Swiper styles
 import { useEffect, useRef, useState } from "react";
+// @ts-ignoreimport
 import "swiper/css";
+// @ts-ignoreimport
 import "swiper/css/effect-fade";
 
 function ComparisonSection({

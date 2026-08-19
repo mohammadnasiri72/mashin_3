@@ -3,6 +3,7 @@
 import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+// @ts-ignoreimport
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";

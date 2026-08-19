@@ -57,7 +57,7 @@ async function pageContactUs() {
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
-    FullData: true,
+    FullData: false,
   });
   const setting: SettingType[] = await getSetting();
   return <ContactUs banner={banner} setting={setting} />;

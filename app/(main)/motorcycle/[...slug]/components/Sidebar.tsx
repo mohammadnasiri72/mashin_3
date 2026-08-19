@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import SideBarListItems from "@/app/components/SideBar/SideBarListItems";
 import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
+// @ts-ignoreimport
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 const Sidebar = ({

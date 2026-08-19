@@ -2,6 +2,7 @@
 
 import { setIsLoading, setUser } from "@/redux/slice/user";
 import AOS from "aos";
+// @ts-ignoreimport
 import "aos/dist/aos.css";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";

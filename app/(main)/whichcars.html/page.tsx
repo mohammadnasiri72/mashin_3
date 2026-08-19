@@ -66,7 +66,7 @@ async function pageWhichCars({
      PageIndex: page,
     ...(term && term !== "undefined" && { Term: term }),
     PageSize: 15,
-    FullData:true,
+    FullData:false,
   });
   const popularComparisons: Items[] = await getItem({
     TypeId: 1045,
@@ -80,7 +80,7 @@ async function pageWhichCars({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
-    FullData: true,
+    FullData: false,
   });
 
   const headersList = await headers();

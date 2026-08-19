@@ -4,6 +4,7 @@
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { mainDomain } from "@/utils/mainDomain";
+// @ts-ignoreimport
 import "swiper/css";
 import { formatPersianDate, htmlToPlainText } from "@/utils/func";
 import Link from "next/link";
@@ -24,9 +25,9 @@ const getImageUrl = (image: string) => {
 // تابع برای دریافت رنگ چیپ براساس نوع
 const getChipColor = (type: string) => {
   switch (type) {
-    case "خبر":
+    case "خبر داخلی":
       return "bg-blue-700 text-blue-100 border-blue-500/30";
-    case "مقایسه":
+    case "خبر خارجی":
       return "bg-orange-700 text-orange-100 border-orange-500/30";
     case "پیش‌فروش":
       return "bg-yellow-700 text-yellow-100 border-yellow-500/30";
@@ -106,13 +107,13 @@ export default function HeroSection({
           <SidebarBox
             icon={<BiCalendar className="w-5 h-5" />}
             item={latestNews[0]}
-            type="خبر"
+            type="خبر داخلی"
           />
           {/* باکس آخرین مقایسه‌ها */}
           <SidebarBox
             icon={<BiBarChart className="w-5 h-5" />}
             item={latestComparisons[0]}
-            type="مقایسه"
+            type="خبر خارجی"
           />
           {/* باکس آخرین پیش‌فروش‌ها */}
           <SidebarBox

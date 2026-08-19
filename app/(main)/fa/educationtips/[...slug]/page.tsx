@@ -80,7 +80,7 @@ async function pageEducationTips({
     ...(String(id) !== "NaN" && id > 0 && { CategoryIdArray: String(id) }),
     PageIndex: page, // استفاده از page از URL
     PageSize: 20,
-    FullData: true,
+    FullData: false,
   });
   
   const educationPopular: Items[] = await getItem({
@@ -103,7 +103,7 @@ async function pageEducationTips({
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
-    FullData: true,
+    FullData: false,
   });
 
   return (

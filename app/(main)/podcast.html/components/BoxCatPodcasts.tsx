@@ -4,9 +4,11 @@ import Link from "next/link";
 import { Mousewheel, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper styles
+// @ts-ignoreimport
 import "swiper/css";
+// @ts-ignoreimport
 import "swiper/css/navigation";
+// @ts-ignoreimport
 import "swiper/css/pagination";
 
 interface ItemsCategory {

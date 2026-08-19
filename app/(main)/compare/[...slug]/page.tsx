@@ -90,9 +90,10 @@ async function pageCompareDainamic({
   const TypeId = type === "motor" ? 1052 : 1042;
   const ParentIdArray = type === "motor" ? 6059 : 6058;
   const ids = param.slug[0].replace("%2C", ",");
-
+  
+  
   const dataCompare: ItemsId[] = await getItemByIds(ids);
-
+  
   const brandsCar: ItemsCategory[] = await getCategory({
     TypeId: TypeId,
     LangCode: "fa",

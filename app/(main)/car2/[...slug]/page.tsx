@@ -10,12 +10,7 @@ import ImageGallery from "./components/ImageGallery";
 import ModelShowcase from "./components/ModelShowcase";
 import RatingProsCons from "./components/RatingProsCons";
 import SectionTabs from "./components/SectionTabs";
-import {
-  CompetitorCar,
-  CompetitorRow,
-  PricePoint,
-  PriceRange,
-} from "./components/types";
+import { PricePoint, PriceRange } from "./components/types";
 
 import CommentsSection from "@/app/components/CommentsSection";
 import { getItem } from "@/services/Item/Item";
@@ -23,6 +18,7 @@ import { getItemByIds } from "@/services/Item/ItemByIds";
 import PriceAndComparison from "./components/PriceAndComparison";
 import RelatedItems from "./components/RelatedItems";
 import ReviewSection from "./components/ReviewSection";
+import { JsonLd } from "@/app/components/JsonLd";
 
 async function page({
   params,
@@ -32,8 +28,6 @@ async function page({
   const param = await params;
   const id = Number(param.slug[0]);
   const detailsCar: ItemsId = await getItemId(id);
-
-  
 
   const [Attachment, comments, pollData] = await Promise.all([
     getAttachment(id),
@@ -67,30 +61,28 @@ async function page({
   const categoryId = String(detailsCar.categoryId);
   const brandName = detailsCar.sourceName || "خودرو";
   const specificName = detailsCar.title || "";
-  const [detailsCarcompetitor, carsModel, carsModel2] =
-    await Promise.all([
-      competitorIds ? getItemByIds(competitorIds) : Promise.resolve([]),
-      sourceLink
-        ? getItem({
-            TypeId: 1042,
-            langCode: "fa",
-            CategoryIdArray: sourceLink,
-            PageIndex: 1,
-            PageSize: 5,
-          })
-        : Promise.resolve([]),
-      categoryId
-        ? getItem({
-            TypeId: 1042,
-            langCode: "fa",
-            CategoryIdArray: categoryId,
-            PageIndex: 1,
-            PageSize: 5,
-            FullData: true,
-          })
-        : Promise.resolve([]),
-    
-    ]);
+  const [detailsCarcompetitor, carsModel, carsModel2] = await Promise.all([
+    competitorIds ? getItemByIds(competitorIds) : Promise.resolve([]),
+    sourceLink
+      ? getItem({
+          TypeId: 1042,
+          langCode: "fa",
+          CategoryIdArray: sourceLink,
+          PageIndex: 1,
+          PageSize: 5,
+        })
+      : Promise.resolve([]),
+    categoryId
+      ? getItem({
+          TypeId: 1042,
+          langCode: "fa",
+          CategoryIdArray: categoryId,
+          PageIndex: 1,
+          PageSize: 5,
+          FullData: true,
+        })
+      : Promise.resolve([]),
+  ]);
 
   const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
 
@@ -163,18 +155,40 @@ async function page({
     ],
   };
 
- 
-
- 
-
   const hasBrandModels = carsModel && carsModel.length > 1;
   const hasSpecificModels = carsModel2 && carsModel2.length > 1;
   const isShowModelShowcase = hasBrandModels || hasSpecificModels;
 
-  
+   // ✅ فقط اگر pollData وجود داشت و مقدار معتبری داشت، aggregateRating رو اضافه کن
+  let schemas = detailsCar?.seoInfo?.schemas || [];
+
+  if (pollData && pollData.pollScore !== undefined && pollData.pollNumber !== undefined) {
+    const aggregateRating = {
+      "@type": "AggregateRating",
+      "ratingValue": pollData.pollScore,
+      "bestRating": 10,
+      "worstRating": 1,
+      "ratingCount": pollData.pollNumber
+    };
+
+    // ✅ فقط اگر schemas وجود داشت، به schema های موجود aggregateRating اضافه کن
+    if (schemas.length > 0) {
+      schemas = schemas.map((schema) => {
+        if (schema['@type'] === 'Product' || schema['@type'] === 'Car' || schema['@type'] === 'Vehicle') {
+          return {
+            ...schema,
+            aggregateRating: aggregateRating
+          };
+        }
+        return schema;
+      });
+    }
+  }
+
 
   return (
     <>
+    <JsonLd schemas={schemas} />
       <HeroSection detailsCar={detailsCar} pollData={pollData} />
       <SectionTabs
         isShowRelatedVideo={relatedVideo.length > 0}

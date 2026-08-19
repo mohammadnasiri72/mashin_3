@@ -26,12 +26,12 @@ export default async function RootLayout({
     ] = await Promise.all([
       getMenu({ langCode: "fa", menuKey: "" }),
       getSetting(),
-      getItem({ TypeId: 8, langCode: "fa", FullData: true }),
+      getItem({ TypeId: 8, langCode: "fa", FullData: false }),
       getItem({
         TypeId: 1051,
         langCode: "fa",
         CategoryIdArray: "6390",
-        FullData: true,
+        FullData: false,
       }),
     ]);
     
@@ -50,11 +50,6 @@ export default async function RootLayout({
     );
   }
    catch (error: any) {
-      // استخراج status code از خطا
-      const status = error.response?.status || error.status || 500;
-  
-      // ریدایرکت مستقیم به صفحه خطا
-      // redirect(`/error?status=${status}`);
       return notFound()
     }
 }

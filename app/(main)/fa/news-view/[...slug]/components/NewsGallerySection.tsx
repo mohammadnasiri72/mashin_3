@@ -2,6 +2,7 @@
 
 import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
+// @ts-ignoreimport
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { useEffect } from "react";
 

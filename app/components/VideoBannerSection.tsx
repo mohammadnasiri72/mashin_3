@@ -10,7 +10,7 @@ import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import OptimizedImage from "./OptimizedImage";
 
-// Import Swiper styles
+// @ts-ignoreimport
 import "swiper/css";
 
 const VideoBannerSection = ({ video }: { video: Items[] }) => {

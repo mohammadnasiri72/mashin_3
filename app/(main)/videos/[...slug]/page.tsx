@@ -93,7 +93,7 @@ const id =
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
-    FullData: true,
+    FullData: false,
   });
   const popularVideos: Items[] = await getItem({
     TypeId: 1028,

@@ -5,7 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
+// @ts-ignoreimport
 import "swiper/css";
+// @ts-ignoreimport
 import "swiper/css/navigation";
 import { Autoplay, Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -171,7 +173,7 @@ const CarSpecsSection = ({
                   const propertyCar = Properties.filter(
                     (e) => e.itemId === car.id,
                   )
-                    .filter((e) => e.isTechnicalProperty)
+                   
                     .slice(0, 4);
                   
                   return (

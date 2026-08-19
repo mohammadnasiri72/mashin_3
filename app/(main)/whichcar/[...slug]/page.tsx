@@ -88,7 +88,7 @@ async function pageWhichcarsDainamic() {
     TypeId: 1051,
     langCode: "fa",
     CategoryIdArray: "6415",
-    FullData: true,
+    FullData: false,
   });
 
   const comments: CommentResponse[] = await getComment({

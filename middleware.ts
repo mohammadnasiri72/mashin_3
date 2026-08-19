@@ -12,7 +12,11 @@ export async function middleware(request: NextRequest) {
     try {
       const type = searchParams.get("type");
       const pathParts = pathname.split("/");
-      const ids = String(pathParts[2]);
+      // const ids = String(pathParts[2]);
+            let rawId = String(pathParts[2] || "");
+      
+      // حذف پسوند .html یا هر پسوند دیگری
+      const ids = rawId.replace(/\.[^/.]+$/, "");
       const dataCompare: ItemsId[] = await getItemByIds(ids);
       const idsRes = dataCompare.map((item) => item.id).join(",");
 
@@ -156,7 +160,8 @@ export async function middleware(request: NextRequest) {
         headers: requestHeaders,
       },
     });
-  } else if (pathname.startsWith("/car2")) {
+  } 
+  else if (pathname.startsWith("/car2")) {
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-pathname", pathname + url.search);
     return NextResponse.next({
@@ -164,7 +169,17 @@ export async function middleware(request: NextRequest) {
         headers: requestHeaders,
       },
     });
-  } else if (pathname.match(/^\/fa\/tag\//i) || pathname.match(/^\/tag\//i)) {
+  } 
+  else if (pathname.startsWith("/update-sitemap")) {
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-pathname", pathname + url.search);
+    return NextResponse.next({
+      request: {
+        headers: requestHeaders,
+      },
+    });
+  } 
+  else if (pathname.match(/^\/fa\/tag\//i) || pathname.match(/^\/tag\//i)) {
     const decodedPath = decodeURIComponent(pathname);
     const lowerCasePath = decodedPath.toLowerCase();
 

@@ -22,7 +22,7 @@ const NewsRelatedSection = ({ relatedNews }: { relatedNews: Items[] }) => {
         </div>
         <Link
           href="/news"
-          className="text-[#ce1a2a] text-sm flex items-center gap-1 hover:gap-2 transition-all duration-300"
+          className="text-[#ce1a2a]! text-sm flex items-center gap-1 hover:gap-2 transition-all duration-300"
         >
           مشاهده همه
           <FaArrowLeftLong className="text-xs" />
@@ -53,11 +53,11 @@ const NewsRelatedSection = ({ relatedNews }: { relatedNews: Items[] }) => {
 
             {/* Content */}
             <div className="flex-1 min-w-0">
-              <h4 className="font-semibold text-gray-800 text-sm md:text-base line-clamp-2 group-hover:text-[#ce1a2a] transition-colors duration-300">
+              <h4 className="font-semibold text-gray-800 text-sm md:text-base line-clamp-2 group-hover:text-[#ce1a2a]! transition-colors duration-300">
                 {news.title}
               </h4>
               <div className="flex items-center gap-2 mt-2">
-                <span className="text-[11px] text-gray-400 flex items-center gap-1">
+                <span className="text-[11px] text-gray-700 flex items-center gap-1">
                   <svg
                     className="w-3.5 h-3.5"
                     fill="none"

@@ -109,7 +109,7 @@ function MainBoxBestChoices({
         langCode: "fa",
         PageIndex: nextPage.toString(),
         PageSize: pageSize.toString(),
-        FullData: "true",
+        FullData: "false",
       });
 
       if (searchTerm && searchTerm !== "undefined") {

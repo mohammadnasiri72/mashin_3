@@ -1,11 +1,13 @@
+// CarFinderSection.tsx
 "use client";
 
 import { getCategory } from "@/services/Category/Category";
 import { Box, Button, ThemeProvider } from "@mui/material";
 import { Select } from "antd";
+// @ts-ignoreimport
 import "antd/dist/reset.css";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoSearch } from "react-icons/io5";
 import theme from "../theme/theme";
 
@@ -18,12 +20,17 @@ const CarFinderSection = ({
   brands: ItemsCategory[];
   segmentCars: Items[];
 }) => {
+  const [isMounted, setIsMounted] = useState(false);
   const [models, setModels] = useState<ItemsCategory[]>([]);
   const [brandId, setBrandId] = useState<number>(0);
   const [modelId, setModelId] = useState<number>(0);
   const [typeId, setTypeId] = useState<number>(0);
 
   const router = useRouter();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const fetchModelCars = async (id: number) => {
     setModelId(0);
@@ -36,7 +43,9 @@ const CarFinderSection = ({
         PageSize: 200,
       });
       setModels(modelsCarResponse);
-    } catch (err) {}
+    } catch (err) {
+      console.error('Error fetching models:', err);
+    }
   };
 
   const handleSearch = () => {
@@ -54,6 +63,42 @@ const CarFinderSection = ({
     }
   };
 
+  // ✅ اگر هنوز mounted نشده، placeholder نمایش بده
+  if (!isMounted) {
+    return (
+      <ThemeProvider theme={theme}>
+        <Box
+          component="section"
+          className="findCar_wrap pb-4"
+          sx={{
+            backgroundColor: "background.paper",
+            py: 2,
+          }}
+        >
+          <div className="mb-4! mt-3 sm:px-5 px-2 flex sm:flex-row flex-col justify-center items-center">
+            <h3 className="pb-0! mb-0! text-white! font-bold! inline-block relative pl-2.5 sm:text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ce1a2a]">
+              خودرو یاب
+            </h3>
+          </div>
+          <div className="flex justify-center items-center w-full px-5 flex-wrap">
+            <div className="lg:w-1/5 sm:w-1/3 w-full px-1">
+              <div className="h-10 bg-gray-200 rounded animate-pulse" />
+            </div>
+            <div className="lg:w-1/5 sm:w-1/3 w-full px-1 mt-3 sm:mt-0">
+              <div className="h-10 bg-gray-200 rounded animate-pulse" />
+            </div>
+            <div className="lg:w-1/5 sm:w-1/3 w-full px-1 mt-3 sm:mt-0">
+              <div className="h-10 bg-gray-200 rounded animate-pulse" />
+            </div>
+            <div className="lg:w-1/5 sm:w-full w-full px-1 mt-3 lg:mt-0">
+              <div className="h-10 bg-gray-200 rounded animate-pulse" />
+            </div>
+          </div>
+        </Box>
+      </ThemeProvider>
+    );
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -64,20 +109,18 @@ const CarFinderSection = ({
           py: 2,
         }}
       >
-        {/* Header Section */}
         <div className="mb-4! mt-3 sm:px-5 px-2 flex sm:flex-row flex-col justify-center items-center">
-          <h3 className="pb-0! mb-0! text-white! font-bold! inline-block relative pl-2.5 sm:text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ce1a2a] ">
+          <h3 className="pb-0! mb-0! text-white! font-bold! inline-block relative pl-2.5 sm:text-[22px] z-10 after:content-[''] after:absolute after:left-0 after:right-0 after:bottom-0 after:h-1/2 after:-z-10 sm:after:bg-[#ce1a2a]">
             خودرو یاب
           </h3>
         </div>
 
-        {/* Search Form */}
         <div className="flex justify-center items-center w-full px-5 flex-wrap">
           <div className="lg:w-1/5 sm:w-1/3 w-full px-1">
             <Select
               aria-label="select brand"
               placeholder="جستجوی برند..."
-              value={brandId}
+              value={brandId || undefined}
               onChange={(value) => {
                 setBrandId(value);
                 setModelId(0);
@@ -101,7 +144,7 @@ const CarFinderSection = ({
               aria-label="select model"
               disabled={!brandId}
               placeholder="جستجوی مدل..."
-              value={modelId}
+              value={modelId || undefined}
               onChange={(value) => setModelId(value)}
               className="dropdown_main"
               style={{ width: "100%" }}
@@ -120,7 +163,7 @@ const CarFinderSection = ({
             <Select
               aria-label="select type"
               placeholder="نوع خودرو..."
-              value={typeId}
+              value={typeId || undefined}
               onChange={(value) => setTypeId(value)}
               className="dropdown_main"
               style={{ width: "100%" }}
@@ -136,7 +179,8 @@ const CarFinderSection = ({
             </Select>
           </div>
           <div className="lg:w-1/5 sm:w-full w-full px-1 mt-3 lg:mt-0">
-            <Button aria-label="جستجو خودرو"
+            <Button
+              aria-label="جستجو خودرو"
               variant="contained"
               className="searchCar_bt button button-wave-1 sm:w-auto w-full"
               onClick={handleSearch}

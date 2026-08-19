@@ -3,12 +3,14 @@
 import { useEffect, useMemo, useState } from "react";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-
+// @ts-ignoreimport
 import "swiper/css";
+// @ts-ignoreimport
 import "swiper/css/navigation";
 
 import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
+// @ts-ignoreimport
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
