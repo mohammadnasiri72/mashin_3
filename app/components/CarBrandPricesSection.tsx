@@ -5,21 +5,20 @@ import { getPriceCar } from "@/services/Price/PriceCar";
 import { getPriceCarBrands } from "@/services/Price/PriceCarBrands";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowTrendDown, FaArrowTrendUp } from "react-icons/fa6";
 // @ts-ignoreimport
 import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import { mainDomain } from "@/utils/mainDomain";
-import { getPriceMotorBrands } from "@/services/Price/PriceMotorBrands";
 import { getPriceMotor } from "@/services/Price/PriceMotor";
+import { getPriceMotorBrands } from "@/services/Price/PriceMotorBrands";
+import { mainDomain } from "@/utils/mainDomain";
 import { FaArrowDown, FaArrowUp, FaChevronLeft } from "react-icons/fa";
 import { MdOutlineCompareArrows } from "react-icons/md";
 
 // ✅ تایپ‌ها (اگه نیازه import کن)
-
 
 interface Prices {
   id: number;
@@ -57,16 +56,16 @@ const CarBrandPricesSection = () => {
     const fetchInitialData = async () => {
       setLoadingBrands(true);
       setLoadingPrices(true);
-      
+
       try {
         // دریافت برندهای اولیه (internal)
         const brandsData: BrandsPrice = await getPriceCarBrands("internal");
         setBrands(brandsData.brands);
-        
+
         if (brandsData.brands.length > 0) {
           const firstBrandId = brandsData.brands[0].id;
           setActiveBrand(firstBrandId);
-          
+
           // دریافت قیمت‌های اولیه
           const pricesData: Price = await getPriceCar({
             Type: "internal",
@@ -75,7 +74,7 @@ const CarBrandPricesSection = () => {
           setPrices(pricesData.prices);
         }
       } catch (err) {
-        console.error('Error fetching initial data:', err);
+        console.error("Error fetching initial data:", err);
       } finally {
         setLoadingBrands(false);
         setLoadingPrices(false);
@@ -88,25 +87,28 @@ const CarBrandPricesSection = () => {
   const fetchBrands = async (type: string) => {
     setLoadingBrands(true);
     setLoadingPrices(true);
-    
+
     try {
       let brandsData: BrandsPrice;
-      
-      if (type === 'motor') {
-        brandsData = await getPriceMotorBrands('all');
+
+      if (type === "motor") {
+        brandsData = await getPriceMotorBrands("all");
       } else {
         brandsData = await getPriceCarBrands(type);
       }
-      
+
       setBrands(brandsData.brands);
-      
+
       if (brandsData.brands.length > 0) {
         const firstBrandId = brandsData.brands[0].id;
         setActiveBrand(firstBrandId);
         await fetchPrice(type, firstBrandId);
       }
     } catch (err) {
-      console.error('Error fetching brands:', err);
+      console.error("Error fetching brands:", err);
+      setBrands([]);
+      setPrices([]);
+      setLoadingPrices(false);
     } finally {
       setLoadingBrands(false);
     }
@@ -114,13 +116,13 @@ const CarBrandPricesSection = () => {
 
   const fetchPrice = async (type: string, brandId: number) => {
     setLoadingPrices(true);
-    
+
     try {
       let pricesData: Price;
-      
-      if (type === 'motor') {
+
+      if (type === "motor") {
         pricesData = await getPriceMotor({
-          Type: 'all',
+          Type: "all",
           BrandId: brandId,
         });
       } else {
@@ -129,10 +131,10 @@ const CarBrandPricesSection = () => {
           BrandId: brandId,
         });
       }
-      
+
       setPrices(pricesData.prices);
     } catch (err) {
-      console.error('Error fetching prices:', err);
+      console.error("Error fetching prices:", err);
     } finally {
       setLoadingPrices(false);
     }
@@ -352,7 +354,9 @@ const CarBrandPricesSection = () => {
                               {item.change && item.change !== 0 && (
                                 <div
                                   className={`flex items-center justify-end gap-0.5 text-[10px] ${
-                                    item.change > 0 ? "text-green-600" : "text-red-600"
+                                    item.change > 0
+                                      ? "text-green-600"
+                                      : "text-red-600"
                                   }`}
                                 >
                                   {item.change > 0 ? (
@@ -367,7 +371,9 @@ const CarBrandPricesSection = () => {
                               )}
                             </>
                           ) : (
-                            <span className="text-xs font-medium text-gray-400">---</span>
+                            <span className="text-xs font-medium text-gray-400">
+                              ---
+                            </span>
                           )}
                         </div>
                       </div>
@@ -378,7 +384,11 @@ const CarBrandPricesSection = () => {
                 {prices.filter((e) => e.price1 > 0).length > 8 && (
                   <div className="flex justify-center">
                     <Link
-                      href={type === 'motor' ? `/motorcycle-prices.html` : `/price.html?type=${type}`}
+                      href={
+                        type === "motor"
+                          ? `/motorcycle-prices.html`
+                          : `/price.html?type=${type}`
+                      }
                       className="w-auto inline-block mt-3 cursor-pointer py-2 px-3 border border-red-600 text-red-600 rounded-lg font-medium hover:bg-red-600 hover:text-white! transition-colors duration-300 text-sm"
                     >
                       <span className="flex items-center justify-center gap-1">
@@ -395,7 +405,10 @@ const CarBrandPricesSection = () => {
             <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 mt-4!">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {[...Array(8)].map((_, index) => (
-                  <div key={index} className="h-16 bg-gray-200 rounded-lg animate-pulse" />
+                  <div
+                    key={index}
+                    className="h-16 bg-gray-200 rounded-lg animate-pulse"
+                  />
                 ))}
               </div>
             </div>

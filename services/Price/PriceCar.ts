@@ -3,6 +3,8 @@ import { baseUrl } from "@/utils/mainDomain";
 export const getPriceCar = async (data: {
   Type: string;
   BrandId: number;
+  Term?:string;
+  PageSize?:number
 }): Promise<Price> => {
   try {
     const url = new URL(`${baseUrl}api/Price/Car`);

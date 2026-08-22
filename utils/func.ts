@@ -192,3 +192,25 @@ export function parseMetaTags(html: string) {
 }
 
 
+interface FormattedPart {
+  text: string;
+  isSeparator: boolean;
+}
+
+export const formatTitleParts = (title: string): FormattedPart[] => {
+  if (!title) return [{ text: "", isSeparator: false }];
+  
+  // اسپلیت بر اساس کاما با حفظ کاماها
+  const parts: FormattedPart[] = [];
+  const segments = title.split(/(,)/g);
+  
+  segments.forEach((segment) => {
+    if (segment === ",") {
+      parts.push({ text: segment, isSeparator: true });
+    } else if (segment.trim()) {
+      parts.push({ text: segment.trim(), isSeparator: false });
+    }
+  });
+  
+  return parts;
+};

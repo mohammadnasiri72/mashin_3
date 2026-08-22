@@ -22,34 +22,34 @@ function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
     detailsAuto.properties.length > 0
       ? detailsAuto.properties.find(
           (e) => e.propertyKey === "p1050_serviceaddress",
-        )?.value
+        )?.propertyValue
       : undefined;
   const phone: string | undefined =
     detailsAuto.properties.length > 0
       ? detailsAuto.properties.find((e) => e.propertyKey === "p1050_servicetel")
-          ?.value
+          ?.propertyValue
       : undefined;
   const workingHours: string | undefined =
     detailsAuto.properties.length > 0
       ? detailsAuto.properties.find(
           (e) => e.propertyKey === "p1050_servicetime",
-        )?.value
+        )?.propertyValue
       : undefined;
   const servicebosscode: string | undefined =
     detailsAuto.properties.length > 0
       ? detailsAuto.properties.find(
           (e) => e.propertyKey === "p1050_servicebosscode",
-        )?.value
+        )?.propertyValue
       : undefined;
   const Latitude: string | undefined =
     detailsAuto.properties.length > 0
       ? detailsAuto.properties.find((e) => e.propertyKey === "p1050_latitude")
-          ?.value
+          ?.propertyValue
       : undefined;
   const Longitude: string | undefined =
     detailsAuto.properties.length > 0
       ? detailsAuto.properties.find((e) => e.propertyKey === "p1050_longitude")
-          ?.value
+          ?.propertyValue
       : undefined;
 
   const numbers = phone

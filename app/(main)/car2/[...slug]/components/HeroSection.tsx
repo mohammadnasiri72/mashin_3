@@ -167,7 +167,7 @@ export default function HeroSection({
                         {spec.title}
                       </span>
                       <span className="text-xs font-semibold text-white!">
-                        {spec.value}
+                        {spec.propertyValue}
                       </span>
                     </span>
                   </li>
@@ -352,7 +352,7 @@ export default function HeroSection({
                         {spec.title}
                       </span>
                       <span className="text-xs font-bold text-white">
-                        {spec.value}
+                        {spec.propertyValue}
                       </span>
                     </div>
                   </div>

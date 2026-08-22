@@ -149,7 +149,7 @@ export default function ComparisonTable({ competitors }: ComparisonTableProps) {
 
   // گرفتن مقادیر مشخصات برای هر خودرو
   const getPropertyValues = (car: ItemsId) => {
-    return getTechnicalProperties(car).map((prop) => prop.value || "-");
+    return getTechnicalProperties(car).map((prop) => prop.propertyValue || "-");
   };
 
   const propertyLabels = getPropertyLabels();
@@ -425,7 +425,7 @@ export default function ComparisonTable({ competitors }: ComparisonTableProps) {
                     </Typography>
                   </Box>
                   <Typography variant="body2" fontWeight="bold">
-                    {prop.value || "-"}
+                    {prop.propertyValue || "-"}
                   </Typography>
                 </Box>
               ))}

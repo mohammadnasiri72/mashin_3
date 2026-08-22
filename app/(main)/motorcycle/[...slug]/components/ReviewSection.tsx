@@ -8,10 +8,10 @@ const ReviewSection = ({ detailsMotorcycle }: { detailsMotorcycle: ItemsId }) =>
         <strong className="text-red-600">نقد </strong>
         کارشناسی ماشین {detailsMotorcycle.sourceName} {detailsMotorcycle.title}
       </h3>
-      {Criticism[0]?.value && (
+      {Criticism[0]?.propertyValue && (
         <div
           className="text_area text-gray-700 leading-8 text-justify space-y-4 mt-3 body-motor"
-          dangerouslySetInnerHTML={createMarkup(Criticism[0]?.value)}
+          dangerouslySetInnerHTML={createMarkup(Criticism[0]?.propertyValue)}
         />
       )}
     </div>

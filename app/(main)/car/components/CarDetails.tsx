@@ -244,7 +244,7 @@ const CarDetails = memo(
                     </div>
                     <div className="w-4/5">
                       <div className="font-bold text-gray-800 text-sm">
-                        {toPersianNumbers(spec.value)}
+                        {toPersianNumbers(spec.propertyValue)}
                       </div>
                       <div className="text-gray-500 text-xs mt-1">
                         {spec.title}

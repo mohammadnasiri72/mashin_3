@@ -98,7 +98,7 @@ function VideoPlayer({
     );
 
     if (aparatProperty) {
-      const videoIdMatch = aparatProperty.value.match(/embed\/([a-zA-Z0-9]+)/);
+      const videoIdMatch = aparatProperty.propertyValue.match(/embed\/([a-zA-Z0-9]+)/);
       if (videoIdMatch && videoIdMatch[1]) {
         setVideoId(videoIdMatch[1]);
       }

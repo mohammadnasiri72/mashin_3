@@ -133,7 +133,7 @@ export default function CarDimensions({
                           {row.left.title}
                         </span>
                         <span className="text-sm font-semibold text-slate-900 text-justify">
-                          {row.left.value}
+                          {row.left.propertyValue}
                         </span>
                       </div>
                     ) : (
@@ -157,7 +157,7 @@ export default function CarDimensions({
                           {row.right.title}
                         </span>
                         <span className="text-sm font-semibold text-slate-900 text-justify">
-                          {row.right.value}
+                          {row.right.propertyValue}
                         </span>
                       </div>
                     ) : (
@@ -198,7 +198,7 @@ export default function CarDimensions({
                                     {row.left.title}
                                   </span>
                                   <span className="text-sm font-semibold text-slate-900 text-justify">
-                                    {row.left.value}
+                                    {row.left.propertyValue}
                                   </span>
                                 </div>
                               ) : (
@@ -224,7 +224,7 @@ export default function CarDimensions({
                                     {row.right.title}
                                   </span>
                                   <span className="text-sm font-semibold text-slate-900 text-justify">
-                                    {row.right.value}
+                                    {row.right.propertyValue}
                                   </span>
                                 </div>
                               ) : (

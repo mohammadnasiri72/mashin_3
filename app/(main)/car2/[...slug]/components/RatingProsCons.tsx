@@ -111,10 +111,10 @@ export default function RatingProsCons({
               <h3 className="text-sm font-bold text-slate-900">معایب</h3>
             </div>
 
-            {disadvantagesData?.value ? (
+            {disadvantagesData?.propertyValue ? (
               <ul
                 className="flex flex-col gap-3 list-disc pr-5"
-                dangerouslySetInnerHTML={createMarkup(disadvantagesData.value)}
+                dangerouslySetInnerHTML={createMarkup(disadvantagesData.propertyValue)}
               />
             ) : (
               <ul className="flex flex-col gap-3">
@@ -147,10 +147,10 @@ export default function RatingProsCons({
               <h3 className="text-sm font-bold text-slate-900">مزایا</h3>
             </div>
 
-            {advantagesData?.value ? (
+            {advantagesData?.propertyValue ? (
               <ul
                 className="flex flex-col gap-3 list-disc pr-5"
-                dangerouslySetInnerHTML={createMarkup(advantagesData.value)}
+                dangerouslySetInnerHTML={createMarkup(advantagesData.propertyValue)}
               />
             ) : (
               <ul className="flex flex-col gap-3">

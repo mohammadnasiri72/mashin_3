@@ -42,7 +42,7 @@ const FeaturesSectionMotor = ({
                   <span className="text-green-500 ml-2 mt-1">•</span>
                   <div
                     className="text-gray-700 leading-8 text-justify advantage-motor"
-                    dangerouslySetInnerHTML={createMarkup(advantage.value)}
+                    dangerouslySetInnerHTML={createMarkup(advantage.propertyValue)}
                   />
                 </li>
               ))}
@@ -66,7 +66,7 @@ const FeaturesSectionMotor = ({
                   <span className="text-red-500 ml-2 mt-1">•</span>
                   <div
                     className="text-gray-700 leading-8 text-justify disadvantage-motor"
-                    dangerouslySetInnerHTML={createMarkup(disadvantage.value)}
+                    dangerouslySetInnerHTML={createMarkup(disadvantage.propertyValue)}
                   />
                 </li>
               ))}

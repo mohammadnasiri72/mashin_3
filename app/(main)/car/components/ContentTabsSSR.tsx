@@ -28,7 +28,7 @@ async function ContentTabsSSR({
 
   // ✅ فقط تب‌های SSR (مهم برای سئو)
   const tabItems = [
-    ...(Criticism[0]?.value ? [{ key: "review", label: "نقد کارشناسی" }] : []),
+    ...(Criticism[0]?.propertyValue ? [{ key: "review", label: "نقد کارشناسی" }] : []),
     ...(specifications.length > 0
       ? [{ key: "technical", label: "مشخصات فنی" }]
       : []),
@@ -45,7 +45,7 @@ async function ContentTabsSSR({
       }
     >
       {/* ✅ بخش‌های SSR برای سئو */}
-      {Criticism[0]?.value && (
+      {Criticism[0]?.propertyValue && (
         <div id="review" className="section-anchor">
           <ReviewSection detailsCar={detailsCar} vehicle={vehicle}/>
         </div>

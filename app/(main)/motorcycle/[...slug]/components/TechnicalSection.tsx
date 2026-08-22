@@ -20,7 +20,7 @@ const TechnicalSection = ({ detailsMotorcycle }: { detailsMotorcycle: ItemsId })
                 {spec.title}
               </th>
               <td className="text-right p-4 text-gray-800 font-bold text-sm border-b border-gray-200">
-                {spec.value}
+                {spec.propertyValue}
               </td>
             </tr>
           ))}

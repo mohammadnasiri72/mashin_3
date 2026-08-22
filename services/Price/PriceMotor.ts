@@ -3,6 +3,8 @@ import { baseUrl } from "@/utils/mainDomain";
 export const getPriceMotor = async (data: {
   Type: string;
   BrandId: number;
+  Term?: string;
+  PageSize?: number;
 }): Promise<Price> => {
   try {
     const url = new URL(`${baseUrl}api/Price/Motor`);
@@ -27,7 +29,7 @@ export const getPriceMotor = async (data: {
 
     if (!response.ok) {
       throw new Error(
-        `خطا در دریافت: ${response.status} ${response.statusText}`
+        `خطا در دریافت: ${response.status} ${response.statusText}`,
       );
     }
 
