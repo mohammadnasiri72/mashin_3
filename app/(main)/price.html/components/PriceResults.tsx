@@ -102,9 +102,7 @@ export default function PriceResults({
       {brandsWithPrice.map((brand) => {
         const items = groupedPrices[brand.id] || [];
         const brandName = getBrandNameById(brand.id);
-
         if (items.length === 0) return null;
-
         return isMobile ? (
           <Box key={brand.id} sx={{ mb: 3 }}>
             <Box
