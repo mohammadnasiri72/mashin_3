@@ -5,7 +5,7 @@ import {
   Button,
   CardContent,
   Chip,
-  CircularProgress,
+  Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
@@ -13,6 +13,8 @@ import { FaCar, FaMotorcycle } from "react-icons/fa";
 import BrandAccordion from "./BrandAccordion";
 import DesktopPriceTable from "./DesktopPriceTable";
 import MobilePriceCard from "./MobilePriceCard";
+import SkeletonDesktopTable from "./SkeletonDesktopTable";
+import SkeletonMobileCard from "./SkeletonMobileCard";
 import { StyledCard } from "./styled";
 import { PriceBrands, Prices } from "./types";
 
@@ -29,6 +31,7 @@ interface PriceResultsProps {
   brandsWithPrice: PriceBrands[];
   isLoadingBrand: number | null;
   vehicle: string;
+  isSearching: boolean;
 }
 
 export default function PriceResults({
@@ -44,12 +47,15 @@ export default function PriceResults({
   brandsWithPrice,
   isLoadingBrand,
   vehicle,
+  isSearching,
 }: PriceResultsProps) {
-  if (isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", my: 4 }}>
-        <CircularProgress sx={{ color: "#ce1a2a" }} />
-      </Box>
+   
+  // اسکلتون برای بارگذاری اولیه
+  if (isLoading && Object.keys(groupedPrices).length === 0) {
+    return isMobile ? (
+      <SkeletonMobileCard count={3} />
+    ) : (
+      <SkeletonDesktopTable rows={5} />
     );
   }
 
@@ -59,20 +65,12 @@ export default function PriceResults({
     return (
       <StyledCard>
         <CardContent sx={{ textAlign: "center", py: 6 }}>
-          <Typography
-            variant="h3"
-            sx={{
-              mb: 2,
-              fontSize: 48,
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            {vehicle === "car" ? (
-              <FaCar style={{ color: "#ce1a2a", fontSize: 36 }} />
-            ) : (
-              <FaMotorcycle style={{ color: "#ce1a2a", fontSize: 36 }} />
-            )}
+          <Typography variant="h3" sx={{ mb: 2, fontSize: 48  , display:'flex' , justifyContent:'center'}}>
+           {vehicle === "car" ? (
+                  <FaCar style={{ color: "#ce1a2a", fontSize: 36 }} />
+                ) : (
+                  <FaMotorcycle style={{ color: "#ce1a2a", fontSize: 36 }} />
+                )}
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 1.5 }}>
             مدلی یافت نشد
@@ -102,7 +100,9 @@ export default function PriceResults({
       {brandsWithPrice.map((brand) => {
         const items = groupedPrices[brand.id] || [];
         const brandName = getBrandNameById(brand.id);
+
         if (items.length === 0) return null;
+
         return isMobile ? (
           <Box key={brand.id} sx={{ mb: 3 }}>
             <Box
@@ -150,7 +150,7 @@ export default function PriceResults({
               />
             </Box>
             {items.map((item) => (
-              <MobilePriceCard key={item.id} item={item} vehicle={vehicle} />
+              <MobilePriceCard key={item.id} item={item} vehicle={vehicle}/>
             ))}
           </Box>
         ) : (
@@ -158,19 +158,51 @@ export default function PriceResults({
             key={brand.id}
             items={items}
             brandName={brandName}
-            vehicle={vehicle}
+            vehicle= {vehicle}
           />
         );
       })}
 
-      {/* نمایش برندهای باقی‌مانده (۷ به بعد) */}
-      {brandsWithoutPrice.length > 0 && (
+      {/* اسکلتون برای بارگذاری برند خاص */}
+      {isLoadingBrand && isMobile && (
+        <SkeletonMobileCard count={1} />
+      )}
+      
+      {isLoadingBrand && !isMobile && (
+        <SkeletonDesktopTable rows={3} />
+      )}
+
+      {/* نمایش برندهای باقی‌مانده (۷ به بعد) - فقط زمانی که جستجو فعال نباشه */}
+      {!isSearching && brandsWithoutPrice.length > 0 && (
         <Box sx={{ mt: 4 }}>
           <Stack spacing={2}>
             {brandsWithoutPrice.map((brand) => {
               const items = groupedPrices[brand.id] || [];
               const isExpanded = expandedBrands.has(brand.id);
               const isLoadingThisBrand = isLoadingBrand === brand.id;
+
+              // اگر این برند در حال بارگذاری هست، اسکلتون نمایش بده
+              if (isLoadingThisBrand) {
+                return (
+                  <StyledCard key={brand.id}>
+                    <CardContent sx={{ py: 2, px: 3 }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                          <Skeleton variant="circular" width={40} height={40} />
+                          <Skeleton variant="text" width={120} height={28} />
+                        </Box>
+                        <Skeleton variant="rounded" width={100} height={32} />
+                      </Box>
+                    </CardContent>
+                  </StyledCard>
+                );
+              }
 
               return (
                 <BrandAccordion

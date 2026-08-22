@@ -55,7 +55,9 @@ function PriceCar({
     },
   ];
 
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(initialType==='import'? 8954 : 8955);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(
+    initialType === "import" ? 8954 : 8955,
+  );
   const [selectedBrand, setSelectedBrand] = useState<number | null>(
     brandIdSearchParams || null,
   );
@@ -66,10 +68,14 @@ function PriceCar({
   const [searchDebounceTimer, setSearchDebounceTimer] =
     useState<NodeJS.Timeout | null>(null);
   const [expandedBrands, setExpandedBrands] = useState<Set<number>>(new Set());
-  
+
   // State برای برندها - با داده‌های جدید به‌روز میشن
-  const [brandsWithPrice, setBrandsWithPrice] = useState<PriceBrands[]>(initialBrandsWithPrice);
-  const [brandsWithoutPrice, setBrandsWithoutPrice] = useState<PriceBrands[]>(initialBrandsWithoutPrice);
+  const [brandsWithPrice, setBrandsWithPrice] = useState<PriceBrands[]>(
+    initialBrandsWithPrice,
+  );
+  const [brandsWithoutPrice, setBrandsWithoutPrice] = useState<PriceBrands[]>(
+    initialBrandsWithoutPrice,
+  );
   const [currentType, setCurrentType] = useState<string>(initialType);
 
   const searchParams = useSearchParams();
@@ -100,41 +106,51 @@ function PriceCar({
   }, []);
 
   // تابع به‌روزرسانی برندها بر اساس داده‌های قیمت
-  const updateBrandsFromPrices = useCallback((newPrices: Prices[], allBrands: PriceBrands[]) => {
-    const brandIdsWithPrice = new Set(newPrices.map(p => p.brandId));
-    const newBrandsWithPrice = allBrands.filter(b => brandIdsWithPrice.has(b.id));
-    const newBrandsWithoutPrice = allBrands.filter(b => !brandIdsWithPrice.has(b.id));
-    
-    setBrandsWithPrice(newBrandsWithPrice);
-    setBrandsWithoutPrice(newBrandsWithoutPrice);
-  }, []);
+  const updateBrandsFromPrices = useCallback(
+    (newPrices: Prices[], allBrands: PriceBrands[]) => {
+      const brandIdsWithPrice = new Set(newPrices.map((p) => p.brandId));
+      const newBrandsWithPrice = allBrands.filter((b) =>
+        brandIdsWithPrice.has(b.id),
+      );
+      const newBrandsWithoutPrice = allBrands.filter(
+        (b) => !brandIdsWithPrice.has(b.id),
+      );
+
+      setBrandsWithPrice(newBrandsWithPrice);
+      setBrandsWithoutPrice(newBrandsWithoutPrice);
+    },
+    [],
+  );
 
   // تابع دریافت داده‌های اولیه برای تب جدید (با PageSize: 6)
-  const fetchInitialDataForType = useCallback(async (newType: string) => {
-    setIsLoading(true);
-    try {
-      // دریافت برندها برای نوع جدید
-      const newBrands = await fetchBrandsForType(newType);
-      
-      // دریافت قیمت‌ها برای نوع جدید
-      const response = await getPriceCar({
-        Type: newType,
-        BrandId: -1,
-        PageSize: 6,
-      });
+  const fetchInitialDataForType = useCallback(
+    async (newType: string) => {
+      setIsLoading(true);
+      try {
+        // دریافت برندها برای نوع جدید
+        const newBrands = await fetchBrandsForType(newType);
 
-      if (response.prices) {
-        setPrices(response.prices);
-        // به‌روزرسانی برندها بر اساس قیمت‌های جدید
-        updateBrandsFromPrices(response.prices, newBrands);
-        setCurrentType(newType);
+        // دریافت قیمت‌ها برای نوع جدید
+        const response = await getPriceCar({
+          Type: newType,
+          BrandId: -1,
+          PageSize: 6,
+        });
+
+        if (response.prices) {
+          setPrices(response.prices);
+          // به‌روزرسانی برندها بر اساس قیمت‌های جدید
+          updateBrandsFromPrices(response.prices, newBrands);
+          setCurrentType(newType);
+        }
+      } catch (error) {
+        console.error("Error fetching initial data for type:", error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching initial data for type:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [fetchBrandsForType, updateBrandsFromPrices]);
+    },
+    [fetchBrandsForType, updateBrandsFromPrices],
+  );
 
   // وقتی type تغییر میکنه، داده‌های اولیه رو دریافت کن
   useEffect(() => {
@@ -174,7 +190,7 @@ function PriceCar({
             }
             return response.prices;
           });
-          
+
           // اگر جستجو بود و brandId نداشت، برندها رو به‌روزرسانی کن
           if (!brandId && term) {
             // برای جستجو، برندها رو بر اساس نتایج جستجو به‌روزرسانی کن
@@ -235,24 +251,46 @@ function PriceCar({
         fetchInitialDataForType(currentType);
       }
     },
-    [selectedBrand, brandsWithPrice, prices, fetchInitialDataForType, currentType],
+    [
+      selectedBrand,
+      brandsWithPrice,
+      prices,
+      fetchInitialDataForType,
+      currentType,
+    ],
   );
 
-  // جستجو با Debounce
+  // جستجو با Debounce و محدودیت دو کاراکتری
   const handleSearch = useCallback(
     (term: string) => {
       setSearchTerm(term);
 
+      // لغو تایمر قبلی
       if (searchDebounceTimer) {
         clearTimeout(searchDebounceTimer);
       }
 
+      // تایمر جدید برای جستجو با تاخیر
       const timer = setTimeout(() => {
-        if (term.trim().length > 0) {
-          fetchPrices(null, term);
+        const trimmedTerm = term.trim();
+
+        // اگر طول عبارت جستجو کمتر از 2 کاراکتر باشد، جستجو انجام نشود
+        if (trimmedTerm.length > 0 && trimmedTerm.length < 2) {
+          return;
+        }
+
+        if (trimmedTerm.length >= 2) {
+          setSelectedCategory(null);
+          setSelectedBrand(null);
+          setPrices([]);
+          // جستجو در کل برندها با Term
+          fetchPrices(null, trimmedTerm);
           setSelectedBrand(null);
           setExpandedBrands(new Set());
+          // وقتی جستجو فعاله، برندهای بدون قیمت رو مخفی کن
+          // این کار با شرط در PriceResults انجام میشه
         } else {
+          // اگر جستجو خالی شد، به حالت اولیه برگرد
           fetchInitialDataForType(currentType);
           setSelectedBrand(null);
         }
@@ -276,7 +314,13 @@ function PriceCar({
       router.push(`${baseUrl}?${params.toString()}`);
     }
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [brandIdSearchParams, fetchInitialDataForType, router, searchParams, currentType]);
+  }, [
+    brandIdSearchParams,
+    fetchInitialDataForType,
+    router,
+    searchParams,
+    currentType,
+  ]);
 
   // تغییر تب - با رفرش کامل صفحه
   const handleTabChange = useCallback(
@@ -419,6 +463,7 @@ function PriceCar({
           brandsWithPrice={brandsWithPrice}
           isLoadingBrand={isLoadingBrand}
           vehicle="car"
+          isSearching={searchTerm.trim().length >= 1}
         />
       </Container>
     </Box>
