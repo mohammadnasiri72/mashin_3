@@ -94,17 +94,27 @@ export default function PriceResults({
     );
   }
 
+  // تعیین لیست برندهایی که باید نمایش داده بشن
+  // در حالت جستجو: همه برندهایی که در groupedPrices وجود دارن
+  // در حالت عادی: فقط ۶ برند اول (brandsWithPrice)
+  const brandsToShow = isSearching 
+    ? Object.keys(groupedPrices).map(Number).filter(brandId => {
+        // فقط برندهایی که آیتم دارند
+        return groupedPrices[brandId]?.length > 0;
+      })
+    : brandsWithPrice.map(b => b.id);
+
   return (
     <Box sx={{ mt: 2 }}>
-      {/* نمایش برندهای ۶ تایی اول */}
-      {brandsWithPrice.map((brand) => {
-        const items = groupedPrices[brand.id] || [];
-        const brandName = getBrandNameById(brand.id);
+      {/* نمایش برندها */}
+      {brandsToShow.map((brandId) => {
+        const items = groupedPrices[brandId] || [];
+        const brandName = getBrandNameById(brandId);
 
         if (items.length === 0) return null;
 
         return isMobile ? (
-          <Box key={brand.id} sx={{ mb: 3 }}>
+          <Box key={brandId} sx={{ mb: 3 }}>
             <Box
               sx={{
                 display: "flex",
@@ -155,10 +165,10 @@ export default function PriceResults({
           </Box>
         ) : (
           <DesktopPriceTable
-            key={brand.id}
+            key={brandId}
             items={items}
             brandName={brandName}
-            vehicle= {vehicle}
+            vehicle={vehicle}
           />
         );
       })}

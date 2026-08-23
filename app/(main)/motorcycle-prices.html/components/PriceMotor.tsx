@@ -342,6 +342,7 @@ function PriceMotor({
           brandsWithPrice={brandsWithPrice}
           isLoadingBrand={isLoadingBrand}
           vehicle="motor"
+          isSearching={searchTerm.trim().length >= 1}
         />
       </Container>
     </Box>
