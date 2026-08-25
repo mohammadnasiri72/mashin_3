@@ -1,12 +1,13 @@
 "use client";
 
 import { Box, Chip, CircularProgress, Typography } from "@mui/material";
-import { FaCar, FaMotorcycle } from "react-icons/fa";
+import { FaAngleDown, FaCar, FaMotorcycle } from "react-icons/fa";
 import { PRIMARY_COLOR } from "./constants";
 import DesktopPriceTable from "./DesktopPriceTable";
 import MobilePriceCard from "./MobilePriceCard";
 import { BrandHeader, StyledCard } from "./styled";
 import { PriceBrands, Prices } from "./types";
+import { FaArrowDown } from "react-icons/fa6";
 
 interface BrandAccordionProps {
   brand: PriceBrands;
@@ -189,14 +190,17 @@ export default function BrandAccordion({
             borderRadius: "6px",
             fontSize: { xs: "0.8rem", sm: "0.875rem" },
             fontWeight: 500,
-            width: { xs: "100%", sm: "auto" },
+            width: { xs: "auto", sm: "auto" },
             textAlign: "center",
             "&:hover": {
               backgroundColor: "#b01520",
             },
           }}
         >
-          نمایش مدل‌ها
+          <div className="flex items-center gap-1">
+         <span>نمایش مدل‌ها</span>
+            <FaAngleDown />
+          </div>
         </Box>
       </BrandHeader>
     </StyledCard>

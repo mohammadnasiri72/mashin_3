@@ -10,18 +10,14 @@ import SidebarEducation from "./SidebarEducation";
 
 function EducationView({
   education,
-  popularEducations,
   relatedEducations,
   id,
   comments,
-  banner,
 }: {
   education: ItemsId;
-  popularEducations: Items[];
   relatedEducations: Items[];
   id: number;
   comments: CommentResponse[];
-  banner: Items[];
 }) {
   const [activeKey, setActiveKey] = useState("1");
   const [isNavbarSticky, setIsNavbarSticky] = useState(false);
@@ -55,7 +51,7 @@ function EducationView({
       window.removeEventListener("resize", checkHeights);
       clearTimeout(timer);
     };
-  }, [education, relatedEducations, popularEducations, banner]);
+  }, [education, relatedEducations]);
 
   // هندل کردن اسکرول و sticky navbar
   useEffect(() => {
@@ -249,8 +245,8 @@ function EducationView({
             `}
           >
             <SidebarEducation
-              popularEducations={popularEducations}
-              banner={banner}
+              categoryId={education.categoryId}
+              currentEducationId={education.id}
             />
           </aside>
         </div>

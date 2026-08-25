@@ -164,7 +164,6 @@ export default function MobilePriceCard({
               <Typography
                 variant="body2"
                 fontWeight="500"
-                color="text.secondary"
                 sx={{ fontSize: "0.75rem" }}
               >
                 قیمت بازار
@@ -194,7 +193,6 @@ export default function MobilePriceCard({
               <Typography
                 variant="body2"
                 fontWeight="500"
-                color="text.secondary"
                 sx={{ fontSize: "0.75rem" }}
               >
                 قیمت نمایندگی

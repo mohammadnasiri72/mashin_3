@@ -83,19 +83,8 @@ async function pageNewsViewDetails() {
       });
     }
 
-    const popularNews: Items[] = await getItem({
-      TypeId: 5,
-      langCode: "fa",
-      OrderBy: 8,
-      PageIndex: 1,
-      PageSize: 5,
-    });
-    const newNews: Items[] = await getItem({
-      TypeId: 5,
-      langCode: "fa",
-      PageIndex: 1,
-      PageSize: 5,
-    });
+   
+   
     const Attachment: ItemsAttachment[] = await getAttachment(id);
 
     const comments: CommentResponse[] = await getComment({
@@ -106,12 +95,7 @@ async function pageNewsViewDetails() {
       pageIndex: 1,
     });
 
-    const banner: Items[] = await getItem({
-      TypeId: 1051,
-      langCode: "fa",
-      CategoryIdArray: "6415",
-      FullData: true,
-    });
+    
 
     const idsCars = detailsNews.properties.find(
       (e) => e.propertyKey === "p5_relatednewscar",
@@ -156,15 +140,12 @@ async function pageNewsViewDetails() {
           <NewsViewDetails
             detailsNews={detailsNews}
             Attachment={Attachment}
-            popularNews={popularNews}
             comments={comments}
             id={Number(id)}
-            banner={banner}
             relatedNews={relatedNews}
             relatedCars={relatedCars}
             relatedVideos={relatedVideos}
             relatedVoices={relatedVoices}
-            newNews={newNews}
           />
         </div>
       </>

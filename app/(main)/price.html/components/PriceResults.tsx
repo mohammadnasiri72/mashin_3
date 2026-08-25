@@ -98,10 +98,7 @@ export default function PriceResults({
   // در حالت جستجو: همه برندهایی که در groupedPrices وجود دارن
   // در حالت عادی: فقط ۶ برند اول (brandsWithPrice)
   const brandsToShow = isSearching 
-    ? Object.keys(groupedPrices).map(Number).filter(brandId => {
-        // فقط برندهایی که آیتم دارند
-        return groupedPrices[brandId]?.length > 0;
-      })
+    ? brandsWithPrice.map(b => b.id)
     : brandsWithPrice.map(b => b.id);
 
   return (
@@ -136,7 +133,7 @@ export default function PriceResults({
                 )}
 
                 <Typography
-                  variant="subtitle2"
+                  variant="body1"
                   fontWeight="bold"
                   color="text.primary"
                   sx={{ fontSize: "0.85rem" }}

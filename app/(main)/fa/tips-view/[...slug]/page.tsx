@@ -67,20 +67,13 @@ async function pageTipView() {
 
   const id = Number(education.id);
 
-  const popularEducations: Items[] = await getItem({
-    TypeId: 3,
-    langCode: "fa",
-    CategoryIdArray: String(education.categoryId),
-    PageIndex: 1,
-    PageSize: 10,
-    OrderBy: 8,
-  });
+ 
   const relatedEducations: Items[] = await getItem({
     TypeId: 3,
     langCode: "fa",
     CategoryIdArray: String(education.categoryId),
     PageIndex: 1,
-    PageSize: 10,
+    PageSize: 6,
   });
 
   const comments: CommentResponse[] = await getComment({
@@ -91,12 +84,7 @@ async function pageTipView() {
     pageIndex: 1,
   });
 
-  const banner: Items[] = await getItem({
-    TypeId: 1051,
-    langCode: "fa",
-    CategoryIdArray: "6415",
-    FullData: false,
-  });
+ 
 
   try {
     await ItemVisit({
@@ -117,15 +105,12 @@ async function pageTipView() {
         <JsonLd schemas={schemas} />
         <EducationView
           education={education}
-          popularEducations={popularEducations.filter(
-            (e) => e.id !== education.id,
-          )}
+        
           relatedEducations={relatedEducations.filter(
             (e) => e.id !== education.id,
           )}
           id={id}
           comments={comments}
-          banner={banner}
         />
       </div>
     </>

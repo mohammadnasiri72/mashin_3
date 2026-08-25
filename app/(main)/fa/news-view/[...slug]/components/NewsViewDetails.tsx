@@ -14,28 +14,22 @@ import CommentsSection from "@/app/components/CommentsSection";
 
 function NewsViewDetails({
   detailsNews,
-  popularNews,
   Attachment,
   comments,
   id,
-  banner,
   relatedNews,
   relatedCars,
   relatedVideos,
   relatedVoices,
-  newNews
 }: {
   detailsNews: ItemsId;
-  popularNews: Items[];
   Attachment: ItemsAttachment[];
   comments: CommentResponse[];
   id: number;
-  banner: Items[];
   relatedNews: Items[];
   relatedCars: ItemsId[];
   relatedVideos: ItemsId[];
   relatedVoices: ItemsId[];
-  newNews:Items[]
 }) {
 
 
@@ -132,8 +126,6 @@ function NewsViewDetails({
     relatedCars,
     relatedVideos,
     relatedVoices,
-    popularNews,
-    banner,
   ]);
 
   // هندل کردن اسکرول و sticky navbar
@@ -416,7 +408,7 @@ function NewsViewDetails({
               ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
             `}
           >
-            <SidebarNewsView popularNews={popularNews} banner={banner} newNews={newNews}/>
+            <SidebarNewsView />
           </aside>
         </div>
 

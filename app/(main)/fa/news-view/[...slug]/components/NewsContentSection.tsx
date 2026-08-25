@@ -139,7 +139,7 @@ const NewsContentSection = ({ detailsNews }: { detailsNews: ItemsId }) => {
         </div>
       </div>
 
-      <style jsx global>{`
+      {/* <style jsx global>{`
         .prose p {
           margin-bottom: 1.5em;
           line-height: 2;
@@ -153,7 +153,7 @@ const NewsContentSection = ({ detailsNews }: { detailsNews: ItemsId }) => {
           border-radius: 8px;
           margin: 2em auto;
         }
-      `}</style>
+      `}</style> */}
     </section>
   );
 };

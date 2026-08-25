@@ -13,7 +13,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { PRIMARY_COLOR } from "./constants";
 import PriceResults from "./PriceResults";
 import SearchBox from "./SearchBox";
@@ -260,46 +260,80 @@ function PriceCar({
     ],
   );
 
-  // جستجو با Debounce و محدودیت دو کاراکتری
-  const handleSearch = useCallback(
-    (term: string) => {
-      setSearchTerm(term);
+// اضافه کردن ref برای ذخیره وضعیت قبلی
+const prevSearchState = useRef<{ isSearching: boolean; term: string }>({
+  isSearching: false,
+  term: "",
+});
 
-      // لغو تایمر قبلی
-      if (searchDebounceTimer) {
-        clearTimeout(searchDebounceTimer);
+// جستجو با Debounce و محدودیت دو کاراکتری
+const handleSearch = useCallback(
+  (term: string) => {
+    setSearchTerm(term);
+
+    // لغو تایمر قبلی
+    if (searchDebounceTimer) {
+      clearTimeout(searchDebounceTimer);
+    }
+
+    // تایمر جدید برای جستجو با تاخیر
+    const timer = setTimeout(() => {
+      const trimmedTerm = term.trim();
+      const isSearching = trimmedTerm.length >= 2;
+      const wasSearching = prevSearchState.current.isSearching;
+      const prevTerm = prevSearchState.current.term;
+
+      // اگر عبارت تغییر نکرده، هیچ کاری نکن
+      if (trimmedTerm === prevTerm) {
+        return;
       }
 
-      // تایمر جدید برای جستجو با تاخیر
-      const timer = setTimeout(() => {
-        const trimmedTerm = term.trim();
+      // به‌روزرسانی وضعیت قبلی
+      prevSearchState.current = {
+        isSearching: isSearching,
+        term: trimmedTerm,
+      };
 
-        // اگر طول عبارت جستجو کمتر از 2 کاراکتر باشد، جستجو انجام نشود
-        if (trimmedTerm.length > 0 && trimmedTerm.length < 2) {
-          return;
-        }
+      // اگر عبارت خالی شده و قبلاً هم در حالت جستجو نبودیم، هیچ کاری نکن
+      if (trimmedTerm === "" && !wasSearching) {
+        return;
+      }
 
-        if (trimmedTerm.length >= 2) {
-          setSelectedCategory(null);
-          setSelectedBrand(null);
+      // اگر طول عبارت جستجو کمتر از 2 کاراکتر باشد
+      if (trimmedTerm.length > 0 && trimmedTerm.length < 2) {
+        // اگر قبلاً در حالت جستجو بودیم، به حالت اولیه برگرد
+        if (wasSearching) {
           setPrices([]);
-          // جستجو در کل برندها با Term
-          fetchPrices(null, trimmedTerm);
-          setSelectedBrand(null);
-          setExpandedBrands(new Set());
-          // وقتی جستجو فعاله، برندهای بدون قیمت رو مخفی کن
-          // این کار با شرط در PriceResults انجام میشه
-        } else {
-          // اگر جستجو خالی شد، به حالت اولیه برگرد
           fetchInitialDataForType(currentType);
           setSelectedBrand(null);
+          setExpandedBrands(new Set());
         }
-      }, 500);
+        return;
+      }
 
-      setSearchDebounceTimer(timer);
-    },
-    [fetchPrices, fetchInitialDataForType, searchDebounceTimer, currentType],
-  );
+      if (isSearching) {
+        // شروع جستجو یا تغییر عبارت جستجو
+        setSelectedCategory(null);
+        setSelectedBrand(null);
+        setPrices([]);
+        fetchPrices(null, trimmedTerm);
+        setSelectedBrand(null);
+        setExpandedBrands(new Set());
+      } else {
+        // خروج از حالت جستجو (وقتی input خالی میشه و قبلاً در حالت جستجو بودیم)
+        if (wasSearching) {
+          setPrices([]);
+          fetchInitialDataForType(currentType);
+          setSelectedBrand(null);
+          setExpandedBrands(new Set());
+        }
+      }
+    }, 500);
+
+    setSearchDebounceTimer(timer);
+  },
+  [fetchPrices, fetchInitialDataForType, searchDebounceTimer, currentType],
+);
 
   // پاک کردن فیلترها
   const handleResetFilters = useCallback(() => {

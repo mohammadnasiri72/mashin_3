@@ -126,7 +126,7 @@ const DescBestChoice = ({
         </div>
       </div>
 
-      <style jsx global>{`
+      {/* <style jsx global>{`
         .prose p {
           margin-bottom: 1.5em;
           line-height: 2;
@@ -140,7 +140,7 @@ const DescBestChoice = ({
           border-radius: 8px;
           margin: 2em auto;
         }
-      `}</style>
+      `}</style> */}
     </section>
   );
 };

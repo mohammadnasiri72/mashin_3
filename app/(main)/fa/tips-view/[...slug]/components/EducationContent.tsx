@@ -76,7 +76,7 @@ function EducationContent({ education }: { education: ItemsId }) {
                  <div className="mb-8! p-4 bg-blue-50 border-r-4 border-blue-500 rounded">
                    <div className="flex justify-between items-center border-b mb-2! border-gray-200">
                      <h3 className="text-lg font-bold text-gray-800 mb-2!">
-                       خلاصه خبر:
+                       خلاصه مطلب:
                      </h3>
                      <div className="flex items-center justify-end gap-4 text-sm text-gray-600 flex-wrap px-2">
                        <div className="flex items-center gap-1.5 bg-gray-100 px-3 py-1.5 rounded-full">
@@ -134,7 +134,7 @@ function EducationContent({ education }: { education: ItemsId }) {
            </div>
          </div>
    
-         <style jsx global>{`
+         {/* <style jsx global>{`
            .prose p {
              margin-bottom: 1.5em;
              line-height: 2;
@@ -148,7 +148,7 @@ function EducationContent({ education }: { education: ItemsId }) {
              border-radius: 8px;
              margin: 2em auto;
            }
-         `}</style>
+         `}</style> */}
        </section>
   );
 }
