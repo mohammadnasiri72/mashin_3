@@ -6,6 +6,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import CardDic from "../../fa/technical-words.html/components/CardDic";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
 
@@ -117,8 +118,11 @@ const id =
     });
   }
 
+  const schemas = dataPage?.seoInfo?.schemas || [];
+
   return (
     <>
+     <JsonLd schemas={schemas} />
       {dataPage?.breadcrumb && (
         <BreadcrumbCategory
           breadcrumb={dataPage.breadcrumb}

@@ -2,6 +2,7 @@
 
 import CustomPagination from "@/app/components/CustomPagination";
 import {
+  estimateReadTime,
   formatPersianDate,
   htmlToPlainText,
   toPersianNumbers,
@@ -11,9 +12,9 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaCalendar, FaEye } from "react-icons/fa";
-// @ts-ignoreimport
+// @ts-ignore
 import "swiper/css";
-// @ts-ignoreimport
+// @ts-ignore
 import "swiper/css/free-mode";
 import { FreeMode } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -36,10 +37,13 @@ const CarNews = ({
   banner: Items[];
   newsDetails: ItemsCategoryId | ItemsId;
   tabConfig: { key: number; href: string; label: string }[];
-  curentPage:number
+  curentPage: number
 }) => {
-  const [activeTab, setActiveTab] = useState<number>(0);
+  const searchParams = useSearchParams();
+  const [isMainLonger, setIsMainLonger] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
+  
+  // State برای infinite scroll
   const [newsData, setNewsData] = useState<Items[]>(initialNewsData || []);
   const [currentPage, setCurrentPage] = useState<number>(curentPage);
   const [loading, setLoading] = useState<boolean>(false);
@@ -51,23 +55,46 @@ const CarNews = ({
   const [isManualPage, setIsManualPage] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const mainBoxRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const swiperRef = useRef<any>(null);
   const loaderRef = useRef<HTMLDivElement>(null);
-  const searchParams = useSearchParams();
 
   const pageFromUrl = Number(searchParams.get("page")) || 1;
   const MAX_INFINITE_PAGES = 10;
 
+  // تنظیم activeTab بر اساس id
   useEffect(() => {
     if (id) {
-      setActiveTab(id);
-    } else {
-      setActiveTab(0);
+      // activeTab را با id هماهنگ می‌کنیم
     }
   }, [id]);
 
+  // مقایسه ارتفاع باکس‌ها
+  useEffect(() => {
+    const checkHeights = () => {
+      if (mainBoxRef.current && sidebarRef.current) {
+        const mainHeight = mainBoxRef.current.offsetHeight;
+        const sidebarHeight = sidebarRef.current.offsetHeight;
+        setIsMainLonger(mainHeight > sidebarHeight);
+      }
+    };
+
+    checkHeights();
+
+    const timer = setTimeout(checkHeights, 500);
+    window.addEventListener("resize", checkHeights);
+
+    return () => {
+      window.removeEventListener("resize", checkHeights);
+      clearTimeout(timer);
+    };
+  }, [newsData, popularNews, offerNews, banner]);
+
+  // بررسی اینکه آیا کاربر دستی صفحه رو وارد کرده
   useEffect(() => {
     const hasPageParam = searchParams.has("page");
-    if (hasPageParam) {
+    if (hasPageParam && pageFromUrl > 1) {
       setIsManualPage(true);
       setShowPagination(true);
       setHasMore(false);
@@ -79,23 +106,38 @@ const CarNews = ({
     setError(null);
   }, [pageFromUrl, searchParams]);
 
+  // تنظیم مجدد داده‌ها وقتی تب عوض می‌شه یا id تغییر کنه
   useEffect(() => {
     setNewsData(initialNewsData || []);
     setCurrentPage(pageFromUrl);
     setTotalItems(initialNewsData?.[0]?.total || 0);
     setError(null);
-  }, [initialNewsData, pageFromUrl]);
 
+    if (pageFromUrl > 1) {
+      setShowPagination(true);
+      setHasMore(false);
+      setIsManualPage(true);
+    } else {
+      setShowPagination(false);
+      setHasMore(true);
+      setIsManualPage(false);
+    }
+  }, [initialNewsData, id, pageFromUrl]);
+
+  // تابع بارگذاری صفحه بعد
   const loadMore = useCallback(async () => {
     if (loading || !hasMore || isManualPage) return;
 
     const nextPage = currentPage + 1;
     const pageSize = 20;
     const totalPages = Math.ceil(totalItems / pageSize);
+
     // اگر به صفحه ۱۰ رسیدیم یا صفحه بعدی از کل صفحات بیشتره
-    if (nextPage > MAX_INFINITE_PAGES || nextPage >= totalPages) {
+    if (nextPage > MAX_INFINITE_PAGES || nextPage > totalPages) {
       setHasMore(false);
-      setShowPagination(true);
+      if (totalPages > MAX_INFINITE_PAGES) {
+        setShowPagination(true);
+      }
       return;
     }
 
@@ -111,7 +153,7 @@ const CarNews = ({
         FullData: "false",
       });
 
-      if (id) {
+      if (id > 0) {
         params.append("CategoryIdArray", String(id));
       }
 
@@ -131,7 +173,7 @@ const CarNews = ({
         result.data.length > 0
       ) {
         // فیلتر کردن آیتم‌های تکراری
-        const existingIds = new Set(newsData.map((item) => item.id));
+        const existingIds = new Set(newsData.map((item: Items) => item.id));
         const newItems = result.data.filter(
           (item: Items) => !existingIds.has(item.id),
         );
@@ -164,6 +206,7 @@ const CarNews = ({
     }
   }, [currentPage, hasMore, loading, id, totalItems, isManualPage, newsData]);
 
+  // تنظیم Intersection Observer
   useEffect(() => {
     if (isManualPage || showPagination || !hasMore || loading) return;
 
@@ -212,10 +255,17 @@ const CarNews = ({
     <div className="min-h-screen bg-[#f4f4f4] py-8">
       <div className="mx-auto px-4">
         <div className="flex flex-col lg:flex-row gap-6 relative items-start">
-          <div className="lg:w-3/4 w-full lg:sticky lg:top-20 lg:self-start">
-            <div className="bg-white rounded-2xl sm:px-6 px-2 shadow-sm border border-gray-100 overflow-hidden">
+          {/* محتوای اصلی - 3/4 صفحه */}
+          <div
+            ref={mainBoxRef}
+            className={`
+              lg:w-3/4 w-full transition-all duration-300 overflow-hidden
+              ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
+            <div className="bg-white rounded-2xl px-6 py-2 shadow-sm border border-gray-100">
               {/* نمایش اطلاعات صفحه */}
-              <div className="flex items-center justify-between flex-wrap gap-2 py-2">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <div className="flex items-center gap-3 flex-wrap">
                   <span className="text-sm text-gray-500">
                     صفحه {toPersianNumbers(currentPage)} از{" "}
@@ -230,7 +280,8 @@ const CarNews = ({
                   {toPersianNumbers(totalItems)} خبر
                 </span>
               </div>
-              {/* هدر */}
+
+              {/* هدر صفحه */}
               <div className="text-center mb-8!">
                 <h1 className="text-3xl font-bold text-gray-900 mb-4!">
                   <span className="text-red-600">
@@ -244,9 +295,10 @@ const CarNews = ({
                 </p>
               </div>
 
-              {/* تب‌ها */}
-              <div className="relative">
+              {/* تب‌ها - با Swiper */}
+              <div className="relative mb-6!">
                 <Swiper
+                  ref={swiperRef}
                   modules={[FreeMode]}
                   slidesPerView="auto"
                   spaceBetween={8}
@@ -267,7 +319,7 @@ const CarNews = ({
                     <SwiperSlide key={tab.key} style={{ width: "auto" }}>
                       <Link
                         className={`whitespace-nowrap duration-300 px-4 py-2 rounded-lg text-sm font-medium transition-all block text-center ${
-                          activeTab === tab.key
+                          id === tab.key
                             ? "text-white! bg-[#ce1a2a] shadow-md"
                             : "text-gray-700! hover:text-red-900! hover:bg-red-100 bg-gray-100"
                         }`}
@@ -344,6 +396,13 @@ const CarNews = ({
                                   {toPersianNumbers(news.visit)} بازدید
                                 </span>
                               </div>
+
+                              <div className="flex items-center gap-1">
+                                <span>
+                                  زمان مطالعه:{" "}
+                                  {estimateReadTime(news.body || "")}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -351,7 +410,7 @@ const CarNews = ({
                     ))}
                   </div>
 
-                  {/* المنت observer */}
+                  {/* عنصر observer برای تشخیص اسکرول */}
                   {!isManualPage && !showPagination && hasMore && (
                     <div
                       ref={loaderRef}
@@ -396,8 +455,14 @@ const CarNews = ({
             </div>
           </div>
 
-          {/* سایدبار */}
-          <aside className="lg:w-1/4 w-full lg:sticky lg:top-20 lg:self-start">
+          {/* سایدبار - 1/4 صفحه */}
+          <aside
+            ref={sidebarRef}
+            className={`
+              lg:w-1/4 w-full transition-all duration-300
+              ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
+            `}
+          >
             <SideBarNews
               banner={banner}
               offerNews={offerNews}
@@ -423,18 +488,25 @@ const CarNews = ({
         .tabs-swiper .swiper-wrapper {
           transition-timing-function: ease-out;
         }
-        @media (max-width: 1023px) {
-          .lg\\:sticky {
-            position: relative !important;
-            top: auto !important;
-            align-self: auto !important;
-          }
-        }
         .line-clamp-3 {
           display: -webkit-box;
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
           overflow: hidden;
+        }
+        /* استایل‌های sticky */
+        .lg\\:sticky {
+          position: sticky;
+          bottom: 0;
+          align-self: flex-end;
+        }
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
         }
       `}</style>
     </div>

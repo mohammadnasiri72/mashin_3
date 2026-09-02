@@ -15,7 +15,7 @@ function SidebarVideo({
         <div className="mx-auto">
           <div className="space-y-6">
             {/* بنرهای سایدبار */}
-            <SideBarBanner banner={banner} />
+            <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
 
             {/* محبوب‌ترین اخبار */}
             <SideBarListItems

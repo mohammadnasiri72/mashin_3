@@ -9,8 +9,8 @@ function SideBarContact({ banner }: { banner: Items[] }) {
       <section className="py-8 bg-gray-50">
         <div className="mx-auto pl-4 lg:pr-2 pr-4">
           <div className="space-y-6">
-            {banner.length > 0 &&
-              banner.map((ban) => (
+            {banner.filter((e) => e.id === 2570).length > 0 &&
+              banner.filter((e) => e.id === 2570).map((ban) => (
                 <div className="w-full" key={ban.id}>
                   <img
                     className="w-full"

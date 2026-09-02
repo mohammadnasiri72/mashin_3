@@ -15,24 +15,20 @@ function SidebarAutoServices({
   return (
     <>
       <div className="space-y-6">
-            {/* جدیدترین خودروها */}
-            <SideBarListItems
-              itemsList={lastCars}
-              title={"جدیدترین خودروها"}
-              type={"car"}
-            />
-            {/* جدیدترین اخبار */}
-            <SideBarListItems
-              itemsList={lastNews}
-              title={"جدیدترین اخبار خودرو"}
-            />
+        {/* بنرهای سایدبار */}
+        <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
+        {/* جدیدترین خودروها */}
+        <SideBarListItems
+          itemsList={lastCars}
+          title={"جدیدترین خودروها"}
+          type={"car"}
+        />
+        {/* جدیدترین اخبار */}
+        <SideBarListItems itemsList={lastNews} title={"جدیدترین اخبار خودرو"} />
 
-            {/* بنرهای سایدبار */}
-            <SideBarBanner banner={banner} />
-
-            {/* آمار بازار */}
-            <MarketStats />
-          </div>
+        {/* آمار بازار */}
+        <MarketStats />
+      </div>
     </>
   );
 }

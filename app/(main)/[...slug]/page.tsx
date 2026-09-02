@@ -1,4 +1,5 @@
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { JsonLd } from "@/app/components/JsonLd";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { createMarkup, htmlToPlainText } from "@/utils/func";
 import { mainDomainOld } from "@/utils/mainDomain";
@@ -102,8 +103,11 @@ async function pageDynamic() {
       throw error;
     }
 
+    const schemas = dataPage?.seoInfo?.schemas || [];
+
     return (
       <article>
+         <JsonLd schemas={schemas} />
         <BreadcrumbCategory
           breadcrumb={dataPage.breadcrumb}
           title={dataPage.title}

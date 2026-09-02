@@ -1,19 +1,21 @@
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { JsonLd } from "@/app/components/JsonLd";
 import { getCategory } from "@/services/Category/Category";
 import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
-import MainBoxAutoServices from "../autoservices/components/MainBoxAutoServices";
 import { notFound } from "next/navigation";
+import MainBoxAutoServices from "../autoservices/components/MainBoxAutoServices";
 
 export async function generateMetadata() {
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const dataPage: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
   if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
@@ -24,9 +26,9 @@ export async function generateMetadata() {
       ? dataPage.seoInfo?.seoKeywords
       : dataPage.seoKeywords;
     const metadataBase = new URL(mainDomainOld);
-  const seoUrl = dataPage?.url
-        ? `${mainDomainOld}${dataPage?.url}`
-        : `${mainDomainOld}`;
+    const seoUrl = dataPage?.url
+      ? `${mainDomainOld}${dataPage?.url}`
+      : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
 
     return {
@@ -61,9 +63,10 @@ async function pageAutoService({
   const headersList = await headers();
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
-  const autoServiceCat: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
+  const autoServiceCat: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
-if (!autoServiceCat) {
+  if (!autoServiceCat) {
     return notFound();
   }
 
@@ -75,12 +78,12 @@ if (!autoServiceCat) {
   const AutoServiceData: Items[] = await getItem({
     TypeId: 1050,
     langCode: "fa",
-   PageIndex: page,
+    PageIndex: page,
     ...(provinceId && { FilterProps: `23207=${provinceId}` }),
     PageSize: 15,
     OrderBy: 8,
   });
-  
+
   //
   const ids = AutoServiceData.map((item) => item.id).join(",");
 
@@ -102,10 +105,6 @@ if (!autoServiceCat) {
     CategoryIdArray: "6415",
     FullData: false,
   });
-
- 
-
- 
 
   const provinces: Items[] = await getItem({
     TypeId: 1055,
@@ -129,9 +128,10 @@ if (!autoServiceCat) {
     PageSize: 7,
   });
 
-  
+  const schemas = autoServiceCat?.seoInfo?.schemas || [];
   return (
     <>
+      <JsonLd schemas={schemas} />
       {autoServiceCat && (
         <BreadcrumbCategory
           breadcrumb={autoServiceCat.breadcrumb}

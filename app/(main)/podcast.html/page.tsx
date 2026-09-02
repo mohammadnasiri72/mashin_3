@@ -5,6 +5,7 @@ import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import Podcast from "./components/Podcast";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -95,8 +96,11 @@ async function pagePodcast({
   const podcastDetails: ItemsId | ItemsCategoryId | null =
     await getItemByUrl(decodedPathname);
 
+
+    const schemas = podcastDetails?.seoInfo?.schemas || [];
   return (
     <>
+     <JsonLd schemas={schemas} />
       {podcastDetails && (
         <div className="">
           <BreadcrumbCategory

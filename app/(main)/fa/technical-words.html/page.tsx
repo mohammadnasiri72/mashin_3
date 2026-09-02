@@ -5,6 +5,7 @@ import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import CardDic from "./components/CardDic";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -106,8 +107,11 @@ const page = Number(searchParam.page) || 1;
     });
   }
 
+   const schemas = dataPage?.seoInfo?.schemas || [];
+
   return (
     <>
+    <JsonLd schemas={schemas} />
       {dataPage?.breadcrumb && (
         <BreadcrumbCategory
           breadcrumb={dataPage.breadcrumb}

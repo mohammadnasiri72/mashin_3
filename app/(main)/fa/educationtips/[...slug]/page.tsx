@@ -6,6 +6,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import EducationCar from "./components/EducationCar";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -106,8 +107,11 @@ async function pageEducationTips({
     FullData: false,
   });
 
+   const schemas = educationDetails?.seoInfo?.schemas || [];
+
   return (
     <>
+     <JsonLd schemas={schemas} />
       {educationDetails && (
         <BreadcrumbCategory
           breadcrumb={educationDetails.breadcrumb}

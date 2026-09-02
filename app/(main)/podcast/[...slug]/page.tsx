@@ -6,6 +6,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import Podcast from "../../podcast.html/components/Podcast";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -103,8 +104,11 @@ async function pagePodcastDainamic({
     FullData: false,
   });
 
+  const schemas = podcastsCa?.seoInfo?.schemas || [];
+
   return (
     <>
+     <JsonLd schemas={schemas} />
       <BreadcrumbCategory
         breadcrumb={podcastsCa.breadcrumb}
         title={podcastsCa.title}

@@ -16,14 +16,13 @@ function SideBarEducation({
       <section className="">
         <div className="mx-auto">
           <div className="space-y-6">
+            {/* بنرهای سایدبار */}
+            <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
             {/* محبوب ترین نکات آموزشی خودرو */}
             <SideBarListItems
               itemsList={educationPopular}
               title={"محبوب ترین نکات آموزشی خودرو"}
             />
-
-            {/* بنرهای سایدبار */}
-            <SideBarBanner banner={banner} />
 
             {/* آمار بازار */}
             <MarketStats />

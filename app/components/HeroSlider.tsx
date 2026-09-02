@@ -25,11 +25,11 @@ const getImageUrl = (image: string) => {
 // تابع برای دریافت رنگ چیپ براساس نوع
 const getChipColor = (type: string) => {
   switch (type) {
-    case "خبر داخلی":
+    case "اخبار داخلی":
       return "bg-blue-700 text-blue-100 border-blue-500/30";
-    case "خبر خارجی":
+    case "اخبار جهانی":
       return "bg-orange-700 text-orange-100 border-orange-500/30";
-    case "پیش‌فروش":
+    case "فروش و پیش فروش":
       return "bg-yellow-700 text-yellow-100 border-yellow-500/30";
     default:
       return "bg-gray-700 text-gray-100 border-gray-500/30";
@@ -107,19 +107,19 @@ export default function HeroSection({
           <SidebarBox
             icon={<BiCalendar className="w-5 h-5" />}
             item={latestNews[0]}
-            type="خبر داخلی"
+            type="اخبار داخلی"
           />
           {/* باکس آخرین مقایسه‌ها */}
           <SidebarBox
             icon={<BiBarChart className="w-5 h-5" />}
             item={latestComparisons[0]}
-            type="خبر خارجی"
+            type="اخبار جهانی"
           />
           {/* باکس آخرین پیش‌فروش‌ها */}
           <SidebarBox
             icon={<FaClock className="w-5 h-5" />}
             item={latestPresales[0]}
-            type="پیش‌فروش"
+            type="فروش و پیش فروش"
           />
         </div>
       </div>

@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import MarketStats from "@/app/components/SideBar/MarketStats";
 import SideBarBanner from "@/app/components/SideBar/SideBarBanner";
 import SideBarListItems from "@/app/components/SideBar/SideBarListItems";
 import { getItem } from "@/services/Item/Item";
+import { useEffect, useState } from "react";
 
 interface SidebarEducationProps {
   currentEducationId?: number;
   categoryId?: number;
 }
 
-function SidebarEducation({ 
-  currentEducationId, 
-  categoryId 
+function SidebarEducation({
+  currentEducationId,
+  categoryId,
 }: SidebarEducationProps) {
   const [popularEducations, setPopularEducations] = useState<Items[]>([]);
   const [banner, setBanner] = useState<Items[]>([]);
@@ -23,7 +23,7 @@ function SidebarEducation({
     const fetchSidebarData = async () => {
       try {
         setLoading(true);
-        
+
         // دریافت محبوب‌ترین مطالب آموزشی (همون درخواست اول)
         const popularData = await getItem({
           TypeId: 3,
@@ -44,7 +44,7 @@ function SidebarEducation({
 
         // فیلتر کردن آیتم فعلی از لیست محبوب‌ها
         setPopularEducations(
-          popularData.filter((e: Items) => e.id !== currentEducationId)
+          popularData.filter((e: Items) => e.id !== currentEducationId),
         );
         setBanner(bannerData);
       } catch (error) {
@@ -87,6 +87,11 @@ function SidebarEducation({
     <section className="px-2">
       <div className="mx-auto">
         <div className="space-y-6">
+          {/* بنرهای سایدبار */}
+          {banner.filter((e) => e.id === 2570).length > 0 && (
+            <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
+          )}
+
           {/* محبوب‌ترین مطالب آموزشی */}
           {popularEducations.length > 0 && (
             <SideBarListItems
@@ -94,9 +99,6 @@ function SidebarEducation({
               title={"محبوب ترین مطالب آموزشی"}
             />
           )}
-
-          {/* بنرهای سایدبار */}
-          {banner.length > 0 && <SideBarBanner banner={banner} />}
 
           {/* آمار بازار */}
           <MarketStats />

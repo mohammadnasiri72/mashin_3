@@ -4,6 +4,7 @@ import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import CompareClient from "./components/CompareClient";
+import { JsonLd } from "@/app/components/JsonLd";
 
 function extractAfterSecondSlash(url: string) {
   // پیدا کردن دومین اسلش (با رد کردن اسلش‌های پروتکل مثل https://)
@@ -84,6 +85,7 @@ async function pageCompareDainamic({
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+   const dataPage: ItemsId | null = await getItemByUrl("/compare");
   const param = await params;
   const searchParam = await searchParams;
   const type = searchParam.type;
@@ -103,8 +105,11 @@ async function pageCompareDainamic({
     PageSize: 200,
   });
 
+   const schemas = dataPage?.seoInfo?.schemas || [];
+
   return (
     <>
+    <JsonLd schemas={schemas} />
       <CompareClient
         brandsCar={brandsCar}
         dataCompare={dataCompare}

@@ -21,13 +21,14 @@ function SidebarBestChoice({
     <>
       <section className="bg-gray-50 px-2">
         <div className="space-y-6">
+          {/* بنرهای سایدبار */}
+          <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
           {/* بهترین خودروها از نگاه کاربران*/}
           <SideBarListItems
             itemsList={popularBestChoices}
             title={"بهترین خودروها از نگاه کاربران"}
           />
-          {/* بنرهای سایدبار */}
-          <SideBarBanner banner={banner} />
+
           {/* آمار بازار */}
           <MarketStats />
 
@@ -38,7 +39,11 @@ function SidebarBestChoice({
           />
 
           {/* جدیدترین خودروها */}
-          <SideBarListItems itemsList={lastCars} title={"جدیدترین خودروها"} type={"car"}/>
+          <SideBarListItems
+            itemsList={lastCars}
+            title={"جدیدترین خودروها"}
+            type={"car"}
+          />
         </div>
       </section>
     </>

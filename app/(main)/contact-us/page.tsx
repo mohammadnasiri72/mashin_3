@@ -4,6 +4,7 @@ import { getItem } from "@/services/Item/Item";
 import { getSetting } from "@/services/Property/setting";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata({
   params,
@@ -24,9 +25,9 @@ export async function generateMetadata({
       ? dataPage.seoInfo?.seoKeywords
       : dataPage.seoKeywords;
     const metadataBase = new URL(mainDomainOld);
-   const seoUrl = dataPage?.url
-        ? `${mainDomainOld}${dataPage?.url}`
-        : `${mainDomainOld}`;
+    const seoUrl = dataPage?.url
+      ? `${mainDomainOld}${dataPage?.url}`
+      : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
     return {
       title,
@@ -52,7 +53,17 @@ export async function generateMetadata({
   }
 }
 
-async function pageContactUs() {
+async function pageContactUs({
+  params,
+}: {
+  params: Promise<{ slug: string | string[] }>; // تغییر این خط
+}) {
+
+   const param = await params;
+  const slugArray = Array.isArray(param.slug) ? param.slug : [param.slug];
+  const path = slugArray.length > 0 ? "/" + slugArray.join("/") : "/";
+  const dataPage: ItemsId | null = await getItemByUrl(path);
+
   const banner: Items[] = await getItem({
     TypeId: 1051,
     langCode: "fa",
@@ -60,7 +71,15 @@ async function pageContactUs() {
     FullData: false,
   });
   const setting: SettingType[] = await getSetting();
-  return <ContactUs banner={banner} setting={setting} />;
+
+  const schemas = dataPage?.seoInfo?.schemas || [];
+
+  return (
+    <>
+    <JsonLd schemas={schemas} />
+      <ContactUs banner={banner} setting={setting} />
+    </>
+  );
 }
 
 export default pageContactUs;

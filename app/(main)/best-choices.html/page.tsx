@@ -1,4 +1,5 @@
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { JsonLd } from "@/app/components/JsonLd";
 import { getItem } from "@/services/Item/Item";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
@@ -10,7 +11,8 @@ export async function generateMetadata() {
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const dataPage: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
+  const dataPage: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
   if (dataPage && dataPage.title) {
     const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
@@ -21,9 +23,9 @@ export async function generateMetadata() {
       ? dataPage.seoInfo?.seoKeywords
       : dataPage.seoKeywords;
     const metadataBase = new URL(mainDomainOld);
-   const seoUrl = dataPage?.url
-        ? `${mainDomainOld}${dataPage?.url}`
-        : `${mainDomainOld}`;
+    const seoUrl = dataPage?.url
+      ? `${mainDomainOld}${dataPage?.url}`
+      : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
 
     return {
@@ -62,10 +64,10 @@ async function pageBestChoices({
   const bestChoices: Items[] = await getItem({
     TypeId: 1043,
     langCode: "fa",
-   PageIndex: page,
+    PageIndex: page,
     ...(term && term !== "undefined" && { Term: term }),
     PageSize: 15,
-    FullData:false,
+    FullData: false,
   });
   const popularBestChoices: Items[] = await getItem({
     TypeId: 1043,
@@ -85,7 +87,8 @@ async function pageBestChoices({
   const pathname = headersList.get("x-pathname");
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
 
-  const bestCat: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
+  const bestCat: ItemsId | ItemsCategoryId | null =
+    await getItemByUrl(decodedPathname);
 
   const lastNews: Items[] = await getItem({
     TypeId: 5,
@@ -101,8 +104,11 @@ async function pageBestChoices({
     PageSize: 7,
   });
 
+  const schemas = bestCat?.seoInfo?.schemas || [];
+  
   return (
     <>
+      <JsonLd schemas={schemas} />
       {bestCat && (
         <BreadcrumbCategory
           breadcrumb={bestCat.breadcrumb}

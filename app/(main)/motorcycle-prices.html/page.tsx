@@ -5,6 +5,7 @@ import PriceMotor from "./components/PriceMotor";
 import { headers } from "next/headers";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
+import { JsonLd } from "@/app/components/JsonLd";
 
 
 export async function generateMetadata() {
@@ -57,6 +58,11 @@ async function pageMotorcyclePrices({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
+   const headersList = await headers();
+  const pathname = headersList.get("x-pathname");
+  const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
+
+  const dataPage: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
   const searchParam = await searchParams;
 
   const type = searchParam.type;
@@ -79,8 +85,11 @@ async function pageMotorcyclePrices({
   const brandsWithPrice = brands.brands?.filter(b => brandIdsWithPrice.has(b.id)) || [];
   const brandsWithoutPrice = brands.brands?.filter(b => !brandIdsWithPrice.has(b.id)) || [];
 
+   const schemas = dataPage?.seoInfo?.schemas || [];
+
   return (
     <>
+     <JsonLd schemas={schemas} />
       <div className="mb-4!">
         <BreadcrumbCategory breadcrumb={[]} title={price.title} />
       </div>

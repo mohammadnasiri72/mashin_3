@@ -13,14 +13,14 @@ function SideBarCompareCars({
   return (
     <>
       <div className="space-y-6 px-4">
+        {/* بنرهای سایدبار */}
+        <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
         {/*پرطرفدارترین مقایسه‌ها*/}
         <SideBarListItems
           itemsList={popularComparisons}
           title={"پرطرفدارترین مقایسه‌ها"}
         />
 
-        {/* بنرهای سایدبار */}
-        <SideBarBanner banner={banner} />
 
         {/* آمار بازار */}
         <MarketStats />

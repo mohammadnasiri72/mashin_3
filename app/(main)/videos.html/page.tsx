@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -96,8 +97,10 @@ async function pageVideo({
 
   const videoCat: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
 
+  const schemas = videoCat?.seoInfo?.schemas || [];
   return (
     <>
+     <JsonLd schemas={schemas} />
       {videoCat && (
         <div className="">
           <BreadcrumbCategory

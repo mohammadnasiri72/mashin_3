@@ -16,14 +16,13 @@ function SidebarPodcasts({
       <section className="">
         <div className="mx-auto">
           <div className="space-y-6">
+            {/* بنرهای سایدبار */}
+            <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
             {/* محبوب‌ترین اخبار */}
             <SideBarListItems
               itemsList={popularNews}
               title={"محبوب‌ترین اخبار"}
             />
-
-            {/* بنرهای سایدبار */}
-            <SideBarBanner banner={banner} />
 
             {/* آمار بازار */}
             <MarketStats />

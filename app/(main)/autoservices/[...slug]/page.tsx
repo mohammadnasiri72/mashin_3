@@ -7,6 +7,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import MainBoxAutoServices from "../components/MainBoxAutoServices";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
    const headersList = await headers();
@@ -131,8 +132,11 @@ async function pageAutoServiceDetails({
     PageSize: 100,
   });
 
+  const schemas = autoServiceCat?.seoInfo?.schemas || [];
+
   return (
     <>
+     <JsonLd schemas={schemas} />
       <BreadcrumbCategory
         breadcrumb={autoServiceCat.breadcrumb}
         title={autoServiceCat.title}

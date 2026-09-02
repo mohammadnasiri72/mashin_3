@@ -4,6 +4,7 @@ import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import WhichCars from "./components/WhichCars";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -88,8 +89,11 @@ async function pageWhichCars({
   const decodedPathname = pathname ? decodeURIComponent(pathname) : "";
   const whichCarsCat: ItemsId |ItemsCategoryId| null = await getItemByUrl(decodedPathname);
 
+  const schemas = whichCarsCat?.seoInfo?.schemas || [];
+
   return (
     <>
+    <JsonLd schemas={schemas} />
       {whichCarsCat && (
         <BreadcrumbCategory
           breadcrumb={whichCarsCat.breadcrumb}

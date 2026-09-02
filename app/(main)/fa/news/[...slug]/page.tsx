@@ -6,6 +6,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import CarNews from "./components/CarNews";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -138,8 +139,10 @@ async function pageNewsDetails({
   }
 
   if (news.length > 0) {
+    const schemas = newsDetails?.seoInfo?.schemas || [];
     return (
       <>
+      <JsonLd schemas={schemas} />
         {newsDetails && (
           <BreadcrumbCategory
             breadcrumb={newsDetails.breadcrumb}

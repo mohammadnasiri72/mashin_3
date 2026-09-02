@@ -8,6 +8,7 @@ import { notFound } from "next/navigation";
 import BoxCatVideos from "../../videos.html/components/BoxCatVideos";
 import Video from "../../videos.html/components/Video";
 import VideoNotFound from "./VideoNotFound";
+import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -110,9 +111,11 @@ const id =
     PageSize: 200,
   });
 
+const schemas = videoCat?.seoInfo?.schemas || [];
 
   return (
     <>
+    <JsonLd schemas={schemas} />
       <div className="mb-4!">
         <BreadcrumbCategory
           breadcrumb={videoCat.breadcrumb}

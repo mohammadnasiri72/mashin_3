@@ -14,14 +14,14 @@ function SidebarVideo({
       <section className="px-2">
         <div className="mx-auto">
           <div className="space-y-6">
+            {/* بنرهای سایدبار */}
+            <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
             {/*محبوب ترین فیلم های ماشین 3*/}
             <SideBarListItems
               itemsList={popularVideos}
               title={"محبوب ترین فیلم های ماشین 3"}
             />
 
-            {/* بنرهای سایدبار */}
-            <SideBarBanner banner={banner} />
           </div>
         </div>
       </section>

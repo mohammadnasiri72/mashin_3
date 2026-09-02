@@ -88,6 +88,9 @@ function SidebarNewsView() {
     <section className="bg-gray-50">
       <div className="mx-auto pl-4 lg:pr-2 pr-4">
         <div className="space-y-6">
+            {/* بنرهای سایدبار */}
+          {banner.filter((e) => e.id === 2570).length > 0 && <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />}
+
           {/* جدیدترین اخبار */}
           {newNews.length > 0 && (
             <SideBarListItems
@@ -104,9 +107,7 @@ function SidebarNewsView() {
             />
           )}
 
-          {/* بنرهای سایدبار */}
-          {banner.length > 0 && <SideBarBanner banner={banner} />}
-
+        
           {/* آمار بازار */}
           <MarketStats />
         </div>
