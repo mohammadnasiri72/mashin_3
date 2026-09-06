@@ -79,7 +79,6 @@ async function pageBestChoice() {
     const banner: Items[] = await getItem({
       TypeId: 1051,
       langCode: "fa",
-      CategoryIdArray: "6415",
       FullData: false,
     });
     const Attachment: ItemsAttachment[] = await getAttachment(id);

@@ -22,12 +22,15 @@ function SidebarBestChoice({
       <section className="bg-gray-50 px-2">
         <div className="space-y-6">
           {/* بنرهای سایدبار */}
-          <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
+          <SideBarBanner banner={banner.filter((e) => e.categoryId === 6506)} />
           {/* بهترین خودروها از نگاه کاربران*/}
           <SideBarListItems
             itemsList={popularBestChoices}
             title={"بهترین خودروها از نگاه کاربران"}
           />
+
+           {/* بنرهای سایدبار */}
+          <SideBarBanner banner={banner.filter((e) => e.categoryId === 6415)} />
 
           {/* آمار بازار */}
           <MarketStats />

@@ -19,6 +19,7 @@ import "swiper/css/free-mode";
 import { FreeMode } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SideBarNews from "./SideBarNews";
+import MainBanner from "@/app/components/MainBanner";
 
 const CarNews = ({
   id,
@@ -471,7 +472,7 @@ const CarNews = ({
           </aside>
         </div>
       </div>
-
+<MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
       <style jsx global>{`
         .tabs-swiper {
           overflow: visible !important;

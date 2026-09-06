@@ -19,6 +19,7 @@ import "swiper/css/free-mode";
 import { FreeMode } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SideBarEducation from "./SideBarEducation";
+import MainBanner from "@/app/components/MainBanner";
 
 const EducationCar = ({
   education: initialEducation,
@@ -481,6 +482,8 @@ const EducationCar = ({
           </aside>
         </div>
       </div>
+
+      <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
 
       {/* استایل‌های سفارشی */}
       <style jsx global>{`

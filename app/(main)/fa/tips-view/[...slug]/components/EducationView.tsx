@@ -1,6 +1,8 @@
 "use client";
 
 import CommentsSection from "@/app/components/CommentsSection";
+import MainBanner from "@/app/components/MainBanner";
+import { getItem } from "@/services/Item/Item";
 import { Card, Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
 import EducationContent from "./EducationContent";
@@ -174,6 +176,50 @@ function EducationView({
     },
   ];
 
+  const [popularEducations, setPopularEducations] = useState<Items[]>([]);
+  const [banner, setBanner] = useState<Items[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSidebarData = async () => {
+      try {
+        setLoading(true);
+
+        // دریافت محبوب‌ترین مطالب آموزشی (همون درخواست اول)
+        const popularData = await getItem({
+          TypeId: 3,
+          langCode: "fa",
+          CategoryIdArray: String(education.categoryId || ""),
+          PageIndex: 1,
+          PageSize: 10,
+          OrderBy: 8,
+        });
+
+        // دریافت بنرها (همون درخواست دوم)
+        const bannerData = await getItem({
+          TypeId: 1051,
+          langCode: "fa",
+          FullData: false,
+        });
+
+        // فیلتر کردن آیتم فعلی از لیست محبوب‌ها
+        setPopularEducations(
+          popularData.filter((e: Items) => e.id !== education.id),
+        );
+        setBanner(bannerData);
+      } catch (error) {
+        console.error("Error fetching sidebar data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // فقط در صورتی که categoryId وجود داشته باشه درخواست بزن
+    if (education.categoryId) {
+      fetchSidebarData();
+    }
+  }, [education.categoryId, education.id]);
+
   return (
     <div className="min-h-screen bg-gray-50 w-full">
       <HeroSectionEdu education={education} />
@@ -245,12 +291,13 @@ function EducationView({
             `}
           >
             <SidebarEducation
-              categoryId={education.categoryId}
-              currentEducationId={education.id}
+              popularEducations={popularEducations}
+              banner={banner}
+              loading={loading}
             />
           </aside>
         </div>
-
+        <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor mt-8" ref={commentsRef}>
           <CommentsSection details={education} id={id} comments={comments} />

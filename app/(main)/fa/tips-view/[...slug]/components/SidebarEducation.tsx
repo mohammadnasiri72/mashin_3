@@ -3,8 +3,6 @@
 import MarketStats from "@/app/components/SideBar/MarketStats";
 import SideBarBanner from "@/app/components/SideBar/SideBarBanner";
 import SideBarListItems from "@/app/components/SideBar/SideBarListItems";
-import { getItem } from "@/services/Item/Item";
-import { useEffect, useState } from "react";
 
 interface SidebarEducationProps {
   currentEducationId?: number;
@@ -12,54 +10,14 @@ interface SidebarEducationProps {
 }
 
 function SidebarEducation({
-  currentEducationId,
-  categoryId,
-}: SidebarEducationProps) {
-  const [popularEducations, setPopularEducations] = useState<Items[]>([]);
-  const [banner, setBanner] = useState<Items[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSidebarData = async () => {
-      try {
-        setLoading(true);
-
-        // دریافت محبوب‌ترین مطالب آموزشی (همون درخواست اول)
-        const popularData = await getItem({
-          TypeId: 3,
-          langCode: "fa",
-          CategoryIdArray: String(categoryId || ""),
-          PageIndex: 1,
-          PageSize: 10,
-          OrderBy: 8,
-        });
-
-        // دریافت بنرها (همون درخواست دوم)
-        const bannerData = await getItem({
-          TypeId: 1051,
-          langCode: "fa",
-          CategoryIdArray: "6415",
-          FullData: false,
-        });
-
-        // فیلتر کردن آیتم فعلی از لیست محبوب‌ها
-        setPopularEducations(
-          popularData.filter((e: Items) => e.id !== currentEducationId),
-        );
-        setBanner(bannerData);
-      } catch (error) {
-        console.error("Error fetching sidebar data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // فقط در صورتی که categoryId وجود داشته باشه درخواست بزن
-    if (categoryId) {
-      fetchSidebarData();
-    }
-  }, [categoryId, currentEducationId]);
-
+  popularEducations,
+  banner,
+  loading,
+}: {
+  popularEducations: Items[];
+  banner: Items[];
+  loading: boolean;
+}) {
   // نمایش لودینگ
   if (loading) {
     return (
@@ -88,9 +46,7 @@ function SidebarEducation({
       <div className="mx-auto">
         <div className="space-y-6">
           {/* بنرهای سایدبار */}
-          {banner.filter((e) => e.id === 2570).length > 0 && (
-            <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
-          )}
+          <SideBarBanner banner={banner.filter((e) => e.categoryId === 6506)} />
 
           {/* محبوب‌ترین مطالب آموزشی */}
           {popularEducations.length > 0 && (
@@ -99,6 +55,9 @@ function SidebarEducation({
               title={"محبوب ترین مطالب آموزشی"}
             />
           )}
+
+          {/* بنرهای سایدبار */}
+          <SideBarBanner banner={banner.filter((e) => e.categoryId === 6415)} />
 
           {/* آمار بازار */}
           <MarketStats />

@@ -10,32 +10,83 @@ import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import "swiper/css";
 // @ts-ignoreimport
 import "swiper/css/navigation";
+import { useEffect, useRef, useState } from "react";
+import { getItem } from "@/services/Item/Item";
+import { useDispatch } from "react-redux";
+import { setIsModelCar } from "@/redux/slice/isModelCar";
 
 interface ModelShowcaseProps {
-  brandModels: Items[];
-  specificModels: Items[];
-  brandName: string;
-  specificName: string;
-  specificHref: string | undefined;
-  brandHref: string | undefined;
+  detailsCar: ItemsId;
 }
 
 export default function ModelShowcase({
-  brandModels,
-  specificModels,
-  brandName,
-  specificName,
-  specificHref,
-  brandHref,
+  detailsCar,
 }: ModelShowcaseProps) {
-  const hasBrandModels = brandModels && brandModels.length > 1;
+  const dispatch = useDispatch()
+  const [brandModels , setBrandModels] = useState<Items[]>([])
+  const [specificModels , setSpecificModels] = useState<Items[]>([])
+  const brandName = detailsCar.sourceName || "خودرو";
+  const specificName = detailsCar.title || "";
+  const specificHref = detailsCar.breadcrumb.find(
+    (e) => e.title === detailsCar.title,
+  )?.href;
+  const brandHref =  detailsCar.breadcrumb.find(
+                  (e) => e.title === detailsCar.sourceName,
+                )?.href;
+ 
+  const isFetched = useRef(false);
+  const sourceLink = detailsCar.sourceLink;
+  const categoryId = String(detailsCar.categoryId);
+  useEffect(() => {
+    if (isFetched.current || !sourceLink || !categoryId) return;
+    isFetched.current = true;
+    
+
+    const fetchData = async () => {
+      try {
+        const [carsModel, carsModel2] = await Promise.all([
+          sourceLink
+            ? getItem({
+                TypeId: 1042,
+                langCode: "fa",
+                CategoryIdArray: sourceLink,
+                PageIndex: 1,
+                PageSize: 5,
+              })
+            : Promise.resolve([]),
+          categoryId
+            ? getItem({
+                TypeId: 1042,
+                langCode: "fa",
+                CategoryIdArray: categoryId,
+                PageIndex: 1,
+                PageSize: 5,
+                FullData: true,
+              })
+            : Promise.resolve([]),
+        ]);        
+        setBrandModels(carsModel)
+        setSpecificModels(carsModel2)
+        console.log(carsModel);
+        
+        if ((carsModel&&carsModel.length>1)  || (carsModel2&&carsModel2.length>1)) {
+          dispatch(setIsModelCar(true))
+        }
+      } catch (error) {
+        console.error("❌ Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+ const hasBrandModels = brandModels && brandModels.length > 1;
   const hasSpecificModels = specificModels && specificModels.length > 1;
 
   if (!hasBrandModels && !hasSpecificModels) return null;
-
   return (
     <section dir="rtl" className="mx-auto w-full">
-      <div className={`grid grid-cols-1  gap-6 ${(hasBrandModels && hasSpecificModels)? 'lg:grid-cols-2':'lg:grid-cols-1' }`}>
+      <div
+        className={`grid grid-cols-1  gap-6 ${hasBrandModels && hasSpecificModels ? "lg:grid-cols-2" : "lg:grid-cols-1"}`}
+      >
         {/* مدل‌های برند */}
         {hasBrandModels && (
           <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
@@ -47,7 +98,7 @@ export default function ModelShowcase({
                 href={brandHref || "#"}
                 className="flex items-center gap-0.5 text-sm font-medium text-[#ce1a2a]! hover:text-red-700! transition-colors"
               >
-              همه مدل‌های {brandName}
+                همه مدل‌های {brandName}
                 <BiChevronLeft fontSize="small" />
               </Link>
             </div>
@@ -63,10 +114,22 @@ export default function ModelShowcase({
                 slidesPerView={2}
                 dir="rtl"
                 breakpoints={{
-                  480: (hasBrandModels && hasSpecificModels)? { slidesPerView: 2 }:{ slidesPerView: 2 },
-                  640: (hasBrandModels && hasSpecificModels)? { slidesPerView: 4 }:{ slidesPerView: 4 },
-                  768: (hasBrandModels && hasSpecificModels)?  { slidesPerView: 6 } : { slidesPerView: 6 },
-                  1024: (hasBrandModels && hasSpecificModels)? { slidesPerView: 3 } :{ slidesPerView: 6 },
+                  480:
+                    hasBrandModels && hasSpecificModels
+                      ? { slidesPerView: 2 }
+                      : { slidesPerView: 2 },
+                  640:
+                    hasBrandModels && hasSpecificModels
+                      ? { slidesPerView: 4 }
+                      : { slidesPerView: 4 },
+                  768:
+                    hasBrandModels && hasSpecificModels
+                      ? { slidesPerView: 6 }
+                      : { slidesPerView: 6 },
+                  1024:
+                    hasBrandModels && hasSpecificModels
+                      ? { slidesPerView: 3 }
+                      : { slidesPerView: 6 },
                 }}
                 className="w-full"
               >
@@ -81,7 +144,6 @@ export default function ModelShowcase({
                             className="object-contain group-hover:scale-105 h-full transition-transform duration-300"
                             loading="lazy"
                           />
-                         
                         </div>
                         <div className="flex flex-col gap-1 p-3">
                           <h3 className="text-sm font-bold text-slate-900 line-clamp-2 h-10 group-hover:text-[#ce1a2a] transition-colors">
@@ -130,7 +192,7 @@ export default function ModelShowcase({
                 href={specificHref || "#"}
                 className="flex items-center gap-0.5 text-sm font-medium text-[#ce1a2a]! hover:text-red-700! transition-colors"
               >
-                 همه مدل‌های {brandName} {specificName}
+                همه مدل‌های {brandName} {specificName}
                 <BiChevronLeft fontSize="small" />
               </Link>
             </div>
@@ -145,11 +207,23 @@ export default function ModelShowcase({
                 spaceBetween={12}
                 slidesPerView={2}
                 dir="rtl"
-               breakpoints={{
-                  480: (hasBrandModels && hasSpecificModels)? { slidesPerView: 2 }:{ slidesPerView: 2 },
-                  640: (hasBrandModels && hasSpecificModels)? { slidesPerView: 4 }:{ slidesPerView: 4 },
-                  768: (hasBrandModels && hasSpecificModels)?  { slidesPerView: 6 } : { slidesPerView: 6 },
-                  1024: (hasBrandModels && hasSpecificModels)? { slidesPerView: 3 } :{ slidesPerView: 6 },
+                breakpoints={{
+                  480:
+                    hasBrandModels && hasSpecificModels
+                      ? { slidesPerView: 2 }
+                      : { slidesPerView: 2 },
+                  640:
+                    hasBrandModels && hasSpecificModels
+                      ? { slidesPerView: 4 }
+                      : { slidesPerView: 4 },
+                  768:
+                    hasBrandModels && hasSpecificModels
+                      ? { slidesPerView: 6 }
+                      : { slidesPerView: 6 },
+                  1024:
+                    hasBrandModels && hasSpecificModels
+                      ? { slidesPerView: 3 }
+                      : { slidesPerView: 6 },
                 }}
                 className="w-full"
               >

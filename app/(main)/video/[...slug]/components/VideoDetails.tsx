@@ -10,6 +10,7 @@ import RelatedPodcastsVideos from "./relatedPodcastsVideos";
 import RelatedVideos from "./RelatedVideos";
 import SidebarVideo from "./SideBarVideo";
 import VideoPlayer from "./VideoPlayer";
+import MainBanner from "@/app/components/MainBanner";
 
 function VideoDetails({
   video,
@@ -336,7 +337,7 @@ function VideoDetails({
             <SidebarVideo popularVideos={popularVideos} banner={banner} />
           </aside>
         </div>
-
+<MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor mt-8" ref={commentsRef}>
           <CommentsSection details={video} comments={comments} id={id} />

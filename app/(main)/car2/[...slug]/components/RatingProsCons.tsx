@@ -68,6 +68,8 @@ export default function RatingProsCons({
     (e) => e.propertyKey === "p1042_performance",
   );
 
+  
+
   // تابع برای استخراج متن از HTML
   const extractTextFromHTML = (html: string) => {
     if (!html) return [];
@@ -112,7 +114,7 @@ export default function RatingProsCons({
             </div>
 
             {disadvantagesData?.propertyValue ? (
-              <ul
+              <div
                 className="flex flex-col gap-3 list-disc pr-5"
                 dangerouslySetInnerHTML={createMarkup(disadvantagesData.propertyValue)}
               />
@@ -148,7 +150,7 @@ export default function RatingProsCons({
             </div>
 
             {advantagesData?.propertyValue ? (
-              <ul
+              <div
                 className="flex flex-col gap-3 list-disc pr-5"
                 dangerouslySetInnerHTML={createMarkup(advantagesData.propertyValue)}
               />

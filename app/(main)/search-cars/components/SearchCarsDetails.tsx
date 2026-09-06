@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { FaCar } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
 import SideBarSearchCars from "./SideBarSearchCars";
+import MainBanner from "@/app/components/MainBanner";
 
 const { Option } = Select;
 
@@ -552,7 +553,7 @@ function SearchCarsDetails({
           </aside>
         </div>
       </div>
-
+<MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
       <style jsx global>{`
         .container {
           max-width: 1200px;

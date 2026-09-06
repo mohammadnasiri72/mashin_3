@@ -8,6 +8,7 @@ import ContactUsAutoService from "./ContactUsAutoService";
 import HeroSectionAutoService from "./HeroSectionAutoService";
 import RatingAutoService from "./RatingAutoService";
 import SidebarAutoService from "./SidebarAutoService";
+import MainBanner from "@/app/components/MainBanner";
 
 function MainBoxAutoService({
   detailsAuto,
@@ -241,6 +242,7 @@ function MainBoxAutoService({
             <SidebarAutoService banner={banner} />
           </aside>
         </div>
+          <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
 
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor px-2" ref={commentsRef}>

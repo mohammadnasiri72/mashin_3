@@ -67,7 +67,6 @@ async function pageTechnicalWord() {
   const banner: Items[] = await getItem({
     TypeId: 1051,
     langCode: "fa",
-    CategoryIdArray: "6415",
     FullData: false,
   });
 

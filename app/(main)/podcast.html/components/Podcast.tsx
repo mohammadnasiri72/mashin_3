@@ -7,6 +7,7 @@ import BoxPodcasts from "./BoxPodcasts";
 import SidebarPodcasts from "./SidebarPodcasts";
 import BoxCatPodcasts from "./BoxCatPodcasts";
 import { useSearchParams } from "next/navigation";
+import MainBanner from "@/app/components/MainBanner";
 
 function Podcast({
   podcasts: initialPodcasts,
@@ -296,7 +297,7 @@ function Podcast({
           </div>
         </div>
       </div>
-
+<MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
       <style jsx global>{`
         .container {
           max-width: 1200px;

@@ -11,6 +11,7 @@ import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaCar, FaSearch } from "react-icons/fa";
 import ShowSummary from "./ShowSummary";
 import SideBarCars from "./SideBarCars";
+import MainBanner from "@/app/components/MainBanner";
 
 // ✅ کامپوننت کارت خودرو با memo
 const CarCard = memo(
@@ -393,6 +394,8 @@ const CarsDetails = ({ carView, carDetails, banner }: CarsDetailsProps) => {
             </aside>
         </div>
       </div>
+
+       <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
 
       <style jsx global>{`
         .container {

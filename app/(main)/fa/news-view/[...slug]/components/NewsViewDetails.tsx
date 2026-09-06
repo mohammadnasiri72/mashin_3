@@ -1,16 +1,18 @@
 "use client";
 
+import CommentsSection from "@/app/components/CommentsSection";
+import MainBanner from "@/app/components/MainBanner";
+import { getItem } from "@/services/Item/Item";
 import { Card, Tabs } from "antd";
 import { useEffect, useRef, useState } from "react";
+import CarsRelatedSection from "./CarsRelatedSection";
+import HeroSectionNews from "./HeroSectionNews";
 import NewsContentSection from "./NewsContentSection";
 import NewsGallerySection from "./NewsGallerySection";
 import NewsRelatedSection from "./NewsRelatedSection";
 import SidebarNewsView from "./SidebarNewsView";
-import HeroSectionNews from "./HeroSectionNews";
-import CarsRelatedSection from "./CarsRelatedSection";
 import VideosRelatedSection from "./VideosRelatedSection";
 import VoicesRelatedSection from "./VoicesRelatedSection";
-import CommentsSection from "@/app/components/CommentsSection";
 
 function NewsViewDetails({
   detailsNews,
@@ -31,57 +33,40 @@ function NewsViewDetails({
   relatedVideos: ItemsId[];
   relatedVoices: ItemsId[];
 }) {
+  // ذخیره در localStorage
+  useEffect(() => {
+    try {
+      // دریافت لیست قبلی
+      const recentViews = JSON.parse(
+        localStorage.getItem("recentCarViews") || "[]",
+      );
 
+      // ساخت آیتم جدید
+      const newView = {
+        id: detailsNews.id,
+        title: detailsNews.title,
+        sourceName: detailsNews.sourceName,
+        publishCode: detailsNews.publishCode,
+        image: detailsNews.image,
+        timestamp: Date.now(),
+        url: detailsNews.url,
+        type: "اخبار",
+      };
 
+      // حذف اگر قبلا بود
+      const filteredViews = recentViews.filter(
+        (item: any) => item.id !== detailsNews.id,
+      );
 
+      // اضافه به اول لیست و نگه داشتن حداکثر ۱۰ مورد
+      const updatedViews = [newView, ...filteredViews].slice(0, 10);
 
-
-
-   // ذخیره در localStorage
-    useEffect(() => {
-      try {
-        // دریافت لیست قبلی
-        const recentViews = JSON.parse(
-          localStorage.getItem("recentCarViews") || "[]",
-        );
-  
-        // ساخت آیتم جدید
-        const newView = {
-          id: detailsNews.id,
-          title: detailsNews.title,
-          sourceName: detailsNews.sourceName,
-          publishCode: detailsNews.publishCode,
-          image: detailsNews.image,
-          timestamp: Date.now(),
-          url: detailsNews.url,
-          type: 'اخبار'
-        };
-  
-        // حذف اگر قبلا بود
-        const filteredViews = recentViews.filter(
-          (item: any) => item.id !== detailsNews.id,
-        );
-  
-        // اضافه به اول لیست و نگه داشتن حداکثر ۱۰ مورد
-        const updatedViews = [newView, ...filteredViews].slice(0, 10);
-  
-        // ذخیره
-        localStorage.setItem("recentCarViews", JSON.stringify(updatedViews));
-      } catch (error) {
-        console.error("خطا در ذخیره بازدید:", error);
-      }
-    }, [detailsNews.id]); // فقط وقتی id تغییر کند اجرا شود
-  
-
-
-
-
-
-
-
-
-
-
+      // ذخیره
+      localStorage.setItem("recentCarViews", JSON.stringify(updatedViews));
+    } catch (error) {
+      console.error("خطا در ذخیره بازدید:", error);
+    }
+  }, [detailsNews.id]); // فقط وقتی id تغییر کند اجرا شود
 
   const [activeKey, setActiveKey] = useState("1");
   const [isNavbarSticky, setIsNavbarSticky] = useState(false);
@@ -228,7 +213,7 @@ function NewsViewDetails({
       const offsetPosition = absoluteOffsetTop - navbarHeight;
 
       window.scrollTo({
-        top: offsetPosition ,
+        top: offsetPosition,
         behavior: "smooth",
       });
     }
@@ -251,7 +236,7 @@ function NewsViewDetails({
           },
         ]
       : []),
-       ...(relatedCars.length > 0
+    ...(relatedCars.length > 0
       ? [
           {
             key: "3",
@@ -267,7 +252,7 @@ function NewsViewDetails({
           },
         ]
       : []),
-   
+
     ...(relatedVideos.length > 0
       ? [
           {
@@ -289,6 +274,53 @@ function NewsViewDetails({
       label: "نظرات کاربران",
     },
   ];
+
+  const [popularNews, setPopularNews] = useState<Items[]>([]);
+  const [newNews, setNewNews] = useState<Items[]>([]);
+  const [banner, setBanner] = useState<Items[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSidebarData = async () => {
+      try {
+        setLoading(true);
+
+        // دریافت محبوب‌ترین اخبار
+        const popularData = await getItem({
+          TypeId: 5,
+          langCode: "fa",
+          OrderBy: 8,
+          PageIndex: 1,
+          PageSize: 5,
+        });
+
+        // دریافت جدیدترین اخبار
+        const newNewsData = await getItem({
+          TypeId: 5,
+          langCode: "fa",
+          PageIndex: 1,
+          PageSize: 5,
+        });
+
+        // دریافت بنرها
+        const bannerData = await getItem({
+          TypeId: 1051,
+          langCode: "fa",
+          FullData: true,
+        });
+
+        setPopularNews(popularData);
+        setNewNews(newNewsData);
+        setBanner(bannerData);
+      } catch (error) {
+        console.error("Error fetching sidebar data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSidebarData();
+  }, []);
 
   return (
     <article className="min-h-screen bg-gray-50 w-full">
@@ -355,7 +387,7 @@ function NewsViewDetails({
                   />
                 </div>
               )}
-               {/* بخش خودروهای مرتبط */}
+              {/* بخش خودروهای مرتبط */}
               {relatedCars.length > 0 && (
                 <div
                   id="relatedCars"
@@ -368,12 +400,14 @@ function NewsViewDetails({
 
               {/* بخش اخبار مرتبط */}
               {relatedNews.length > 0 && (
-                <div id="related" className="section-anchor" ref={relatedCarRef} >
+                <div
+                  id="related"
+                  className="section-anchor"
+                  ref={relatedCarRef}
+                >
                   <NewsRelatedSection relatedNews={relatedNews} />
                 </div>
               )}
-
-             
 
               {/* بخش ویدئوهای مرتبط */}
               {relatedVideos.length > 0 && (
@@ -408,108 +442,113 @@ function NewsViewDetails({
               ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
             `}
           >
-            <SidebarNewsView />
+            <SidebarNewsView
+              popularNews={popularNews}
+              newNews={newNews}
+              banner={banner}
+              loading={loading}
+            />
           </aside>
         </div>
-
+        <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor mt-8" ref={commentsRef}>
           <CommentsSection details={detailsNews} comments={comments} id={id} />
         </div>
       </div>
 
-    <style jsx global>{`
-  .navbar-tabs {
-    transition: all 0.3s ease;
-    z-index: 1000;
-  }
+      <style jsx global>{`
+        .navbar-tabs {
+          transition: all 0.3s ease;
+          z-index: 1000;
+        }
 
-  .navbar-tabs .ant-card-body {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
+        .navbar-tabs .ant-card-body {
+          padding: 0 !important;
+          margin: 0 !important;
+        }
 
-  .news-details-tabs .ant-tabs-nav {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
+        .news-details-tabs .ant-tabs-nav {
+          margin: 0 !important;
+          padding: 0 !important;
+        }
 
-  .news-details-tabs .ant-tabs-tab {
-    padding: 8px 16px !important;
-    font-weight: 600 !important;
-    color: #6b7280 !important;
-    transition: all 0.3s ease !important;
-    cursor: pointer !important;
-    height: 50px !important;
-    margin: 0 !important;
-  }
+        .news-details-tabs .ant-tabs-tab {
+          padding: 8px 16px !important;
+          font-weight: 600 !important;
+          color: #6b7280 !important;
+          transition: all 0.3s ease !important;
+          cursor: pointer !important;
+          height: 50px !important;
+          margin: 0 !important;
+        }
 
-  .news-details-tabs .ant-tabs-tab:hover {
-    color: #ce1a2a;
-  }
+        .news-details-tabs .ant-tabs-tab:hover {
+          color: #ce1a2a;
+        }
 
-  .news-details-tabs .ant-tabs-tab-active {
-    color: #fff !important;
-    background: #ce1a2a !important;
-  }
+        .news-details-tabs .ant-tabs-tab-active {
+          color: #fff !important;
+          background: #ce1a2a !important;
+        }
 
-  .news-details-tabs .ant-tabs-tab .ant-tabs-tab-btn {
-    color: #222 !important;
-  }
+        .news-details-tabs .ant-tabs-tab .ant-tabs-tab-btn {
+          color: #222 !important;
+        }
 
-  .news-details-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #fff !important;
-  }
+        .news-details-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+          color: #fff !important;
+        }
 
-  .news-details-tabs .ant-tabs-ink-bar {
-    background: #ce1a2a;
-  }
+        .news-details-tabs .ant-tabs-ink-bar {
+          background: #ce1a2a;
+        }
 
-  .section-anchor {
-    scroll-margin-top: 180px;
-  }
+        .section-anchor {
+          scroll-margin-top: 180px;
+        }
 
-  @keyframes slideDown {
-    from {
-      transform: translateY(-100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
+        @keyframes slideDown {
+          from {
+            transform: translateY(-100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
 
-  /* دسکتاپ */
-  @media (min-width: 1024px) {
-    .navbar-tabs[style*="position: sticky"] {
-      top: 60px !important;
-    }
-    .section-anchor {
-      scroll-margin-top: 120px;
-    }
-  }
+        /* دسکتاپ */
+        @media (min-width: 1024px) {
+          .navbar-tabs[style*="position: sticky"] {
+            top: 60px !important;
+          }
+          .section-anchor {
+            scroll-margin-top: 120px;
+          }
+        }
 
-  /* غیرفعال کردن sticky در موبایل */
-  @media (max-width: 1023px) {
-    .lg\\:sticky {
-      position: relative !important;
-      bottom: auto !important;
-      align-self: auto !important;
-    }
+        /* غیرفعال کردن sticky در موبایل */
+        @media (max-width: 1023px) {
+          .lg\\:sticky {
+            position: relative !important;
+            bottom: auto !important;
+            align-self: auto !important;
+          }
 
-    .navbar-tabs[style*="position: sticky"] {
-      position: sticky !important;
-      top: 115px !important;
-    }
+          .navbar-tabs[style*="position: sticky"] {
+            position: sticky !important;
+            top: 115px !important;
+          }
 
-    .news-details-tabs .ant-tabs-tab {
-      padding: 0px 10px !important;
-      font-size: 12px !important;
-      height: 40px !important;
-    }
-  }
-`}</style>
+          .news-details-tabs .ant-tabs-tab {
+            padding: 0px 10px !important;
+            font-size: 12px !important;
+            height: 40px !important;
+          }
+        }
+      `}</style>
     </article>
   );
 }

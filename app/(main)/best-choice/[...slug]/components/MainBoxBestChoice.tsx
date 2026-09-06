@@ -9,6 +9,7 @@ import DescBestChoice from "./DescBestChoice";
 import GalleryBestChoice from "./GalleryBestChoice";
 import HeroSectionBestChoice from "./HeroSectionBestChoice";
 import SidebarBestChoice from "./SidebarBestChoice";
+import MainBanner from "@/app/components/MainBanner";
 
 function MainBoxBestChoice({
   detailsBest,
@@ -301,6 +302,8 @@ function MainBoxBestChoice({
             />
           </aside>
         </div>
+
+         <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
 
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor px-2" ref={commentsRef}>

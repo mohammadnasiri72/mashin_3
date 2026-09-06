@@ -13,6 +13,7 @@ import { useCallback, useEffect, useRef, useState, useMemo } from "react";
 import { FaCalendar, FaEye, FaCar } from "react-icons/fa";
 import SearchBoxWhichCars from "./SearchBoxWhichCars";
 import SideBarWhichCars from "./SideBarWhichCars";
+import MainBanner from "@/app/components/MainBanner";
 
 const WhichCars = ({
   whichCars: initialWhichCars,
@@ -383,7 +384,7 @@ const WhichCars = ({
           </aside>
         </div>
       </div>
-
+<MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
       <style jsx global>{`
         .container {
           max-width: 1200px;

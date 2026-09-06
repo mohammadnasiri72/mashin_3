@@ -57,32 +57,30 @@ async function page({
     (e) => e.propertyKey === "p1042_relatedcars",
   )?.propertyValue;
 
-  const sourceLink = detailsCar.sourceLink;
-  const categoryId = String(detailsCar.categoryId);
-  const brandName = detailsCar.sourceName || "خودرو";
-  const specificName = detailsCar.title || "";
-  const [detailsCarcompetitor, carsModel, carsModel2] = await Promise.all([
-    competitorIds ? getItemByIds(competitorIds) : Promise.resolve([]),
-    sourceLink
-      ? getItem({
-          TypeId: 1042,
-          langCode: "fa",
-          CategoryIdArray: sourceLink,
-          PageIndex: 1,
-          PageSize: 5,
-        })
-      : Promise.resolve([]),
-    categoryId
-      ? getItem({
-          TypeId: 1042,
-          langCode: "fa",
-          CategoryIdArray: categoryId,
-          PageIndex: 1,
-          PageSize: 5,
-          FullData: true,
-        })
-      : Promise.resolve([]),
-  ]);
+  // const sourceLink = detailsCar.sourceLink;
+  // const categoryId = String(detailsCar.categoryId);
+  // const [ carsModel, carsModel2] = await Promise.all([
+   
+  //   sourceLink
+  //     ? getItem({
+  //         TypeId: 1042,
+  //         langCode: "fa",
+  //         CategoryIdArray: sourceLink,
+  //         PageIndex: 1,
+  //         PageSize: 5,
+  //       })
+  //     : Promise.resolve([]),
+  //   categoryId
+  //     ? getItem({
+  //         TypeId: 1042,
+  //         langCode: "fa",
+  //         CategoryIdArray: categoryId,
+  //         PageIndex: 1,
+  //         PageSize: 5,
+  //         FullData: true,
+  //       })
+  //     : Promise.resolve([]),
+  // ]);
 
   const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
 
@@ -110,54 +108,11 @@ async function page({
     ? await getItemByIds(idsCompares)
     : [];
 
-  const priceRanges: PriceRange[] = [
-    { id: "1m", label: "1 ماه" },
-    { id: "3m", label: "3 ماه" },
-    { id: "6m", label: "6 ماه" },
-    { id: "1y", label: "1 سال" },
-    { id: "all", label: "همه" },
-  ];
 
-  const priceDataByRange: Record<string, PricePoint[]> = {
-    "3m": [
-      { label: "بهمن", value: 1865000000 },
-      { label: "اسفند", value: 1900000000 },
-      { label: "فروردین", value: 1850000000 },
-      { label: "اردیبهشت", value: 1780000000 },
-      { label: "خرداد", value: 1720000000 },
-      { label: "تیر", value: 1800000000 },
-    ],
-    "1m": [
-      { label: "هفته 1", value: 1830000000 },
-      { label: "هفته 2", value: 1800000000 },
-      { label: "هفته 3", value: 1780000000 },
-      { label: "هفته 4", value: 1800000000 },
-    ],
-    "6m": [
-      { label: "دی", value: 1750000000 },
-      { label: "بهمن", value: 1865000000 },
-      { label: "اسفند", value: 1900000000 },
-      { label: "فروردین", value: 1850000000 },
-      { label: "اردیبهشت", value: 1780000000 },
-      { label: "خرداد", value: 1720000000 },
-    ],
-    "1y": [
-      { label: "تیر ۱۴۰۲", value: 1600000000 },
-      { label: "مهر ۱۴۰۲", value: 1700000000 },
-      { label: "دی ۱۴۰۲", value: 1750000000 },
-      { label: "بهمن ۱۴۰۲", value: 1865000000 },
-      { label: "اردیبهشت ۱۴۰۳", value: 1780000000 },
-      { label: "خرداد ۱۴۰۳", value: 1720000000 },
-    ],
-    all: [
-      { label: "۱۴۰۲", value: 1600000000 },
-      { label: "۱۴۰۳", value: 1865000000 },
-    ],
-  };
 
-  const hasBrandModels = carsModel && carsModel.length > 1;
-  const hasSpecificModels = carsModel2 && carsModel2.length > 1;
-  const isShowModelShowcase = hasBrandModels || hasSpecificModels;
+  // const hasBrandModels = carsModel && carsModel.length > 1;
+  // const hasSpecificModels = carsModel2 && carsModel2.length > 1;
+  // const isShowModelShowcase = hasBrandModels || hasSpecificModels;
 
    // ✅ فقط اگر pollData وجود داشت و مقدار معتبری داشت، aggregateRating رو اضافه کن
   let schemas = detailsCar?.seoInfo?.schemas || [];
@@ -194,7 +149,6 @@ async function page({
         isShowRelatedVideo={relatedVideo.length > 0}
         isShowRelatedCompare={relatedCompare.length > 0}
         isShowRelatedNews={relatedNews.length > 0}
-        isShowModelShowcase={isShowModelShowcase}
       />
 
       {/* هر بخش با id مخصوص برای اسکرول */}
@@ -226,25 +180,15 @@ async function page({
             title={detailsCar.title + detailsCar.sourceName}
           />
         </section>
-        {isShowModelShowcase && (
+        {(
           <section
             id="models"
             className="scroll-mt-20 bg-[#f4f4f4] rounded-2xl mt-5"
           >
             <ModelShowcase
-              brandModels={carsModel}
-              specificModels={carsModel2}
-              brandName={brandName}
-              specificName={specificName}
-              specificHref={
-                detailsCar.breadcrumb.find((e) => e.title === detailsCar.title)
-                  ?.href
-              }
-              brandHref={
-                detailsCar.breadcrumb.find(
-                  (e) => e.title === detailsCar.sourceName,
-                )?.href
-              }
+            detailsCar={detailsCar}
+             
+             
             />
           </section>
         )}
@@ -253,10 +197,7 @@ async function page({
           className="scroll-mt-20 bg-[#f4f4f4] rounded-2xl mt-5 "
         >
           <PriceAndComparison
-            ranges={priceRanges}
-            dataByRange={priceDataByRange}
-            defaultRangeId="3m"
-            detailsCarcompetitor={detailsCarcompetitor.slice(0, 4)}
+            competitorIds={competitorIds}
           />
         </section>
 

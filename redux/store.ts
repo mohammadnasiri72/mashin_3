@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import settingReducer from './slice/setting'
 import userReducer from './slice/user'
+import isModelCarReducer from './slice/isModelCar'
 import activeTabNewsReducer from './slice/activeTabNews'
 import redirectRegisterReducer from './slice/redirectRegister'
 
@@ -10,6 +11,7 @@ export const store = configureStore({
     setting: settingReducer,
     activeTabNews: activeTabNewsReducer,
     redirectRegister: redirectRegisterReducer,
+    isModelCar : isModelCarReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

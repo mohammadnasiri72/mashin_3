@@ -110,6 +110,7 @@ export default function HeroSection({
           }
           alt={`${detailsCar.sourceName} ${detailsCar.title}`}
           className="object-cover object-center w-full h-full bg-no-repeat"
+          fetchPriority="high"
         />
         {/* Gradient overlays for legibility */}
         <div className="absolute inset-0 bg-linear-to-l from-slate-950/30 via-slate-950/50 to-slate-950/80" />

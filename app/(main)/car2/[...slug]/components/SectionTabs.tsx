@@ -1,5 +1,6 @@
 "use client";
 
+import { RootState } from "@/redux/store";
 import { useEffect, useRef, useState } from "react";
 import { BiChevronRight } from "react-icons/bi";
 import {
@@ -13,18 +14,19 @@ import {
   FaVideo,
 } from "react-icons/fa";
 import { MdCompare } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 export default function SectionTabs({
   isShowRelatedVideo,
   isShowRelatedCompare,
   isShowRelatedNews,
-  isShowModelShowcase,
 }: {
   isShowRelatedVideo: boolean;
   isShowRelatedCompare: boolean;
   isShowRelatedNews: boolean;
-  isShowModelShowcase: boolean;
 }) {
+
+  const isShowModelShowcase = useSelector((state: RootState) => state.isModelCar.isModelCar);
   const tabs = [
     { id: "specifications", label: "مشخصات فنی", icon: FaCog },
     { id: "expert-review", label: "نقد کارشناسی", icon: FaSearch },
@@ -50,6 +52,9 @@ export default function SectionTabs({
   const tabsRef = useRef<HTMLDivElement>(null);
   const [isClient, setIsClient] = useState(false);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
+
+  console.log(active);
+  
 
   useEffect(() => {
     setIsClient(true);
@@ -103,7 +108,7 @@ export default function SectionTabs({
         currentTabsRef.removeEventListener("scroll", checkScroll);
       }
     };
-  }, [isClient]);
+  }, [isClient , isShowModelShowcase]);
 
   const handleClick = (id: string) => {
     setActive(id);

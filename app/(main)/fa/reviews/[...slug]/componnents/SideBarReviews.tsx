@@ -13,7 +13,8 @@ function SideBarReviews({
     <>
       <div className="space-y-6">
         {/* بنرهای سایدبار */}
-        <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
+         <SideBarBanner banner={banner.filter((e) => e.categoryId === 6506)} />
+          <SideBarBanner banner={banner.filter((e) => e.categoryId === 6415)} />
 
         {/* آمار بازار */}
         <MarketStats />

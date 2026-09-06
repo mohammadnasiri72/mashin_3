@@ -13,6 +13,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { FaCalendar, FaCar, FaEye } from "react-icons/fa";
 import SearchBoxBestChoice from "./SearchBoxBestChoice";
 import SideBarBestChoices from "./SideBarBestChoices";
+import MainBanner from "@/app/components/MainBanner";
 
 function MainBoxBestChoices({
   title,
@@ -370,7 +371,7 @@ function MainBoxBestChoices({
           </aside>
         </div>
       </div>
-
+ <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
       <style jsx global>{`
         .container {
           max-width: 1200px;

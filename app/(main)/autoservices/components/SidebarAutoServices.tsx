@@ -15,8 +15,8 @@ function SidebarAutoServices({
   return (
     <>
       <div className="space-y-6">
-        {/* بنرهای سایدبار */}
-        <SideBarBanner banner={banner.filter((e) => e.id === 2570)} />
+        {/* بنر جستجوگر */}
+        <SideBarBanner banner={banner.filter((e) => e.categoryId === 6506)} />
         {/* جدیدترین خودروها */}
         <SideBarListItems
           itemsList={lastCars}
@@ -25,6 +25,9 @@ function SidebarAutoServices({
         />
         {/* جدیدترین اخبار */}
         <SideBarListItems itemsList={lastNews} title={"جدیدترین اخبار خودرو"} />
+
+        {/* سایر بنرها  */}
+        <SideBarBanner banner={banner.filter((e) => e.categoryId === 6415)} />
 
         {/* آمار بازار */}
         <MarketStats />

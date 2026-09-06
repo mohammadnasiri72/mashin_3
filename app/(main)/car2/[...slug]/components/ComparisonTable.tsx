@@ -1,6 +1,7 @@
 // components/ComparisonTable.tsx
 "use client";
 
+import { getItemByIds } from "@/services/Item/ItemByIds";
 import { mainDomain } from "@/utils/mainDomain";
 import {
   Avatar,
@@ -15,17 +16,16 @@ import {
   TableHead,
   TableRow,
   Typography,
-  useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BiChevronLeft } from "react-icons/bi";
 import { FaCar } from "react-icons/fa";
 
 interface ComparisonTableProps {
-  competitors: ItemsId[];
+  competitorIds: string | undefined;
 }
 
 const StyledTableHead = styled(TableHead)(({ theme }) => ({
@@ -60,7 +60,26 @@ const CarCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-export default function ComparisonTable({ competitors }: ComparisonTableProps) {
+export default function ComparisonTable({
+  competitorIds,
+}: ComparisonTableProps) {
+  const [competitors, setCompetitors] = useState<ItemsId[]>([]);
+  const isFetched = useRef(false);
+  useEffect(() => {
+    if (isFetched.current || !competitorIds) return;
+    isFetched.current = true;
+
+    const fetchData = async () => {
+      try {
+        const response = await getItemByIds(competitorIds);
+        setCompetitors(response.slice(0, 4));
+      } catch (error) {
+        console.error("❌ Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
   const theme = useTheme();
   const [isMobile, setIsMobile] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -69,7 +88,9 @@ export default function ComparisonTable({ competitors }: ComparisonTableProps) {
   // تشخیص موبایل در کلاینت
   useEffect(() => {
     setIsClient(true);
-    const mediaQuery = window.matchMedia(theme.breakpoints.down("md").replace("@media ", ""));
+    const mediaQuery = window.matchMedia(
+      theme.breakpoints.down("md").replace("@media ", ""),
+    );
     setIsMobile(mediaQuery.matches);
 
     const handler = (e: MediaQueryListEvent) => {
@@ -83,8 +104,14 @@ export default function ComparisonTable({ competitors }: ComparisonTableProps) {
   // اگر کامپوننت در سمت سرور هست یا هنوز هیدریت نشده، یک placeholder نمایش بده
   if (!isClient) {
     return (
-      <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm h-full min-h-[400px]">
-        <Box display="flex" alignItems="center" justifyContent="center" height="100%" minHeight="300px">
+      <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm h-full min-h-100">
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          height="100%"
+          minHeight="300px"
+        >
           <Typography color="text.secondary">در حال بارگذاری...</Typography>
         </Box>
       </div>

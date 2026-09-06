@@ -1,10 +1,11 @@
 "use client";
 
 import CustomPagination from "@/app/components/CustomPagination";
+import MainBanner from "@/app/components/MainBanner";
 import { htmlToPlainText, toPersianNumbers } from "@/utils/func";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaArrowLeft, FaTag } from "react-icons/fa";
 import SearchBoxDic from "./SearchBoxDic";
 import SideBarTechnicalWords from "./SideBarTechnicalWords";
@@ -15,14 +16,14 @@ function CardDic({
   tabConfig,
   dic: initialDic,
   banner,
-  curentPage
+  curentPage,
 }: {
   title: string;
   summary: string;
   tabConfig: { key: number; href: string; label: string }[];
   dic: Items[];
   banner: Items[];
-  curentPage:number
+  curentPage: number;
 }) {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [isMainLonger, setIsMainLonger] = useState(true);
@@ -392,7 +393,7 @@ function CardDic({
           </div>
         </div>
       </div>
-
+      <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
       <style jsx global>{`
         .container {
           max-width: 1200px;

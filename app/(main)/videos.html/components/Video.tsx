@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import SidebarVideo from "./SidebarVideo";
+import MainBanner from "@/app/components/MainBanner";
+import { useEffect, useRef, useState } from "react";
 import BoxVideo from "./BoxVideo";
+import SidebarVideo from "./SidebarVideo";
 
 function Video({
   popularVideos,
@@ -44,34 +45,33 @@ function Video({
   return (
     <>
       <div className="min-h-screen bg-[#f4f4f4] py-8">
-      <div className="mx-auto px-4">
-
-      <div className="flex flex-col lg:flex-row gap-6 relative items-start">
-        {/* محتوای اصلی */}
-        <div
-          ref={mainBoxRef}
-          className={`
+        <div className="mx-auto px-4">
+          <div className="flex flex-col lg:flex-row gap-6 relative items-start">
+            {/* محتوای اصلی */}
+            <div
+              ref={mainBoxRef}
+              className={`
             lg:w-3/4 w-full transition-all duration-300 
             ${!isMainLonger ? "lg:sticky lg:top-20 lg:self-start" : ""}
           `}
-        >
-          <BoxVideo videos={videos} titleCat={titleCat} />
-        </div>
+            >
+              <BoxVideo videos={videos} titleCat={titleCat} />
+            </div>
 
-        {/* سایدبار */}
-        <aside
-          ref={sidebarRef}
-          className={`
+            {/* سایدبار */}
+            <aside
+              ref={sidebarRef}
+              className={`
             lg:w-1/4 w-full transition-all duration-300
             ${isMainLonger ? "lg:sticky lg:top-20 lg:self-start" : ""}
           `}
-        >
-          <SidebarVideo popularVideos={popularVideos} banner={banner} />
-        </aside>
+            >
+              <SidebarVideo popularVideos={popularVideos} banner={banner} />
+            </aside>
+          </div>
+        </div>
       </div>
-      </div>
-      </div>
-
+      <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
       <style jsx global>{`
         .container {
           max-width: 1200px;

@@ -25,7 +25,14 @@ function MiniLineChart({ data }: { data: PricePoint[] }) {
 
   const { points, areaPath, linePath, min, max, yTicks } = useMemo(() => {
     if (data.length === 0) {
-      return { points: [], areaPath: "", linePath: "", min: 0, max: 0, yTicks: [] };
+      return {
+        points: [],
+        areaPath: "",
+        linePath: "",
+        min: 0,
+        max: 0,
+        yTicks: [],
+      };
     }
 
     const values = data.map((d) => d.value);
@@ -48,9 +55,7 @@ function MiniLineChart({ data }: { data: PricePoint[] }) {
     const pts = data.map((d, i) => {
       const x = padding.left + i * step;
       const y =
-        padding.top +
-        chartHeight -
-        ((d.value - minVal) / range) * chartHeight;
+        padding.top + chartHeight - ((d.value - minVal) / range) * chartHeight;
       return { x, y, label: d.label };
     });
 
@@ -137,7 +142,14 @@ function MiniLineChart({ data }: { data: PricePoint[] }) {
         {/* Points and labels */}
         {points.map((p, i) => (
           <g key={i}>
-            <circle cx={p.x} cy={p.y} r="5" fill="#dc2626" stroke="#fff" strokeWidth="2.5" />
+            <circle
+              cx={p.x}
+              cy={p.y}
+              r="5"
+              fill="#dc2626"
+              stroke="#fff"
+              strokeWidth="2.5"
+            />
             {/* برچسب محور X */}
             <text
               x={p.x}
@@ -179,17 +191,54 @@ function MiniLineChart({ data }: { data: PricePoint[] }) {
   );
 }
 
-interface PriceChartProps {
-  ranges: PriceRange[];
-  dataByRange: Record<string, PricePoint[]>;
-  defaultRangeId?: string;
-}
+export default function PriceChart() {
+  const defaultRangeId = "3m";
 
-export default function PriceChart({
-  ranges,
-  dataByRange,
-  defaultRangeId,
-}: PriceChartProps) {
+  const ranges: PriceRange[] = [
+    { id: "1m", label: "1 ماه" },
+    { id: "3m", label: "3 ماه" },
+    { id: "6m", label: "6 ماه" },
+    { id: "1y", label: "1 سال" },
+    { id: "all", label: "همه" },
+  ];
+
+  const dataByRange: Record<string, PricePoint[]> = {
+    "3m": [
+      { label: "بهمن", value: 1865000000 },
+      { label: "اسفند", value: 1900000000 },
+      { label: "فروردین", value: 1850000000 },
+      { label: "اردیبهشت", value: 1780000000 },
+      { label: "خرداد", value: 1720000000 },
+      { label: "تیر", value: 1800000000 },
+    ],
+    "1m": [
+      { label: "هفته 1", value: 1830000000 },
+      { label: "هفته 2", value: 1800000000 },
+      { label: "هفته 3", value: 1780000000 },
+      { label: "هفته 4", value: 1800000000 },
+    ],
+    "6m": [
+      { label: "دی", value: 1750000000 },
+      { label: "بهمن", value: 1865000000 },
+      { label: "اسفند", value: 1900000000 },
+      { label: "فروردین", value: 1850000000 },
+      { label: "اردیبهشت", value: 1780000000 },
+      { label: "خرداد", value: 1720000000 },
+    ],
+    "1y": [
+      { label: "تیر ۱۴۰۲", value: 1600000000 },
+      { label: "مهر ۱۴۰۲", value: 1700000000 },
+      { label: "دی ۱۴۰۲", value: 1750000000 },
+      { label: "بهمن ۱۴۰۲", value: 1865000000 },
+      { label: "اردیبهشت ۱۴۰۳", value: 1780000000 },
+      { label: "خرداد ۱۴۰۳", value: 1720000000 },
+    ],
+    all: [
+      { label: "۱۴۰۲", value: 1600000000 },
+      { label: "۱۴۰۳", value: 1865000000 },
+    ],
+  };
+
   const [activeRange, setActiveRange] = useState(
     defaultRangeId ?? ranges[0]?.id,
   );
@@ -208,14 +257,12 @@ export default function PriceChart({
         {/* <h2 className="text-base font-extrabold text-slate-900">
           نمودار قیمت
         </h2> */}
-         <h2 className="text-xl font-bold text-gray-900">
-            <span className="pl-1">نمودار</span>
-            <strong className="text-red-700">
-             قیمت
-            </strong>
-          </h2>
+        <h2 className="text-xl font-bold text-gray-900">
+          <span className="pl-1">نمودار</span>
+          <strong className="text-red-700">قیمت</strong>
+        </h2>
         <button
-        //   onClick={onViewDetails}
+          //   onClick={onViewDetails}
           className="flex items-center gap-0.5 text-sm font-semibold text-red-600 hover:text-red-700 cursor-pointer"
         >
           مشاهده جزئیات...
@@ -245,31 +292,25 @@ export default function PriceChart({
 
       <div className="mt-4 grid sm:grid-cols-3 grid-cols-1 gap-3 border-t border-slate-100 pt-4 text-center">
         <div className="flex flex-col gap-0.5">
-          <span className="text-xs text-slate-400">کمترین قیمت</span>
+          <span className="text-xs text-slate-700">کمترین قیمت</span>
           <span className="text-sm font-bold text-slate-900">
             {formatToman(min)}{" "}
           </span>
-            <span className="text-xs font-normal text-slate-400">
-              تومان
-            </span>
+          <span className="text-xs font-normal text-slate-700">تومان</span>
         </div>
         <div className="flex flex-col gap-0.5 rounded-lg bg-red-50 py-1">
-          <span className="text-xs text-red-500">میانگین قیمت</span>
-          <span className="text-sm font-bold text-red-600">
+          <span className="text-xs text-red-600">میانگین قیمت</span>
+          <span className="text-sm font-bold text-red-800">
             {formatToman(avg)}{" "}
           </span>
-            <span className="text-xs font-normal text-red-400">
-              تومان
-            </span>
+          <span className="text-xs font-normal text-red-600">تومان</span>
         </div>
         <div className="flex flex-col gap-0.5">
-          <span className="text-xs text-slate-400">بیشترین قیمت</span>
+          <span className="text-xs text-slate-700">بیشترین قیمت</span>
           <span className="text-sm font-bold text-slate-900">
             {formatToman(max)}{" "}
           </span>
-            <span className="text-xs font-normal text-slate-400">
-              تومان
-            </span>
+          <span className="text-xs font-normal text-slate-700">تومان</span>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import SideBarKeyWords from "./SideBarKeyWords";
+import MainBanner from "@/app/components/MainBanner";
 
 function MainPageTags({
   term,
@@ -129,6 +130,7 @@ function MainPageTags({
           </aside>
         </div>
       </div>
+      <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
     </div>
   );
 }

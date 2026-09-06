@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import DetailsDic from "./DetailsDic";
 import SideBarDic from "./SideBarDic";
+import MainBanner from "@/app/components/MainBanner";
 
 function BoxDic({
   detailsDic,
@@ -62,7 +63,7 @@ function BoxDic({
           <SideBarDic banner={banner} />
         </aside>
       </div>
-
+<MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
       <style jsx global>{`
         .container {
           max-width: 1200px;

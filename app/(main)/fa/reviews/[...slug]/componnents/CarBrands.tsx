@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import SideBarReviews from "./SideBarReviews";
+import MainBanner from "@/app/components/MainBanner";
 
 const CarBrands = ({
   carBrands,
@@ -122,7 +123,7 @@ const CarBrands = ({
           </aside>
         </div>
       </div>
-
+ <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
       <style jsx global>{`
         .container {
           max-width: 1200px;

@@ -10,6 +10,7 @@ import RelatedCompare from "./RelatedCompare";
 import RelatedVideosCompare from "./RelatedVideosCompare";
 import RelatedVoicesCompare from "./RelatedVoicesCompare";
 import SideBarCompareCars from "./SideBarCompareCars";
+import MainBanner from "@/app/components/MainBanner";
 
 function CompareCars({
   whichcars,
@@ -315,7 +316,7 @@ function CompareCars({
             />
           </aside>
         </div>
-
+<MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
         {/* بخش نظرات */}
         <div id="comments" className="section-anchor mt-5" ref={commentsRef}>
           {whichcars && (

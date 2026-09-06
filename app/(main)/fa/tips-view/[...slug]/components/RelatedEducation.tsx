@@ -15,7 +15,7 @@ function RelatedEducation({
   }
 
   return (
-    <section className="mb-12 max-w-7xl mx-auto px-4 md:px-6">
+    <section className=" max-w-7xl mx-auto px-4 md:px-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
