@@ -3,7 +3,7 @@ import Link from "next/link";
 
 function MainBanner({ banner }: { banner: Items[] }) {
   return (
-    <>
+    <div className="">
       {banner.length > 0 &&
         banner.map((ban) => (
           <div className="w-full" key={ban.id}>
@@ -16,7 +16,7 @@ function MainBanner({ banner }: { banner: Items[] }) {
             </Link>
           </div>
         ))}
-    </>
+    </div>
   );
 }
 

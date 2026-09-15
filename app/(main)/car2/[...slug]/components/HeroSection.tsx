@@ -7,6 +7,7 @@ import { postLiked } from "@/services/UserActivity/postLiked";
 import { createpublishCode, Toast } from "@/utils/func";
 import { mainDomain } from "@/utils/mainDomain";
 import { message } from "antd";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { FaStar } from "react-icons/fa";
@@ -100,6 +101,7 @@ export default function HeroSection({
     }
   };
 
+  
   return (
     <section className="relative w-full overflow-hidden" dir="rtl">
       {/* Background image - full width */}
@@ -109,8 +111,17 @@ export default function HeroSection({
             bannerSrc ? mainDomain + bannerSrc : mainDomain + detailsCar.image
           }
           alt={`${detailsCar.sourceName} ${detailsCar.title}`}
+          sizes="100vw"
           className="object-cover object-center w-full h-full bg-no-repeat"
           fetchPriority="high"
+          loading="eager"
+          decoding="async"
+          srcSet={`
+    ${bannerSrc ? mainDomain + bannerSrc : mainDomain + detailsCar.image}?w=400&q=75 400w,
+    ${bannerSrc ? mainDomain + bannerSrc : mainDomain + detailsCar.image}?w=768&q=75 768w,
+    ${bannerSrc ? mainDomain + bannerSrc : mainDomain + detailsCar.image}?w=1200&q=75 1200w,
+    ${bannerSrc ? mainDomain + bannerSrc : mainDomain + detailsCar.image}?w=1920&q=75 1920w
+  `}
         />
         {/* Gradient overlays for legibility */}
         <div className="absolute inset-0 bg-linear-to-l from-slate-950/30 via-slate-950/50 to-slate-950/80" />
@@ -157,9 +168,11 @@ export default function HeroSection({
                     className="flex items-center gap-2 border-t border-white/10 py-2"
                   >
                     <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 text-slate-200">
-                      <img
+                      <Image
                         src={"/images/icons/speedometer-large.png"}
                         alt={spec.title}
+                        width={40}
+                        height={40}
                         className="w-10"
                       />
                     </span>
@@ -342,9 +355,11 @@ export default function HeroSection({
                     className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/5 shrink-0"
                   >
                     <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 shrink-0">
-                      <img
+                      <Image
                         src="/images/icons/speedometer-large.png"
                         alt={spec.title}
+                        width={32}
+                        height={32}
                         className="w-8"
                       />
                     </div>

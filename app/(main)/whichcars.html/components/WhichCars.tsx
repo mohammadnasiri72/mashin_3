@@ -198,11 +198,11 @@ const WhichCars = ({
   const totalPages = Math.ceil(totalItems / 15);
 
   return (
-    <div className="min-h-screen bg-[#f4f4f4] py-8">
-      <div className="mx-auto px-4">
+    <div className="min-h-screen bg-[#f4f4f4] pt-2">
+      <div className="mx-auto px-2">
        
 
-        <div className="flex flex-col lg:flex-row gap-6 relative items-start">
+        <div className="flex flex-col lg:flex-row gap-2 relative items-start">
           {/* محتوای اصلی - sticky از بالا */}
           <div className="lg:w-3/4 w-full lg:sticky lg:top-20 lg:self-start">
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">

@@ -2,6 +2,7 @@
 "use client";
 
 import { mainDomain } from "@/utils/mainDomain";
+import Image from "next/image";
 import Link from "next/link";
 import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -67,7 +68,6 @@ export default function ModelShowcase({
         ]);        
         setBrandModels(carsModel)
         setSpecificModels(carsModel2)
-        console.log(carsModel);
         
         if ((carsModel&&carsModel.length>1)  || (carsModel2&&carsModel2.length>1)) {
           dispatch(setIsModelCar(true))
@@ -141,8 +141,16 @@ export default function ModelShowcase({
                           <img
                             src={mainDomain + model.image}
                             alt={`${model.sourceName} ${model.title}`}
+                            sizes={hasBrandModels && hasSpecificModels ? "(max-width: 640px) 46vw, (max-width: 768px) 30vw, (max-width: 1024px) 23vw, 15vw" : "(max-width: 640px) 46vw, (max-width: 768px) 15vw, (max-width: 1024px) 15vw, 8vw"}
                             className="object-contain group-hover:scale-105 h-full transition-transform duration-300"
-                            loading="lazy"
+                          loading="lazy"
+                          decoding="async"
+                            srcSet={`
+    ${mainDomain + model.image}?w=200&q=75 200w,
+    ${mainDomain + model.image}?w=400&q=75 400w,
+    ${mainDomain + model.image}?w=600&q=75 600w,
+    ${mainDomain + model.image}?w=800&q=75 800w
+  `}
                           />
                         </div>
                         <div className="flex flex-col gap-1 p-3">
@@ -235,8 +243,16 @@ export default function ModelShowcase({
                           <img
                             src={mainDomain + model.image}
                             alt={`${model.sourceName} ${model.title}`}
+                            sizes={hasBrandModels && hasSpecificModels ? "(max-width: 640px) 46vw, (max-width: 768px) 30vw, (max-width: 1024px) 23vw, 15vw" : "(max-width: 640px) 46vw, (max-width: 768px) 15vw, (max-width: 1024px) 15vw, 8vw"}
                             className="object-contain group-hover:scale-105 h-full transition-transform duration-300"
-                            loading="lazy"
+                          loading="lazy"
+                          decoding="async"
+                            srcSet={`
+    ${mainDomain + model.image}?w=200&q=75 200w,
+    ${mainDomain + model.image}?w=400&q=75 400w,
+    ${mainDomain + model.image}?w=600&q=75 600w,
+    ${mainDomain + model.image}?w=800&q=75 800w
+  `}
                           />
                         </div>
                         <div className="flex flex-col gap-1 p-3">

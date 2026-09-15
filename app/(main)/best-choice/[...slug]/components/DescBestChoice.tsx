@@ -1,6 +1,6 @@
 "use client";
 
-import { createMarkup } from "@/utils/func";
+import { createMarkup, toPersianNumbers } from "@/utils/func";
 import { mainDomain } from "@/utils/mainDomain";
 import { Fancybox } from "@fancyapps/ui";
 import { useEffect } from "react";
@@ -54,9 +54,9 @@ const DescBestChoice = ({
     };
   }, []);
   return (
-    <section className="pb-8! bg-gray-50">
+    <section className="bg-gray-50">
       <div className="mx-auto">
-        <div className="bg-white rounded-xl shadow-sm p-8">
+        <div className="bg-white rounded-xl shadow-sm lg:p-6 p-2">
           <div className="">
             {/* News Summary */}
             {detailsBest.summary && (
@@ -77,7 +77,7 @@ const DescBestChoice = ({
               aria-label={detailsBest.title}
             >
               <img
-                className="float-start! w-96 pl-5"
+                className="md:float-start! md:w-96 w-full md:pl-5"
                 src={mainDomain + detailsBest.image}
                 alt={detailsBest.title}
               />
@@ -111,7 +111,7 @@ const DescBestChoice = ({
                 <div className="flex items-center gap-1 ">
                   <FaEye className="text-[#666] text-xs" />
                   <span className="font-bold text-[#666] text-xs">
-                    {detailsBest.visit}
+                    {toPersianNumbers(detailsBest.visit)}
                   </span>
                 </div>
                 <div className="flex items-center gap-1">

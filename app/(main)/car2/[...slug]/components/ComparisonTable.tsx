@@ -52,7 +52,6 @@ const CarCard = styled(Card)(({ theme }) => ({
   width: "100%",
   "&.active": {
     borderColor: theme.palette.error.main,
-    backgroundColor: theme.palette.error.light + "20",
   },
   "&:hover": {
     transform: "translateY(-2px)",
@@ -218,7 +217,10 @@ export default function ComparisonTable({
                       borderRadius: "8px",
                       objectFit: "contain",
                     }}
-                    imgProps={{ style: { objectFit: "contain" } }}
+                    imgProps={{
+                      style: { objectFit: "contain" },
+                      loading: "lazy",
+                    }}
                     className="group-hover:scale-105 duration-300"
                   />
                 </Box>
@@ -334,7 +336,7 @@ export default function ComparisonTable({
                 onClick={() => handleCarSelect(index)}
               >
                 <CardContent sx={{ p: 1.5, textAlign: "center" }}>
-                  <Avatar
+                  {/* <Avatar
                     variant="rounded"
                     src={mainDomain + car.image}
                     alt={car.title}
@@ -345,8 +347,28 @@ export default function ComparisonTable({
                       mb: 0.5,
                       borderRadius: "8px",
                     }}
-                    imgProps={{ style: { objectFit: "contain" } }}
-                  />
+                    imgProps={{
+                      style: { objectFit: "contain" },
+                      loading: "lazy",
+                    }}
+                  /> */}
+                  <div 
+  className="relative rounded-lg overflow-hidden shrink-0 group-hover:scale-105 duration-300"
+  style={{ 
+    height: 60,
+  }}
+>
+  <img
+    src={mainDomain + car.image}
+    alt={`${car.sourceName} ${car.title}`}
+    loading="lazy"
+    decoding="async"
+    sizes="80px"
+    className="w-full h-full object-contain"
+    style={{ objectFit: 'contain' }}
+   
+  />
+</div>
                   <Typography
                     variant="caption"
                     fontWeight="bold"

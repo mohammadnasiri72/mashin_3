@@ -113,7 +113,7 @@ function ComparisonTable({ car }: { car: ItemsId }) {
   return (
     <div className="w-full">
       <Card
-        className="shadow-xl border-2 border-red-200! hover:shadow-2xl transition-all duration-300 h-full"
+        className="shadow-sm hover:shadow-md transition-all duration-300 h-full"
         cover={
           <div className="relative p-6 bg-white">
             {/* تصویر با امکان کلیک */}

@@ -39,40 +39,39 @@ const NewsGallerySection = ({
   }, []);
 
   return (
-    <section className=" bg-gray-50">
-      <div className="mx-auto pr-4 lg:pl-2 pl-4">
-        <div className="bg-white rounded-xl shadow-sm px-8 pb-8">
-          {/* <h3 className="py-4">تصاویر خبر {detailsNews.title}</h3> */}
-          <h3 className="dt_title text-xl font-bold text-gray-900 py-4">
-            <strong className="text-[#ce1a2a]!">تصاویر </strong>
-            خبر {detailsNews.title}
-          </h3>
-          {Attachment.length > 0 && (
-            <div className="space-y-4 mt-3">
-              <div className="flex flex-wrap items-center">
-                {Attachment.map((image) => (
-                  <div key={image.id} className="lg:w-1/5 sm:w-1/4 w-1/2 p-1">
-                    <div className="inn_gl_item border-2 border-transparent rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:border-red-400">
-                      <a
-                        href={mainDomain + image.fileUrl}
-                        data-fancybox="news-gallery"
-                        data-caption={image.title || detailsNews.title}
-                        aria-label={image.title || detailsNews.title}
-                      >
-                        <img
-                          src={mainDomain + image.fileUrl}
-                          alt={image.title || detailsNews.title}
-                          className="w-full h-32 object-cover"
-                        />
-                      </a>
-                    </div>
-                  </div>
-                ))}
+    <section className="sm:px-5 px-2 py-5 bg-white rounded-xl shadow-sm">
+      {/* <h3 className="dt_title text-xl font-bold text-gray-900">
+        <strong className="text-[#ce1a2a]!">تصاویر </strong>
+        خبر {detailsNews.title}
+      </h3> */}
+       <h3 className="dt_title text-xl font-bold text-gray-900 mb-5!">
+        <strong className="text-[#ce1a2a]!">گالری </strong>
+        تصاویر
+      </h3>
+      {Attachment.length > 0 && (
+        <div className="space-y-4 mt-2">
+          <div className="flex flex-wrap items-center">
+            {Attachment.map((image) => (
+              <div key={image.id} className="lg:w-1/5 sm:w-1/4 w-1/2 p-1">
+                <div className="inn_gl_item border-2 h-32 border-transparent rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover:border-red-400">
+                  <a
+                    href={mainDomain + image.fileUrl}
+                    data-fancybox="news-gallery"
+                    data-caption={image.title || detailsNews.title}
+                    aria-label={image.title || detailsNews.title}
+                  >
+                    <img
+                      src={mainDomain + image.fileUrl}
+                      alt={image.title || detailsNews.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </a>
+                </div>
               </div>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       <style jsx global>{`
         .news-gallery-thumbs .swiper-slide {

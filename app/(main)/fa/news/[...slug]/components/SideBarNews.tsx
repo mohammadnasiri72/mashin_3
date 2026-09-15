@@ -13,7 +13,7 @@ function SideBarNews({
 }) {
   return (
     <>
-      <div className="space-y-6">
+      <div className="space-y-2">
         {/* بنرهای سایدبار */}
         <SideBarBanner banner={banner.filter((e) => e.categoryId === 6506)} />
         {/*اخبار فروش ویژه*/}

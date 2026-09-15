@@ -76,8 +76,7 @@ const Footer = ({
                       src={mainDomain + logoSrc}
                       alt={logoTitle}
                       className="max-w-32"
-                      loading="eager"
-                      fetchPriority="high"
+                      loading="lazy"
                     />
                   </Link>
                 </div>

@@ -1,15 +1,14 @@
 "use client";
 
 import CommentsSection from "@/app/components/CommentsSection";
-import type { TabsProps } from "antd";
-import { Card, Tabs } from "antd";
-import { useEffect, useRef, useState } from "react";
+import MainBanner from "@/app/components/MainBanner";
+import SectionTabs from "@/app/components/SectionTabs";
+import { useEffect, useState } from "react";
 import CompetitorsBestChoice from "./CompetitorsBestChoice";
 import DescBestChoice from "./DescBestChoice";
 import GalleryBestChoice from "./GalleryBestChoice";
 import HeroSectionBestChoice from "./HeroSectionBestChoice";
 import SidebarBestChoice from "./SidebarBestChoice";
-import MainBanner from "@/app/components/MainBanner";
 
 function MainBoxBestChoice({
   detailsBest,
@@ -36,35 +35,22 @@ function MainBoxBestChoice({
     (e) => e.propertyKey === "p1043_carname",
   )?.propertyValue;
 
-  const [activeKey, setActiveKey] = useState("1");
-  const [isNavbarSticky, setIsNavbarSticky] = useState(false);
   const [isMainLonger, setIsMainLonger] = useState(true);
+  const [sidebarHeight, setSidebarHeight] = useState(0);
 
-  const navbarRef = useRef<HTMLDivElement>(null);
-  const mainBoxRef = useRef<HTMLDivElement>(null);
-  const sidebarRef = useRef<HTMLDivElement>(null);
-
-  // رفرنس‌های مربوط به هر بخش
-  const commentsRef = useRef<HTMLDivElement>(null);
-  const descRef = useRef<HTMLDivElement>(null);
-  const galleryRef = useRef<HTMLDivElement>(null);
-  const competitorsRef = useRef<HTMLDivElement>(null);
-
-  // مقایسه ارتفاع باکس‌ها
+  // مقایسه ارتفاع محتوا و سایدبار + گرفتن ارتفاع سایدبار
   useEffect(() => {
     const checkHeights = () => {
-      if (mainBoxRef.current && sidebarRef.current) {
-        const mainHeight = mainBoxRef.current.offsetHeight;
-        const sidebarHeight = sidebarRef.current.offsetHeight;
-        setIsMainLonger(mainHeight > sidebarHeight);
+      const mainEl = document.getElementById("best-main-box");
+      const sidebarEl = document.getElementById("best-sidebar-box");
+      if (mainEl && sidebarEl) {
+        setIsMainLonger(mainEl.offsetHeight > sidebarEl.offsetHeight);
+        setSidebarHeight(sidebarEl.offsetHeight);
       }
     };
 
     checkHeights();
-
-    // اگه محتوا از API میاد، با تاخیر دوباره چک کن
     const timer = setTimeout(checkHeights, 500);
-
     window.addEventListener("resize", checkHeights);
 
     return () => {
@@ -73,139 +59,18 @@ function MainBoxBestChoice({
     };
   }, [detailsBest, Attachment, competitorsCar]);
 
-  // هندل کردن اسکرول و sticky navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      if (navbarRef.current) {
-        const navbarTop = navbarRef.current.offsetTop;
-        // فقط برای تغییر استایل، نه برای position
-        setIsNavbarSticky(window.scrollY > navbarTop);
-      }
-
-      const sections = [
-        { key: "1", ref: descRef },
-        { key: "2", ref: galleryRef },
-        { key: "3", ref: competitorsRef },
-        { key: "4", ref: commentsRef },
-      ];
-
-      let currentActiveKey = activeKey;
-
-      for (let i = 0; i < sections.length; i++) {
-        const section = sections[i];
-        if (section.ref.current) {
-          const rect = section.ref.current.getBoundingClientRect();
-          const sectionTop = rect.top;
-          const sectionBottom = rect.bottom;
-
-          if (sectionTop <= 200 && sectionBottom >= 200) {
-            currentActiveKey = section.key;
-            break;
-          }
-
-          if (i < sections.length - 1) {
-            const nextSection = sections[i + 1];
-            if (nextSection.ref.current) {
-              const nextRect = nextSection.ref.current.getBoundingClientRect();
-              if (sectionBottom < 200 && nextRect.top > 200) {
-                currentActiveKey = section.key;
-                break;
-              }
-            }
-          }
-        }
-      }
-
-      if (currentActiveKey !== activeKey) {
-        setActiveKey(currentActiveKey);
-      }
-    };
-
-    let ticking = false;
-    const throttledScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", throttledScroll, { passive: true });
-    handleScroll();
-
-    return () => window.removeEventListener("scroll", throttledScroll);
-  }, [activeKey]);
-
-  // هندل کلیک روی تب - اسکرول به بخش مربوطه
-  const handleTabClick = (key: string) => {
-    const sectionRefs: {
-      [key: string]: React.RefObject<HTMLDivElement | null>;
-    } = {
-      "1": descRef,
-      "2": galleryRef,
-      "3": competitorsRef,
-      "4": commentsRef,
-    };
-
-    const targetRef = sectionRefs[key];
-    if (targetRef?.current) {
-      const getAbsoluteOffsetTop = (element: HTMLElement): number => {
-        let offsetTop = 0;
-        let currentElement: HTMLElement | null = element;
-        while (currentElement) {
-          offsetTop += currentElement.offsetTop;
-          currentElement = currentElement.offsetParent as HTMLElement;
-        }
-        return offsetTop;
-      };
-
-      const navbarHeight = isNavbarSticky
-        ? (navbarRef.current?.offsetHeight || 0) + 20
-        : 100;
-      const absoluteOffsetTop = getAbsoluteOffsetTop(targetRef.current);
-      const offsetPosition = absoluteOffsetTop - navbarHeight;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-    }
-  };
-
   const labelR: string = title ? `رقبای ${title}` : "رقبا";
 
-  const items: TabsProps["items"] = [
-    ...(detailsBest
-      ? [
-          {
-            key: "1",
-            label: "محتوای اصلی ",
-          },
-        ]
-      : []),
+  // لیست تب‌ها - id هر تب دقیقاً همون id بخش توی JSX هست
+  const tabs = [
+    ...(detailsBest ? [{ id: "desc", label: "محتوای اصلی" }] : []),
     ...(Attachment.length > 0
-      ? [
-          {
-            key: "2",
-            label: "گالری تصاویر",
-          },
-        ]
+      ? [{ id: "gallery", label: "گالری تصاویر" }]
       : []),
     ...(competitorsCar.length > 0
-      ? [
-          {
-            key: "3",
-            label: `${labelR}`,
-          },
-        ]
+      ? [{ id: "competitors", label: labelR }]
       : []),
-
-    {
-      key: "4",
-      label: "نظرات کاربران",
-    },
+    { id: "comments", label: "نظرات کاربران" },
   ];
 
   return (
@@ -213,57 +78,32 @@ function MainBoxBestChoice({
       {/* هدر صفحه */}
       <HeroSectionBestChoice detailsBest={detailsBest} />
 
-      {/* باکس تب ها - با position: sticky */}
-      <div
-        ref={navbarRef}
-        className="navbar-tabs w-full px-2 z-10000"
-        style={{
-          position: "sticky",
-          top: isNavbarSticky ? "112px" : "auto",
-          left: 0,
-          right: 0,
-          background: isNavbarSticky ? "white" : "transparent",
-          boxShadow: isNavbarSticky ? "0 4px 12px rgba(0,0,0,0.1)" : "none",
-          paddingTop: isNavbarSticky ? "8px" : "0",
-          paddingBottom: isNavbarSticky ? "8px" : "0",
-          transition: "all 0.3s ease",
-        }}
-      >
-        <Card
-          style={{ padding: 0, margin: 0 }}
-          className="rounded-xl shadow-lg"
-        >
-          <Tabs
-            activeKey={activeKey}
-            onChange={handleTabClick}
-            type="card"
-            items={items}
-            className="autoService-tabs"
-          />
-        </Card>
-      </div>
+      {/* تب‌ها */}
+      <SectionTabs tabs={tabs} />
 
       <div className="mx-auto">
-        <div className="flex flex-wrap lg:flex-nowrap items-start py-3 relative">
-          {/* محتوای اصلی */}
+        <div className="flex flex-wrap lg:flex-nowrap items-start gap-2 px-2 pt-2 relative">
+          {/* محتوای اصلی - فقط وقتی سایدبار بلندتره، min-height می‌گیره */}
           <div
-            ref={mainBoxRef}
-            className={`
-              lg:w-3/4 w-full px-2 transition-all duration-300
-              ${!isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
-            `}
+            id="best-main-box"
+            className="lg:w-3/4 w-full"
+            style={{
+              minHeight:
+                !isMainLonger && sidebarHeight > 0
+                  ? `${sidebarHeight}px`
+                  : undefined,
+            }}
           >
-            <div className="space-y-8">
+            <div className="space-y-2">
               {/* بخش محتوا اصلی */}
-              <div id="desc" className="section-anchor" ref={descRef}>
+              <div id="desc" className="section-anchor">
                 <DescBestChoice detailsBest={detailsBest} title={title} />
               </div>
 
               {/* بخش گالری تصاویر */}
               {Attachment.length > 0 && (
-                <div id="gallery" className="section-anchor" ref={galleryRef}>
+                <div id="gallery" className="section-anchor">
                   <GalleryBestChoice
-                    detailsBest={detailsBest}
                     Attachment={Attachment}
                     title={title}
                   />
@@ -272,11 +112,7 @@ function MainBoxBestChoice({
 
               {/* بخش رقبا */}
               {competitorsCar.length > 0 && (
-                <div
-                  id="competitors"
-                  className="section-anchor"
-                  ref={competitorsRef}
-                >
+                <div id="competitors" className="section-anchor">
                   <CompetitorsBestChoice
                     competitorsCar={competitorsCar}
                     title={title}
@@ -286,11 +122,11 @@ function MainBoxBestChoice({
             </div>
           </div>
 
-          {/* سایدبار */}
+          {/* سایدبار - فقط وقتی محتوا بلندتره، sticky می‌شه */}
           <aside
-            ref={sidebarRef}
+            id="best-sidebar-box"
             className={`
-              lg:w-1/4 w-full mt-6 lg:mt-0 px-2 transition-all duration-300
+              lg:w-1/4 w-full mt-6 lg:mt-0 transition-all duration-300
               ${isMainLonger ? "lg:sticky lg:bottom-0 lg:self-end" : ""}
             `}
           >
@@ -303,96 +139,13 @@ function MainBoxBestChoice({
           </aside>
         </div>
 
-         <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
+        <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
 
         {/* بخش نظرات */}
-        <div id="comments" className="section-anchor px-2" ref={commentsRef}>
+        <div id="comments" className="section-anchor px-2 pb-2">
           <CommentsSection details={detailsBest} comments={comments} id={id} />
         </div>
       </div>
-
-    <style jsx global>{`
-  .navbar-tabs {
-    transition: all 0.3s ease;
-    z-index: 10000;
-  }
-
-  .navbar-tabs .ant-card-body {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  .autoService-tabs .ant-tabs-nav {
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .autoService-tabs .ant-tabs-tab {
-    padding: 8px 16px !important;
-    font-weight: 600 !important;
-    color: #6b7280 !important;
-    transition: all 0.3s ease !important;
-    cursor: pointer !important;
-    height: 50px !important;
-    margin: 0 !important;
-  }
-
-  .autoService-tabs .ant-tabs-tab:hover {
-    color: #ce1a2a;
-  }
-
-  .autoService-tabs .ant-tabs-tab-active {
-    color: #fff !important;
-    background: #ce1a2a !important;
-  }
-
-  .autoService-tabs .ant-tabs-tab .ant-tabs-tab-btn {
-    color: #222 !important;
-  }
-
-  .autoService-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: #fff !important;
-  }
-
-  .autoService-tabs .ant-tabs-ink-bar {
-    background: #ce1a2a;
-  }
-
-  .section-anchor {
-    scroll-margin-top: 180px;
-  }
-
-  /* دسکتاپ */
-  @media (min-width: 1024px) {
-    .navbar-tabs[style*="position: sticky"] {
-      top: 60px !important;
-    }
-
-    .section-anchor {
-      scroll-margin-top: 120px;
-    }
-  }
-
-  /* موبایل */
-  @media (max-width: 1023px) {
-    .lg\\:sticky {
-      position: relative !important;
-      bottom: auto !important;
-      align-self: auto !important;
-    }
-
-    .navbar-tabs[style*="position: sticky"] {
-      position: sticky !important;
-      top: 115px !important;
-    }
-
-    .autoService-tabs .ant-tabs-tab {
-      padding: 0px 10px !important;
-      font-size: 12px !important;
-      height: 40px !important;
-    }
-  }
-`}</style>
     </div>
   );
 }

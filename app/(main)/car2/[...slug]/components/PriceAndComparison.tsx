@@ -6,10 +6,12 @@ import PriceChart from "./PriceChart";
 
 interface PriceAndComparisonProps {
   competitorIds: string | undefined;
+  dataPriceChart:PriceChart[]
 }
 
 export default function PriceAndComparison({
-  competitorIds
+  competitorIds ,
+  dataPriceChart
 }: PriceAndComparisonProps) {
   return (
     <section dir="rtl" className="mx-auto w-full">
@@ -21,7 +23,8 @@ export default function PriceAndComparison({
 
         {/* Price Chart - 1/3 عرض */}
         <div className="lg:col-span-1 w-full">
-          <PriceChart />
+          <PriceChart dataPriceChart={dataPriceChart}/>
+          {/* <MarketStatsTest /> */}
         </div>
       </div>
     </section>

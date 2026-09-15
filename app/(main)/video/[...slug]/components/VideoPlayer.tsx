@@ -194,7 +194,7 @@ function VideoPlayer({
     return (
       <>
         {attachment.length > 0 && (
-          <Card className="rounded-xl shadow-lg">
+          <Card className="rounded-xl shadow-sm">
             <div className="space-y-4">
               <h2 className="text-xl font-bold text-gray-800 mb-2!">
                 پخش ویدئو
@@ -207,11 +207,8 @@ function VideoPlayer({
                 controls
               />
             </div>
-          </Card>
-        )}
-
-        {/* اطلاعات و دکمه‌ها */}
-        <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+              {/* اطلاعات و دکمه‌ها */}
+        <div className=" p-4 ">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             {/* اطلاعات ویدئو */}
             <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
@@ -275,13 +272,17 @@ function VideoPlayer({
             </div>
           )}
         </div>
+          </Card>
+        )}
+
+      
         {renderAparatOfficial()}
       </>
     );
   }
 
   return (
-    <Card className="rounded-xl shadow-lg border-0">
+    <Card className="rounded-xl shadow-sm border-0">
       <div className="space-y-4">
         <h2 className="text-xl font-bold text-gray-800 mb-2!">پخش ویدئو</h2>
 

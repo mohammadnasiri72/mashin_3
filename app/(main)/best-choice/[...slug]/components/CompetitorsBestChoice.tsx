@@ -11,13 +11,13 @@ function CompetitorsBestChoice({
 }) {
   return (
     <>
-      <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100 ">
-        <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
+      <div className="detailsBox bg-white rounded-2xl lg:px-5 px-2 py-5 shadow-sm border border-gray-100 ">
+        <h3 className="dt_title sm:text-xl font-bold text-gray-900 mb-5!">
           <strong className="text-red-600">رقبا </strong>
           {title}
         </h3>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 mt-3!">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
           {competitorsCar.map((car) => (
             <div
               key={car.id}
@@ -26,7 +26,7 @@ function CompetitorsBestChoice({
             >
               <div className="bg-white rounded-2xl overflow-hidden pb-2 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 hover:border-red-200 h-full flex flex-col">
                 {/* تصویر خودرو */}
-                <div className="w-full h-40 overflow-hidden rounded-lg mb-4! bg-gray-50 flex items-center justify-center relative">
+                <div className="w-full h-40 overflow-hidden rounded-lg mb-4! bg-white flex items-center justify-center relative">
                   <Link href={car?.url || "#"}>
                     <img
                       src={mainDomain + car.image}
@@ -46,7 +46,7 @@ function CompetitorsBestChoice({
                       e.preventDefault();
                     }}
                   >
-                    <h3 className="font-bold text-gray-900 text-lg mb-2! text-center hover:text-[#ce1a2a]! transition-colors">
+                    <h3 className="font-bold text-gray-900 sm:text-lg mb-2! text-center hover:text-[#ce1a2a]! transition-colors">
                    {car.sourceName} {car.title} {createpublishCode(car.publishCode)}
                     </h3>
                   </Link>

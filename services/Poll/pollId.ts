@@ -10,8 +10,7 @@ export const getPollId = async (id: number): Promise<PollData> => {
       headers: {
         "Content-Type": "application/json",
       },
-      cache: "no-store", // برای SSR
-      // next: { revalidate: 3600 } // برای ISR
+      next: { revalidate: 60 }, // کش کوتاه برای کاهش TTFB
     });
 
     if (!response.ok) {

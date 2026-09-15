@@ -10,8 +10,8 @@ export const getItemByIds = async (ids: string): Promise<ItemsId[]> => {
       headers: {
         "Content-Type": "application/json",
       },
-      cache: isServer? "no-store" : 'default', // برای SSR
-      // next: { revalidate: 3600 } // برای ISR
+      // کش سمت سرور برای کاهش TTFB؛ سمت کلاینت مثل قبل
+      ...(isServer ? { next: { revalidate: 60 } } : {}),
     });
 
     if (!response.ok) {

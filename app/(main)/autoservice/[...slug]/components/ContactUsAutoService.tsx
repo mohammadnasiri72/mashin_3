@@ -97,15 +97,15 @@ function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
 
   return (
     <>
-      <Card className="rounded-xl shadow-lg">
+      <div className="rounded-xl shadow-lg sm:p-5 p-2 bg-white">
         <div className="flex gap-2 items-center mb-6!">
           <img
             src={mainDomain + detailsAuto.image}
             alt={detailsAuto.title}
-            className="w-16 rounded-lg bg-white ml-4"
+            className="w-16 rounded-lg bg-white"
           />
-          <h3 className="text-xl font-bold text-gray-800 ">
-            مشخصات {detailsAuto.title}
+          <h3 className="text-xl font-bold text-gray-800 line-clamp-2">
+            {detailsAuto.title}
           </h3>
         </div>
 
@@ -210,7 +210,7 @@ function ContactUsAutoService({ detailsAuto }: { detailsAuto: ItemsId }) {
             )}
           </div>
         </div>
-      </Card>
+      </div>
     </>
   );
 }

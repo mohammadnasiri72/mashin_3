@@ -53,7 +53,6 @@ export default function SectionTabs({
   const [isClient, setIsClient] = useState(false);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
 
-  console.log(active);
   
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import SideBarBanner from "@/app/components/SideBar/SideBarBanner";
 function SideBarTechnicalWords({ banner }: { banner: Items[] }) {
   return (
     <>
-      <div className="space-y-6">
+      <div className="space-y-2">
         {/* بنرهای سایدبار */}
          <SideBarBanner banner={banner.filter((e) => e.categoryId === 6506)} />
           <SideBarBanner banner={banner.filter((e) => e.categoryId === 6415)} />

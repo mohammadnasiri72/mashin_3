@@ -66,13 +66,12 @@ function RecentViews() {
     >
       <div className="w-12 h-12 bg-gray-200 rounded-lg overflow-hidden shrink-0">
         {view.image ? (
-          <Image
+          <img
             src={mainDomain + view.image}
             alt={view.title}
             width={48}
             height={48}
             className="w-full h-full object-contain"
-            unoptimized
           />
         ) : (
           <div className="w-full h-full bg-linear-to-br from-gray-200 to-gray-300" />

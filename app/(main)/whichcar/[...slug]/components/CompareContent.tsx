@@ -17,11 +17,11 @@ function CompareContent({
 }) {
   
   return (
-    <div className="rounded-xl border-0 p-3">
-      <div className="space-y-8">
+    <div className="rounded-xl border-0">
+      <div className="space-y-2">
         {/* خلاصه مقایسه از whichcars */}
         {whichcars.body && (
-          <Card className="shadow-lg mb-5!">
+          <Card className="shadow-sm mb-2!">
             <h3 className="dt_title text-xl font-semibold text-gray-900 mb-4!">
               <span className="px-1">مقایسه</span>
               {dataCompare.map((e, i) => (
@@ -47,7 +47,7 @@ function CompareContent({
           </Card>
         )}
         {dataCompare.length > 0 && (
-          <div className="flex items-center sm:flex-nowrap flex-wrap gap-3">
+          <div className="flex items-center sm:flex-nowrap flex-wrap gap-2">
             {dataCompare.map((car) => (
               <ComparisonTable key={car.id} car={car} />
             ))}
@@ -56,28 +56,12 @@ function CompareContent({
         {dataCompare.length > 0 && (
           <div className="flex flex-col">
             {dataCompare.map((car) => (
-              <DescCarCompare key={car.id} car={car} />
+              <DescCarCompare key={car.id} car={car} whichcars={whichcars}/>
             ))}
           </div>
         )}
 
-        {/* News Tags */}
-        <div className=" pt-3 border-t border-gray-200">
-          <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 flex-wrap">
-            <div className="flex items-center gap-1 ">
-              <FaEye className="text-[#666] text-xs" />
-              <span className="font-bold text-[#666] text-xs">
-                {whichcars.visit}
-              </span>
-            </div>
-            <div className="flex items-center gap-1">
-              <FaCalendar className="text-[#666] text-xs" />
-              <span className="font-bold text-[#666] text-xs">
-                {new Date(whichcars.modified ? whichcars.modified:whichcars.created).toLocaleDateString("fa-IR")}
-              </span>
-            </div>
-          </div>
-        </div>
+        
       </div>
 
       <style jsx global>{`

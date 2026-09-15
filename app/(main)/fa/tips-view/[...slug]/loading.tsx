@@ -53,7 +53,7 @@ function Loading() {
               <div className="rounded-xl shadow-lg bg-white p-6 animate-pulse">
                 <div className="space-y-6">
                   {/* Image Skeleton */}
-                  <div className="float-start w-96 pl-5">
+                  <div className="md:float-start! md:w-96 w-full md:pl-5">
                     <div className="w-full h-64 bg-gray-200 rounded-lg"></div>
                   </div>
                   

@@ -6,55 +6,53 @@ import { FaCalendar, FaEye } from "react-icons/fa";
 function VoicesRelatedSection({ relatedVoices }: { relatedVoices: ItemsId[] }) {
   return (
     <>
-      <div className="px-2 py-4">
-        {/* Videos List */}
-        <div className="space-y-6 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex md:flex-nowrap flex-wrap items-center gap-2">
-            <h3 className="dt_title text-2xl font-bold text-gray-900 mb-4!">
-              <strong className="text-red-600"> پادکست‌های مرتبط</strong>
-            </h3>
-          </div>
-          {relatedVoices.map((podcast) => (
-            <div
-              key={podcast.id}
-              className="group bg-gray-50 rounded-xl hover:bg-white border-2 border-gray-200 hover:border-[#ce1a2a]/40 transition-all duration-300 hover:shadow-lg"
-            >
-              <div className="flex md:items-stretch items-center justify-center gap-4 p-5 md:flex-row flex-col">
-                <div className="flex flex-col items-center gap-2">
-                  <div className="relative group/icon shrink-0 sm:w-72 w-full sm:h-56 rounded-xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300">
-                    <img
-                      src={mainDomain + podcast.image}
-                      alt={podcast.title}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <div className="flex items-center sm:gap-2 gap-1 bg-white sm:px-3 px-2 sm:py-2 py-1 rounded-xl border border-gray-200 shadow-sm">
-                      <FaCalendar className="text-[#ce1a2a] text-xs!" />
-                      <span className="font-medium text-gray-700 text-xs">
-                        {formatPersianDate(podcast.modified ? podcast.modified : podcast.created)}
-                      </span>
-                    </div>
-
-                    {/* Views */}
-                    <div className="flex items-center sm:gap-2 gap-1 bg-white sm:px-3 px-2 sm:py-2 py-1 rounded-xl border border-gray-200 shadow-sm">
-                      <FaEye className=" text-[#ce1a2a] text-xs!" />
-                      <span className="font-medium text-gray-700 text-xs">
-                        {toPersianNumbers(podcast.visit)} بازدید
-                      </span>
-                    </div>
-                  </div>
+      <section className="sm:px-5 px-2 py-5 bg-white rounded-xl shadow-sm">
+        <h3 className="dt_title text-xl font-bold text-gray-900 mb-5!">
+          <strong className="text-[#ce1a2a]!">پادکست‌های </strong>
+          مرتبط
+        </h3>
+        {relatedVoices.map((podcast) => (
+          <div
+            key={podcast.id}
+            className="group bg-gray-50 rounded-xl hover:bg-white border-2 border-gray-200 hover:border-[#ce1a2a]/40 transition-all duration-300 hover:shadow-lg"
+          >
+            <div className="flex md:items-stretch items-center justify-center gap-4 p-5 md:flex-row flex-col">
+              <div className="flex flex-col items-center gap-2">
+                <div className="relative group/icon shrink-0 sm:w-72 w-full sm:h-56 rounded-xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300">
+                  <img
+                    src={mainDomain + podcast.image}
+                    alt={podcast.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
                 </div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <div className="flex items-center sm:gap-2 gap-1 bg-white sm:px-3 px-2 sm:py-2 py-1 rounded-xl border border-gray-200 shadow-sm">
+                    <FaCalendar className="text-[#ce1a2a] text-xs!" />
+                    <span className="font-medium text-gray-700 text-xs">
+                      {formatPersianDate(
+                        podcast.modified ? podcast.modified : podcast.created,
+                      )}
+                    </span>
+                  </div>
 
-                {/* Content Container - Larger */}
-                <div className="flex-1 min-w-0 flex flex-col justify-between py-1 w-full">
-                  <AudioPlayer podcast={podcast} />
+                  {/* Views */}
+                  <div className="flex items-center sm:gap-2 gap-1 bg-white sm:px-3 px-2 sm:py-2 py-1 rounded-xl border border-gray-200 shadow-sm">
+                    <FaEye className=" text-[#ce1a2a] text-xs!" />
+                    <span className="font-medium text-gray-700 text-xs">
+                      {toPersianNumbers(podcast.visit)} بازدید
+                    </span>
+                  </div>
                 </div>
               </div>
+
+              {/* Content Container - Larger */}
+              <div className="flex-1 min-w-0 flex flex-col justify-between py-1 w-full">
+                <AudioPlayer podcast={podcast} />
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+        ))}
+      </section>
     </>
   );
 }

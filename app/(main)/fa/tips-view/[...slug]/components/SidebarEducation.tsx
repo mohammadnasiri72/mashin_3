@@ -21,9 +21,9 @@ function SidebarEducation({
   // نمایش لودینگ
   if (loading) {
     return (
-      <section className="px-2">
+      <section className="">
         <div className="mx-auto">
-          <div className="space-y-6">
+          <div className="space-y-2">
             {/* اسکلتون لودینگ */}
             <div className="animate-pulse space-y-4">
               <div className="h-8 bg-gray-200 rounded w-3/4"></div>
@@ -42,9 +42,9 @@ function SidebarEducation({
   }
 
   return (
-    <section className="px-2">
+    <section className="">
       <div className="mx-auto">
-        <div className="space-y-6">
+        <div className="space-y-2">
           {/* بنرهای سایدبار */}
           <SideBarBanner banner={banner.filter((e) => e.categoryId === 6506)} />
 

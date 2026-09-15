@@ -19,8 +19,8 @@ function SidebarBestChoice({
 
   return (
     <>
-      <section className="bg-gray-50 px-2">
-        <div className="space-y-6">
+      <section className="bg-gray-50">
+        <div className="space-y-2">
           {/* بنرهای سایدبار */}
           <SideBarBanner banner={banner.filter((e) => e.categoryId === 6506)} />
           {/* بهترین خودروها از نگاه کاربران*/}

@@ -21,7 +21,8 @@ export const getComment = async (data: CommentParams): Promise<CommentResponse[]
       headers: {
         'Content-Type': 'application/json',
       },
-      cache: 'no-store',
+      // کامنت‌ها محتوای عمومی هستند؛ کش کوتاه TTFB را به‌شدت کاهش می‌دهد
+      next: { revalidate: 30 },
     });
 
     if (!response.ok) {

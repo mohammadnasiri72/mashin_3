@@ -346,6 +346,12 @@ interface Price {
   brands: string | null;
   prices: Prices[];
 }
+interface PriceChart {
+  productId: number;
+  price: number;
+  created: string;
+  createdFa: string;
+}
 interface Prices {
   id: number;
   title: string;

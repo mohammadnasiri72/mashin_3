@@ -1,12 +1,23 @@
-import axiosInstance from "../axiosInstance";
-
+import { baseUrl } from "@/utils/mainDomain";
 
 export const getAttachment = async (id: number): Promise<ItemsAttachment[]> => {
   try {
-    const response = await axiosInstance.get<ItemsAttachment[]>(`/api/Attachment/item/${id}`, {
-      // withCredentials: true,
+    const response = await fetch(`${baseUrl}api/Attachment/item/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      next: { revalidate: 60 },
     });
-    return response.data;
+
+    if (!response.ok) {
+      throw new Error(
+        `خطا در دریافت Attachment: ${response.status} ${response.statusText}`,
+      );
+    }
+
+    const responseData: ItemsAttachment[] = await response.json();
+    return responseData;
   } catch (error) {
     console.error("خطا در دریافت Attachment:", error);
     throw error;

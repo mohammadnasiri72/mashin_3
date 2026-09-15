@@ -1,318 +1,470 @@
 // components/PriceChart.tsx
 "use client";
 
+import { toPersianNumbers } from "@/utils/func";
 import { useMemo, useState } from "react";
-import { PricePoint, PriceRange } from "./types";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 
-const formatToman = (n: number) => n.toLocaleString("fa-IR");
+// تایپ دیتای خام که از API میاد
+export interface PriceChartRaw {
+  productId: number;
+  price: number;
+  created: string;
+  createdFa: string;
+}
 
-// تبدیل عدد به میلیون تومان برای نمایش بهتر
-const formatTomanShort = (n: number) => {
-  if (n >= 1000000000) {
-    return (n / 1000000000).toFixed(1) + " میلیارد";
+// تایپ نقطه نمودار
+interface PricePoint {
+  label: string;
+  value: number;
+  timestamp: number;
+}
+
+// تایپ داده چارت برای Recharts
+interface ChartDatum {
+  date: string;
+  price: number;
+}
+
+type RangeId = "1m" | "3m" | "6m" | "1y" | "all";
+
+interface Range {
+  id: RangeId;
+  label: string;
+  days: number | null;
+}
+
+const RANGES: Range[] = [
+  { id: "1m", label: "1 ماه", days: 30 },
+  { id: "3m", label: "3 ماه", days: 90 },
+  { id: "6m", label: "6 ماه", days: 180 },
+  { id: "1y", label: "1 سال", days: 365 },
+  { id: "all", label: "همه", days: null },
+];
+
+// فرمت اعداد فارسی
+const faNumberFormatter = new Intl.NumberFormat("fa-IR");
+
+// تبدیل امن هر مقدار عددی (شامل BigInt) به number
+const toNumber = (val: unknown): number => {
+  if (typeof val === "bigint") return Number(val);
+  if (typeof val === "number") return val;
+  if (typeof val === "string") {
+    const n = Number(val);
+    return Number.isFinite(n) ? n : 0;
   }
-  if (n >= 1000000) {
-    return (n / 1000000).toFixed(0) + " میلیون";
-  }
-  return n.toLocaleString("fa-IR");
+  return 0;
 };
 
-// MiniLineChart برای نمودار قیمت با محورها
-function MiniLineChart({ data }: { data: PricePoint[] }) {
-  const width = 640;
-  const height = 300;
-  const padding = { top: 30, right: 30, bottom: 50, left: 75 };
+// فرمت قیمت به میلیون تومان (برای محور Y)
+const formatPriceMillion = (n: number) => {
+  const safe = toNumber(n);
+  // تقسیم بر ۱۰۰۰ تا واحد بشه میلیارد
+  const inBillion = safe / 1000;
+  // اگه عدد اعشار داشت، ۱ رقم اعشار، وگرنه عدد صحیح
+  const formatted =
+    inBillion % 1 === 0 ? inBillion.toString() : inBillion.toFixed(1);
+  return toPersianNumbers(formatted);
+};
 
-  const { points, areaPath, linePath, min, max, yTicks } = useMemo(() => {
-    if (data.length === 0) {
-      return {
-        points: [],
-        areaPath: "",
-        linePath: "",
-        min: 0,
-        max: 0,
-        yTicks: [],
-      };
+// تبدیل تاریخ شمسی به عدد قابل مقایسه (YYYYMMDD)
+const parseFaDate = (faDate: string): number => {
+  if (!faDate) return 0;
+  const parts = faDate.split(/[\/\-]/).map((p) => p.trim());
+  if (parts.length < 3) return 0;
+  const [y, m, d] = parts.map((p) => parseInt(p, 10) || 0);
+  return y * 10000 + m * 100 + d;
+};
+
+// تبدیل تاریخ شمسی به تعداد روز
+const faDateToDayNumber = (faDate: string): number => {
+  if (!faDate) return 0;
+  const parts = faDate.split(/[\/\-]/).map((p) => p.trim());
+  if (parts.length < 3) return 0;
+  const jy = parseInt(parts[0], 10) || 0;
+  const jm = parseInt(parts[1], 10) || 0;
+  const jd = parseInt(parts[2], 10) || 0;
+
+  const q = Math.floor(jy / 4);
+  const daysInMonths = [0, 31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+  let dayOfYear = 0;
+  for (let i = 1; i < jm; i++) {
+    dayOfYear += daysInMonths[i];
+  }
+  dayOfYear += jd;
+
+  return jy * 365 + q + dayOfYear;
+};
+
+// اختلاف روز بین دو تاریخ شمسی
+const faDaysBetween = (faDateA: string, faDateB: string): number => {
+  return Math.abs(faDateToDayNumber(faDateA) - faDateToDayNumber(faDateB));
+};
+
+// چک می‌کنه آیا بازه انتخابی دیتای کافی داره
+const hasEnoughDataForRange = (
+  points: PricePoint[],
+  rangeDays: number | null,
+): boolean => {
+  if (rangeDays === null) return true;
+  if (points.length === 0) return false;
+  const lastDate = points[points.length - 1].label;
+  const oldestDate = points[0].label;
+  const totalSpan = faDaysBetween(oldestDate, lastDate);
+  return totalSpan >= rangeDays * 0.3;
+};
+
+export default function PriceChart({
+  dataPriceChart,
+}: {
+  dataPriceChart: PriceChartRaw[];
+}) {
+  // نرمال‌سازی و مرتب‌سازی
+  const normalizedData: PricePoint[] = useMemo(() => {
+    if (!Array.isArray(dataPriceChart) || dataPriceChart.length === 0)
+      return [];
+
+    return [...dataPriceChart]
+      .map((d) => ({
+        label: d.createdFa,
+        value: toNumber(d.price),
+        timestamp: parseFaDate(d.createdFa),
+      }))
+      .sort((a, b) => a.timestamp - b.timestamp);
+  }, [dataPriceChart]);
+
+  const defaultRangeId: RangeId = useMemo(() => {
+    if (normalizedData.length <= 3) return "all";
+    return "3m";
+  }, [normalizedData.length]);
+
+  const [activeRange, setActiveRange] = useState<RangeId>(defaultRangeId);
+
+  useMemo(() => {
+    setActiveRange(defaultRangeId);
+  }, [defaultRangeId]);
+
+  // فیلتر دیتا
+  const filteredData = useMemo(() => {
+    const range = RANGES.find((r) => r.id === activeRange);
+    if (!range) return normalizedData;
+    const rangeDays = range.days;
+    if (rangeDays === null) return normalizedData;
+
+    const lastPoint = normalizedData[normalizedData.length - 1];
+    if (!lastPoint) return normalizedData;
+    const lastFaDate = lastPoint.label;
+
+    return normalizedData.filter(
+      (p) => faDaysBetween(p.label, lastFaDate) <= rangeDays,
+    );
+  }, [normalizedData, activeRange]);
+
+  const hasData = filteredData.length > 0;
+  const isUpdating = normalizedData.length < 2;
+
+  // آمار
+  const stats = useMemo(() => {
+    const values = filteredData.map((d) => toNumber(d.value));
+    if (values.length === 0) {
+      return { min: 0, max: 0, avg: 0 };
     }
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    const avg = values.reduce((a, b) => a + b, 0) / values.length;
+    return { min, max, avg };
+  }, [filteredData]);
 
-    const values = data.map((d) => d.value);
+  // داده چارت برای Recharts
+  const chartData: ChartDatum[] = useMemo(() => {
+    return filteredData.map((d) => ({
+      date: d.label,
+      price: toNumber(d.value),
+    }));
+  }, [filteredData]);
+
+  // محاسبه بازه محور Y
+  const yDomain = useMemo(() => {
+    const values = filteredData.map((d) => toNumber(d.value));
+    if (values.length === 0) return [0, 100];
     const minVal = Math.min(...values);
     const maxVal = Math.max(...values);
     const range = maxVal - minVal || 1;
-
-    // محور Y - 5 نقطه
-    const yTickCount = 5;
-    const yStep = range / yTickCount;
-    const yTicks = Array.from({ length: yTickCount + 1 }, (_, i) => ({
-      value: Math.round(minVal + i * yStep),
-      label: formatTomanShort(Math.round(minVal + i * yStep)),
-    }));
-
-    const chartWidth = width - padding.left - padding.right;
-    const chartHeight = height - padding.top - padding.bottom;
-    const step = chartWidth / Math.max(data.length - 1, 1);
-
-    const pts = data.map((d, i) => {
-      const x = padding.left + i * step;
-      const y =
-        padding.top + chartHeight - ((d.value - minVal) / range) * chartHeight;
-      return { x, y, label: d.label };
-    });
-
-    const line = pts
-      .map((p, i) => `${i === 0 ? "M" : "L"} ${p.x} ${p.y}`)
-      .join(" ");
-    const area = `${line} L ${pts[pts.length - 1].x} ${padding.top + chartHeight} L ${
-      pts[0].x
-    } ${padding.top + chartHeight} Z`;
-
-    return {
-      points: pts,
-      areaPath: area,
-      linePath: line,
-      min: minVal,
-      max: maxVal,
-      yTicks,
-    };
-  }, [data]);
+    const padding = range * 0.1;
+    return [Math.max(0, minVal - padding), maxVal + padding];
+  }, [filteredData]);
 
   return (
-    <div className="w-full overflow-x-auto ">
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        className="w-full"
-        preserveAspectRatio="xMidYMid meet"
-        style={{ minHeight: "200px", width: "100%" }}
-      >
-        <defs>
-          <linearGradient id="priceGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#dc2626" stopOpacity="0.25" />
-            <stop offset="100%" stopColor="#dc2626" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-
-        {/* Grid lines - محور Y */}
-        {yTicks.map((tick, i) => {
-          const y =
-            padding.top +
-            (height - padding.top - padding.bottom) -
-            ((tick.value - min) / (max - min || 1)) *
-              (height - padding.top - padding.bottom);
-          return (
-            <g key={i}>
-              <line
-                x1={padding.left}
-                y1={y}
-                x2={width - padding.right}
-                y2={y}
-                stroke="#e5e7eb"
-                strokeWidth="0.5"
-                strokeDasharray="4,4"
-              />
-              <text
-                x={padding.left - 70}
-                y={y - 5}
-                textAnchor="end"
-                fontSize="16"
-                fill="#6b7280"
-                fontWeight="500"
-              >
-                {tick.label}
-              </text>
-            </g>
-          );
-        })}
-
-        {/* Axis Y line */}
-        <line
-          x1={padding.left}
-          y1={padding.top}
-          x2={padding.left}
-          y2={height - padding.bottom}
-          stroke="#d1d5db"
-          strokeWidth="1.5"
-        />
-
-        {/* Area */}
-        <path d={areaPath} fill="url(#priceGradient)" />
-
-        {/* Line */}
-        <path d={linePath} fill="none" stroke="#dc2626" strokeWidth="3" />
-
-        {/* Points and labels */}
-        {points.map((p, i) => (
-          <g key={i}>
-            <circle
-              cx={p.x}
-              cy={p.y}
-              r="5"
-              fill="#dc2626"
-              stroke="#fff"
-              strokeWidth="2.5"
-            />
-            {/* برچسب محور X */}
-            <text
-              x={p.x}
-              y={height - padding.bottom + 22}
-              textAnchor="middle"
-              fontSize="11"
-              fill="#6b7280"
-              fontWeight="500"
-            >
-              {p.label}
-            </text>
-          </g>
-        ))}
-
-        {/* Axis X line */}
-        <line
-          x1={padding.left}
-          y1={height - padding.bottom}
-          x2={width - padding.right}
-          y2={height - padding.bottom}
-          stroke="#d1d5db"
-          strokeWidth="1.5"
-        />
-
-        {/* عنوان محور Y */}
-        <text
-          x={45}
-          y={0}
-          textAnchor="middle"
-          fontSize="14"
-          fill="#9ca3af"
-          fontWeight="500"
-          transform={`rotate(0, 1000)`}
-        >
-          قیمت (تومان)
-        </text>
-      </svg>
-    </div>
-  );
-}
-
-export default function PriceChart() {
-  const defaultRangeId = "3m";
-
-  const ranges: PriceRange[] = [
-    { id: "1m", label: "1 ماه" },
-    { id: "3m", label: "3 ماه" },
-    { id: "6m", label: "6 ماه" },
-    { id: "1y", label: "1 سال" },
-    { id: "all", label: "همه" },
-  ];
-
-  const dataByRange: Record<string, PricePoint[]> = {
-    "3m": [
-      { label: "بهمن", value: 1865000000 },
-      { label: "اسفند", value: 1900000000 },
-      { label: "فروردین", value: 1850000000 },
-      { label: "اردیبهشت", value: 1780000000 },
-      { label: "خرداد", value: 1720000000 },
-      { label: "تیر", value: 1800000000 },
-    ],
-    "1m": [
-      { label: "هفته 1", value: 1830000000 },
-      { label: "هفته 2", value: 1800000000 },
-      { label: "هفته 3", value: 1780000000 },
-      { label: "هفته 4", value: 1800000000 },
-    ],
-    "6m": [
-      { label: "دی", value: 1750000000 },
-      { label: "بهمن", value: 1865000000 },
-      { label: "اسفند", value: 1900000000 },
-      { label: "فروردین", value: 1850000000 },
-      { label: "اردیبهشت", value: 1780000000 },
-      { label: "خرداد", value: 1720000000 },
-    ],
-    "1y": [
-      { label: "تیر ۱۴۰۲", value: 1600000000 },
-      { label: "مهر ۱۴۰۲", value: 1700000000 },
-      { label: "دی ۱۴۰۲", value: 1750000000 },
-      { label: "بهمن ۱۴۰۲", value: 1865000000 },
-      { label: "اردیبهشت ۱۴۰۳", value: 1780000000 },
-      { label: "خرداد ۱۴۰۳", value: 1720000000 },
-    ],
-    all: [
-      { label: "۱۴۰۲", value: 1600000000 },
-      { label: "۱۴۰۳", value: 1865000000 },
-    ],
-  };
-
-  const [activeRange, setActiveRange] = useState(
-    defaultRangeId ?? ranges[0]?.id,
-  );
-
-  const data = dataByRange[activeRange] ?? [];
-  const values = data.map((d) => d.value);
-  const min = values.length ? Math.min(...values) : 0;
-  const max = values.length ? Math.max(...values) : 0;
-  const avg = values.length
-    ? Math.round(values.reduce((a, b) => a + b, 0) / values.length)
-    : 0;
-
-  return (
-    <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm h-full">
+    <div
+      className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm h-full"
+      dir="rtl"
+    >
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        {/* <h2 className="text-base font-extrabold text-slate-900">
-          نمودار قیمت
-        </h2> */}
         <h2 className="text-xl font-bold text-gray-900">
           <span className="pl-1">نمودار</span>
           <strong className="text-red-700">قیمت</strong>
         </h2>
-        <button
-          //   onClick={onViewDetails}
-          className="flex items-center gap-0.5 text-sm font-semibold text-red-600 hover:text-red-700 cursor-pointer"
+
+        {normalizedData.length >= 3 && (
+          <div className="flex items-center gap-2 rounded-lg bg-slate-100 p-2 w-full sm:justify-center overflow-x-auto">
+            {RANGES.map((r) => {
+              const isActive = r.id === activeRange;
+              const hasEnoughData = hasEnoughDataForRange(
+                normalizedData,
+                r.days,
+              );
+              return (
+                <button
+                  key={r.id}
+                  disabled={!hasEnoughData}
+                  onClick={() => setActiveRange(r.id)}
+                  className={[
+                    "rounded-md px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap",
+                    isActive
+                      ? "bg-[#ce1a2a] text-white! shadow-sm"
+                      : "text-slate-500 bg-white! hover:text-slate-700",
+                    !hasEnoughData && "opacity-40 cursor-not-allowed",
+                  ].join(" ")}
+                >
+                  {r.label}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {!hasData ? (
+        <EmptyState />
+      ) : isUpdating ? (
+        <UpdatingState lastPoint={normalizedData[normalizedData.length - 1]} />
+      ) : (
+        <div className="w-full" style={{ height: "320px" }} dir="ltr">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart
+              data={chartData}
+              margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+            >
+              <CartesianGrid
+                strokeDasharray="4 4"
+                stroke="#f1f5f9"
+                vertical={false}
+              />
+              <XAxis
+               dataKey="date"
+  tick={{ fontSize: 11, fill: "#64748b", fontWeight: 500 }}
+  tickMargin={10}
+  axisLine={{ stroke: "#cbd5e1" }}
+  tickLine={false}
+  angle={-55}
+  textAnchor="end"
+  height={70}
+  interval={0}
+  tickFormatter={(val) => toPersianNumbers(val)}
+              />
+              <YAxis
+               orientation="left"
+  domain={yDomain}
+  tickFormatter={(val) => formatPriceMillion(val)}
+  tick={{ fontSize: 11, fill: "#64748b", fontWeight: 500 }}
+  tickMargin={8}
+  axisLine={{ stroke: "#cbd5e1" }}
+  tickLine={false}
+  width={70}
+  label={{
+    value: "میلیارد تومان",
+    angle: -90,
+    position: "insideLeft",
+    offset: 0,
+    style: {
+      fontSize: 11,
+      fill: "#94a3b8",
+      fontWeight: 600,
+      textAnchor: "middle",
+    },
+  }}
+              />
+              <Tooltip
+                content={<CustomTooltip />}
+                cursor={{
+                  stroke: "#dc2626",
+                  strokeWidth: 1,
+                  strokeDasharray: "4 4",
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="price"
+                stroke="#dc2626"
+                strokeWidth={3}
+                dot={{
+                  r: 5,
+                  fill: "#dc2626",
+                  stroke: "#ffffff",
+                  strokeWidth: 2.5,
+                }}
+                activeDot={{
+                  r: 8,
+                  fill: "#dc2626",
+                  stroke: "#ffffff",
+                  strokeWidth: 3,
+                }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {hasData && (
+        <div className="mt-4 grid sm:grid-cols-3 grid-cols-1 gap-3 border-t border-slate-100 pt-4 text-center">
+          <StatBox label="کمترین قیمت" value={stats.min} />
+          <StatBox label="میانگین قیمت" value={stats.avg} highlight />
+          <StatBox label="بیشترین قیمت" value={stats.max} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ---------- Tooltip سفارشی ---------- */
+
+function CustomTooltip({ active, payload }: any) {
+  if (!active || !payload || !payload.length) return null;
+
+  const data = payload[0].payload as ChartDatum;
+
+  return (
+    <div
+      dir="rtl"
+      className="rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-lg"
+    >
+      <div className="mb-1 h-1 w-full rounded-full bg-red-600" />
+      <p className="text-xs text-slate-500">
+        {toPersianNumbers(data.date)}
+      </p>
+      <p className="text-base font-extrabold text-red-700">
+        {toPersianNumbers(
+          Math.round(toNumber(data.price)).toLocaleString("en-US"),
+        )}
+      </p>
+      <p className="text-xs text-slate-400">میلیون تومان</p>
+    </div>
+  );
+}
+
+/* ---------- زیرکامپوننت‌ها ---------- */
+
+function StatBox({
+  label,
+  value,
+  highlight,
+}: {
+  label: string;
+  value: number;
+  highlight?: boolean;
+}) {
+  const safeValue = toNumber(value);
+  return (
+    <div
+      className={[
+        "flex flex-col gap-0.5",
+        highlight ? "rounded-lg bg-red-50 py-1" : "",
+      ].join(" ")}
+    >
+      <span
+        className={`text-xs ${highlight ? "text-red-600" : "text-slate-700"}`}
+      >
+        {label}
+      </span>
+      <span
+        className={`text-sm font-bold ${
+          highlight ? "text-red-800" : "text-slate-900"
+        }`}
+      >
+        {toPersianNumbers(Math.round(safeValue).toLocaleString("en-US"))}
+      </span>
+      <span
+        className={`text-xs font-normal ${
+          highlight ? "text-red-600" : "text-slate-700"
+        }`}
+      >
+        میلیون تومان
+      </span>
+    </div>
+  );
+}
+
+function EmptyState() {
+  return (
+    <div className="flex flex-col items-center justify-center py-12 text-center">
+      <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100">
+        <svg
+          className="h-7 w-7 text-slate-400"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
         >
-          مشاهده جزئیات...
-        </button>
-        <div className="flex items-center gap-2 rounded-lg bg-slate-100 p-2 w-full sm:justify-center overflow-x-auto">
-          {ranges.map((r) => {
-            const isActive = r.id === activeRange;
-            return (
-              <button
-                key={r.id}
-                onClick={() => setActiveRange(r.id)}
-                className={[
-                  "rounded-md px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap",
-                  isActive
-                    ? "bg-[#ce1a2a] text-white! shadow-sm"
-                    : "text-slate-500 bg-white! hover:text-slate-700",
-                ].join(" ")}
-              >
-                {r.label}
-              </button>
-            );
-          })}
-        </div>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+          />
+        </svg>
       </div>
+      <p className="text-sm font-semibold text-slate-700">
+        هنوز قیمتی برای این خودرو ثبت نشده است
+      </p>
+      <p className="mt-1 text-xs text-slate-500">
+        به‌زودی نمودار قیمت نمایش داده می‌شود
+      </p>
+    </div>
+  );
+}
 
-      <MiniLineChart data={data} />
-
-      <div className="mt-4 grid sm:grid-cols-3 grid-cols-1 gap-3 border-t border-slate-100 pt-4 text-center">
-        <div className="flex flex-col gap-0.5">
-          <span className="text-xs text-slate-700">کمترین قیمت</span>
-          <span className="text-sm font-bold text-slate-900">
-            {formatToman(min)}{" "}
-          </span>
-          <span className="text-xs font-normal text-slate-700">تومان</span>
-        </div>
-        <div className="flex flex-col gap-0.5 rounded-lg bg-red-50 py-1">
-          <span className="text-xs text-red-600">میانگین قیمت</span>
-          <span className="text-sm font-bold text-red-800">
-            {formatToman(avg)}{" "}
-          </span>
-          <span className="text-xs font-normal text-red-600">تومان</span>
-        </div>
-        <div className="flex flex-col gap-0.5">
-          <span className="text-xs text-slate-700">بیشترین قیمت</span>
-          <span className="text-sm font-bold text-slate-900">
-            {formatToman(max)}{" "}
-          </span>
-          <span className="text-xs font-normal text-slate-700">تومان</span>
-        </div>
+function UpdatingState({ lastPoint }: { lastPoint: PricePoint }) {
+  const safeValue = toNumber(lastPoint.value);
+  return (
+    <div className="flex flex-col items-center justify-center py-10 text-center">
+      <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-amber-50">
+        <svg
+          className="h-7 w-7 animate-spin text-amber-500"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+          />
+        </svg>
       </div>
+      <p className="text-sm font-semibold text-slate-700">
+        نمودار در حال بروزرسانی است
+      </p>
+      <p className="mt-1 text-xs text-slate-500">
+        آخرین قیمت ثبت‌شده ({lastPoint.label}):
+      </p>
+      <p className="mt-2 text-lg font-extrabold text-red-700">
+        {safeValue.toLocaleString("fa-IR")} میلیون تومان
+      </p>
+     
     </div>
   );
 }

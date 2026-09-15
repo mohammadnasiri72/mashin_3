@@ -15,7 +15,7 @@ function SideBarEducation({
     <>
       <section className="">
         <div className="mx-auto">
-          <div className="space-y-6">
+          <div className="space-y-2">
             {/* بنرهای سایدبار */}
             <SideBarBanner
               banner={banner.filter((e) => e.categoryId === 6506)}

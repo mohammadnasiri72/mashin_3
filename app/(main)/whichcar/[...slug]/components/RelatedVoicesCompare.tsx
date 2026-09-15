@@ -10,7 +10,7 @@ function RelatedVoicesCompare({ relatedVoices }: { relatedVoices: ItemsId[] }) {
         {/* Videos List */}
         <div className="space-y-6 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
           <div className="flex md:flex-nowrap flex-wrap items-center gap-2">
-            <h3 className="dt_title text-2xl font-bold text-gray-900 mb-4!">
+            <h3 className="dt_title text-2xl font-bold text-gray-900 mb-5!">
               <strong className="text-red-600"> پادکست‌های مرتبط</strong>
             </h3>
           </div>

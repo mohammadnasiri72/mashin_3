@@ -5,10 +5,27 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false,
   // بهینه‌سازی تصاویر از دامنه‌های خارجی
   images: {
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
     remotePatterns: [
       {
         protocol: "https",
         hostname: "mashin3.com",
+        pathname: "/**",
+      },
+      {
+      protocol: "https",
+      hostname: "file.mashin3.com", // ✅ این دامنه اصلی فایل‌ها را اضافه کنید
+      pathname: "/**",
+    },
+      {
+        protocol: "https",
+        hostname: "test.mashin3.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "**.mashin3.com",
         pathname: "/**",
       },
       {
@@ -24,12 +41,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "m3.aitest2.ir/",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "mashin3.com/",
+        hostname: "**.aitest2.ir",
         pathname: "/**",
       },
     ],

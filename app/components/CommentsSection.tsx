@@ -584,7 +584,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
   return (
     <>
-      <div className="detailsBox bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+      <div className="detailsBox bg-white rounded-2xl px-4 py-6 shadow-sm border border-gray-100">
         <h3 className="dt_title text-xl font-bold text-gray-900 mb-4!">
           <strong className="text-red-600">نظرات </strong>
           درمورد {details.sourceName} {details.title}
@@ -593,10 +593,10 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
           </span>
         </h3>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 ">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* فرم ثبت نظر اصلی */}
-          <div className="lg:col-span-4 ">
-            <div className="contactForm_wrap bg-gray-50 rounded-xl px-6 py-4 comment-form sticky top-36!">
+          <div className="lg:col-span-4">
+            <div className="contactForm_wrap bg-gray-50 rounded-xl px-6 py-4 comment-form sticky top-30!">
               <div className="title_sec mb-4!">
                 <h3 className="text-lg font-bold text-gray-900">دیدگاه</h3>
                 <p className="text-gray-600 mt-2">

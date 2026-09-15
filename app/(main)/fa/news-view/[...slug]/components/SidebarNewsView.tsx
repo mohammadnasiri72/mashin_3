@@ -46,7 +46,7 @@ function SidebarNewsView({
 
   return (
     <section className="bg-gray-50">
-      <div className="mx-auto pl-4 lg:pr-2 pr-4">
+      <div className="mx-auto">
         <div className="space-y-6">
           {/* بنرهای سایدبار */}
           <SideBarBanner banner={banner.filter((e) => e.categoryId === 6506)} />

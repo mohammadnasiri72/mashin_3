@@ -9,6 +9,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import { mainDomain } from "@/utils/mainDomain";
+import Image from "next/image";
 import { Fancybox } from "@fancyapps/ui";
 // @ts-ignoreimport
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
@@ -161,7 +162,9 @@ export default function ImageGallery({
                   <img
                     src={mainDomain + img.fileUrl}
                     alt={img.title || title || "تصویر"}
+                    sizes="(max-width: 640px) 46vw, (max-width: 768px) 30vw, (max-width: 1024px) 23vw, (max-width: 1280px) 18vw, 15vw"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
                   />
                 </div>
               </a>

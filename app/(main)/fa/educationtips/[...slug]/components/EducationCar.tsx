@@ -242,9 +242,9 @@ const EducationCar = ({
   const totalPages = Math.ceil(totalItems / 20);
 
   return (
-    <div className="min-h-screen bg-[#f4f4f4] py-8">
-      <div className="mx-auto px-4">
-        <div className="flex flex-col lg:flex-row gap-6 relative items-start">
+    <div className="min-h-screen bg-[#f4f4f4] pt-2">
+      <div className="mx-auto px-2">
+        <div className="flex flex-col lg:flex-row gap-2 relative items-start">
           {/* محتوای اصلی - 3/4 صفحه */}
           <div
             ref={mainBoxRef}
@@ -355,7 +355,7 @@ const EducationCar = ({
                   <>
                     {education.map((item, index) => (
                       <div key={`${item.id}-${index}`}>
-                        <article className="py-6! border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                        <article className="py-6! border-b border-gray-200 transition-colors">
                           <div className="flex flex-col md:flex-row gap-4 ">
                             {/* تصویر مطلب */}
                             <div className="md:w-48 w-full h-32 shrink-0">

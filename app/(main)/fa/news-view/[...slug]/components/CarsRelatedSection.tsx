@@ -1,50 +1,45 @@
 "use client";
 
-import { formatPersianDate } from "@/utils/func";
 import { mainDomain } from "@/utils/mainDomain";
 import Link from "next/link";
 
 const CarsRelatedSection = ({ relatedCars }: { relatedCars: ItemsId[] }) => {
   return (
-    <section className="bg-gray-50">
-      <div className="mx-auto pr-4 lg:pl-2 pl-4">
+    <section className="sm:px-5 px-2 py-5 bg-white rounded-xl shadow-sm">
+      <h3 className="dt_title text-xl font-bold text-gray-900 mb-5!">
+        <strong className="text-[#ce1a2a]!">خودروهای </strong>
+        مرتبط
+      </h3>
 
-      <div className="bg-white rounded-xl shadow-sm px-8 pb-8">
-        <h3 className="dt_title text-2xl font-bold text-gray-900 py-4">
-          <strong className="text-red-600"> خودروهای مرتبط</strong>
-        </h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 ">
+        {relatedCars.map((car) => (
+          <div
+            key={car.id}
+            className="bg-white border border-slate-100 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+          >
+            <div className="h-48 overflow-hidden">
+              <Link href={car.url} className="w-full h-full">
+                <img
+                  src={mainDomain + car.image}
+                  alt={car.title}
+                  className="w-full h-full object-contain hover:scale-95 scale-90 transition-transform"
+                />
+              </Link>
+            </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {relatedCars.map((car) => (
-            <div
-              key={car.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-            >
-              <div className="h-48 overflow-hidden">
-                <Link href={car.url} className="w-full h-full">
-                  <img
-                    src={mainDomain + car.image}
-                    alt={car.title}
-                    className="w-full h-full object-contain hover:scale-95 scale-90 transition-transform"
-                  />
-                </Link>
-              </div>
+            <div className="p-4">
+              <Link href={car.url} className="font-medium group">
+                <h3 className="font-bold text-gray-800 mt-3! mb-2! line-clamp-2 duration-300 group-hover:text-[#ce1a2a]!">
+                  بررسی مشخصات فنی {car.sourceName} {car.title}
+                </h3>
+              </Link>
 
-              <div className="p-4">
-                <Link href={car.url} className="font-medium group">
-                  <h3 className="font-bold text-gray-800 mt-3! mb-2! line-clamp-2 duration-300 group-hover:text-[#ce1a2a]!">
-              بررسی مشخصات فنی   {car.sourceName} {car.title}
-                  </h3>
-                </Link>
-
-                {/* <div className="flex justify-between items-center text-sm text-gray-500">
+              {/* <div className="flex justify-between items-center text-sm text-gray-500">
                   <span>{formatPersianDate(car.modified ? car.modified: car.created)}</span>
                 </div> */}
-              </div>
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
+        ))}
       </div>
 
       <style jsx global>{`

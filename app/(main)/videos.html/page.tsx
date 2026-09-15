@@ -8,6 +8,7 @@ import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { mainDomainOld } from "@/utils/mainDomain";
 import BreadcrumbCategory from "@/app/components/BreadcrumbCategory";
 import { JsonLd } from "@/app/components/JsonLd";
+import MainBanner from "@/app/components/MainBanner";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -116,6 +117,7 @@ async function pageVideo({
           titleCat={""}
         />
         <BoxCatVideos videosCat={videosCat} />
+        <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
       </div>
     </>
   );

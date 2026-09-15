@@ -53,8 +53,8 @@ const NewsContentSection = ({ detailsNews }: { detailsNews: ItemsId }) => {
   }, []);
   return (
     <section className=" bg-gray-50">
-      <div className="mx-auto pr-4 lg:pl-2 pl-4">
-        <div className="bg-white rounded-xl shadow-sm p-8">
+      <div className="mx-auto px-0">
+        <div className="bg-white rounded-xl shadow-sm p-4">
           {!detailsNews.summary && (
             <div className="flex items-center justify-end gap-4 mb-2! text-sm text-gray-600 flex-wrap px-2 pb-4 border-b border-gray-200">
               <div className="flex items-center gap-1.5 bg-gray-100 px-3 py-1.5 rounded-full">
@@ -117,7 +117,7 @@ const NewsContentSection = ({ detailsNews }: { detailsNews: ItemsId }) => {
               aria-label={detailsNews.title}
             >
               <img
-                className="float-start! w-96 pl-5"
+                className="md:float-start! md:w-96 w-full md:pl-5"
                 src={mainDomain + detailsNews.image}
                 alt={detailsNews.title}
               />

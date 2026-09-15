@@ -1,4 +1,5 @@
 // app/page.tsx
+import { after } from "next/server";
 import { getAttachment } from "@/services/Attachment/Attachment";
 import { getComment } from "@/services/Comment/Comment";
 import { getItemId } from "@/services/Item/ItemId";
@@ -19,6 +20,59 @@ import PriceAndComparison from "./components/PriceAndComparison";
 import RelatedItems from "./components/RelatedItems";
 import ReviewSection from "./components/ReviewSection";
 import { JsonLd } from "@/app/components/JsonLd";
+import { mainDomainOld } from "@/utils/mainDomain";
+import { getPriceChart } from "@/services/PriceChart/PriceChart";
+
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string | string[] }>;
+}) {
+   const param = await params;
+  const id = Number(param.slug[0]);
+  const dataPage: ItemsId = await getItemId(id);
+
+
+
+ 
+
+  if (dataPage && dataPage.title) {
+    const title = `${dataPage.seoInfo?.seoTitle ? dataPage?.seoInfo?.seoTitle : dataPage.title + " | ماشین3"}`;
+    const description = dataPage.seoInfo?.seoDescription
+      ? dataPage.seoInfo?.seoDescription
+      : dataPage.title;
+    const keywords = dataPage.seoInfo?.seoKeywords
+      ? dataPage.seoInfo?.seoKeywords
+      : dataPage.seoKeywords;
+    const metadataBase = new URL(mainDomainOld);
+   const seoUrl = dataPage?.url
+        ? `${mainDomainOld}${dataPage?.url}`
+        : `${mainDomainOld}`;
+    const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
+    return {
+      title,
+      description,
+      keywords,
+      metadataBase,
+      alternates: {
+        canonical: seoUrl,
+      },
+      openGraph: {
+        title,
+        description,
+      },
+      other: {
+        seoHeadTags,
+      },
+    };
+  } else {
+    return {
+      title: "ماشین3 - جزئیات خودرو",
+      description: "جزئیات خودرو",
+    };
+  }
+}
 
 async function page({
   params,
@@ -29,90 +83,59 @@ async function page({
   const id = Number(param.slug[0]);
   const detailsCar: ItemsId = await getItemId(id);
 
-  const [Attachment, comments, pollData] = await Promise.all([
-    getAttachment(id),
-    getComment({
-      id,
-      langCode: "fa",
-      type: 0,
-      pageSize: 20,
-      pageIndex: 1,
-    }),
-    getPollId(id),
-  ]);
-
-  try {
-    await ItemVisit({
-      langCode: "fa",
-      id,
-      ip: "",
-      url: detailsCar.url,
-      userAgent: "",
-    });
-  } catch (error) {
-    console.error("Error recording visit:", error);
-  }
-
   const competitorIds = detailsCar.properties.find(
     (e) => e.propertyKey === "p1042_relatedcars",
   )?.propertyValue;
 
-  // const sourceLink = detailsCar.sourceLink;
-  // const categoryId = String(detailsCar.categoryId);
-  // const [ carsModel, carsModel2] = await Promise.all([
-   
-  //   sourceLink
-  //     ? getItem({
-  //         TypeId: 1042,
-  //         langCode: "fa",
-  //         CategoryIdArray: sourceLink,
-  //         PageIndex: 1,
-  //         PageSize: 5,
-  //       })
-  //     : Promise.resolve([]),
-  //   categoryId
-  //     ? getItem({
-  //         TypeId: 1042,
-  //         langCode: "fa",
-  //         CategoryIdArray: categoryId,
-  //         PageIndex: 1,
-  //         PageSize: 5,
-  //         FullData: true,
-  //       })
-  //     : Promise.resolve([]),
-  // ]);
-
   const searchTerm = detailsCar.sourceName + " " + detailsCar.title;
-
-  const relatedNews = await getItem({
-    TypeId: 5,
-    langCode: "fa",
-    Term: searchTerm,
-    PageIndex: 1,
-    PageSize: 10,
-  });
-
-  const relatedVideo = await getItem({
-    TypeId: 1028,
-    langCode: "fa",
-    Term: searchTerm,
-    PageIndex: 1,
-    PageSize: 10,
-  });
 
   const idsCompares = detailsCar.properties.find(
     (e) => e.propertyKey === "p1042_vidrelatedcompare",
   )?.propertyValue;
 
-  const relatedCompare: ItemsId[] = idsCompares
-    ? await getItemByIds(idsCompares)
-    : [];
+  // همه درخواست‌ها به صورت موازی برای کاهش زمان پاسخ سرور
+  const [Attachment, comments, pollData, relatedNews, relatedVideo, relatedCompare] =
+    await Promise.all([
+      getAttachment(id),
+      getComment({
+        id,
+        langCode: "fa",
+        type: 0,
+        pageSize: 20,
+        pageIndex: 1,
+      }),
+      getPollId(id),
+      getItem({
+        TypeId: 5,
+        langCode: "fa",
+        Term: searchTerm,
+        PageIndex: 1,
+        PageSize: 10,
+      }),
+      getItem({
+        TypeId: 1028,
+        langCode: "fa",
+        Term: searchTerm,
+        PageIndex: 1,
+        PageSize: 10,
+      }),
+      idsCompares ? getItemByIds(idsCompares) : Promise.resolve([] as ItemsId[]),
+    ]);
+
+  // ثبت بازدید بعد از ارسال پاسخ به کاربر انجام می‌شود تا TTFB کند نشود
+  after(() =>
+    ItemVisit({
+      langCode: "fa",
+      id,
+      ip: "",
+      url: detailsCar.url,
+      userAgent: "",
+    }).catch((error) => console.error("Error recording visit:", error)),
+  );
 
 
 
-  // const hasBrandModels = carsModel && carsModel.length > 1;
-  // const hasSpecificModels = carsModel2 && carsModel2.length > 1;
-  // const isShowModelShowcase = hasBrandModels || hasSpecificModels;
+  
 
    // ✅ فقط اگر pollData وجود داشت و مقدار معتبری داشت، aggregateRating رو اضافه کن
   let schemas = detailsCar?.seoInfo?.schemas || [];
@@ -140,6 +163,8 @@ async function page({
     }
   }
 
+  const dataPriceChart:PriceChart[] = await getPriceChart(id)
+  
 
   return (
     <>
@@ -198,6 +223,7 @@ async function page({
         >
           <PriceAndComparison
             competitorIds={competitorIds}
+            dataPriceChart={dataPriceChart}
           />
         </section>
 

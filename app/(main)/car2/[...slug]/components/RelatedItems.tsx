@@ -10,6 +10,7 @@ import "swiper/css/navigation";
 
 import { formatPersianDate, toPersianNumbers } from "@/utils/func";
 import { mainDomain } from "@/utils/mainDomain";
+import Image from "next/image";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { FaCalendar, FaEye } from "react-icons/fa";
 
@@ -75,9 +76,11 @@ export default function RelatedItems({
                     <img
                       src={mainDomain + item.image}
                       alt={item.title}
+                      sizes="(max-width: 640px) 46vw, (max-width: 768px) 30vw, (max-width: 1024px) 23vw, (max-width: 1280px) 18vw, 15vw"
                       className="object-cover! w-full h-full group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
                     />
-                   
+
                   </div>
                   <div className="flex flex-col gap-1 p-3">
                     <h3 className="text-sm font-bold text-slate-900 line-clamp-2 h-10 group-hover:text-[#ce1a2a]! transition-colors">

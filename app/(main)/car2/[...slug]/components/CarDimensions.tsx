@@ -1,6 +1,7 @@
 "use client";
 
 import { createMarkup } from "@/utils/func";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import VideoPlayerCar from "./VideoPlayerCar";
@@ -106,6 +107,7 @@ export default function CarDimensions({
               <img
                 src={mainDomain + detailsCar.image}
                 alt={`${detailsCar.sourceName} ${detailsCar.title}`}
+                sizes="(max-width: 1024px) 120px, 20vw"
                 className="w-full h-full object-contain rounded-lg"
               />
             </div>

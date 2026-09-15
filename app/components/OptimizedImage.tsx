@@ -47,7 +47,7 @@ export default function OptimizedImage({
       fetchPriority={fetchPriority}
       onLoad={onLoad}
       onError={onError}
-      quality={60}
+      quality={70}
       unoptimized={true}
     />
   );

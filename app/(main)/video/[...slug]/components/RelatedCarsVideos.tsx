@@ -8,7 +8,7 @@ const RelatedCarsVideos = ({ relatedCars }: { relatedCars: ItemsId[] }) => {
   return (
     <section className="py-5 bg-white rounded-xl shadow-sm">
       <div className="mx-auto px-4">
-        <h3 className="dt_title text-2xl font-bold text-gray-900 mb-4!">
+        <h3 className="dt_title text-2xl font-bold text-gray-900 mb-5!">
           <strong className="text-red-600"> خودروهای مرتبط</strong>
         </h3>
 
