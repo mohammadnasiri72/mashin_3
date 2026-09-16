@@ -172,7 +172,7 @@ export default function RatingProsCons({
         </div>
 
         {/* Score + breakdown */}
-        <div className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+        <div id="poll-results" className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm font-bold text-slate-900">نتایج نظرسنجی</h3>
             <button

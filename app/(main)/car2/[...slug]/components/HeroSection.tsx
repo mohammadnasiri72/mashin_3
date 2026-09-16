@@ -9,9 +9,10 @@ import { mainDomain } from "@/utils/mainDomain";
 import { message } from "antd";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { FaArrowTrendUp, FaHeart } from "react-icons/fa6";
+import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 import { MdCompare } from "react-icons/md";
 import { useSelector } from "react-redux";
 
@@ -70,6 +71,30 @@ export default function HeroSection({
   const [openLogin, setOpenLogin] = useState(false);
   const [isLiked, setIsLiked] = useState(true);
 
+  // --- state و ref برای فلش‌های اسکرول مشخصات فنی موبایل ---
+  const specsRef = useRef<HTMLDivElement>(null);
+  const [specsShowLeftArrow, setSpecsShowLeftArrow] = useState(false);
+  const [specsShowRightArrow, setSpecsShowRightArrow] = useState(false);
+
+  const checkSpecsScroll = () => {
+    if (!specsRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = specsRef.current;
+    const isAtStart = Math.abs(scrollLeft) < 5;
+    const isAtEnd = Math.abs(scrollLeft) + clientWidth >= scrollWidth - 5;
+    setSpecsShowRightArrow(!isAtStart);
+    setSpecsShowLeftArrow(!isAtEnd);
+  };
+
+  useEffect(() => {
+    // بررسی اولیه بعد از رندر
+    const t = setTimeout(checkSpecsScroll, 200);
+    window.addEventListener("resize", checkSpecsScroll);
+    return () => {
+      clearTimeout(t);
+      window.removeEventListener("resize", checkSpecsScroll);
+    };
+  }, []);
+
   const handleLike = async (id: number) => {
     if (user.token) {
       setIsLoading(true);
@@ -101,7 +126,6 @@ export default function HeroSection({
     }
   };
 
-  
   return (
     <section className="relative w-full overflow-hidden" dir="rtl">
       {/* Background image - full width */}
@@ -206,7 +230,27 @@ export default function HeroSection({
                 </div>
               </div>
 
-              <div className="flex items-center flex-col gap-2">
+              <div
+                onClick={() => {
+                  const el = document.getElementById("poll-results");
+                  if (el) {
+                    const offset = 200;
+                    const top =
+                      el.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({ top, behavior: "smooth" });
+                  }
+                }}
+                className="flex items-center flex-col gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    document
+                      .getElementById("poll-results")
+                      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }
+                }}
+              >
                 <div className="flex items-center gap-1 rounded-lg px-2.5 py-1 backdrop-blur-sm text-5xl">
                   <span className="text-xs text-slate-300">10/</span>
                   <span className="font-bold text-yellow-400!">
@@ -344,36 +388,96 @@ export default function HeroSection({
           </div>
 
           {/* مشخصات فنی به صورت اسکرول افقی */}
-          <div className="mt-2 overflow-x-auto scrollbar-hide">
-            <div className="flex gap-3 min-w-max">
-              {detailsCar.properties
-                .filter((e) => e.isTechnicalProperty)
-                .slice(0, 6)
-                .map((spec) => (
-                  <div
-                    key={spec.title}
-                    className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/5 shrink-0"
-                  >
-                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 shrink-0">
-                      <Image
-                        src="/images/icons/speedometer-large.png"
-                        alt={spec.title}
-                        width={32}
-                        height={32}
-                        className="w-8"
-                      />
+          <div className="mt-2 relative">
+            {/* فلش راست (ابتدای لیست) */}
+            <button
+              type="button"
+              aria-label="اسکرول به راست"
+              onClick={() => {
+                if (specsRef.current) {
+                  specsRef.current.scrollBy({
+                    left: 200,
+                    behavior: "smooth",
+                  });
+                }
+              }}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-slate-900/80 backdrop-blur-sm border border-red-600/20 shadow-lg transition-opacity duration-300 cursor-pointer"
+              style={{
+                opacity: specsShowRightArrow ? 1 : 0,
+                pointerEvents: specsShowRightArrow ? "auto" : "none",
+              }}
+            >
+              <BiChevronRight className="text-lg text-[#ce1a2a]" />
+            </button>
+
+            {/* فلش چپ (انتهای لیست) */}
+            <button
+              type="button"
+              aria-label="اسکرول به چپ"
+              onClick={() => {
+                if (specsRef.current) {
+                  specsRef.current.scrollBy({
+                    left: -200,
+                    behavior: "smooth",
+                  });
+                }
+              }}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-slate-900/80 backdrop-blur-sm border border-red-600/20 shadow-lg transition-opacity duration-300 cursor-pointer"
+              style={{
+                opacity: specsShowLeftArrow ? 1 : 0,
+                pointerEvents: specsShowLeftArrow ? "auto" : "none",
+              }}
+            >
+              <BiChevronLeft className="text-lg text-[#ce1a2a]" />
+            </button>
+
+            {/* ناحیه اسکرول */}
+            <div
+              ref={specsRef}
+              onScroll={checkSpecsScroll}
+              className="overflow-x-auto scrollbar-hide"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              <div className="flex gap-3 min-w-max px-1">
+                {detailsCar.properties
+                  .filter((e) => e.isTechnicalProperty)
+                  .slice(0, 6)
+                  .map((spec) => (
+                    <div
+                      key={spec.title}
+                      className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-xl border border-white/5 shrink-0"
+                    >
+                      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/10 shrink-0">
+                        <Image
+                          src="/images/icons/speedometer-large.png"
+                          alt={spec.title}
+                          width={32}
+                          height={32}
+                          className="w-8"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] text-white/60">
+                          {spec.title}
+                        </span>
+                        <span className="text-xs font-bold text-white">
+                          {spec.propertyValue}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col">
-                      <span className="text-[10px] text-white/60">
-                        {spec.title}
-                      </span>
-                      <span className="text-xs font-bold text-white">
-                        {spec.propertyValue}
-                      </span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+              </div>
             </div>
+
+            {/* گرادیانت‌های کناری */}
+            <div
+              className="absolute right-0 top-0 h-full w-8 bg-linear-to-l from-slate-900/60 to-transparent pointer-events-none transition-opacity duration-300"
+              style={{ opacity: specsShowRightArrow ? 1 : 0 }}
+            />
+            <div
+              className="absolute left-0 top-0 h-full w-8 bg-linear-to-r from-slate-900/60 to-transparent pointer-events-none transition-opacity duration-300"
+              style={{ opacity: specsShowLeftArrow ? 1 : 0 }}
+            />
           </div>
         </div>
       </div>
@@ -389,6 +493,20 @@ export default function HeroSection({
         .scrollbar-hide {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        @keyframes pulse-slow {
+          0%,
+          100% {
+            transform: translateY(-50%) scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: translateY(-50%) scale(1.1);
+            opacity: 0.9;
+          }
+        }
+        .animate-pulse-slow {
+          animation: pulse-slow 2s ease-in-out infinite;
         }
       `}</style>
     </section>
