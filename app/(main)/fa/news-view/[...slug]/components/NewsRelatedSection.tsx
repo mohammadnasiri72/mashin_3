@@ -6,6 +6,7 @@ import Link from "next/link";
 import { FaArrowLeftLong } from "react-icons/fa6";
 
 const NewsRelatedSection = ({ relatedNews }: { relatedNews: ItemsRalatedNews[] }) => {
+  
   if (!relatedNews?.length) {
     return null;
   }

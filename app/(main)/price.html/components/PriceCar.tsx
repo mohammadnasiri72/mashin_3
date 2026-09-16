@@ -313,7 +313,7 @@ const handleSearch = useCallback(
 
       if (isSearching) {
         // شروع جستجو یا تغییر عبارت جستجو
-        setSelectedCategory(null);
+        // setSelectedCategory(null);
         setSelectedBrand(null);
         setPrices([]);
         fetchPrices(null, trimmedTerm);

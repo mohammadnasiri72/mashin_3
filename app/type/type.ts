@@ -358,7 +358,6 @@ interface Price {
 interface PriceChart {
   productId: number;
   price: number;
-  created: string;
   createdFa: string;
 }
 interface Prices {

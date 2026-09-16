@@ -13,14 +13,6 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// تایپ دیتای خام که از API میاد
-export interface PriceChartRaw {
-  productId: number;
-  price: number;
-  created: string;
-  createdFa: string;
-}
-
 // تایپ نقطه نمودار
 interface PricePoint {
   label: string;
@@ -50,9 +42,6 @@ const RANGES: Range[] = [
   { id: "all", label: "همه", days: null },
 ];
 
-// فرمت اعداد فارسی
-const faNumberFormatter = new Intl.NumberFormat("fa-IR");
-
 // تبدیل امن هر مقدار عددی (شامل BigInt) به number
 const toNumber = (val: unknown): number => {
   if (typeof val === "bigint") return Number(val);
@@ -64,12 +53,10 @@ const toNumber = (val: unknown): number => {
   return 0;
 };
 
-// فرمت قیمت به میلیون تومان (برای محور Y)
+// فرمت قیمت به میلیارد تومان (برای محور Y)
 const formatPriceMillion = (n: number) => {
   const safe = toNumber(n);
-  // تقسیم بر ۱۰۰۰ تا واحد بشه میلیارد
   const inBillion = safe / 1000;
-  // اگه عدد اعشار داشت، ۱ رقم اعشار، وگرنه عدد صحیح
   const formatted =
     inBillion % 1 === 0 ? inBillion.toString() : inBillion.toFixed(1);
   return toPersianNumbers(formatted);
@@ -109,23 +96,46 @@ const faDaysBetween = (faDateA: string, faDateB: string): number => {
   return Math.abs(faDateToDayNumber(faDateA) - faDateToDayNumber(faDateB));
 };
 
-// چک می‌کنه آیا بازه انتخابی دیتای کافی داره
+// کل بازه دیتا (روز)
+const getTotalSpan = (points: PricePoint[]): number => {
+  if (points.length < 2) return 0;
+  return faDaysBetween(points[0].label, points[points.length - 1].label);
+};
+
+// چک می‌کنه آیا این تب قابل استفاده هست
 const hasEnoughDataForRange = (
   points: PricePoint[],
-  rangeDays: number | null,
+  rangeIndex: number,
 ): boolean => {
-  if (rangeDays === null) return true;
-  if (points.length === 0) return false;
-  const lastDate = points[points.length - 1].label;
-  const oldestDate = points[0].label;
-  const totalSpan = faDaysBetween(oldestDate, lastDate);
-  return totalSpan >= rangeDays * 0.3;
+  const range = RANGES[rangeIndex];
+  if (!range) return false;
+
+  // "همه" همیشه فعال
+  if (range.days === null) return true;
+
+  // "۱ ماه" همیشه فعال (اگه دیتا داشته باشیم)
+  if (rangeIndex === 0) {
+    return points.length >= 1;
+  }
+
+  // برای بقیه: فعال اگه کل بازه دیتا از بازه‌ی تب قبلی بیشتر باشه
+  const prevRange = RANGES[rangeIndex - 1];
+  const prevDays = prevRange.days ?? 0;
+  const totalSpan = getTotalSpan(points);
+
+  return totalSpan > prevDays;
+};
+
+// آیا اصلاً باید تب‌های بازه زمانی نمایش داده بشن؟
+// فقط اگه حداقل ۳ نقطه دیتا داشته باشیم
+const shouldShowRangeTabs = (points: PricePoint[]): boolean => {
+  return points.length >= 3;
 };
 
 export default function PriceChart({
   dataPriceChart,
 }: {
-  dataPriceChart: PriceChartRaw[];
+  dataPriceChart: PriceChart[];
 }) {
   // نرمال‌سازی و مرتب‌سازی
   const normalizedData: PricePoint[] = useMemo(() => {
@@ -141,13 +151,21 @@ export default function PriceChart({
       .sort((a, b) => a.timestamp - b.timestamp);
   }, [dataPriceChart]);
 
+  // پیش‌فرض: کوچک‌ترین بازه‌ای که کل دیتا رو پوشش بده
   const defaultRangeId: RangeId = useMemo(() => {
-    if (normalizedData.length <= 3) return "all";
-    return "3m";
-  }, [normalizedData.length]);
+    if (normalizedData.length < 2) return "all";
+    const totalSpan = getTotalSpan(normalizedData);
+
+    if (totalSpan <= 30) return "1m";
+    if (totalSpan <= 90) return "3m";
+    if (totalSpan <= 180) return "6m";
+    if (totalSpan <= 365) return "1y";
+    return "all";
+  }, [normalizedData]);
 
   const [activeRange, setActiveRange] = useState<RangeId>(defaultRangeId);
 
+  // sync state با defaultRangeId وقتی دیتا تغییر کرد
   useMemo(() => {
     setActiveRange(defaultRangeId);
   }, [defaultRangeId]);
@@ -213,13 +231,13 @@ export default function PriceChart({
           <strong className="text-red-700">قیمت</strong>
         </h2>
 
-        {normalizedData.length >= 3 && (
+        {shouldShowRangeTabs(normalizedData) && (
           <div className="flex items-center gap-2 rounded-lg bg-slate-100 p-2 w-full sm:justify-center overflow-x-auto">
-            {RANGES.map((r) => {
+            {RANGES.map((r, index) => {
               const isActive = r.id === activeRange;
               const hasEnoughData = hasEnoughDataForRange(
                 normalizedData,
-                r.days,
+                index,
               );
               return (
                 <button
@@ -259,38 +277,38 @@ export default function PriceChart({
                 vertical={false}
               />
               <XAxis
-               dataKey="date"
-  tick={{ fontSize: 11, fill: "#64748b", fontWeight: 500 }}
-  tickMargin={10}
-  axisLine={{ stroke: "#cbd5e1" }}
-  tickLine={false}
-  angle={-55}
-  textAnchor="end"
-  height={70}
-  interval={0}
-  tickFormatter={(val) => toPersianNumbers(val)}
+                dataKey="date"
+                tick={{ fontSize: 11, fill: "#64748b", fontWeight: 500 }}
+                tickMargin={10}
+                axisLine={{ stroke: "#cbd5e1" }}
+                tickLine={false}
+                angle={-55}
+                textAnchor="end"
+                height={70}
+                interval={0}
+                tickFormatter={(val) => toPersianNumbers(val)}
               />
               <YAxis
-               orientation="left"
-  domain={yDomain}
-  tickFormatter={(val) => formatPriceMillion(val)}
-  tick={{ fontSize: 11, fill: "#64748b", fontWeight: 500 }}
-  tickMargin={8}
-  axisLine={{ stroke: "#cbd5e1" }}
-  tickLine={false}
-  width={70}
-  label={{
-    value: "میلیارد تومان",
-    angle: -90,
-    position: "insideLeft",
-    offset: 0,
-    style: {
-      fontSize: 11,
-      fill: "#94a3b8",
-      fontWeight: 600,
-      textAnchor: "middle",
-    },
-  }}
+                orientation="left"
+                domain={yDomain}
+                tickFormatter={(val) => formatPriceMillion(val)}
+                tick={{ fontSize: 11, fill: "#64748b", fontWeight: 500 }}
+                tickMargin={8}
+                axisLine={{ stroke: "#cbd5e1" }}
+                tickLine={false}
+                width={70}
+                label={{
+                  value: "میلیارد تومان",
+                  angle: -90,
+                  position: "insideLeft",
+                  offset: 0,
+                  style: {
+                    fontSize: 11,
+                    fill: "#94a3b8",
+                    fontWeight: 600,
+                    textAnchor: "middle",
+                  },
+                }}
               />
               <Tooltip
                 content={<CustomTooltip />}
@@ -325,9 +343,9 @@ export default function PriceChart({
 
       {hasData && (
         <div className="mt-4 grid sm:grid-cols-3 grid-cols-1 gap-3 border-t border-slate-100 pt-4 text-center">
-          <StatBox label="کمترین قیمت" value={stats.min} />
-          <StatBox label="میانگین قیمت" value={stats.avg} highlight />
           <StatBox label="بیشترین قیمت" value={stats.max} />
+          <StatBox label="میانگین قیمت" value={stats.avg} highlight />
+          <StatBox label="کمترین قیمت" value={stats.min} />
         </div>
       )}
     </div>
@@ -347,9 +365,7 @@ function CustomTooltip({ active, payload }: any) {
       className="rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-lg"
     >
       <div className="mb-1 h-1 w-full rounded-full bg-red-600" />
-      <p className="text-xs text-slate-500">
-        {toPersianNumbers(data.date)}
-      </p>
+      <p className="text-xs text-slate-500">{toPersianNumbers(data.date)}</p>
       <p className="text-base font-extrabold text-red-700">
         {toPersianNumbers(
           Math.round(toNumber(data.price)).toLocaleString("en-US"),
@@ -464,7 +480,6 @@ function UpdatingState({ lastPoint }: { lastPoint: PricePoint }) {
       <p className="mt-2 text-lg font-extrabold text-red-700">
         {safeValue.toLocaleString("fa-IR")} میلیون تومان
       </p>
-     
     </div>
   );
 }

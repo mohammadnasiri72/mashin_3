@@ -14,7 +14,7 @@ function SidebarNewsView({
   newNews: Items[];
   banner: Items[];
   loading: boolean;
-}) {
+}) {  
   // نمایش لودینگ
   if (loading) {
     return (

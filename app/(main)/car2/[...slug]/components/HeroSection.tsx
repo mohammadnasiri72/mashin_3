@@ -153,7 +153,7 @@ export default function HeroSection({
                       <span className="text-[11px]">(ملیون تومان)</span>
                     </span>
                   </span>
-                  <span className="text-white! text-lg font-bold">
+                  <span className="text-white! text-lg font-bold amount-car-desktop">
                     {detailsCar.amount.toLocaleString() || "در حال بروزرسانی"}
                   </span>
                 </span>
@@ -190,8 +190,8 @@ export default function HeroSection({
           </div>
 
           {/* Left: title, tags, rating, actions */}
-          <div className="flex max-w-xl flex-col items-center justify-between gap-4 h-full py-10">
-            <div className="flex items-start flex-col gap-5">
+          <div className="flex max-w-xl flex-col items-center min-w-96 gap-4 h-full py-10">
+            <div className="flex items-center flex-col gap-5">
               <div className="flex flex-col items-center">
                 <h1 className="text-5xl! font-extrabold text-white! md:text-4xl">
                   {detailsCar.itemKey}
@@ -220,7 +220,7 @@ export default function HeroSection({
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-col flex-wrap items-center gap-3 pt-2">
               <Link
                 href={`/compare/${detailsCar.id}`}
                 className="flex items-center gap-1.5 rounded-lg border cursor-pointer border-white/25 bg-white/5 px-4 py-2.5 text-sm font-semibold text-white! backdrop-blur-sm transition hover:bg-[#ce1a2a]/30"
@@ -338,7 +338,7 @@ export default function HeroSection({
                 </span>
               </div>
             </div>
-            <span className="text-base font-bold text-white">
+            <span className="text-base font-bold text-white amount-car-mobile">
               {detailsCar.amount.toLocaleString() || "در حال بروزرسانی"}
             </span>
           </div>

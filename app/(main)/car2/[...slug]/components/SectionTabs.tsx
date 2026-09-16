@@ -32,9 +32,7 @@ export default function SectionTabs({
     { id: "expert-review", label: "نقد کارشناسی", icon: FaSearch },
     { id: "images", label: "گالری تصاویر", icon: FaImages },
 
-    ...(isShowModelShowcase
-      ? [{ id: "models", label: "مدل‌ها", icon: FaCar }]
-      : []),
+    { id: "models", label: "مدل‌ها", icon: FaCar },
     { id: "priceAndComparison", label: "رقبا و نمودار", icon: FaChartBar },
     ...(isShowRelatedNews
       ? [{ id: "news", label: "اخبار مرتبط", icon: FaNewspaper }]
@@ -186,7 +184,7 @@ export default function SectionTabs({
               >
                 <IconComponent
                   className={`
-                    text-lg md:text-2xl
+                    text-lg md:text-3xl
                     transition-all duration-300
                     ${isActive ? "text-[#ce1a2a]" : "text-white!"}
                   `}

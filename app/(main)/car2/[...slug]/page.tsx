@@ -205,7 +205,7 @@ async function page({
             title={detailsCar.title + detailsCar.sourceName}
           />
         </section>
-        {(
+       
           <section
             id="models"
             className="scroll-mt-20 bg-[#f4f4f4] rounded-2xl mt-5"
@@ -216,7 +216,7 @@ async function page({
              
             />
           </section>
-        )}
+        
         <section
           id="priceAndComparison"
           className="scroll-mt-20 bg-[#f4f4f4] rounded-2xl mt-5 "

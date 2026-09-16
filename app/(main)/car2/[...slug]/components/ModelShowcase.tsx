@@ -20,28 +20,25 @@ interface ModelShowcaseProps {
   detailsCar: ItemsId;
 }
 
-export default function ModelShowcase({
-  detailsCar,
-}: ModelShowcaseProps) {
-  const dispatch = useDispatch()
-  const [brandModels , setBrandModels] = useState<Items[]>([])
-  const [specificModels , setSpecificModels] = useState<Items[]>([])
+export default function ModelShowcase({ detailsCar }: ModelShowcaseProps) {
+  const dispatch = useDispatch();
+  const [brandModels, setBrandModels] = useState<Items[]>([]);
+  const [specificModels, setSpecificModels] = useState<Items[]>([]);
   const brandName = detailsCar.sourceName || "خودرو";
   const specificName = detailsCar.title || "";
   const specificHref = detailsCar.breadcrumb.find(
     (e) => e.title === detailsCar.title,
   )?.href;
-  const brandHref =  detailsCar.breadcrumb.find(
-                  (e) => e.title === detailsCar.sourceName,
-                )?.href;
- 
+  const brandHref = detailsCar.breadcrumb.find(
+    (e) => e.title === detailsCar.sourceName,
+  )?.href;
+
   const isFetched = useRef(false);
   const sourceLink = detailsCar.sourceLink;
   const categoryId = String(detailsCar.categoryId);
   useEffect(() => {
     if (isFetched.current || !sourceLink || !categoryId) return;
     isFetched.current = true;
-    
 
     const fetchData = async () => {
       try {
@@ -65,12 +62,15 @@ export default function ModelShowcase({
                 FullData: true,
               })
             : Promise.resolve([]),
-        ]);        
-        setBrandModels(carsModel)
-        setSpecificModels(carsModel2)
-        
-        if ((carsModel&&carsModel.length>1)  || (carsModel2&&carsModel2.length>1)) {
-          dispatch(setIsModelCar(true))
+        ]);
+        setBrandModels(carsModel);
+        setSpecificModels(carsModel2);
+
+        if (
+          (carsModel && carsModel.length > 1) ||
+          (carsModel2 && carsModel2.length > 1)
+        ) {
+          dispatch(setIsModelCar(true));
         }
       } catch (error) {
         console.error("❌ Error fetching data:", error);
@@ -78,10 +78,10 @@ export default function ModelShowcase({
     };
     fetchData();
   }, []);
- const hasBrandModels = brandModels && brandModels.length > 1;
+  const hasBrandModels = brandModels && brandModels.length > 1;
   const hasSpecificModels = specificModels && specificModels.length > 1;
 
-  if (!hasBrandModels && !hasSpecificModels) return null;
+  // if (!hasBrandModels && !hasSpecificModels) return null;
   return (
     <section dir="rtl" className="mx-auto w-full">
       <div
@@ -141,10 +141,14 @@ export default function ModelShowcase({
                           <img
                             src={mainDomain + model.image}
                             alt={`${model.sourceName} ${model.title}`}
-                            sizes={hasBrandModels && hasSpecificModels ? "(max-width: 640px) 46vw, (max-width: 768px) 30vw, (max-width: 1024px) 23vw, 15vw" : "(max-width: 640px) 46vw, (max-width: 768px) 15vw, (max-width: 1024px) 15vw, 8vw"}
+                            sizes={
+                              hasBrandModels && hasSpecificModels
+                                ? "(max-width: 640px) 46vw, (max-width: 768px) 30vw, (max-width: 1024px) 23vw, 15vw"
+                                : "(max-width: 640px) 46vw, (max-width: 768px) 15vw, (max-width: 1024px) 15vw, 8vw"
+                            }
                             className="object-contain group-hover:scale-105 h-full transition-transform duration-300"
-                          loading="lazy"
-                          decoding="async"
+                            loading="lazy"
+                            decoding="async"
                             srcSet={`
     ${mainDomain + model.image}?w=200&q=75 200w,
     ${mainDomain + model.image}?w=400&q=75 400w,
@@ -243,10 +247,14 @@ export default function ModelShowcase({
                           <img
                             src={mainDomain + model.image}
                             alt={`${model.sourceName} ${model.title}`}
-                            sizes={hasBrandModels && hasSpecificModels ? "(max-width: 640px) 46vw, (max-width: 768px) 30vw, (max-width: 1024px) 23vw, 15vw" : "(max-width: 640px) 46vw, (max-width: 768px) 15vw, (max-width: 1024px) 15vw, 8vw"}
+                            sizes={
+                              hasBrandModels && hasSpecificModels
+                                ? "(max-width: 640px) 46vw, (max-width: 768px) 30vw, (max-width: 1024px) 23vw, 15vw"
+                                : "(max-width: 640px) 46vw, (max-width: 768px) 15vw, (max-width: 1024px) 15vw, 8vw"
+                            }
                             className="object-contain group-hover:scale-105 h-full transition-transform duration-300"
-                          loading="lazy"
-                          decoding="async"
+                            loading="lazy"
+                            decoding="async"
                             srcSet={`
     ${mainDomain + model.image}?w=200&q=75 200w,
     ${mainDomain + model.image}?w=400&q=75 400w,
@@ -287,6 +295,45 @@ export default function ModelShowcase({
             </div>
           </div>
         )}
+      {!hasBrandModels && !hasSpecificModels && (
+  <div className="rounded-2xl border border-slate-100 bg-white p-10 shadow-sm">
+    <div className="flex flex-col items-center justify-center gap-4 text-center">
+      {/* آیکون خودرو با پس‌زمینه گرادیانی */}
+      <div className="relative">
+        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-red-100 to-red-50 blur-xl opacity-70" />
+        <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-red-50 to-white border border-red-100 shadow-sm">
+          <svg
+            className="h-10 w-10 text-[#ce1a2a]"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.6}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {/* بدنه خودرو */}
+            <path d="M5 17h14M5 17a2 2 0 01-2-2v-3a2 2 0 012-2h1.5l1.2-3.6A2 2 0 019.6 5h4.8a2 2 0 011.9 1.4L17.5 10H19a2 2 0 012 2v3a2 2 0 01-2 2M5 17a2 2 0 002 2h1a2 2 0 002-2m8 0a2 2 0 01-2 2h-1a2 2 0 01-2-2m-4 0h4" />
+            {/* چرخ‌ها */}
+            <circle cx="7.5" cy="17" r="1.5" fill="currentColor" stroke="none" />
+            <circle cx="16.5" cy="17" r="1.5" fill="currentColor" stroke="none" />
+          </svg>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <h3 className="text-base font-extrabold text-slate-800">
+          مدلی یافت نشد
+        </h3>
+        <p className="max-w-sm text-sm text-slate-500 leading-6">
+          در حال حاضر مدل مشابهی برای این خودرو ثبت نشده است. به‌زودی مدل‌های
+          بیشتری به این بخش اضافه می‌شود.
+        </p>
+      </div>
+
+     
+    </div>
+  </div>
+)}
       </div>
     </section>
   );
