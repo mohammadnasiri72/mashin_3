@@ -28,7 +28,7 @@ function NewsViewDetails({
   Attachment: ItemsAttachment[];
   comments: CommentResponse[];
   id: number;
-  relatedNews: Items[];
+  relatedNews: ItemsRalatedNews[];
   relatedCars: ItemsId[];
   relatedVideos: ItemsId[];
   relatedVoices: ItemsId[];

@@ -17,7 +17,7 @@ function EducationView({
   comments,
 }: {
   education: ItemsId;
-  relatedEducations: Items[];
+  relatedEducations: ItemsRalatedNews[];
   id: number;
   comments: CommentResponse[];
 }) {

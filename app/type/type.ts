@@ -123,6 +123,15 @@ interface Items {
   userId: string | null;
   visit: number;
 }
+interface ItemsRalatedNews {
+  id: number;
+  created: string;
+  image: string;
+  modified: string;
+  priority: number;
+  title: string;
+  url: string;
+}
 
 interface ItemsAttachment {
   id: number;

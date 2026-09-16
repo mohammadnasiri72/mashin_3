@@ -9,7 +9,7 @@ import { FaBook, FaArrowLeftLong } from "react-icons/fa6";
 function RelatedEducation({
   relatedEducations,
 }: {
-  relatedEducations: Items[];
+  relatedEducations: ItemsRalatedNews[];
 }) {
   if (!relatedEducations?.length) {
     return null;

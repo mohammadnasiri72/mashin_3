@@ -1,14 +1,14 @@
+import { JsonLd } from "@/app/components/JsonLd";
 import { getAttachment } from "@/services/Attachment/Attachment";
 import { getComment } from "@/services/Comment/Comment";
-import { getItem } from "@/services/Item/Item";
 import { getItemByIds } from "@/services/Item/ItemByIds";
 import { getItemByUrl } from "@/services/Item/ItemByUrl";
 import { ItemVisit } from "@/services/Item/ItemVisit";
+import { getRalatedNews } from "@/services/RalatedNews/RalatedNews";
 import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import NewsViewDetails from "./components/NewsViewDetails";
-import { JsonLd } from "@/app/components/JsonLd";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -27,9 +27,9 @@ export async function generateMetadata() {
       ? dataPage.seoInfo?.seoKeywords
       : dataPage.seoKeywords;
     const metadataBase = new URL(mainDomainOld);
-   const seoUrl = dataPage?.url
-        ? `${mainDomainOld}${dataPage?.url}`
-        : `${mainDomainOld}`;
+    const seoUrl = dataPage?.url
+      ? `${mainDomainOld}${dataPage?.url}`
+      : `${mainDomainOld}`;
     const seoHeadTags = dataPage?.seoInfo?.seoHeadTags;
 
     return {
@@ -71,20 +71,8 @@ async function pageNewsViewDetails() {
     }
     const id = Number(detailsNews.id);
 
-    let relatedNews: Items[] = [];
+    const relatedNews: ItemsRalatedNews[] = await getRalatedNews(id);
 
-    if (detailsNews.categoryId) {
-      relatedNews = await getItem({
-        TypeId: 5,
-        langCode: "fa",
-        PageIndex: 1,
-        PageSize: 6,
-        CategoryIdArray: String(detailsNews.categoryId),
-      });
-    }
-
-   
-   
     const Attachment: ItemsAttachment[] = await getAttachment(id);
 
     const comments: CommentResponse[] = await getComment({
@@ -94,8 +82,6 @@ async function pageNewsViewDetails() {
       pageSize: 20,
       pageIndex: 1,
     });
-
-    
 
     const idsCars = detailsNews.properties.find(
       (e) => e.propertyKey === "p5_relatednewscar",

@@ -7,6 +7,7 @@ import { mainDomainOld } from "@/utils/mainDomain";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import EducationView from "./components/EducationView";
+import { getRalatedNews } from "@/services/RalatedNews/RalatedNews";
 
 export async function generateMetadata() {
   const headersList = await headers();
@@ -68,13 +69,17 @@ async function pageTipView() {
   const id = Number(education.id);
 
  
-  const relatedEducations: Items[] = await getItem({
-    TypeId: 3,
-    langCode: "fa",
-    CategoryIdArray: String(education.categoryId),
-    PageIndex: 1,
-    PageSize: 6,
-  });
+  // const relatedEducations: Items[] = await getItem({
+  //   TypeId: 3,
+  //   langCode: "fa",
+  //   CategoryIdArray: String(education.categoryId),
+  //   PageIndex: 1,
+  //   PageSize: 6,
+  // });
+
+  const relatedEducations: ItemsRalatedNews[] = await getRalatedNews(id);
+
+  
 
   const comments: CommentResponse[] = await getComment({
     id: Number(id),
