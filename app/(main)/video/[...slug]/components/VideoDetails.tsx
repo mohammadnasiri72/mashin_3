@@ -90,8 +90,8 @@ function VideoDetails({
 
       <SectionTabs tabs={tabs} />
 
-      <div className="mx-auto pt-2 px-2">
-        <div className="flex flex-wrap lg:flex-nowrap items-start gap-2 relative">
+      <div className="mx-auto pt-2 ">
+        <div className="flex flex-wrap lg:flex-nowrap items-start gap-2 relative px-2">
           {/* محتوای اصلی - فقط وقتی سایدبار بلندتره، min-height می‌گیره */}
           <div
             id="video-main-box"
@@ -150,7 +150,7 @@ function VideoDetails({
 
         <MainBanner banner={banner.filter((e) => e.categoryId === 6393)} />
 
-        <div id="comments" className="section-anchor">
+        <div id="comments" className="section-anchor px-2 pb-2">
           <CommentsSection details={video} comments={comments} id={id} />
         </div>
       </div>

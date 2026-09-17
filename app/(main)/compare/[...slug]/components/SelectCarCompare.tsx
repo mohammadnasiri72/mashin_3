@@ -4,7 +4,7 @@ import { getItem } from "@/services/Item/Item";
 import { createpublishCode } from "@/utils/func";
 import { Button, Select } from "antd";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const { Option } = Select;
 
@@ -57,9 +57,11 @@ function SelectCarCompare({
         className={`lg:w-1/4 w-1/2 flex-col gap-2 px-3 ${
           dataCompare.length === 3
             ? "lg:flex! hidden"
-            : dataCompare.length === 2 || dataCompare.length === 1 || dataCompare.length === 0
-              ? "flex"
-              : "hidden"
+            : dataCompare.length === 2
+              ? "md:flex! hidden"
+              : dataCompare.length === 1 || dataCompare.length === 0
+                ? "flex"
+                : "hidden"
         }`}
       >
         <Select

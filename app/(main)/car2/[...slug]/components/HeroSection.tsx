@@ -325,7 +325,15 @@ export default function HeroSection({
             </span>
           </div>
           <div className="flex items-center justify-center gap-3 mt-3">
-            <div className="flex items-center gap-0.5 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1">
+            <div onClick={() => {
+                  const el = document.getElementById("poll-results");
+                  if (el) {
+                    const offset = 200;
+                    const top =
+                      el.getBoundingClientRect().top + window.scrollY - offset;
+                    window.scrollTo({ top, behavior: "smooth" });
+                  }
+                }} className="flex items-center gap-0.5 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1">
               <span className="text-xs text-white/60">10 /</span>
               <span className="text-lg font-bold text-yellow-400">
                 {pollData?.pollScore || 0}
